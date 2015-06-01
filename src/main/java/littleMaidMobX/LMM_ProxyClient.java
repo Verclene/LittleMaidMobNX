@@ -11,8 +11,11 @@ import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityCrit2FX;
 import net.minecraft.client.particle.EntityPickupFX;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import network.W_Message;
 
@@ -28,6 +31,8 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		RenderingRegistry.registerEntityRenderingHandler(LMM_EntityLittleMaid.class,new LMM_RenderLittleMaid(Minecraft.getMinecraft().getRenderManager(),0.3F));
 		RenderingRegistry.registerEntityRenderingHandler(MMM_EntitySelect.class,	new RenderModelMulti(Minecraft.getMinecraft().getRenderManager(), 0.0F));
 		RenderingRegistry.registerEntityRenderingHandler(MMM_EntityDummy.class,		new MMM_RenderDummy());
+		
+		
 // TODO ★		RenderingRegistry.registerEntityRenderingHandler(EntityItem.class,			new MMM_RenderItem());
 	}
 
