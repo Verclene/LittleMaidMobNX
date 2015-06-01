@@ -131,10 +131,10 @@ public class LMM_InventoryLittleMaid extends InventoryPlayer {
 	public void damageArmor(float pDamage) {
 		// 装備アーマーに対するダメージ
 		// 頭部は除外
-		ItemStack lis = armorInventory[3];
-		armorInventory[3] = null;
-		super.damageArmor(pDamage);
-		armorInventory[3] = lis;
+		//ItemStack lis = armorInventory[3];
+		//armorInventory[3] = null;
+		//super.damageArmor(pDamage);
+		//armorInventory[3] = lis;
 
 	}
 /*

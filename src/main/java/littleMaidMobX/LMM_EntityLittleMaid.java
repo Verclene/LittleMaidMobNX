@@ -1456,8 +1456,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	protected void damageArmor(float pDamage) {
+		/*
 		maidInventory.damageArmor(pDamage);
 		getAvatarIF().W_damageArmor(pDamage);
+		*/
 	}
 
 	@Override
@@ -1487,6 +1489,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			LMM_LittleMaidMobX.Debug(String.format("Blocking success ID:%d, %f -> %f" , this.getEntityId(), par2, (par2 = (1.0F + par2) * 0.5F)));
 			maidDamegeSound = LMM_EnumSound.hurt_guard;
 		}
+		//デバッグ
+		//maidInventory.armorInventory[2] = null;
 
 		// 被ダメ
 		float llasthealth = getHealth();

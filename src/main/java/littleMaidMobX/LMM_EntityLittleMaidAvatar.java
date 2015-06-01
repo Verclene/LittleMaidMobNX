@@ -185,7 +185,7 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 	@Override
 	public ItemStack getCurrentArmor(int par1) {
 		//TODO GGG		return avatar.func_130225_q(par1);
-		return null;
+		return avatar.getCurrentArmor(par1);
 	}
 
 	@Override
@@ -564,7 +564,7 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 	}
 
 	public void W_damageArmor(float par1){
-		super.damageArmor(par1);
+		//super.damageArmor(par1);
 	}
 	
 	public float applyArmorCalculations(DamageSource par1DamageSource, float par2)
