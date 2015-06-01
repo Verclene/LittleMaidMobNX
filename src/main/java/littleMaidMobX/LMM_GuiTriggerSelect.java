@@ -33,7 +33,7 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 	private int selectPage;
 	protected EntityPlayer target;
 	protected static final ResourceLocation fguiTex =
-			new ResourceLocation(LMM_LittleMaidMobX.DOMAIN, "textures/gui/container/littlemaidtrigger.png");
+			new ResourceLocation(LMM_LittleMaidMobNX.DOMAIN, "textures/gui/container/littlemaidtrigger.png");
 
 
 	public LMM_GuiTriggerSelect(EntityPlayer entityplayer, LMM_GuiIFF guiowner) {

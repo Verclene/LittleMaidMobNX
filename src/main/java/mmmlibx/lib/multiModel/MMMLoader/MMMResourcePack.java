@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import littleMaidMobX.LMM_LittleMaidMobX;
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import littleMaidMobX.LMM_SoundManager;
 import mmmlibx.lib.MMMLib;
 import net.minecraft.client.resources.DefaultResourcePack;
@@ -48,7 +48,7 @@ public class MMMResourcePack implements IResourcePack {
 	private InputStream getResourceStream(ResourceLocation resource, boolean b) {
 		String path = resource.getResourcePath();
 		InputStream lis = MMMResourcePack.class.getResourceAsStream(path);
-		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobX.DOMAIN))
+		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
 		{
 			if(lis==null)
 			{
@@ -69,7 +69,7 @@ public class MMMResourcePack implements IResourcePack {
 		return is != null;
 	}
 
-	public static final Set lmmxResourceDomains = ImmutableSet.of(LMM_LittleMaidMobX.DOMAIN);
+	public static final Set lmmxResourceDomains = ImmutableSet.of(LMM_LittleMaidMobNX.DOMAIN);
 	@Override
 	@SuppressWarnings("rawtypes")
 	public Set getResourceDomains() {

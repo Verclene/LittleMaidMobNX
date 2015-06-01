@@ -10,7 +10,7 @@ public class LMM_EventHook
 	{
 		if(event.entityPlayer instanceof LMM_EntityLittleMaidAvatar)
 		{
-			if(event.item!=null && LMM_LittleMaidMobX.isMaidIgnoreItem(event.item.getEntityItem()))
+			if(event.item!=null && LMM_LittleMaidMobNX.isMaidIgnoreItem(event.item.getEntityItem()))
 			{
 				event.setCanceled(true);
 			}

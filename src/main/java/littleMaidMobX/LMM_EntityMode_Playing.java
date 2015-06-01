@@ -109,7 +109,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 		*/
 		if (pe != null) {
 			owner.getNavigator().setPath(pe, 1.0F);
-			LMM_LittleMaidMobX.Debug("Find Snow Area-%d:%d, %d, %d.", owner.getEntityId(), x, y, z);
+			LMM_LittleMaidMobNX.Debug("Find Snow Area-%d:%d, %d, %d.", owner.getEntityId(), x, y, z);
 			return true;
 		} else {
 			return false;
@@ -316,7 +316,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				owner.setPlayingRole(mpr_QuickShooter);
 				owner.setMaidWait(false);
 				owner.setMaidWaitCount(0);
-				LMM_LittleMaidMobX.Debug("playingMode Enable.");
+				LMM_LittleMaidMobNX.Debug("playingMode Enable.");
 			}
 		}
 		return 0F;

@@ -49,9 +49,9 @@ public class LMM_SoundManager {
 		soundDir = new File(FileManager.dirMods, "/littleMaidMobX/");
 		if (!getSoundDir().exists() || !getSoundDir().isDirectory()) {
 			getSoundDir().mkdirs();
-			LMM_LittleMaidMobX.Debug("Create SoundDir: %s", getSoundDir().toString());
+			LMM_LittleMaidMobNX.Debug("Create SoundDir: %s", getSoundDir().toString());
 		} else {
-			LMM_LittleMaidMobX.Debug("SoundDir: %s", getSoundDir().toString());
+			LMM_LittleMaidMobNX.Debug("SoundDir: %s", getSoundDir().toString());
 		}
 	}
 	
@@ -264,7 +264,7 @@ public class LMM_SoundManager {
 				return soundsDefault.get(enumsound.index);
 			}
 		}
-		return LMM_LittleMaidMobX.DOMAIN + ":" + s;
+		return LMM_LittleMaidMobNX.DOMAIN + ":" + s;
 	}
 
 	public static void rebuildSoundPack() {
@@ -279,10 +279,10 @@ public class LMM_SoundManager {
 				if (ls != null && (li & 0x0f) != 0 && !ls.equals("^")) {
 					lmap.put(li, ls);
 //					soundsDefault.put(li, ls);
-					LMM_LittleMaidMobX.Debug(String.format("soundsDefault[%d] = [%d]", li, li & -16));
+					LMM_LittleMaidMobNX.Debug(String.format("soundsDefault[%d] = [%d]", li, li & -16));
 				} else {
 //					soundsDefault.remove(li);
-					LMM_LittleMaidMobX.Debug(String.format("soundsDefault[%d] removed.", li));
+					LMM_LittleMaidMobNX.Debug(String.format("soundsDefault[%d] removed.", li));
 				}
 			} else {
 				lmap.put(li, lt.getValue());
@@ -306,14 +306,14 @@ public class LMM_SoundManager {
 									if (ls != null && !ls.equals("^")) {
 										msm.getValue().put(mis.getKey(), ls);
 										lf = true;
-										LMM_LittleMaidMobX.Debug(String.format("soundsTexture[%d, %s, %d] = [%d]", mim.getKey(), msm.getKey(), mis.getKey(), mim.getKey() & -16));
+										LMM_LittleMaidMobNX.Debug(String.format("soundsTexture[%d, %s, %d] = [%d]", mim.getKey(), msm.getKey(), mis.getKey(), mim.getKey() & -16));
 									}
 								}
 							}
 						}
 						if (!lf) {
 							msm.getValue().remove(mis.getKey());
-							LMM_LittleMaidMobX.Debug(String.format("soundsTexture[%d, %s, %d] removed.", mim.getKey(), msm.getKey(), mis.getKey()));
+							LMM_LittleMaidMobNX.Debug(String.format("soundsTexture[%d, %s, %d] removed.", mim.getKey(), msm.getKey(), mis.getKey()));
 						}
 					}
 				}
@@ -356,7 +356,7 @@ public class LMM_SoundManager {
 							list1.remove(LMM_EnumSound.valueOf(ss));
 						}
 						catch (Exception exception) {
-							LMM_LittleMaidMobX.Debug(String.format("unknown sound parameter:%s.cfg - %s", packname, ss));
+							LMM_LittleMaidMobNX.Debug(String.format("unknown sound parameter:%s.cfg - %s", packname, ss));
 						}
 					} else if (name.equals("LivingVoiceRate")) {
 						if (isdefault) {
@@ -372,7 +372,7 @@ public class LMM_SoundManager {
 						} else {
 							setSoundValue(index, value, packname);
 						}
-		    			LMM_LittleMaidMobX.Debug(String.format("%s(%d) = %s", name, index, value));
+		    			LMM_LittleMaidMobNX.Debug(String.format("%s(%d) = %s", name, index, value));
 					}
 				}
 			}
@@ -397,7 +397,7 @@ public class LMM_SoundManager {
 			}
 		}
 		catch (Exception exception) {
-			LMM_LittleMaidMobX.Debug("decodeSound Exception.");
+			LMM_LittleMaidMobNX.Debug("decodeSound Exception.");
 		}
 	}
 
@@ -435,7 +435,7 @@ public class LMM_SoundManager {
 	
 				if (soundCfg.exists() && soundCfg.isFile())
 				{
-					LMM_LittleMaidMobX.Debug(soundCfg.getName());
+					LMM_LittleMaidMobNX.Debug(soundCfg.getName());
 
 					Reader reader = new FileReader(soundCfg);
 					decodeSoundPack(soundCfg.getName(), reader, true, true);
@@ -443,14 +443,14 @@ public class LMM_SoundManager {
 				}
 				else
 				{
-					LMM_LittleMaidMobX.Debug("no Default Sound cfg.");
+					LMM_LittleMaidMobNX.Debug("no Default Sound cfg.");
 					createDefaultSoundPack(soundCfg);
 				}
 			}
 		}
 		catch (Exception e)
 		{
-			LMM_LittleMaidMobX.Debug("Error: Create Sound cfg failed.");
+			LMM_LittleMaidMobNX.Debug("Error: Create Sound cfg failed.");
 			e.printStackTrace();
 		}
 		rebuildSoundPack();
@@ -635,10 +635,10 @@ public class LMM_SoundManager {
 				writeBufferSoundRate(bwriter, 1.0F);
 				
 				bwriter.close();
-				LMM_LittleMaidMobX.Debug("Success create Default Sound cfg.");
+				LMM_LittleMaidMobNX.Debug("Success create Default Sound cfg.");
 			}
 		} catch (IOException e) {
-			LMM_LittleMaidMobX.Debug("Failed create Default Sound cfg(%s).", file1.getAbsolutePath());
+			LMM_LittleMaidMobNX.Debug("Failed create Default Sound cfg(%s).", file1.getAbsolutePath());
 			e.printStackTrace();
 			return false;
 		}
@@ -687,9 +687,9 @@ public class LMM_SoundManager {
 			bwriter.newLine();
 			
 			bwriter.close();
-			LMM_LittleMaidMobX.Debug("Success create Sounds.json(%s).", file1.getAbsolutePath());
+			LMM_LittleMaidMobNX.Debug("Success create Sounds.json(%s).", file1.getAbsolutePath());
 		} catch (IOException e) {
-			LMM_LittleMaidMobX.Debug("Failed create Sounds.json(%s).", file1.getAbsolutePath());
+			LMM_LittleMaidMobNX.Debug("Failed create Sounds.json(%s).", file1.getAbsolutePath());
 			e.printStackTrace();
 		}
 	}

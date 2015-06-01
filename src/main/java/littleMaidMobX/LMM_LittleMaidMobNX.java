@@ -22,9 +22,9 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import network.W_Network;
 
-@Mod(	modid = LMM_LittleMaidMobX.DOMAIN,
-		name  = LMM_LittleMaidMobX.DOMAIN)
-public class LMM_LittleMaidMobX {
+@Mod(	modid = LMM_LittleMaidMobNX.DOMAIN,
+		name  = LMM_LittleMaidMobNX.DOMAIN)
+public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
 
@@ -92,7 +92,7 @@ public class LMM_LittleMaidMobX {
 	public static LMM_ProxyCommon proxy;
 
 	@Instance(DOMAIN)
-	public static LMM_LittleMaidMobX instance;
+	public static LMM_LittleMaidMobNX instance;
 
 	public static LMM_ItemSpawnEgg spawnEgg;
 
@@ -104,7 +104,7 @@ public class LMM_LittleMaidMobX {
 	}
 
 	public String getName() {
-		return "littleMaidMobX";
+		return "littleMaidMobNX";
 	}
 
 	public String getPriorities() {

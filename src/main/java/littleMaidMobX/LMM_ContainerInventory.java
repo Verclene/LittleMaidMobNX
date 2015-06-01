@@ -101,7 +101,7 @@ public class LMM_ContainerInventory extends ContainerPlayer {
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			
-			if(LMM_LittleMaidMobX.isMaidIgnoreItem(itemstack1))
+			if(LMM_LittleMaidMobNX.isMaidIgnoreItem(itemstack1))
 			{
 				// コンフィグで無視に指定されたアイテムは移動しない
 			}

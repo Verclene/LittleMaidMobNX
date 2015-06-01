@@ -78,7 +78,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			lemaid =LMM_Net.getLittleMaid(var2.data, 1, MMM_Helper.mc.theWorld);
 			if (lemaid == null) return;
 		}
-		LMM_LittleMaidMobX.Debug(String.format("LMM|Upd Clt Call[%2x:%d].", lmode, leid));
+		LMM_LittleMaidMobNX.Debug(String.format("LMM|Upd Clt Call[%2x:%d].", lmode, leid));
 		
 		switch (lmode) {
 		case LMN_Client_SwingArm : 
@@ -94,7 +94,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			int lval = var2.data[1];
 			int lindex = MMM_Helper.getInt(var2.data, 2);
 			String lname = (String)LMM_IFF.DefaultIFF.keySet().toArray()[lindex];
-			LMM_LittleMaidMobX.Debug("setIFF-CL %s(%d)=%d", lname, lindex, lval);
+			LMM_LittleMaidMobNX.Debug("setIFF-CL %s(%d)=%d", lname, lindex, lval);
 			LMM_IFF.setIFFValue(null, lname, lval);
 			break;
 			
@@ -102,7 +102,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			// 音声再生
 			LMM_EnumSound lsound9 = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(var2.data, 5));
 			lemaid.playSound(lsound9, true);
-			LMM_LittleMaidMobX.Debug(String.format("playSound:%s", lsound9.name()));
+			LMM_LittleMaidMobNX.Debug(String.format("playSound:%s", lsound9.name()));
 			break;
 			
 		}

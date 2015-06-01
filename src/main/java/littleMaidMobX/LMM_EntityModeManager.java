@@ -78,9 +78,9 @@ public class LMM_EntityModeManager extends MMM_ManagerBase {
 	 * ロードされているモードリストを表示する。
 	 */
 	public static void showLoadedModes() {
-		LMM_LittleMaidMobX.Debug("Loaded Mode lists(%d)", maidModeList.size());
+		LMM_LittleMaidMobNX.Debug("Loaded Mode lists(%d)", maidModeList.size());
 		for (LMM_EntityModeBase lem : maidModeList) {
-			LMM_LittleMaidMobX.Debug("%04d : %s", lem.priority(), lem.getClass().getSimpleName());
+			LMM_LittleMaidMobNX.Debug("%04d : %s", lem.priority(), lem.getClass().getSimpleName());
 		}
 	}
 

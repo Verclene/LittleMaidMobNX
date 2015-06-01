@@ -147,7 +147,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 		// アイテム回収のエフェクト
 		if (worldObj.isRemote) {
 			// Client
-			LMM_LittleMaidMobX.proxy.onItemPickup(this, entity, i);
+			LMM_LittleMaidMobNX.proxy.onItemPickup(this, entity, i);
 		} else {
 			super.onItemPickup(entity, i);
 		}
@@ -157,7 +157,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	public void onCriticalHit(Entity par1Entity) {
 		if (worldObj.isRemote) {
 			// Client
-			LMM_LittleMaidMobX.proxy.onCriticalHit(this, par1Entity);
+			LMM_LittleMaidMobNX.proxy.onCriticalHit(this, par1Entity);
 		} else {
 //TODO GGG			((WorldServer)worldObj).getEntityTracker().func_151248_b(avatar, new S0BPacketAnimation(par1Entity, 6));
 		}
@@ -166,7 +166,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	@Override
 	public void onEnchantmentCritical(Entity par1Entity) {
 		if (worldObj.isRemote) {
-			LMM_LittleMaidMobX.proxy.onEnchantmentCritical(this, par1Entity);
+			LMM_LittleMaidMobNX.proxy.onEnchantmentCritical(this, par1Entity);
 		} else {
 //TODO GGG			((WorldServer)worldObj).getEntityTracker().func_151248_b(avatar, new S0BPacketAnimation(par1Entity, 7));
 		}
@@ -187,7 +187,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 			((EntityCreature)par1Entity).setRevengeTarget(avatar);
 		}
 		if (ll > 0) {
-			LMM_LittleMaidMobX.Debug(String.format("ID:%d Given Damege:%f", avatar.getEntityId(), ll - ((EntityLivingBase)par1Entity).getHealth()));
+			LMM_LittleMaidMobNX.Debug(String.format("ID:%d Given Damege:%f", avatar.getEntityId(), ll - ((EntityLivingBase)par1Entity).getHealth()));
 		}
 	}
 

@@ -1,6 +1,6 @@
 package network;
 
-import littleMaidMobX.LMM_LittleMaidMobX;
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import littleMaidMobX.LMM_Net;
 import mmmlibx.lib.MMMLib;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -16,7 +16,7 @@ public class W_MessageHandler implements IMessageHandler<W_Message, IMessage>
 		{
 			if(ctx.side.isClient())
 			{
-				LMM_LittleMaidMobX.proxy.clientCustomPayload(message);
+				LMM_LittleMaidMobNX.proxy.clientCustomPayload(message);
 			}
 			else
 			{

@@ -34,7 +34,7 @@ public class LMM_GuiIFF extends MMM_GuiMobSelect {
 				ldata[0] = LMM_Statics.LMN_Server_GetIFFValue;
 				MMM_Helper.setInt(ldata, 1, li);
 				MMM_Helper.setStr(ldata, 5, ls);
-				LMM_LittleMaidMobX.Debug("RequestIFF %s(%d)", ls, li);
+				LMM_LittleMaidMobNX.Debug("RequestIFF %s(%d)", ls, li);
 				LMM_Net.sendToServer(ldata);
 				li++;
 			}
@@ -122,7 +122,7 @@ public class LMM_GuiIFF extends MMM_GuiMobSelect {
 						ldata[1] = (byte) tt;
 						MMM_Helper.setInt(ldata, 2, li);
 						MMM_Helper.setStr(ldata, 6, pName);
-						LMM_LittleMaidMobX.Debug("SendIFF %s(%d) = %d", pName, li, tt);
+						LMM_LittleMaidMobNX.Debug("SendIFF %s(%d) = %d", pName, li, tt);
 						LMM_Net.sendToServer(ldata);
 					}
 					li++;

@@ -38,7 +38,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 		if (theMaid.isFreedom()) {
 			// 自由行動の子は基点へジャンプ
 			if (theMaid.homeWorld != theMaid.dimension) {
-				LMM_LittleMaidMobX.Debug(String.format("ID:%d, %d -> %d, Change HomeWorld. reset HomePosition.",
+				LMM_LittleMaidMobNX.Debug(String.format("ID:%d, %d -> %d, Change HomeWorld. reset HomePosition.",
 						theMaid.getEntityId(),theMaid.homeWorld, theMaid.worldObj.provider.getDimensionId()));
 //				theMaid.func_110171_b(
 				theMaid.func_175449_a(new BlockPos(
@@ -55,7 +55,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 					MathHelper.floor_double(theMaid.posY),
 					MathHelper.floor_double(theMaid.posZ)) > 400D) {
 				jumpTarget = false;
-				LMM_LittleMaidMobX.Debug(String.format(
+				LMM_LittleMaidMobNX.Debug(String.format(
 						"ID:%d(%s) Jump To Home.", theMaid.getEntityId(),
 						theMaid.worldObj.isRemote ? "C" : "W"));
 				return true;
@@ -75,7 +75,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 					return false;
 				}
 			}
-			LMM_LittleMaidMobX.Debug(
+			LMM_LittleMaidMobNX.Debug(
 					"ID:%d(%s) Jump To Master.",
 					theMaid.getEntityId(), theMaid.worldObj.isRemote ? "C" : "W");
 			return true;
@@ -121,7 +121,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 			int lz = theMaid.func_180486_cf().getZ();
 			if (!(isCanJump(lx, ly, lz))) {
 				// ホームポジション消失
-				LMM_LittleMaidMobX.Debug(String.format(
+				LMM_LittleMaidMobNX.Debug(String.format(
 						"ID:%d(%s) home lost.",
 						theMaid.getEntityId(), theMaid.worldObj.isRemote ? "C" : "W"));
 				int a;
@@ -169,17 +169,17 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				if (f) {
 //					theMaid.func_110171_b(lx, ly, lz, (int) theMaid.func_110174_bM());
 					theMaid.func_175449_a(new BlockPos(lx, ly, lz), (int) theMaid.getMaximumHomeDistance());
-					LMM_LittleMaidMobX.Debug(String.format(
+					LMM_LittleMaidMobNX.Debug(String.format(
 							"Find new position:%d, %d, %d.", lx, ly, lz));
 				} else {
 					if (isCanJump(lx, ly - 6, lz)) {
 						ly -= 6;
 					}
-					LMM_LittleMaidMobX.Debug(String.format(
+					LMM_LittleMaidMobNX.Debug(String.format(
 							"loss new position:%d, %d, %d.", lx, ly, lz));
 				}
 			} else {
-				LMM_LittleMaidMobX.Debug(String.format(
+				LMM_LittleMaidMobNX.Debug(String.format(
 						"ID:%d(%s) home solid.",
 						theMaid.getEntityId(), theMaid.worldObj.isRemote ? "C" : "W"));
 			}
@@ -196,7 +196,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 		theMaid.setAttackTarget(null);
 		theMaid.setRevengeTarget(null);
 		theMaid.getNavigator().clearPathEntity();
-		LMM_LittleMaidMobX.Debug(String.format("ID:%d(%s) Jump Fail.",
+		LMM_LittleMaidMobNX.Debug(String.format("ID:%d(%s) Jump Fail.",
 				theMaid.getEntityId(), theMaid.worldObj.isRemote ? "C" : "W"));
 	}
 

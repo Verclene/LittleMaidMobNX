@@ -192,7 +192,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 					if (((fMaid.weaponFullAuto && !lcanattack) || (lcanattack && fMaid.getSwingStatusDominant().canAttack())) && getAvatarIF().getIsItemTrigger()) {
 						// シュート
 						// フルオート武器は射撃停止
-						LMM_LittleMaidMobX.Debug("id:%d shoot.", fMaid.getEntityId());
+						LMM_LittleMaidMobNX.Debug("id:%d shoot.", fMaid.getEntityId());
 						fAvatar.stopUsingItem();
 						fMaid.setSwing(30, LMM_EnumSound.shoot);
 					} else {
@@ -208,10 +208,10 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 									if (swingState.attackTime < at) {
 										fMaid.setSwing(at, LMM_EnumSound.sighting);
 										litemstack = litemstack.useItemRightClick(worldObj, fAvatar);
-										LMM_LittleMaidMobX.Debug("id:%d redygun.", fMaid.getEntityId());
+										LMM_LittleMaidMobNX.Debug("id:%d redygun.", fMaid.getEntityId());
 									}
 								} else {
-									LMM_LittleMaidMobX.Debug(String.format("ID:%d-friendly fire FullAuto.", fMaid.getEntityId()));
+									LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire FullAuto.", fMaid.getEntityId()));
 								}
 							}
 						} 
@@ -223,16 +223,16 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 									// 意図的にショートスパンで音が鳴るようにしてある
 									fMaid.mstatAimeBow = false;
 									fMaid.setSwing(10, (litemstack.stackSize == itemcount) ? LMM_EnumSound.shoot_burst : LMM_EnumSound.Null);
-									LMM_LittleMaidMobX.Debug(String.format("id:%d throw weapon.(%d:%f:%f)", fMaid.getEntityId(), swingState.attackTime, fMaid.rotationYaw, fMaid.rotationYawHead));
+									LMM_LittleMaidMobNX.Debug(String.format("id:%d throw weapon.(%d:%f:%f)", fMaid.getEntityId(), swingState.attackTime, fMaid.rotationYaw, fMaid.rotationYawHead));
 								} else {
-									LMM_LittleMaidMobX.Debug(String.format("ID:%d-friendly fire throw weapon.", fMaid.getEntityId()));
+									LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire throw weapon.", fMaid.getEntityId()));
 								}
 							}
 						} else {
 							// リロード有りの特殊兵装
 							if (!getAvatarIF().isUsingItemLittleMaid()) {
 								litemstack = litemstack.useItemRightClick(worldObj, fAvatar);
-								LMM_LittleMaidMobX.Debug(String.format("%d reload.", fMaid.getEntityId()));
+								LMM_LittleMaidMobNX.Debug(String.format("%d reload.", fMaid.getEntityId()));
 							}
 							// リロード終了まで強制的に構える
 							swingState.attackTime = 5;
@@ -252,7 +252,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 					List<Entity> newentitys = worldObj.loadedEntityList.subList(lastentityid, worldObj.loadedEntityList.size());
 					boolean shootingflag = false;
 					if (newentitys != null && newentitys.size() > 0) {
-						LMM_LittleMaidMobX.Debug(String.format("new FO entity %d", newentitys.size()));
+						LMM_LittleMaidMobNX.Debug(String.format("new FO entity %d", newentitys.size()));
 						for (Entity te : newentitys) {
 							if (te.isDead) {
 								shootingflag = true;
@@ -268,7 +268,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 									Object eo = ff.get(te);
 									if (eo.equals(fAvatar)) {
 										ff.set(te, this);
-										LMM_LittleMaidMobX.Debug("Replace FO Owner.");
+										LMM_LittleMaidMobNX.Debug("Replace FO Owner.");
 									}
 								}
 							}
@@ -296,7 +296,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 				fMaid.getNavigator().tryMoveToEntityLiving(fTarget, 1.0);
 			}
 			if (fMaid.getNavigator().noPath()) {
-				LMM_LittleMaidMobX.Debug("id:%d Target renge out.", fMaid.getEntityId());
+				LMM_LittleMaidMobNX.Debug("id:%d Target renge out.", fMaid.getEntityId());
 				fMaid.setAttackTarget(null);
 			}
 			if (fMaid.weaponFullAuto && getAvatarIF().getIsItemTrigger()) {

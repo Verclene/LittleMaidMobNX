@@ -57,13 +57,13 @@ public class LMM_Net {
 		MMM_Helper.setInt(pData, 1, pEntity.getEntityId());
 		W_Network.sendPacketToServer(2,pData);
 //		ModLoader.clientSendPacket(new Packet250CustomPayload("LMM|Upd", pData));
-		LMM_LittleMaidMobX.Debug(String.format("LMM|Upd:send:%2x:%d", pData[0], pEntity.getEntityId()));
+		LMM_LittleMaidMobNX.Debug(String.format("LMM|Upd:send:%2x:%d", pData[0], pEntity.getEntityId()));
 	}
 
 	public static void sendToServer(byte[] pData) {
 		W_Network.sendPacketToServer(2, pData);
 //		ModLoader.clientSendPacket(new Packet250CustomPayload("LMM|Upd", pData));
-		LMM_LittleMaidMobX.Debug(String.format("LMM|Upd:%2x:NOEntity", pData[0]));
+		LMM_LittleMaidMobNX.Debug(String.format("LMM|Upd:%2x:NOEntity", pData[0]));
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class LMM_Net {
 			lemaid = getLittleMaid(pPayload.data, 1, playerEntity.worldObj);
 			if (lemaid == null) return;
 		}
-		LMM_LittleMaidMobX.Debug(String.format("LMM|Upd Srv Call[%2x:%d].", lmode, leid));
+		LMM_LittleMaidMobNX.Debug(String.format("LMM|Upd Srv Call[%2x:%d].", lmode, leid));
 		byte[] ldata;
 		int lindex;
 		int lval;
@@ -139,7 +139,7 @@ public class LMM_Net {
 			lval = pPayload.data[1];
 			lindex = MMM_Helper.getInt(pPayload.data, 2);
 			lname = MMM_Helper.getStr(pPayload.data, 6);
-			LMM_LittleMaidMobX.Debug("setIFF-SV user:%s %s(%d)=%d", MMM_Helper.getPlayerName(playerEntity), lname, lindex, lval);
+			LMM_LittleMaidMobNX.Debug("setIFF-SV user:%s %s(%d)=%d", MMM_Helper.getPlayerName(playerEntity), lname, lindex, lval);
 			LMM_IFF.setIFFValue(MMM_Helper.getPlayerName(playerEntity), lname, lval);
 			sendIFFValue(playerEntity, lval, lindex);
 			break;
@@ -148,7 +148,7 @@ public class LMM_Net {
 			lindex = MMM_Helper.getInt(pPayload.data, 1);
 			lname = MMM_Helper.getStr(pPayload.data, 5);
 			lval = LMM_IFF.getIFF(MMM_Helper.getPlayerName(playerEntity), lname, playerEntity.worldObj);
-			LMM_LittleMaidMobX.Debug("getIFF-SV user:%s %s(%d)=%d", MMM_Helper.getPlayerName(playerEntity), lname, lindex, lval);
+			LMM_LittleMaidMobNX.Debug("getIFF-SV user:%s %s(%d)=%d", MMM_Helper.getPlayerName(playerEntity), lname, lindex, lval);
 			sendIFFValue(playerEntity, lval, lindex);
 			break;
 		case LMN_Server_SaveIFF:

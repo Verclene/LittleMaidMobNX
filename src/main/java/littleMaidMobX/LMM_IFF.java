@@ -128,7 +128,7 @@ public class LMM_IFF {
 			if (pMap != null) {
 				// 表示用Entityの追加
 				pMap.put(pName, pEntity);
-				LMM_LittleMaidMobX.Debug(pName + " added.");
+				LMM_LittleMaidMobNX.Debug(pName + " added.");
 			}
 			
 			// IFFの初期値
@@ -148,7 +148,7 @@ public class LMM_IFF {
 	 */
 	public static int getIFF(String pUsername, String entityname, World world) {
 		if (entityname == null) {
-			return LMM_LittleMaidMobX.cfg_Aggressive ? iff_Enemy : iff_Friendry;
+			return LMM_LittleMaidMobNX.cfg_Aggressive ? iff_Enemy : iff_Friendry;
 		}
 		int lt = iff_Enemy;
 		Map<String, Integer> lmap = getUserIFF(pUsername);
@@ -189,7 +189,7 @@ public class LMM_IFF {
 	 */
 	public static int getIFF(String pUsername, Entity entity) {
 		if (entity == null || !(entity instanceof EntityLivingBase)) {
-			return LMM_LittleMaidMobX.cfg_Aggressive ? iff_Enemy : iff_Friendry;
+			return LMM_LittleMaidMobNX.cfg_Aggressive ? iff_Enemy : iff_Friendry;
 		}
 		String lename = EntityList.getEntityString(entity);
 		String lcname = lename;
@@ -241,7 +241,7 @@ public class LMM_IFF {
 			for (File lf : lfile.listFiles()) {
 				if (lf.getName().endsWith("littleMaidMob.iff")) {
 					String ls = lf.getName().substring(17, lf.getName().length() - 20);
-					LMM_LittleMaidMobX.Debug(ls);
+					LMM_LittleMaidMobNX.Debug(ls);
 					loadIFF(ls);
 				}
 			}
@@ -264,7 +264,7 @@ public class LMM_IFF {
 			}
 			lfile = MinecraftServer.getServer().getFile(lfilename);
 		}
-		LMM_LittleMaidMobX.Debug(lfile.getAbsolutePath());
+		LMM_LittleMaidMobNX.Debug(lfile.getAbsolutePath());
 		return lfile;
 	}
 
@@ -306,7 +306,7 @@ public class LMM_IFF {
 
 	public static void saveIFF(String pUsername) {
 		// IFF ファイルの書込み
-		File lfile = getFile(LMM_LittleMaidMobX.proxy.isSinglePlayer() ? null : pUsername);
+		File lfile = getFile(LMM_LittleMaidMobNX.proxy.isSinglePlayer() ? null : pUsername);
 		Map<String, Integer> lmap = getUserIFF(pUsername);
 		
 		try {

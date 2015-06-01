@@ -290,7 +290,7 @@ public abstract class LMM_EntityModeBase {
 		World worldObj = owner.worldObj;
 		Block lblock = worldObj.getBlockState(new BlockPos(pX, pY, pZ)).getBlock();
 		if (lblock == null) {
-			LMM_LittleMaidMobX.Debug("block-null: %d, %d, %d", pX, pY, pZ);
+			LMM_LittleMaidMobNX.Debug("block-null: %d, %d, %d", pX, pY, pZ);
 			return false;
 		}
 		lblock.setBlockBoundsBasedOnState(worldObj, new BlockPos(pX, pY, pZ));

@@ -190,10 +190,10 @@ public class LMM_EntityMode_Archer extends LMM_EntityModeBase {
 					// ターゲットが死んでいる時はアイテムの使用をクリア
 					if (owner.getAvatarIF().getIsItemReload()) {
 						owner.maidAvatar.stopUsingItem();
-						LMM_LittleMaidMobX.Debug(String.format("id:%d cancel reload.", owner.getEntityId()));
+						LMM_LittleMaidMobNX.Debug(String.format("id:%d cancel reload.", owner.getEntityId()));
 					} else {
 						owner.maidAvatar.clearItemInUse();
-						LMM_LittleMaidMobX.Debug(String.format("id:%d clear.", owner.getEntityId()));
+						LMM_LittleMaidMobNX.Debug(String.format("id:%d clear.", owner.getEntityId()));
 					}
 				}
 			} else {
@@ -203,7 +203,7 @@ public class LMM_EntityMode_Archer extends LMM_EntityModeBase {
 		if (owner.weaponReload && !owner.maidAvatar.isUsingItem()) {
 			// 特殊リロード
 			owner.maidInventory.getCurrentItem().useItemRightClick(owner.worldObj, owner.maidAvatar);
-			LMM_LittleMaidMobX.Debug("id:%d force reload.", owner.getEntityId());
+			LMM_LittleMaidMobNX.Debug("id:%d force reload.", owner.getEntityId());
 			owner.mstatAimeBow = true;
 		}
 

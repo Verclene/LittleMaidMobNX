@@ -45,7 +45,7 @@ public class LMM_GuiInventory extends GuiContainer {
 	public boolean isChangeTexture;
 	
 	protected static final ResourceLocation fguiTex =
-			new ResourceLocation(LMM_LittleMaidMobX.DOMAIN, "textures/gui/container/littlemaidinventory.png");
+			new ResourceLocation(LMM_LittleMaidMobNX.DOMAIN, "textures/gui/container/littlemaidinventory.png");
 
 	// Method
 	public LMM_GuiInventory(EntityPlayer pPlayer, LMM_EntityLittleMaid elmaid) {

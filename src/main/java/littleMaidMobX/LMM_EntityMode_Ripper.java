@@ -148,7 +148,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 				if (owner.isMovementBlocked() || timeSinceIgnited > 22) {
 					owner.getLookHelper().setLookPositionWithEntity(owner.getMaidMasterEntity(), 40F, 40F);
 				}
-				LMM_LittleMaidMobX.Debug(String.format("ID:%d(%s)-dom:%d(%d)", owner.getEntityId(), owner.worldObj.isRemote ? "C" : "W", owner.maidDominantArm, owner.maidInventory.currentItem));
+				LMM_LittleMaidMobNX.Debug(String.format("ID:%d(%s)-dom:%d(%d)", owner.getEntityId(), owner.worldObj.isRemote ? "C" : "W", owner.maidDominantArm, owner.maidInventory.currentItem));
 				
 				if (owner.maidInventory.isItemExplord(owner.maidInventory.currentItem) && timeSinceIgnited++ > 30) {
 					// TODO:自爆威力を対応させたいけど無理ぽ？
@@ -333,7 +333,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 		{
 			i = 255;
 		}
-		LMM_LittleMaidMobX.Debug(String.format("%2x", i));
+		LMM_LittleMaidMobNX.Debug(String.format("%2x", i));
 		char c = '\377';
 		char c1 = '\377';
 		char c2 = '\377';

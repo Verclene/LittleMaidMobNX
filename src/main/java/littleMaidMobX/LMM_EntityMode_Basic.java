@@ -287,7 +287,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 				if (distance == lastdistance) {
 					// TODO:現状無意味
 					// 移動が固まらないように乱数加速
-					LMM_LittleMaidMobX.Debug("Assert.");
+					LMM_LittleMaidMobNX.Debug("Assert.");
 					//1.8後回し
 					//owner.updateWanderPath();
 					lf = true;
@@ -347,7 +347,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 		if (owner.getSwingStatusDominant().canAttack() && myChest != null) {
 			// 砂糖、時計、被っているヘルム以外のアイテムを突っ込む
 			ItemStack is;
-			LMM_LittleMaidMobX.Debug(String.format("getChest:%d", maidSearchCount));
+			LMM_LittleMaidMobNX.Debug(String.format("getChest:%d", maidSearchCount));
 			while ((is = owner.maidInventory.getStackInSlot(maidSearchCount)) == null && maidSearchCount < owner.maidInventory.mainInventory.length) {
 				maidSearchCount++;
 			}
@@ -400,10 +400,10 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 //				serchedChest.add(myChest);
 				clearMy();
 				lastdistance = 0D;
-				LMM_LittleMaidMobX.Debug("endChest.");
+				LMM_LittleMaidMobNX.Debug("endChest.");
 				// 空きができたら捜索終了
 				if (owner.maidInventory.getFirstEmptyStack() > -1) {
-					LMM_LittleMaidMobX.Debug("Search clear.");
+					LMM_LittleMaidMobNX.Debug("Search clear.");
 					fusedTiles.clear();
 				}
 			}
@@ -434,7 +434,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 						double distance = owner.getDistanceSqToEntity(lentity);
 						if (distance == lastdistance) {
 							// TODO: 現状無意味
-							LMM_LittleMaidMobX.Debug("Assert.");
+							LMM_LittleMaidMobNX.Debug("Assert.");
 							//1.8後回し
 							//owner.updateWanderPath();
 						} else {
