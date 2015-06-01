@@ -1,0 +1,16 @@
+[
+{
+  "modid": "MMMLib",
+  "name": "MMMLib",
+  "description": "MMM's Library. ",
+  "version": "1.7.x-1",
+  "mcversion": "1.7.x",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["MMM"],
+  "credits": "created by MMM",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

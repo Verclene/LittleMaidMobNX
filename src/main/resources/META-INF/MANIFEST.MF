@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+FMLCorePlugin: mmmlibx.lib.multiModel.MMMLoader.MMMCoremod
+FMLCorePluginContainsFMLMod: littleMaidMobX.LMM_LittleMaidMobX
+FMLCorePluginContainsFMLMod: mmmlibx.lib.MMMLib
