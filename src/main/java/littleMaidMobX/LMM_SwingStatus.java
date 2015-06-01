@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 
 public class LMM_SwingStatus {
@@ -217,8 +218,9 @@ public class LMM_SwingStatus {
 		Random rand = new Random();
 		
 		if (itemInUse.getItemUseAction() == EnumAction.EAT) {
-			/*
+			
 			for (int var3 = 0; var3 < par2; ++var3) {
+				/*
 				Vec3 var4 = new Vec3(((double)rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
 				var4.rotateAroundX(-pEntity.rotationPitch * (float)Math.PI / 180.0F);
 				var4.rotateAroundY(-pEntity.rotationYaw * (float)Math.PI / 180.0F);
@@ -226,9 +228,10 @@ public class LMM_SwingStatus {
 				var5.rotateAroundX(-pEntity.rotationPitch * (float)Math.PI / 180.0F);
 				var5.rotateAroundY(-pEntity.rotationYaw * (float)Math.PI / 180.0F);
 				var5 = var5.addVector(pEntity.posX, pEntity.posY + (double)pEntity.getEyeHeight(), pEntity.posZ);
-				pEntity.worldObj.spawnParticle("iconcrack_" + itemInUse.getItem(), var5.xCoord, var5.yCoord, var5.zCoord, var4.xCoord, var4.yCoord + 0.05D, var4.zCoord);
+				*/
+				pEntity.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, pEntity.posX, pEntity.posY, pEntity.posZ, ((double)rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
 			}
-			*/
+			
 			
 			pEntity.playSound("random.eat", 0.5F + 0.5F * (float)rand.nextInt(2), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 		}

@@ -78,6 +78,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -839,21 +840,21 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	// エフェクト表示
-	protected void showParticleFX(String s) {
+	protected void showParticleFX(EnumParticleTypes s) {
 		showParticleFX(s, 1D, 1D, 1D);
 	}
 
-	protected void showParticleFX(String s, double d, double d1, double d2) {
+	protected void showParticleFX(EnumParticleTypes s, double d, double d1, double d2) {
 		showParticleFX(s, d, d1, d2, 0D, 0D, 0D);
 	}
 
-	protected void showParticleFX(String s, double d, double d1, double d2, double d3, double d4, double d5 ) {
+	protected void showParticleFX(EnumParticleTypes s, double d, double d1, double d2, double d3, double d4, double d5 ) {
 		for (int i = 0; i < 7; i++) {
 			double d6 = rand.nextGaussian() * d + d3;
 			double d7 = rand.nextGaussian() * d1 + d4;
 			double d8 = rand.nextGaussian() * d2 + d5;
 			//1.8後回し
-			//worldObj.spawnParticle(s, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d6, d7, d8);
+			worldObj.spawnParticle(s, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d6, d7, d8);
 		}
 	}
 
@@ -863,7 +864,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		switch (par1) {
 		case 10:
 			// 不機嫌
-			showParticleFX("smoke", 0.02D, 0.02D, 0.02D);
+			showParticleFX(EnumParticleTypes.SMOKE_NORMAL, 0.02D, 0.02D, 0.02D);
 			break;
 		case 11:
 			// ゴキゲン
@@ -872,19 +873,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			double d7 = a;
 			double d8 = a * 0.3D;
 			//1.8後回し
-			//worldObj.spawnParticle("note", posX, posY + height + 0.1D, posZ, d6, d7, d8);
+			worldObj.spawnParticle(EnumParticleTypes.NOTE, posX, posY + height + 0.1D, posZ, d6, d7, d8);
 			break;
 		case 12:
 			// 自由行動
-			showParticleFX("reddust", 0.5D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D);
+			showParticleFX(EnumParticleTypes.REDSTONE, 0.5D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D);
 			break;
 		case 13:
 			// 不自由行動
-			showParticleFX("smoke", 0.02D, 0.02D, 0.02D);
+			showParticleFX(EnumParticleTypes.SMOKE_NORMAL, 0.02D, 0.02D, 0.02D);
 			break;
 		case 14:
 			// トレーサー
-			showParticleFX("explode", 0.3D, 0.3D, 0.3D, 0.0D, 0.0D, 0.0D);
+			showParticleFX(EnumParticleTypes.EXPLOSION_NORMAL, 0.3D, 0.3D, 0.3D, 0.0D, 0.0D, 0.0D);
 			break;
 
 		default:
@@ -1880,7 +1881,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 				if (maidOverDriveTime.isEnable()) {
 					//1.8後回し
-					//worldObj.spawnParticle("reddust", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, 1.2D, 0.4D, 0.4D);
+					worldObj.spawnParticle(EnumParticleTypes.REDSTONE, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, 1.2D, 0.4D, 0.4D);
 				}
 				if (!worldObj.isRemote) {
 					Entity lattackentity = getAttackTarget();
@@ -1890,7 +1891,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					if (lattackentity != null) {
 
 						//1.8後回し
-						PathEntity pe = null/* = worldObj.getPathEntityToEntity(this, lattackentity, 16F, true, false, false, true)*/;
+						PathEntity pe = getNavigator().getPathToEntityLiving(this);//getPathEntityToEntity(this, lattackentity, 16F, true, false, false, true);
 						if (pe != null) {
 							pe.incrementPathIndex();
 							if (!pe.isFinished()) {
