@@ -1,6 +1,27 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.*;
+import static littleMaidMobX.LMM_Statics.dataWatch_Absoption;
+import static littleMaidMobX.LMM_Statics.dataWatch_Color;
+import static littleMaidMobX.LMM_Statics.dataWatch_DominamtArm;
+import static littleMaidMobX.LMM_Statics.dataWatch_ExpValue;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Aimebow;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterest;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterestAXIS;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_remainsContract;
+import static littleMaidMobX.LMM_Statics.dataWatch_Free;
+import static littleMaidMobX.LMM_Statics.dataWatch_Gotcha;
+import static littleMaidMobX.LMM_Statics.dataWatch_ItemUse;
+import static littleMaidMobX.LMM_Statics.dataWatch_Mode;
+import static littleMaidMobX.LMM_Statics.dataWatch_Parts;
+import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -92,6 +113,7 @@ import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -665,10 +687,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * 簡易音声再生、標準の音声のみ使用すること。
 	 */
 	public void playSound(String pname) {
-		if(FMLCommonHandler.instance().getSide()==Side.CLIENT){
-			PositionedSound p = new MaidSound(new ResourceLocation(pname));
-			Minecraft.getMinecraft().getSoundHandler().playSound(p);
+		if(!worldObj.isRemote){
+			worldObj.playSoundAtEntity(this, pname, 0.5F, 1.0F);
 		}
+		//MaidSound p = new MaidSound(new ResourceLocation(pname),(float)posX, (float)posY, (float)posZ);
+		//Minecraft.getMinecraft().getSoundHandler().playSound(p);
 		//playSound(pname, 0.5F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 	}
 
@@ -736,19 +759,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			Minecraft.getMinecraft().getSoundHandler().playSound(p);
 		}
 		*/
-
-	}
-
-	public class MaidSound extends PositionedSound{
-
-		protected MaidSound(ResourceLocation p_i45103_1_) {
-			super(p_i45103_1_);
-			// TODO 自動生成されたコンストラクター・スタブ
-			xPosF = (float) posX;
-			yPosF = (float) posY;
-			zPosF = (float) posZ;
-			volume = 0.5F;
-		}
 
 	}
 

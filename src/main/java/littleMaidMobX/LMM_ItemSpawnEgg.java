@@ -142,7 +142,7 @@ public class LMM_ItemSpawnEgg extends Item
 			//entityliving.renderYawOffset = entityliving.rotationYaw;
 			((LMM_EntityLittleMaid) entityliving).onSpawnWithEgg((IEntityLivingData)null);
 			par0World.spawnEntityInWorld(entity);
-			entityliving.playLivingSound();
+			//entityliving.playLivingSound();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
