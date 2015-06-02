@@ -2575,7 +2575,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public ItemStack[] getInventory() {
-		return maidInventory.armorInventory;
+		ItemStack[] tmp = new ItemStack[5];
+		tmp[0] = null;
+		for(int i=0;i<4;i++){
+			tmp[i+1] = maidInventory.armorInventory[i];
+		}
+		return tmp;
 	}
 
 	@Override
