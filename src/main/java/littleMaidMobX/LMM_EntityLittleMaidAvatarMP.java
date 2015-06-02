@@ -585,7 +585,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	}
 
 	public void W_damageArmor(float par1){
-		//super.damageArmor(par1);
+		super.damageArmor(par1);
 	}
 
 	public float applyArmorCalculations(DamageSource par1DamageSource, float par2)
@@ -602,6 +602,9 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	{
 		super.damageEntity(par1DamageSource, par2);
 	}
+	
+	@Override	
+	public void func_152112_bu() {}
 
 	@Override
 	public void func_152111_bt(){}

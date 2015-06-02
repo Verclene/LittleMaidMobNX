@@ -144,7 +144,7 @@ public class LMM_LittleMaidMobNX {
 		// アイテム自体は登録しておき、レシピを隠して無効化
 		spawnEgg = new LMM_ItemSpawnEgg();
 		spawnEgg.setUnlocalizedName(DOMAIN + ":spawn_lmmx_egg");
-		spawnEgg.setTextureName(DOMAIN + ":spawn_lmmx_egg");
+		//spawnEgg.setTextureName(DOMAIN + ":spawn_lmmx_egg");
 		GameRegistry.registerItem(spawnEgg, "spawn_lmmx_egg");
 		if (cfg_enableSpawnEgg) {
 			// 招喚用レシピを追加

@@ -34,6 +34,7 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -290,23 +291,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	//1.8後回し
-	/*
-	@Override
-	public IEntityLivingData onSpawnWithEgg(IEntityLivingData par1EntityLivingData) {
+	public void onSpawnWithEgg(IEntityLivingData par1EntityLivingData) {
 		// テクスチャーをランダムで選択
 		String ls;
-		if (LMM_LittleMaidMobX.cfg_defaultTexture.isEmpty()) {
+		if (LMM_LittleMaidMobNX.cfg_defaultTexture.isEmpty()) {
 			ls = MMM_TextureManager.instance.getRandomTextureString(rand);
 		} else {
-			ls = LMM_LittleMaidMobX.cfg_defaultTexture;
+			ls = LMM_LittleMaidMobNX.cfg_defaultTexture;
 		}
 		textureData.setTextureInitServer(ls);
-		LMM_LittleMaidMobX.Debug("init-ID:%d, %s:%d", getEntityId(), textureData.textureBox[0].textureName, textureData.getColor());
+		LMM_LittleMaidMobNX.Debug("init-ID:%d, %s:%d", getEntityId(), textureData.textureBox[0].textureName, textureData.getColor());
 		setTexturePackIndex(textureData.getColor(), textureData.textureIndex);
 		setMaidMode("Wild");
-		return super.onSpawnWithEgg(par1EntityLivingData);
 	}
-	*/
 
 	protected void applyEntityAttributes() {
 		// 初期パラメーター
@@ -1457,10 +1454,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	protected void damageArmor(float pDamage) {
-		/*
 		maidInventory.damageArmor(pDamage);
 		getAvatarIF().W_damageArmor(pDamage);
-		*/
 	}
 
 	@Override

@@ -564,7 +564,7 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 	}
 
 	public void W_damageArmor(float par1){
-		//super.damageArmor(par1);
+		super.damageArmor(par1);
 	}
 	
 	public float applyArmorCalculations(DamageSource par1DamageSource, float par2)

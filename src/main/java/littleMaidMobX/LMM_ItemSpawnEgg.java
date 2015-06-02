@@ -38,7 +38,7 @@ public class LMM_ItemSpawnEgg extends Item
 		else
 		{
 			Block block = par3World.getBlockState(par46X).getBlock();
-			int par4 = par46X.getX(); int par5 = par46X.getY(); int par6 = par46X.getZ();
+			int par4 = par46X.getX(); int par5 = par46X.getY() + 1; int par6 = par46X.getZ();
 			/*
 			par4 += Facing.offsetsXForSide[par7];
 			par5 += Facing.offsetsYForSide[par7];
@@ -70,6 +70,7 @@ public class LMM_ItemSpawnEgg extends Item
 		}
 	}
 
+	/*
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
 	{
@@ -126,6 +127,7 @@ public class LMM_ItemSpawnEgg extends Item
 			}
 		}
 	}
+	*/
 
 	public static Entity spawnMaid(World par0World, int par1, double par2, double par4, double par6)
 	{
@@ -135,9 +137,10 @@ public class LMM_ItemSpawnEgg extends Item
 
 			EntityLiving entityliving = (EntityLiving)entity;
 			entity.setLocationAndAngles(par2, par4, par6, MathHelper.wrapAngleTo180_float(par0World.rand.nextFloat() * 360.0F), 0.0F);
-			entityliving.rotationYawHead = entityliving.rotationYaw;
-			entityliving.renderYawOffset = entityliving.rotationYaw;
-			//entityliving.onSpawnWithEgg((IEntityLivingData)null);
+			((LMM_EntityLittleMaid)entity).setTextureNames();
+			//entityliving.rotationYawHead = entityliving.rotationYaw;
+			//entityliving.renderYawOffset = entityliving.rotationYaw;
+			((LMM_EntityLittleMaid) entityliving).onSpawnWithEgg((IEntityLivingData)null);
 			par0World.spawnEntityInWorld(entity);
 			entityliving.playLivingSound();
 		} catch (Exception e) {
@@ -154,8 +157,4 @@ public class LMM_ItemSpawnEgg extends Item
 		par3.add(new ItemStack(par1, 1));
 	}
 
-	public void setTextureName(String string) {
-		// TODO 自動生成されたメソッド・スタブ
-		
-	}
 }
