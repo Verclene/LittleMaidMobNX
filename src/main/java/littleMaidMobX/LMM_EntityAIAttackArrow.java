@@ -51,9 +51,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 		if (!fEnable || entityliving == null || entityliving.isDead) {
 			fMaid.setAttackTarget(null);
 			//fMaid.setTarget(null);
-			if (entityliving != null) {
-				fMaid.getNavigator().clearPathEntity();
-			}
+			fMaid.getNavigator().clearPathEntity();
 			fTarget = null;
 			return false;
 		} else {
@@ -284,6 +282,8 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 								//1.8修正検討
 								if (ecr.getAttackTarget() == fAvatar) {
 									ecr.setAttackTarget(fMaid);
+									ecr.setRevengeTarget(fMaid);
+									ecr.getNavigator().getPathToEntityLiving(fMaid);
 								}
 							}
 						}

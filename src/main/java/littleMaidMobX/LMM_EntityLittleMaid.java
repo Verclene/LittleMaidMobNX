@@ -2358,6 +2358,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					if (entitymob.getAttackTarget() == mstatgotcha) {
 						//1.8検討
 						entitymob.setAttackTarget(this);
+						entitymob.getNavigator().setPath(this.getNavigator().getPath(), entitymob.moveForward);
 					}
 				}
 			}
