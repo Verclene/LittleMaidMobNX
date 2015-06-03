@@ -2082,7 +2082,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	protected float func_175134_bD()
 	{
-		return super.func_175134_bD()/2F;
+		return super.func_175134_bD();
 	}
 
 	@Override
