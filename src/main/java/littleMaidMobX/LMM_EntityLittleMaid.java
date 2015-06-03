@@ -1937,22 +1937,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 	}
 
-	private boolean isColideBlock() {
-		// TODO 自動生成されたメソッド・スタブ
-		BlockPos pos = this.getPosition();
-		pos = pos.add(new Vec3i(0,1,0));
-
-		//総当りでブロックの存在を調べる
-
-		BlockPos pos1 = pos.add(motionX>0?1:(motionX<0?-1:0), 0, motionZ>0?1:(motionZ<0?-1:0));
-		BlockPos pos2 = pos1.add(0,1,0);
-
-		if(!worldObj.getBlockState(pos1).getBlock().isPassable(worldObj, pos1)&&worldObj.getBlockState(pos2).getBlock().isPassable(worldObj, pos2)){
-			return true;
-		}
-		return false;
-	}
-
 	/*
 	public boolean isBesideClimbableBlock(){
 		return (this.dataWatcher.getWatchableObjectByte(16) & 1) != 0;
@@ -3087,6 +3071,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setRevengeTarget(null);
 		//setPathToEntity(null);
 		getNavigator().clearPathEntity();
+		if(pflag){
+			setMaidModeAITasks(null,null);
+			getNavigator().setPath(null, 0);
+		}else{
+			setMaidMode(maidMode,false);
+		}
 		velocityChanged = true;
 	}
 

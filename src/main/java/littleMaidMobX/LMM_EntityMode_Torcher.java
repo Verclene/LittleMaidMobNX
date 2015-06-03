@@ -14,6 +14,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	
@@ -116,14 +117,16 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	protected int getBlockLighting(int i, int j, int k) {
 		World worldObj = owner.worldObj;
 		if (worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock().getMaterial().isSolid() && worldObj.getBlockState(new BlockPos(i, j, k)).getBlock() == Blocks.air) {
-			return worldObj.getBlockLightOpacity(new BlockPos(i, j, k));
+			int a = worldObj.getLight(new BlockPos(i,j,k),true);
+			return a;
 		}
-		return 32;
+		return 15;
 	}
 
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
 		int v = getBlockLighting(px, py, pz);
+		
 		if (v < 8 && canBlockBeSeen(px, py - 1, pz, true, true, false)) {
 			if (owner.getNavigator().tryMoveToXYZ(px, py, pz, 1.0F) ) {
 				owner.playSound(LMM_EnumSound.findTarget_D, false);
@@ -137,6 +140,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	public boolean executeBlock(int pMode, int px, int py, int pz) {
 		ItemStack lis = owner.getCurrentEquippedItem();
 		if (lis == null) return false;
+		
 		if(lis.getItem()!=Item.getItemFromBlock(Blocks.torch)) return false;
 		
 		int li = lis.stackSize;
@@ -216,7 +220,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 			for (int x = -1; x < 2; x++) {
 				for (int z = -1; z < 2; z++) {
 					for (int lyi : lil) {
-						int lv = lworld.getBlockLightOpacity(new BlockPos(lxx + x, lyi, lzz + z));
+						int lv = lworld.getLight(new BlockPos(lxx + x, lyi, lzz + z),true);
 						if (ll > lv && lii instanceof ItemBlock &&
 								canPlaceItemBlockOnSide(lworld, lxx + x, lyi - 1, lzz + z, EnumFacing.NORTH, owner.maidAvatar, lis, (ItemBlock)lii)
 								&& canBlockBeSeen(lxx + x, lyi - 1, lzz + z, true, false, true)) {
