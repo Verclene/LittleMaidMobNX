@@ -132,15 +132,13 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 						break;
 					}
 					
-					//1.8見送り
-					/*
 					ItemStack itemstack1 = owner.maidInventory.getCurrentItem();
 					if (itemstack1 != null) {
 						if (itemstack1.getItem() instanceof ItemFood) {
 							// 食料を突っ込む
 							if (h < 18) {
 								owner.setSwing(10, LMM_EnumSound.healing);
-								itemstack1 = itemstack1.onFoodEaten(owner.worldObj, lmaster);
+								itemstack1 = ((ItemFood)itemstack1.getItem()).onItemUseFinish(itemstack1, owner.worldObj, lmaster);
 //	                        	owner.worldObj.playSoundAtEntity(lmaster, lmaster.getHurtSound(), 0.5F, (owner.rand.nextFloat() - owner.rand.nextFloat()) * 0.2F + 1.0F);
 								if (itemstack1.stackSize <= 0) {
 									itemstack1 = null;
@@ -183,7 +181,6 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 							}
 						}
 					}
-					*/
 				}
 			}
 		}

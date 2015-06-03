@@ -135,13 +135,13 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 
 	@Override
 	public boolean executeBlock(int pMode, int px, int py, int pz) {
-		/*
 		ItemStack lis = owner.getCurrentEquippedItem();
 		if (lis == null) return false;
+		if(lis.getItem()!=Item.getItemFromBlock(Blocks.torch)) return false;
 		
 		int li = lis.stackSize;
 		// TODO:当たり判定をどうするか
-		if (lis.tryPlaceItemIntoWorld(owner.maidAvatar, owner.worldObj, px, py - 1, pz, 1, 0.5F, 1.0F, 0.5F)) {
+		if (lis.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px, py - 1, pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
 			owner.setSwing(10, LMM_EnumSound.installation);
 			
 			if (owner.maidAvatar.capabilities.isCreativeMode) {
@@ -152,7 +152,6 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 				owner.getNextEquipItem();
 			}
 		}
-		*/
 		return false;
 	}
 
