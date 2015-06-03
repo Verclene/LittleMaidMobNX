@@ -120,7 +120,7 @@ public class LMM_GuiInventory extends GuiContainer {
 		entitylittlemaid.rotationYawHead = entitylittlemaid.rotationYaw = (float) Math.atan(f8 / 40F) * 40F;
 		entitylittlemaid.rotationPitch = -(float) Math.atan(f9 / 40F) * 20F;
 		//1.8後回し
-		//GL11.glTranslatef(0.0F, entitylittlemaid.yOffset, 0.0F);
+		GL11.glTranslatef(0.0F, 0.0F/*entitylittlemaid.yOffset*/, 0.0F);
 		Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
 		Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entitylittlemaid, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		entitylittlemaid.renderYawOffset = f2;
