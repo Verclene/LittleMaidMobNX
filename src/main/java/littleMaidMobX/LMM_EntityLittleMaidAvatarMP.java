@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.BaseAttributeMap;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -171,21 +172,24 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 //TODO GGG			((WorldServer)worldObj).getEntityTracker().func_151248_b(avatar, new S0BPacketAnimation(par1Entity, 7));
 		}
 	}
+	
+	
 
 	@Override
 	public void attackTargetEntityWithCurrentItem(Entity par1Entity) {
-		// TODO:
 		float ll = 0;
 		if (par1Entity instanceof EntityLivingBase) {
 			ll = ((EntityLivingBase)par1Entity).getHealth();
 		}
 		super.attackTargetEntityWithCurrentItem(par1Entity);
+		/*
 		if (par1Entity instanceof EntityLivingBase) {
 			((EntityLivingBase)par1Entity).setRevengeTarget(avatar);
 		}
 		if (par1Entity instanceof EntityCreature) {
-			((EntityCreature)par1Entity).setRevengeTarget(avatar);
+			((EntityCreature)par1Entity).setAttackTarget(avatar);
 		}
+		*/
 		if (ll > 0) {
 			LMM_LittleMaidMobNX.Debug(String.format("ID:%d Given Damege:%f", avatar.getEntityId(), ll - ((EntityLivingBase)par1Entity).getHealth()));
 		}

@@ -1,8 +1,11 @@
 package littleMaidMobX;
 
 import mmmlibx.lib.MMM_Helper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.item.EntityTNTPrimed;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
@@ -87,7 +90,7 @@ public class LMM_EntityMode_Fencer extends LMM_EntityModeBase {
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean setMode(int pMode) {
 		switch (pMode) {

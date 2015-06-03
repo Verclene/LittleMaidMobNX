@@ -42,7 +42,7 @@ public class LMM_EntityAITracerMove extends EntityAIBase implements LMM_IEntityA
 
 	@Override
 	public boolean continueExecuting() {
-		return !theMaid.getNavigator().noPath();
+		return shouldExecute() || !theMaid.getNavigator().noPath();
 	}
 
 	@Override

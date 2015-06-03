@@ -38,7 +38,7 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 
 	@Override
 	public boolean shouldExecute() {
-		if (!fEnable) {
+		if (!fEnable||theMaid.isMaidWait()) {
 			return false;
 		}
 		Entity lentity = theMaid.getAttackTarget();

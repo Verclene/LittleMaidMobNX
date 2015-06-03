@@ -27,6 +27,7 @@ public class LMM_EntityAIHurtByTarget extends EntityAIHurtByTarget {
 
 	@Override
 	public boolean shouldExecute() {
+		if(theMaid.isMaidWaitEx()) return false;
 		if (theMaid.isContract() && !theMaid.isBlocking() && theMaid.mstatMasterEntity != null) {
 			// フェンサー系は主に対する攻撃に反応
 			EntityLivingBase lentity = theMaid.mstatMasterEntity.getAITarget();

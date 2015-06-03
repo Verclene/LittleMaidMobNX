@@ -31,6 +31,7 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
+		if(theMaid.isMaidWaitEx()) return false;
 		if (theMaid.maidInventory.getFirstEmptyStack() > -1) {
 			List llist = theMaid.worldObj.getEntitiesWithinAABB(EntityItem.class, theMaid.getEntityBoundingBox().expand(8F, 2D, 8F));
 			if (!llist.isEmpty()) {

@@ -15,6 +15,7 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntityAI {
 
@@ -47,12 +48,14 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 	@Override
 	public boolean shouldExecute() {
 		EntityLivingBase entityliving = fMaid.getAttackTarget();
+		if(fMaid.isMaidWaitEx()) return false;
 		
 		if (!fEnable || entityliving == null || entityliving.isDead) {
 			fMaid.setAttackTarget(null);
 			//fMaid.setTarget(null);
 			fMaid.getNavigator().clearPathEntity();
 			fTarget = null;
+			resetTask();
 			return false;
 		} else {
 			fTarget = entityliving;
@@ -75,6 +78,9 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 	@Override
 	public void resetTask() {
 		fTarget = null;
+		fAvatar.stopUsingItem();
+		fAvatar.clearItemInUse();
+		fForget=0;
 	}
 
 	@Override
@@ -108,7 +114,15 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 		// 攻撃対象を見る
 		fMaid.getLookHelper().setLookPositionWithEntity(fTarget, 30F, 30F);
 		
+		if(fForget>=20){
+			resetTask();
+		}
 		if (ldist < lrange) {
+			if(fTarget==null){
+				resetTask();
+				return;
+			}
+
 			// 有効射程内
 			double atx = fTarget.posX - fMaid.posX;
 			double aty = fTarget.posY - fMaid.posY;
@@ -281,9 +295,9 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 								EntityCreature ecr = (EntityCreature)obj;
 								//1.8修正検討
 								if (ecr.getAttackTarget() == fAvatar) {
-									ecr.setAttackTarget(fMaid);
-									ecr.setRevengeTarget(fMaid);
-									ecr.getNavigator().getPathToEntityLiving(fMaid);
+									//ecr.setAttackTarget(fMaid);
+									//ecr.setRevengeTarget(fMaid);
+									//ecr.getNavigator().getPathToEntityLiving(fMaid);
 								}
 							}
 						}
@@ -294,17 +308,16 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 			// 有効射程外
 			if (fMaid.getNavigator().noPath()) {
 				fMaid.getNavigator().tryMoveToEntityLiving(fTarget, 1.0);
-			}
-			if (fMaid.getNavigator().noPath()) {
-				LMM_LittleMaidMobNX.Debug("id:%d Target renge out.", fMaid.getEntityId());
 				fMaid.setAttackTarget(null);
 			}
 			if (fMaid.weaponFullAuto && getAvatarIF().getIsItemTrigger()) {
+				FMLCommonHandler.instance().getFMLLogger().debug("DEBUG INFO=NO TARGET");
 				fAvatar.stopUsingItem();
 			} else {
+				FMLCommonHandler.instance().getFMLLogger().debug("DEBUG INFO=NO TARGET(C)");
 				fAvatar.clearItemInUse();
 			}
-			
+			resetTask();
 		}
 		
 

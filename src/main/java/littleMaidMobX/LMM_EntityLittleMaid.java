@@ -68,6 +68,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityHorse;
@@ -996,8 +997,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		
 		//反撃設定
 		if(par1Entity instanceof EntityMob){
-			((EntityMob) par1Entity).setAttackTarget(this);
-			((EntityMob) par1Entity).setRevengeTarget(this);
+			if(!(par1Entity instanceof EntityCreeper)) ((EntityMob) par1Entity).setAttackTarget(this);
+			//((EntityMob) par1Entity).setRevengeTarget(this);
 			((EntityMob) par1Entity).getNavigator().setPath(getNavigator().getPath(), ((EntityMob)par1Entity).moveForward);
 		}
 
@@ -2081,7 +2082,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	protected float func_175134_bD()
 	{
-		return 0.30F;
+		return super.func_175134_bD()/2F;
 	}
 
 	@Override
@@ -3080,7 +3081,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setMaidFlags(pflag, dataWatch_Flags_Wait);
 
 		aiSit.setSitting(pflag);
-		maidWait = pflag;
+		//maidWait = pflag;
 		isJumping = false;
 		setAttackTarget(null);
 		setRevengeTarget(null);
