@@ -27,6 +27,15 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 
 	@Override
 	public boolean shouldExecute() {
+		/*
+		if(theMaid.isMaidWaitEx()){
+			//待機時は3マスで強制帰還
+			if(theMaid.func_180486_cf().distanceSq(theMaid.posX, theMaid.posY, theMaid.posZ)>3D){
+				jumpTarget = false;
+				return true;
+			}
+		}
+		*/
 		if (!isEnable || !theMaid.isContractEX() || theMaid.isMaidWaitEx()) {
 			// 契約個体のみが跳ぶ
 			return false;

@@ -1,9 +1,12 @@
 package littleMaidMobX;
 
+import java.io.IOException;
+
 import mmmlibx.lib.FileManager;
 import mmmlibx.lib.MMM_Config;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
+import net.blacklab.lib.ConfigList;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Items;
@@ -51,6 +54,7 @@ public class LMM_LittleMaidMobNX {
 //		"UniqueEntityId = UniqueEntityId(0 is AutoAssigned. max 255)"
 	};
 
+	public static ConfigList cfg;
 //	@MLProp(info="Relative spawn weight. The lower the less common. 10=pigs. 0=off")
 	public static int cfg_spawnWeight = 5;
 //	@MLProp(info="Maximum spawn count in the World.")
@@ -116,18 +120,48 @@ public class LMM_LittleMaidMobNX {
 	}
 
 	public String getVersion() {
-		return "1.7.2-x";
+		return "1.8";
 	}
 
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent evt)
 	{
-		FileManager.setSrcPath(evt.getSourceFile());
-		MMM_Config.init();
+		//FileManager.setSrcPath(evt.getSourceFile());
+		//MMM_Config.init();
 
 		// MMMLibのRevisionチェック
 //		MMM_Helper.checkRevision("6");
-		MMM_Config.checkConfig(this.getClass());
+		//MMM_Config.checkConfig(this.getClass());
+		
+		//Config
+		cfg = new ConfigList();
+		try {
+			cfg.loadConfig(getName(), evt);
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+		cfg_Aggressive = cfg.getBoolean("Aggressive", true);
+		cfg_antiDoppelganger = cfg.getBoolean("antiDoppelganger", true);
+		cfg_canDespawn = cfg.getBoolean("canDespawn", false);
+		cfg_checkOwnerName = cfg.getBoolean("checkOwnerName", true);
+		cfg_DeathMessage = cfg.getBoolean("DeathMessage", true);
+		cfg_defaultTexture = cfg.getString("defaultTexture", "default_Origin");
+		cfg_Dominant = cfg.getBoolean("Dominant", false);
+		cfg_enableSpawnEgg = cfg.getBoolean("enableSpawnEgg", true);
+		cfg_IgnoreItemList = cfg.getString("IgnoreItemList", "");
+		cfg_maxGroupSize = cfg.getInt("maxGroupSize", 3);
+		cfg_minGroupSize = cfg.getInt("minGroupSize", 1);
+		cfg_PrintDebugMessage = cfg.getBoolean("PrintDebugMessage", false);
+		cfg_spawnLimit = cfg.getInt("spawnLimit", 20);
+		cfg_spawnWeight = cfg.getInt("spawnWeight", 5);
+		
+		try {
+			cfg.saveConfig(getName(), evt);
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 
 		cfg_defaultTexture = cfg_defaultTexture.trim();
 

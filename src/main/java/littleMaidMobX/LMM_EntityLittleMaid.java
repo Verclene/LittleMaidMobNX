@@ -600,11 +600,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 	public static ArrayList<EntityAITaskEntry> getEntityAITasks_taskEntries(EntityAITasks task)
 	{
-		return (ArrayList<EntityAITaskEntry>)ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, task, "field_75782_a", "taskEntries");
+		try{
+			return (ArrayList<EntityAITaskEntry>)ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, task, "field_75782_a", "taskEntries");
+		}catch(Exception e){
+			return null;
+		}
 	}
 	public static ArrayList<EntityAITaskEntry> getEntityAITasks_executingTaskEntries(EntityAITasks task)
 	{
-		return (ArrayList<EntityAITaskEntry>)ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, task, "field_75780_b", "executingTaskEntries");
+		try{
+			return (ArrayList<EntityAITaskEntry>)ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, task, "field_75780_b", "executingTaskEntries");
+		}catch(Exception e){
+			return null;
+		}
 	}
 
 	/**
@@ -2041,6 +2049,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		this.worldObj.theProfiler.endSection();
+		if(isMaidWait()) return;
+
 		this.worldObj.theProfiler.startSection("travel");
 		this.moveStrafing *= 0.98F;
 		this.moveForward *= 0.98F;
@@ -3072,8 +3082,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//setPathToEntity(null);
 		getNavigator().clearPathEntity();
 		if(pflag){
-			setMaidModeAITasks(null,null);
+			//setMaidModeAITasks(null,null);
 			getNavigator().setPath(null, 0);
+			/*
+			func_175449_a(
+					new BlockPos(MathHelper.floor_double(lastTickPosX),
+					MathHelper.floor_double(lastTickPosY),
+					MathHelper.floor_double(lastTickPosZ)), 0);
+					*/
 		}else{
 			setMaidMode(maidMode,false);
 		}
