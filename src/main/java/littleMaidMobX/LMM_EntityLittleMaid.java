@@ -2078,7 +2078,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		this.worldObj.theProfiler.endSection();
-		if(isMaidWait()) return;
 
 		this.worldObj.theProfiler.startSection("travel");
 		this.moveStrafing *= 0.98F;
@@ -2086,6 +2085,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		this.randomYawVelocity *= 0.9F;
 		this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
 		this.worldObj.theProfiler.endSection();
+
+		if(isMaidWait()) return;
 		this.worldObj.theProfiler.startSection("push");
 
 		if (!this.worldObj.isRemote)
