@@ -185,18 +185,19 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 	@Override
 	public boolean overlooksBlock(int pMode) {
 		// チェストカートの検索
-		List<Entity> list = owner.worldObj.getEntitiesWithinAABB(IInventory.class, owner.getEntityBoundingBox().expand(8D, 2D, 8D));
+		List<TileEntity> list = owner.worldObj.loadedTileEntityList;
 		double cartl = 256D;
-		for (Entity lentity : list) {
+		for (TileEntity lentity : list) {
+			if(!(lentity instanceof TileEntityChest)) continue;
 			if (!fusedTiles.contains(lentity)) {
 				if (((IInventory)lentity).getSizeInventory() < 18) {
 					// インベントリが一定サイズ以下はスキップ
 					continue;
 				}
-				double lr = lentity.getDistanceSqToEntity(owner);
+				double lr = lentity.getDistanceSq(owner.posX,owner.posY,owner.posZ);
 				// 見える位置にある最も近い調べていないカートチェスト
 				
-				if (fDistance > lr && owner.getEntitySenses().canSee(lentity)) {
+				if (fDistance > lr/* && owner.getEntitySenses().canSee(lentity)*/) {
 					myInventory = (IInventory)lentity;
 					fDistance = lr;
 				}

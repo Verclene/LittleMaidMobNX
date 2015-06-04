@@ -174,6 +174,7 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 			
 			// 攻撃
 			theMaid.attackEntityAsMob(entityTarget);
+			//theMaid.moveback();
 			if (theMaid.getActiveModeClass().isChangeTartget(entityTarget)) {
 				// 対象を再設定させる
 				theMaid.setAttackTarget(null);

@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -295,9 +296,9 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 								EntityCreature ecr = (EntityCreature)obj;
 								//1.8修正検討
 								if (ecr.getAttackTarget() == fAvatar) {
-									//ecr.setAttackTarget(fMaid);
-									//ecr.setRevengeTarget(fMaid);
-									//ecr.getNavigator().getPathToEntityLiving(fMaid);
+									ecr.setAttackTarget(fMaid);
+									ecr.setRevengeTarget(fMaid);
+									ecr.getNavigator().getPathToEntityLiving(fMaid);
 								}
 							}
 						}

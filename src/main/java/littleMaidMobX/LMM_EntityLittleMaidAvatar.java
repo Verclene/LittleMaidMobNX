@@ -2,17 +2,19 @@ package littleMaidMobX;
 
 import java.util.Collection;
 
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.attributes.BaseAttributeMap;
-import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.StatBase;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
@@ -167,21 +169,12 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 			ll = ((EntityLivingBase)par1Entity).getHealth();
 		}
 		super.attackTargetEntityWithCurrentItem(par1Entity);
-		/*
-		if(!(par1Entity instanceof EntityCreeper)){
-			if (par1Entity instanceof EntityLivingBase) {
-				((EntityLivingBase)par1Entity).setRevengeTarget(avatar);
-			}
-			if (par1Entity instanceof EntityCreature) {
-				((EntityCreature)par1Entity).setAttackTarget(avatar);
-			}
-		}
-		*/
+		
 		if (ll > 0) {
 			LMM_LittleMaidMobNX.Debug(String.format("ID:%d Given Damege:%f", avatar.getEntityId(), ll - ((EntityLivingBase)par1Entity).getHealth()));
 		}
 	}
-
+	
 	@Override
 	public ItemStack getCurrentEquippedItem() {
 		return avatar.getCurrentEquippedItem();

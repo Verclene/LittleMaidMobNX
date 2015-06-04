@@ -48,6 +48,8 @@ import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockStainedGlass;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
@@ -124,7 +126,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected static AttributeModifier attSneakingSpeed = (new AttributeModifier(maidUUIDSneak, "Sneking speed ampd", -0.4D, 2)).setSaved(false);
 
 
-	// 変数減らしたいなぁ
 //	protected long maidContractLimit;		// 契約失効日
 	protected int maidContractLimit;		// 契約期間
 	protected long maidAnniversary;			// 契約日UIDとして使用
@@ -136,6 +137,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public float getLastDamage(){
 		return lastDamage;
 	}
+	
+	public int fencerDefDetonateTick = 0;
 
 	public int jumpTicks;
 
@@ -1002,11 +1005,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public boolean attackEntityAsMob(Entity par1Entity) {
-		
 		//反撃設定
 		if(par1Entity instanceof EntityMob){
-			if(!(par1Entity instanceof EntityCreeper)) ((EntityMob) par1Entity).setAttackTarget(this);
-			//((EntityMob) par1Entity).setRevengeTarget(this);
+			
+			((EntityMob) par1Entity).setAttackTarget(this);
+			((EntityMob) par1Entity).setRevengeTarget(this);
 			((EntityMob) par1Entity).getNavigator().setPath(getNavigator().getPath(), ((EntityMob)par1Entity).moveForward);
 		}
 
@@ -1024,6 +1027,32 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setSwing(20, isBloodsuck() ? LMM_EnumSound.attack_bloodsuck : LMM_EnumSound.attack);
 		maidAvatar.attackTargetEntityWithCurrentItem(par1Entity);
 		return true;
+	}
+	
+	public void moveback(){
+		float rotate = rotationPitch - 90F;
+		float xmultip = MathHelper.cos(rotate);
+		float zmultip = MathHelper.sin(rotate);
+		
+		float backdist = 8F;
+		double tmpx = posX - backdist * xmultip;
+		double tmpy = posY;
+		double tmpz = posZ - backdist * zmultip;
+		
+		boolean flag = false;
+		int i=0;
+		for(i=-15;i<15;i++){
+			IBlockState state = worldObj.getBlockState(new BlockPos(tmpx,tmpy-i,tmpz));
+			IBlockState state2 = worldObj.getBlockState(new BlockPos(tmpx,tmpy,tmpz));
+			if((state.getBlock().getMaterial().isSolid()||state.getBlock().getMaterial()==Material.water)&&(state2.getBlock().getMaterial().isOpaque())){
+				System.out.println("DEBUG INFO=TELEPORT TO "+tmpx+":"+(tmpy-i)+":"+tmpz);
+				flag=true;
+				break;
+			}
+		}
+		if(flag){
+			setLocationAndAngles(tmpx,tmpy-i+1,tmpz, rotationYaw, rotationPitch);
+		}
 	}
 
 	@Override

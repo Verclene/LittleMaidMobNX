@@ -182,14 +182,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 			ll = ((EntityLivingBase)par1Entity).getHealth();
 		}
 		super.attackTargetEntityWithCurrentItem(par1Entity);
-		/*
-		if (par1Entity instanceof EntityLivingBase) {
-			((EntityLivingBase)par1Entity).setRevengeTarget(avatar);
-		}
-		if (par1Entity instanceof EntityCreature) {
-			((EntityCreature)par1Entity).setAttackTarget(avatar);
-		}
-		*/
+
 		if (ll > 0) {
 			LMM_LittleMaidMobNX.Debug(String.format("ID:%d Given Damege:%f", avatar.getEntityId(), ll - ((EntityLivingBase)par1Entity).getHealth()));
 		}

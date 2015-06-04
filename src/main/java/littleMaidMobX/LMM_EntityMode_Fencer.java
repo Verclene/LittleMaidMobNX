@@ -4,12 +4,13 @@ import mmmlibx.lib.MMM_Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 /**
  * 独自基準としてモード定数は0x0080は平常、0x00c0は血まみれモードと区別。
@@ -107,6 +108,39 @@ public class LMM_EntityMode_Fencer extends LMM_EntityModeBase {
 		
 		return false;
 	}
+	
+	@Override
+	public boolean attackEntityAsMob(int pMode, Entity pEntity) {
+		// TODO 自動生成されたメソッド・スタブ
+		if (pMode != mmode_Bloodsucker && pEntity instanceof EntityCreeper) {
+			try {
+				/*lis.damageItem((Integer)ObfuscationReflectionHelper.getPrivateValue(EntityCreeper.class,
+						(EntityCreeper)pEntity, "field_70833_d", "timeSinceIgnited"), owner);*/
+//						(EntityCreeper)pEntity, 1), owner.maidAvatar);
+				ObfuscationReflectionHelper.setPrivateValue(EntityCreeper.class, (EntityCreeper)pEntity, 1, "field_70833_d", "timeSinceIgnited");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+//			((EntityCreeper)pEntity).timeSinceIgnited = 0;
+			//owner.setSwing(20, LMM_EnumSound.attack_bloodsuck);
+			//super.attackEntityAsMob(pMode, pEntity);
+			owner.fencerDefDetonateTick++;
+			if(owner.fencerDefDetonateTick>=5){
+				pEntity.getDataWatcher().updateObject(6, ((EntityLivingBase) pEntity).getHealth()-5);
+				pEntity.motionY = 0.2D;
+				owner.showParticleFX(EnumParticleTypes.BLOCK_CRACK);
+				owner.setSwing(20, LMM_EnumSound.attack);
+				owner.playSound("mob.creeper.say");
+				pEntity.onUpdate();
+				owner.fencerDefDetonateTick = 0;
+			}
+			return true;
+		}else{
+			owner.fencerDefDetonateTick = 0;
+		}
+		return super.attackEntityAsMob(pMode, pEntity);
+	}
+
 
 	@Override
 	public int getNextEquipItem(int pMode) {
