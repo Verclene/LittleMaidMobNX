@@ -9,6 +9,7 @@ import mmmlibx.lib.Client;
 import mmmlibx.lib.gui.GuiButtonNextPage;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -485,8 +486,9 @@ public class LMM_GuiInventory extends GuiContainer {
 			PotionEffect potioneffect = (PotionEffect) iterator.next();
 			Potion potion = Potion.potionTypes[potioneffect.getPotionID()];
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			Client.setTexture(fguiTex);
+			Client.setTexture(new ResourceLocation("textures/gui/container/inventory.png"));
 			drawTexturedModalRect(lx, ly, 0, ySizebk, 140, 32);
+			
 			if (potion.hasStatusIcon()) {
 				int i1 = potion.getStatusIconIndex();
 				drawTexturedModalRect(lx + 6, ly + 7, 0 + (i1 % 8) * 18,
