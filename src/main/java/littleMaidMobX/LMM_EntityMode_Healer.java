@@ -99,6 +99,13 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 	}
 
 	@Override
+	public void onUpdate(int pMode) {
+		// TODO 自動生成されたメソッド・スタブ
+		super.onUpdate(pMode);
+		updateAITick(pMode);
+	}
+
+	@Override
 	public void updateAITick(int pMode) {
 		if (pMode == mmode_Healer) {
 			// 近接した主に食物を突っ込む
@@ -108,9 +115,11 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 						&& owner.mstatMasterEntity != null && owner.mstatMasterEntity.isEntityAlive()
 						&& owner.mstatMasterEntity instanceof EntityPlayer
 						&& owner.canEntityBeSeen(owner.mstatMasterEntity)) {
-					EntityPlayer lmaster = owner.mstatMasterEntity; 
+					EntityPlayer lmaster = owner.getMaidMasterEntity(); 
 					int h = lmaster.getFoodStats().getFoodLevel();
 					// マスクドメイドは賢いな
+					// 1.8後回し
+					/*
 					while (owner.isMaskedMaid()) {
 						// 主の状態に合わせてアイテムを選択
 						if (lmaster.getHealth() < 9F) {
@@ -131,8 +140,9 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 						}
 						break;
 					}
+					*/
 					
-					ItemStack itemstack1 = owner.maidInventory.getCurrentItem();
+					ItemStack itemstack1 = owner.getCurrentEquippedItem();
 					if (itemstack1 != null) {
 						if (itemstack1.getItem() instanceof ItemFood) {
 							// 食料を突っ込む

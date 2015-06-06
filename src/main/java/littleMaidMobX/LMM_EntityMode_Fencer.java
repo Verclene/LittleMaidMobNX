@@ -112,31 +112,29 @@ public class LMM_EntityMode_Fencer extends LMM_EntityModeBase {
 	@Override
 	public boolean attackEntityAsMob(int pMode, Entity pEntity) {
 		// TODO 自動生成されたメソッド・スタブ
-		if (pMode != mmode_Bloodsucker && pEntity instanceof EntityCreeper) {
+		if (pMode != mmode_Bloodsucker && pEntity instanceof EntityCreeper && ((EntityLivingBase) pEntity).getHealth()!=((EntityLivingBase) pEntity).getMaxHealth()) {
 			try {
 				/*lis.damageItem((Integer)ObfuscationReflectionHelper.getPrivateValue(EntityCreeper.class,
 						(EntityCreeper)pEntity, "field_70833_d", "timeSinceIgnited"), owner);*/
 //						(EntityCreeper)pEntity, 1), owner.maidAvatar);
-				ObfuscationReflectionHelper.setPrivateValue(EntityCreeper.class, (EntityCreeper)pEntity, 1, "field_70833_d", "timeSinceIgnited");
+				ObfuscationReflectionHelper.setPrivateValue(EntityCreeper.class, (EntityCreeper)pEntity, 0, "field_70833_d", "timeSinceIgnited");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 //			((EntityCreeper)pEntity).timeSinceIgnited = 0;
 			//owner.setSwing(20, LMM_EnumSound.attack_bloodsuck);
 			//super.attackEntityAsMob(pMode, pEntity);
-			owner.fencerDefDetonateTick++;
-			if(owner.fencerDefDetonateTick>=5){
-				pEntity.getDataWatcher().updateObject(6, ((EntityLivingBase) pEntity).getHealth()-5);
+			if(/*owner.fencerDefDetonateTick>=3 && */((EntityLivingBase) pEntity).getHealth()>=4){
+				owner.creeperAttacking = true;
+				pEntity.getDataWatcher().updateObject(6, ((EntityLivingBase) pEntity).getHealth()-3);
+				owner.getCurrentEquippedItem().damageItem(1, owner);
 				pEntity.motionY = 0.2D;
-				owner.showParticleFX(EnumParticleTypes.BLOCK_CRACK);
+				owner.showParticleFX(EnumParticleTypes.FIREWORKS_SPARK, 3D, 3D, 3D);
 				owner.setSwing(20, LMM_EnumSound.attack);
 				owner.playSound("mob.creeper.say");
 				pEntity.onUpdate();
-				owner.fencerDefDetonateTick = 0;
+				return true;
 			}
-			return true;
-		}else{
-			owner.fencerDefDetonateTick = 0;
 		}
 		return super.attackEntityAsMob(pMode, pEntity);
 	}

@@ -7,6 +7,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.MathHelper;

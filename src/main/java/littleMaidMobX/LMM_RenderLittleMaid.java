@@ -1,9 +1,9 @@
 package littleMaidMobX;
 
-import mmmlibx.lib.multiModel.model.mc162.*;
+import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
+import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -13,13 +13,11 @@ import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
@@ -53,15 +51,10 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			// TODO 自動生成されたメソッド・スタブ
 			LMM_EntityLittleMaid lmm = (LMM_EntityLittleMaid) p_177141_1_;
 			if(!lmm.isMaidWait()){
-				ItemStack itemstack = lmm.getHeldItem();
-				
-				ModelRenderer r;
-				try{
-					r = modelMain.model.Arms[0];
-				}catch(Exception e){ return ; }
+				ItemStack itemstack = lmm.getCurrentEquippedItem();
 				
 		
-				if (r!= null && itemstack != null)
+				if (itemstack != null)
 				{
 					GlStateManager.pushMatrix();
 					

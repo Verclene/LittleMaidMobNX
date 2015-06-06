@@ -233,6 +233,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
 	private int livingSoundTick;
+	//特殊フラグ
+	public boolean creeperAttacking;
+	public EntityLivingBase prevtarget;
 
 
 	public LMM_EntityLittleMaid(World par1World) {
@@ -772,6 +775,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void onKillEntity(EntityLivingBase par1EntityLiving) {
 		super.onKillEntity(par1EntityLiving);
+		creeperAttacking = false;
 		if (isBloodsuck()) {
 //			mod_LMM_littleMaidMob.Debug("nice Kill.");
 			playSound(LMM_EnumSound.laughter, true);
@@ -1029,32 +1033,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return true;
 	}
 	
-	public void moveback(){
-		float rotate = rotationPitch - 90F;
-		float xmultip = MathHelper.cos(rotate);
-		float zmultip = MathHelper.sin(rotate);
-		
-		float backdist = 8F;
-		double tmpx = posX - backdist * xmultip;
-		double tmpy = posY;
-		double tmpz = posZ - backdist * zmultip;
-		
-		boolean flag = false;
-		int i=0;
-		for(i=-15;i<15;i++){
-			IBlockState state = worldObj.getBlockState(new BlockPos(tmpx,tmpy-i,tmpz));
-			IBlockState state2 = worldObj.getBlockState(new BlockPos(tmpx,tmpy,tmpz));
-			if((state.getBlock().getMaterial().isSolid()||state.getBlock().getMaterial()==Material.water)&&(state2.getBlock().getMaterial().isOpaque())){
-				System.out.println("DEBUG INFO=TELEPORT TO "+tmpx+":"+(tmpy-i)+":"+tmpz);
-				flag=true;
-				break;
-			}
-		}
-		if(flag){
-			setLocationAndAngles(tmpx,tmpy-i+1,tmpz, rotationYaw, rotationPitch);
-		}
-	}
-
 	@Override
 	public boolean isBreedingItem(ItemStack par1ItemStack) {
 		// お好みは何？
@@ -1083,6 +1061,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setInteger("Color", textureData.getColor());
 		par1nbtTagCompound.setString("texName", textureData.getTextureName(0));
 		par1nbtTagCompound.setString("texArmor", textureData.getTextureName(1));
+		par1nbtTagCompound.setBoolean("creePerAttacking", creeperAttacking);
+		NBTTagCompound prevtargettag = new NBTTagCompound();
+		if(prevtarget!=null){
+			prevtarget.writeEntityToNBT(prevtargettag);
+		}
+		par1nbtTagCompound.setTag("prevtarget", prevtargettag);
 		// HomePosition
 		par1nbtTagCompound.setInteger("homeX", func_180486_cf().getX());
 		par1nbtTagCompound.setInteger("homeY", func_180486_cf().getY());
@@ -1260,6 +1244,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 		onInventoryChanged();
+		creeperAttacking = par1nbtTagCompound.getBoolean("creeperAttacking");
+		try{
+			prevtarget = (EntityLivingBase) EntityList.createEntityFromNBT(par1nbtTagCompound.getCompoundTag("prevtarget"), worldObj);
+		}catch(Exception e){
+			prevtarget = null;
+		}
+		
 
 		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
@@ -1819,6 +1810,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					}
 				}
 			}
+		}
+		
+		if(getMaidModeInt()==LMM_EntityMode_Healer.mmode_Healer){
+			
 		}
 
 		superLivingUpdate();
@@ -2540,6 +2535,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public ItemStack getCurrentEquippedItem() {
 		return maidInventory.getCurrentItem();
 	}
+
+	
 	@Override
 	public ItemStack getHeldItem() {
 		return maidInventory.getCurrentItem();
@@ -2635,6 +2632,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	protected void checkMaskedMaid() {
 		// インベントリにヘルムがあるか？
+		/*
 		for (int i = maidInventory.mainInventory.length - 1; i >= 0; i--) {
 			ItemStack is = maidInventory.getStackInSlot(i);
 			if (is != null && is.getItem() instanceof ItemArmor && ((ItemArmor)is.getItem()).armorType == 0) {
@@ -2647,6 +2645,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				return;
 			}
 		}
+		*/
 
 		mstatMaskSelect = -1;
 		maidInventory.armorInventory[3] = null;

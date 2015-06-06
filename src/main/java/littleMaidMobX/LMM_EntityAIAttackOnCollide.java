@@ -2,6 +2,7 @@ package littleMaidMobX;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.EnumAction;
@@ -38,18 +39,26 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 
 	@Override
 	public boolean shouldExecute() {
+		Entity lentity = theMaid.getAttackTarget();
 		if (!fEnable||theMaid.isMaidWait()) {
 			return false;
 		}
-		Entity lentity = theMaid.getAttackTarget();
 		if (lentity == null) {
 			lentity = theMaid.getAttackTarget();
 			if (lentity == null) {
 				return false;
 			}
 		}
+		if(theMaid.creeperAttacking&&!lentity.equals(theMaid.prevtarget)){
+			theMaid.setAttackTarget(theMaid.prevtarget);
+			lentity = theMaid.prevtarget;
+		}
 		
 		entityTarget = lentity;
+		if(lentity instanceof EntityLivingBase){
+			theMaid.prevtarget = (EntityLivingBase) lentity;
+		}
+
 		pathToTarget = theMaid.getNavigator().getPathToXYZ(entityTarget.posX, entityTarget.posY, entityTarget.posZ);
 //		pathToTarget = theMaid.getNavigator().getPathToEntityLiving(entityTarget);
 		attackRange = (double)theMaid.width + (double)entityTarget.width + 0.4D;
