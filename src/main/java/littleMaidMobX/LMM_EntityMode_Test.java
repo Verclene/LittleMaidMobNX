@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import wrapper.W_Common;
 import mmmlibx.lib.MMM_TextureBox;
 import mmmlibx.lib.MMM_TextureBoxServer;
 import mmmlibx.lib.MMM_TextureManager;
-import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandTime;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -19,6 +18,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import wrapper.W_Common;
 
 public class LMM_EntityMode_Test extends LMM_EntityModeBase implements ICommand {
 
@@ -103,23 +103,13 @@ public class LMM_EntityMode_Test extends LMM_EntityModeBase implements ICommand 
 	}
 
 	@Override
-	public String getCommandName() {
-		return "LMMtest";
-	}
-
-	@Override
 	public String getCommandUsage(ICommandSender var1) {
 //		return "";
-		return "/" + this.getCommandName() + " <0-4>";
+		return "/" + this.getName() + " <0-4>";
 	}
 
 	@Override
-	public List getCommandAliases() {
-		return null;
-	}
-
-	@Override
-	public void processCommand(ICommandSender var1, String[] var2) throws WrongUsageException {
+	public void execute(ICommandSender var1, String[] var2) throws WrongUsageException {
 		if (var2.length > 0) {
 			switch (Integer.valueOf(var2[0])) {
 			case 0:
@@ -165,7 +155,7 @@ public class LMM_EntityMode_Test extends LMM_EntityModeBase implements ICommand 
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender var1) {
+	public boolean canCommandSenderUse(ICommandSender var1) {
 		return true;
 	}
 
@@ -192,6 +182,18 @@ public class LMM_EntityMode_Test extends LMM_EntityModeBase implements ICommand 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args,
 			BlockPos pos) {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
+	}
+
+	@Override
+	public String getName() {
+		// TODO 自動生成されたメソッド・スタブ
+		return "LMMtest";
+	}
+
+	@Override
+	public List getAliases() {
 		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}

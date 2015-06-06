@@ -105,7 +105,7 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(int var1, String var2) {
+	public boolean canUseCommand(int var1, String var2) {
 		return false;
 	}
 

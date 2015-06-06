@@ -301,9 +301,9 @@ public abstract class LMM_EntityModeBase {
 		
 		if (movingobjectposition != null && movingobjectposition.typeOfHit == MovingObjectType.BLOCK) {
 			// 接触ブロックが指定したものならば
-			if (movingobjectposition.func_178782_a().getX() == pX && 
-					movingobjectposition.func_178782_a().getY() == pY &&
-					movingobjectposition.func_178782_a().getZ() == pZ) {
+			if (movingobjectposition.getBlockPos().getX() == pX && 
+					movingobjectposition.getBlockPos().getY() == pY &&
+					movingobjectposition.getBlockPos().getZ() == pZ) {
 				return true;
 			}
 		}

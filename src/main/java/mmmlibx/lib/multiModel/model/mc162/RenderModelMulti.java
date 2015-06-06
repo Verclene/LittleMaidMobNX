@@ -122,7 +122,7 @@ public class RenderModelMulti extends RenderLiving {
 	}
 
 	@Override
-	protected void func_110827_b(EntityLiving par1EntityLiving, double par2,
+	protected void renderLeash(EntityLiving par1EntityLiving, double par2,
 			double par4, double par6, float par8, float par9) {
 		// 縄の位置のオフセット
 		// TODO：MCP-804対策
@@ -130,7 +130,7 @@ public class RenderModelMulti extends RenderLiving {
 		if (modelMain.model != null && fcaps != null) {
 			lf = modelMain.model.getLeashOffset(fcaps);
 		}
-		super.func_110827_b(par1EntityLiving, par2, par4 - lf, par6, par8, par9);
+		super.renderLeash(par1EntityLiving, par2, par4 - lf, par6, par8, par9);
 	}
 
 	@Override

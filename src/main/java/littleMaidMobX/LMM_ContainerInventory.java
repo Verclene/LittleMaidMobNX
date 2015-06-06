@@ -139,7 +139,7 @@ public class LMM_ContainerInventory extends ContainerPlayer {
 	}
 
 	@Override
-	public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot) {
+	public boolean canMergeSlot(ItemStack par1ItemStack, Slot par2Slot) {
 		return true;
 	}
 

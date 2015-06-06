@@ -1,4 +1,4 @@
-package wrapper.mc1710;
+package wrapper.mc18;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.util.EnumFacing;

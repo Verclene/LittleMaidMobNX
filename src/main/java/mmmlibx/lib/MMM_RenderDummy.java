@@ -48,7 +48,7 @@ public class MMM_RenderDummy extends Render {
 			int ca = MathHelper.floor_float(((MMM_EntityDummy) entity)
 					.getAlpha(1.0F) * 256);
 			//1.8検討
-			tessellator.getWorldRenderer().func_178974_a(cc, ca);
+			tessellator.getWorldRenderer().setColorRGBA_I(cc, ca);
 		}
 		double xa = 0.3D;
 		double xb = 0.7D;

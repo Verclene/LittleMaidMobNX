@@ -27,7 +27,7 @@ public class W_Common
 		else if(VER.endsWith("1.7.10"))
 		{
 		*/
-			return new wrapper.mc1710.W_CCommon();
+			return new wrapper.mc18.W_CCommon();
 		//}
 		//return null;
 	}

@@ -19,7 +19,7 @@ public class W_Client
 		else if(VER.indexOf("1.7.10") > 0)
 		{
 		*/
-			return new wrapper.mc1710.W_CClient();
+			return new wrapper.mc18.W_CClient();
 		//}
 		//return null;
 	}
