@@ -245,7 +245,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 			TileEntityChest lchest = (TileEntityChest)myInventory;
 			if (!lchest.isInvalid()) {
 				// 使用直前に可視判定
-				if (MMM_Helper.canBlockBeSeen(owner, lchest.getPos().getX(), lchest.getPos().getY(), lchest.getPos().getZ(), false, true, false)) {
+				//if (MMM_Helper.canBlockBeSeen(owner, lchest.getPos().getX(), lchest.getPos().getY(), lchest.getPos().getZ(), false, true, false)) {
 					if (myChest == null) {
 						getChest();
 						if (myChest != null) {
@@ -259,10 +259,10 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 					owner.setWorking(true);
 					putChest();
 					return true;
-				} else {
-					// 見失った
-					clearMy();
-				}
+				//} else {
+				//	// 見失った
+				//	clearMy();
+				//}
 			} else {
 				// Tileの消失
 				clearMy();
@@ -355,7 +355,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 			if (is != null && !(
 					   is.getItem() == Items.sugar
 					|| is.getItem() == Items.clock
-					|| (is == owner.maidInventory.armorItemInSlot(3))
+					/*|| (is == owner.maidInventory.armorItemInSlot(3))*/
 //					|| (is.getItem() instanceof ItemArmor && ((ItemArmor)is.getItem()).armorType == 0)
 				))
 			{

@@ -101,6 +101,7 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 	@Override
 	public void onUpdate(int pMode) {
 		// TODO 自動生成されたメソッド・スタブ
+		if(owner.isMaidWait()) return;
 		super.onUpdate(pMode);
 		updateAITick(pMode);
 	}

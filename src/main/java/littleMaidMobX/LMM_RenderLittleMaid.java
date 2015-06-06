@@ -52,7 +52,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			LMM_EntityLittleMaid lmm = (LMM_EntityLittleMaid) p_177141_1_;
 			if(!lmm.isMaidWait()){
 				ItemStack itemstack = lmm.getCurrentEquippedItem();
-				
 		
 				if (itemstack != null)
 				{
