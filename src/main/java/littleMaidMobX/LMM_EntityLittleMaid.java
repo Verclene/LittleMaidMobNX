@@ -236,6 +236,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	//特殊フラグ
 	public boolean creeperAttacking;
 	public EntityLivingBase prevtarget;
+	//モデル
+	public String textureModelName;
+	public String textureArmorName;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -1061,6 +1064,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setString("texName", textureData.getTextureName(0));
 		par1nbtTagCompound.setString("texArmor", textureData.getTextureName(1));
 		par1nbtTagCompound.setBoolean("creePerAttacking", creeperAttacking);
+		if(textureModelName==null) textureModelName = "default_Origin";
+		par1nbtTagCompound.setString("textureModelName", textureModelName);
+		if(textureArmorName==null) textureArmorName = "default_Origin";
+		par1nbtTagCompound.setString("textureArmorName", textureArmorName);
+		
 		NBTTagCompound prevtargettag = new NBTTagCompound();
 		if(prevtarget!=null){
 			prevtarget.writeEntityToNBT(prevtargettag);
@@ -1116,6 +1124,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texArmor"));
 			textureData.textureBox[0] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[0]);
 			textureData.textureBox[1] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[1]);
+			textureModelName = par1nbtTagCompound.getString("textureModelName");
+			if(textureModelName.equals("")){
+				textureModelName = "default_Origin";
+			}
+			textureArmorName = par1nbtTagCompound.getString("textureArmorName");
+			if(textureArmorName.equals("")){
+				textureArmorName = "default_Origin";
+			}
+			
 			byte b = par1nbtTagCompound.getByte("ModeColor");
 			setColor(b & 0x0f);
 			switch ((b & 0xf0) >> 4) {
