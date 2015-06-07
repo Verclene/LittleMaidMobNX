@@ -237,7 +237,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean creeperAttacking;
 	public EntityLivingBase prevtarget;
 
-
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
 		// 初期設定
@@ -1278,26 +1277,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	}
 
-	/*
-	@Override
-	public IIcon getItemIcon(ItemStack par1ItemStack, int par2) {
-		// アイテムの表示
-		if (maidAvatar != null) {
-			return maidAvatar.getItemIcon(par1ItemStack, par2);
-		}
-
-		if (par1ItemStack.getItem().requiresMultipleRenderPasses()) {
-			return par1ItemStack.getItem().getIconFromDamageForRenderPass(par1ItemStack.getItemDamage(), par2);
-		} else {
-			return super.getItemIcon(par1ItemStack, par2);
-		}
-	}
-	*/
-
 	public boolean canBePushed()
 	{
 		// --------------------------------------------
 		// 肩車状態でプレイヤーが馬に乗っているときは、当たり判定をなくす。
+		if(isMaidWait()) return false;
 		if (ridingEntity != null && ridingEntity == mstatMasterEntity) {
 			if(ridingEntity.ridingEntity instanceof EntityHorse)
 			{
@@ -1832,7 +1816,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if(isCollidedHorizontally/* && motionX!=0 && motionZ != 0*/){
 			jump();
 		}
-
+		
 		 ItemStack itemstack = this.getInventory()[0];
 
 		 if (itemstack != null)
@@ -1969,24 +1953,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 	}
 
-	/*
-	public boolean isBesideClimbableBlock(){
-		return (this.dataWatcher.getWatchableObjectByte(16) & 1) != 0;
-	}
-
-	public void setBesideClimbableBlock(boolean p_70839_1_){
-		byte b0 = this.dataWatcher.getWatchableObjectByte(16);
-
-		if (p_70839_1_){
-			b0 = (byte)(b0 | 1);
-		}else{
-			b0 &= -2;
-		}
-
-		this.dataWatcher.updateObject(16, Byte.valueOf(b0));
-	}
-	*/
-
 	private void superLivingUpdate() {
 		// TODO 自動生成されたメソッド・スタブ
 		/*
@@ -2081,7 +2047,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
 		this.worldObj.theProfiler.endSection();
 
-		if(isMaidWait()) return;
 		this.worldObj.theProfiler.startSection("push");
 
 		if (!this.worldObj.isRemote)
