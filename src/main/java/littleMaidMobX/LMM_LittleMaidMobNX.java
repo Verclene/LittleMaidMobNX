@@ -204,9 +204,6 @@ public class LMM_LittleMaidMobNX {
 		// アイテムスロット更新用のパケット
 		W_Network.init(DOMAIN);
 
-		// TODO ★ サウンドのロードを早くするテスト
-		proxy.loadSounds();
-		
 		//Model
 		if(evt.getSide()==Side.CLIENT) ModelLoader.setCustomModelResourceLocation(LMM_LittleMaidMobNX.spawnEgg, 0, new ModelResourceLocation("lmmx:spawn_lmmx_egg","inventory"));
 
@@ -228,6 +225,7 @@ public class LMM_LittleMaidMobNX {
 
 			// デフォルトモデルの設定
 			proxy.init();
+			proxy.loadSounds();
 		}
 
 

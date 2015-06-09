@@ -641,13 +641,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// 効果音の設定
 	@Override
 	protected String getHurtSound() {
-		playSound(maidDamegeSound, true);
+		playLittleMaidSound(maidDamegeSound, true);
 		return null;
 	}
 
 	@Override
 	protected String getDeathSound() {
-		playSound(LMM_EnumSound.death, true);
+		playLittleMaidSound(LMM_EnumSound.death, true);
 		return null;
 	}
 
@@ -689,28 +689,23 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		if(livingSoundTick==0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
-			playSound(so, false);
+			playLittleMaidSound(so, false);
 			livingSoundTick = 120;
 		}
 		return null;
 	}
 
+	
 	/**
 	 * 簡易音声再生、標準の音声のみ使用すること。
 	 */
 	public void playSound(String pname) {
-		if(!worldObj.isRemote){
-			worldObj.playSoundAtEntity(this, pname, 0.5F, 1.0F);
-		}
-		//MaidSound p = new MaidSound(new ResourceLocation(pname),(float)posX, (float)posY, (float)posZ);
-		//Minecraft.getMinecraft().getSoundHandler().playSound(p);
-		//playSound(pname, 0.5F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+		playSound(pname, 0.5F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 	}
 
 	/**
 	 * ネットワーク対応音声再生
 	 */
-	/*
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
@@ -721,7 +716,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //			worldObj.playSound(posX, posY, posZ, lsound, getSoundVolume(), lpitch, false);
 		} else {
 			// Server
-			LMM_LittleMaidMobX.Debug("id:%d-%s, seps:%04x-%s", getEntityId(), worldObj.isRemote ? "Client" : "Server",  enumsound.index, enumsound.name());
+			LMM_LittleMaidMobNX.Debug("id:%d-%s, seps:%04x-%s", getEntityId(), worldObj.isRemote ? "Client" : "Server",  enumsound.index, enumsound.name());
 			byte[] lbuf = new byte[] {
 					LMM_Statics.LMN_Client_PlaySound,
 					0, 0, 0, 0,
@@ -731,47 +726,29 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			LMM_Net.sendToAllEClient(this, lbuf);
 		}
 	}
-	*/
 
 	/**
 	 * 音声再生用。
 	 * 通常の再生ではネットワーク越しになるのでその対策。
 	 */
-	public void playSound(LMM_EnumSound enumsound, boolean force) {
-
+	public void playLittleMaidSound(LMM_EnumSound enumsound, boolean force) {
 		// 音声の再生
-		/*
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
-		if (!worldObj.isRemote) {
+		if (worldObj.isRemote) {
 			// Client
 			String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
 			if(!s.isEmpty() && !s.startsWith("minecraft:"))
 			{
-				s = LMM_LittleMaidMobX.DOMAIN + ":" + s;
+				s = LMM_LittleMaidMobNX.DOMAIN + ":" + s;
 			}
-			LMM_LittleMaidMobX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
+			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
 			if(!s.isEmpty())
 			{
-				float lpitch = LMM_LittleMaidMobX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
+				float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
 				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
 			}
 		}
-		*/
-		/*
-		String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
-		if(s==null) return;
-		if(s.isEmpty()) return;
-		if(!s.isEmpty() && !s.startsWith("minecraft:"))
-		{
-			s = LMM_LittleMaidMobX.DOMAIN + ":" + s;
-		}
-		if(FMLCommonHandler.instance().getSide()==Side.CLIENT){
-			PositionedSound p = new MaidSound(new ResourceLocation(s));
-			Minecraft.getMinecraft().getSoundHandler().playSound(p);
-		}
-		*/
-
 	}
 
 	@Override
@@ -780,7 +757,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		creeperAttacking = false;
 		if (isBloodsuck()) {
 //			mod_LMM_littleMaidMob.Debug("nice Kill.");
-			playSound(LMM_EnumSound.laughter, true);
+			playLittleMaidSound(LMM_EnumSound.laughter, true);
 		} else {
 			//setTarget(null);
 			setAttackTarget(null);
@@ -1596,7 +1573,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			if (maidDamegeSound == LMM_EnumSound.hurt) {
 				maidDamegeSound = LMM_EnumSound.hurt_nodamege;
 			}
-			playSound(maidDamegeSound, true);
+			playLittleMaidSound(maidDamegeSound, true);
 			playSound("random.successful_hit");
 			return false;
 		}
@@ -1901,7 +1878,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						}
 
 						if (lsound != LMM_EnumSound.Null) {
-							playSound(lsound, true);
+							playLittleMaidSound(lsound, true);
 							setLooksWithInterest(true);
 						}
 					} else {
@@ -2148,7 +2125,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			lf = maidOverDriveTime.isEnable();
 			if (getMaidFlags(dataWatch_Flags_OverDrive) != lf) {
 				if (lf) {
-					playSound(LMM_EnumSound.TNT_D, true);
+					playLittleMaidSound(LMM_EnumSound.TNT_D, true);
 				}
 				setMaidFlags(lf, dataWatch_Flags_OverDrive);
 			}
@@ -2894,7 +2871,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								setMaidWait(false);
 								setMaidMode("Escorter");
 								worldObj.setEntityState(this, (byte)11);
-								playSound(LMM_EnumSound.Recontract, true);
+								playLittleMaidSound(LMM_EnumSound.Recontract, true);
 								return true;
 							}
 						}
@@ -2917,8 +2894,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						if (!worldObj.isRemote) {
 							//1.8後回し
 							/*
-							if (LMM_LittleMaidMobX.ac_Contract != null) {
-								par1EntityPlayer.triggerAchievement(LMM_LittleMaidMobX.ac_Contract);
+							if (LMM_LittleMaidMobNX.ac_Contract != null) {
+								par1EntityPlayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Contract);
 							}
 							*/
 							setContract(true);
@@ -2927,7 +2904,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							setMaidMode("Escorter");
 							setMaidWait(false);
 							setFreedom(false);
-							playSound(LMM_EnumSound.getCake, true);
+							playLittleMaidSound(LMM_EnumSound.getCake, true);
 //							playLittleMaidSound(LMM_EnumSound.getCake, true);
 //							playTameEffect(true);
 							worldObj.setEntityState(this, (byte)7);
@@ -3166,7 +3143,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 	public void setSwinging(int pArm, LMM_EnumSound pSound) {
 		if (mstatSwingStatus[pArm].setSwinging()) {
-			playSound(pSound, true);
+			playLittleMaidSound(pSound, true);
 			maidAvatar.swingProgressInt = -1;
 //			maidAvatar.swingProgressInt = -1;
 			maidAvatar.isSwingInProgress = true;

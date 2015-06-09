@@ -30,19 +30,23 @@ public class W_Message implements IMessage
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		int len = 6;//buf.array().length;
-		//System.out.println("DEBUG INFO=READABLE BUF:"+buf.readableBytes());
-		
-		if(len > 2)
-		{
-			buf = buf.slice();
-			this.data = new byte[len-2];
-			this.ch =  buf.getByte(0);
-			buf.getBytes(0, this.data);
-		}
-		else
-		{
-			this.data = new byte[]{0};
+		try{
+			int len = buf.array().length;
+			//System.out.println("DEBUG INFO=READABLE BUF:"+buf.readableBytes());
+			
+			if(len > 2)
+			{
+				ByteBuf bbuf = buf.slice(0, buf.readableBytes());
+				this.data = new byte[bbuf.readableBytes()-2];
+				this.ch =  bbuf.getByte(1);
+				bbuf.getBytes(2, this.data);
+			}
+			else
+			{
+				this.data = new byte[]{0};
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
