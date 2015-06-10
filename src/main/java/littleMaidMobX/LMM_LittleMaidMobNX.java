@@ -208,6 +208,7 @@ public class LMM_LittleMaidMobNX {
 		if(evt.getSide()==Side.CLIENT) ModelLoader.setCustomModelResourceLocation(LMM_LittleMaidMobNX.spawnEgg, 0, new ModelResourceLocation("lmmx:spawn_lmmx_egg","inventory"));
 
 //		Debug("GUID-sneak: %s", LMM_EntityLittleMaid.maidUUIDSneak.toString());
+		proxy.loadSounds();
 	}
 
 	@EventHandler
@@ -225,9 +226,7 @@ public class LMM_LittleMaidMobNX {
 
 			// デフォルトモデルの設定
 			proxy.init();
-			proxy.loadSounds();
 		}
-
 
 	}
 

@@ -129,7 +129,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		
 		if (v < 8 && canBlockBeSeen(px, py - 1, pz, true, true, false)) {
 			if (owner.getNavigator().tryMoveToXYZ(px, py, pz, 1.0F) ) {
-				owner.playSound(LMM_EnumSound.findTarget_D, false);
+				owner.playLittleMaidSound(LMM_EnumSound.findTarget_D, true);
 				return true;
 			}
 		}

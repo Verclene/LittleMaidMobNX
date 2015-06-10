@@ -37,7 +37,6 @@ public class MMMResourcePack implements IResourcePack {
 	@Override
 	public InputStream getInputStream(ResourceLocation par1ResourceLocation) throws IOException {
 		InputStream inputstream = getResourceStream(par1ResourceLocation, true);
-		
 		if (inputstream != null) {
 			return inputstream;
 		} else {
@@ -47,7 +46,9 @@ public class MMMResourcePack implements IResourcePack {
 
 	private InputStream getResourceStream(ResourceLocation resource, boolean b) {
 		String path = resource.getResourcePath();
-		InputStream lis = MMMResourcePack.class.getResourceAsStream(path);
+		InputStream lis = null;//MMMResourcePack.class.getResourceAsStream(path);
+		LMM_LittleMaidMobNX.Debug("DEBUG INFO = get domain %s", resource.getResourceDomain());
+		LMM_LittleMaidMobNX.Debug("DEBUG INFO = get path %s", resource.getResourcePath());
 		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
 		{
 			if(lis==null)
@@ -61,11 +62,11 @@ public class MMMResourcePack implements IResourcePack {
 	}
 
 	@Override
-	public boolean resourceExists(ResourceLocation par1ResourceLocation) {
-		InputStream is = getResourceStream(par1ResourceLocation, false);
-		
+	public boolean resourceExists(ResourceLocation resource) {
+		LMM_LittleMaidMobNX.Debug("DEBUG INFO = check domain %s", resource.getResourceDomain());
+		LMM_LittleMaidMobNX.Debug("DEBUG INFO = check path %s", resource.getResourcePath());
+		InputStream is = getResourceStream(resource, false);
 		// TODO ★ このInputStream はクローズしなくていいの？
-		
 		return is != null;
 	}
 
@@ -96,7 +97,7 @@ public class MMMResourcePack implements IResourcePack {
 
 	@Override
 	public String getPackName() {
-		return "Default";
+		return "ModelAndSound";
 	}
 
 }

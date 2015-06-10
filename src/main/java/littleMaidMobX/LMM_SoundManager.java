@@ -410,12 +410,12 @@ public class LMM_SoundManager {
 				}
 				if (file.isFile() && file.canRead() && file.getName().endsWith(".cfg")) {
 					// 音声定義ファイルと認識
-					LMM_LittleMaidMobX.Debug("Load SoundPack:" + file.getName());
+					LMM_LittleMaidMobNX.Debug("Load SoundPack:" + file.getName());
 					decodeSoundPack(file, false);
 				}
 			}
 		} else {
-			LMM_LittleMaidMobX.Debug("no Sound Directory.");
+			LMM_LittleMaidMobNX.Debug("no Sound Directory.");
 		}
 		
 		rebuildSoundPack();
@@ -433,19 +433,9 @@ public class LMM_SoundManager {
 				File soundCfg = new File(getSoundDir(), "default_" + SoundConfigName);
 				soundPackDir = null;
 	
-				if (soundCfg.exists() && soundCfg.isFile())
-				{
-					LMM_LittleMaidMobNX.Debug(soundCfg.getName());
+				LMM_LittleMaidMobNX.Debug(soundCfg.getName());
 
-					Reader reader = new FileReader(soundCfg);
-					decodeSoundPack(soundCfg.getName(), reader, true, true);
-					reader.close();
-				}
-				else
-				{
-					LMM_LittleMaidMobNX.Debug("no Default Sound cfg.");
-					createDefaultSoundPack(soundCfg);
-				}
+				createDefaultSoundPack(soundCfg);
 			}
 		}
 		catch (Exception e)

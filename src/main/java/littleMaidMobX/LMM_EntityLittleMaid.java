@@ -752,6 +752,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	@Override
+	public void playLivingSound() {
+		// TODO 自動生成されたメソッド・スタブ
+	}
+
+	@Override
 	public void onKillEntity(EntityLivingBase par1EntityLiving) {
 		super.onKillEntity(par1EntityLiving);
 		creeperAttacking = false;
@@ -1516,9 +1521,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			setMaidWait(false);
 		}
 
+		/*
 		if (llasthealth == getHealth() && maidDamegeSound == LMM_EnumSound.hurt) {
 			maidDamegeSound = LMM_EnumSound.hurt_nodamege;
 		}
+		*/
 		LMM_LittleMaidMobNX.Debug(String.format("GetDamage ID:%d, %s, %f/ %f" , this.getEntityId(), par1DamageSource.damageType, llasthealth - getHealth(), par2));
 //		super.damageEntity(par1DamageSource, par2);
 	}
@@ -1804,10 +1811,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ - (double)width * 0.34999999999999998D);
 		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ + (double)width * 0.34999999999999998D);
 
-		if (grave && onGround) {
-			jump();
-		}
-		if(isCollidedHorizontally/* && motionX!=0 && motionZ != 0*/){
+		if ((grave||isCollidedHorizontally) && !isMaidWait() && onGround) {
 			jump();
 		}
 		
@@ -3142,8 +3146,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setSwinging(maidDominantArm, pSound);
 	}
 	public void setSwinging(int pArm, LMM_EnumSound pSound) {
+		playLittleMaidSound(pSound, true);
 		if (mstatSwingStatus[pArm].setSwinging()) {
-			playLittleMaidSound(pSound, true);
 			maidAvatar.swingProgressInt = -1;
 //			maidAvatar.swingProgressInt = -1;
 			maidAvatar.isSwingInProgress = true;
