@@ -9,10 +9,10 @@ public class W_Message implements IMessage
 	public byte   ch;
 	/** 実データ */
 	public byte[] data;
-	
+
 	public W_Message(){}
 
-	/** 
+	/**
 	 * @param ch どこ宛かを示すチャネル番号。LMM宛か、MMMLib宛かを区別するために追加した
 	 * @param sendData 送信する実データ
 	 *  */
@@ -33,13 +33,13 @@ public class W_Message implements IMessage
 		try{
 			int len = buf.array().length;
 			//System.out.println("DEBUG INFO=READABLE BUF:"+buf.readableBytes());
-			
+
 			if(len > 2)
 			{
 				ByteBuf bbuf = buf.slice(0, buf.readableBytes());
-				this.data = new byte[bbuf.readableBytes()-2];
-				this.ch =  bbuf.getByte(1);
-				bbuf.getBytes(2, this.data);
+				this.data = new byte[bbuf.readableBytes()-1];
+				this.ch =  bbuf.getByte(0);
+				bbuf.getBytes(1, this.data);
 			}
 			else
 			{

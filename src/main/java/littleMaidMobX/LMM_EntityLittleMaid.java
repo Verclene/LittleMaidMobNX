@@ -1,27 +1,6 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.dataWatch_Absoption;
-import static littleMaidMobX.LMM_Statics.dataWatch_Color;
-import static littleMaidMobX.LMM_Statics.dataWatch_DominamtArm;
-import static littleMaidMobX.LMM_Statics.dataWatch_ExpValue;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Aimebow;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterest;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterestAXIS;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_remainsContract;
-import static littleMaidMobX.LMM_Statics.dataWatch_Free;
-import static littleMaidMobX.LMM_Statics.dataWatch_Gotcha;
-import static littleMaidMobX.LMM_Statics.dataWatch_ItemUse;
-import static littleMaidMobX.LMM_Statics.dataWatch_Mode;
-import static littleMaidMobX.LMM_Statics.dataWatch_Parts;
-import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
+import static littleMaidMobX.LMM_Statics.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -48,8 +27,6 @@ import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockStainedGlass;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
@@ -70,7 +47,6 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityHorse;
@@ -105,7 +81,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
-import net.minecraft.util.Vec3i;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -137,7 +112,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public float getLastDamage(){
 		return lastDamage;
 	}
-	
+
 	public int fencerDefDetonateTick = 0;
 
 	public int jumpTicks;
@@ -695,7 +670,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return null;
 	}
 
-	
+
 	/**
 	 * 簡易音声再生、標準の音声のみ使用すること。
 	 */
@@ -707,6 +682,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * ネットワーク対応音声再生
 	 */
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
+		/*
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
 		if (worldObj.isRemote) {
@@ -725,6 +701,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			MMM_Helper.setInt(lbuf, 5, enumsound.index);
 			LMM_Net.sendToAllEClient(this, lbuf);
 		}
+		*/
 	}
 
 	/**
@@ -732,6 +709,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * 通常の再生ではネットワーク越しになるのでその対策。
 	 */
 	public void playLittleMaidSound(LMM_EnumSound enumsound, boolean force) {
+		/*
 		// 音声の再生
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
@@ -749,6 +727,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
 			}
 		}
+		*/
 	}
 
 	@Override
@@ -995,7 +974,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean attackEntityAsMob(Entity par1Entity) {
 		//反撃設定
 		if(par1Entity instanceof EntityMob){
-			
+
 			((EntityMob) par1Entity).setAttackTarget(this);
 			((EntityMob) par1Entity).setRevengeTarget(this);
 			((EntityMob) par1Entity).getNavigator().setPath(getNavigator().getPath(), ((EntityMob)par1Entity).moveForward);
@@ -1016,7 +995,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		maidAvatar.attackTargetEntityWithCurrentItem(par1Entity);
 		return true;
 	}
-	
+
 	@Override
 	public boolean isBreedingItem(ItemStack par1ItemStack) {
 		// お好みは何？
@@ -1050,7 +1029,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setString("textureModelName", textureModelName);
 		if(textureArmorName==null) textureArmorName = "default_Origin";
 		par1nbtTagCompound.setString("textureArmorName", textureArmorName);
-		
+
 		NBTTagCompound prevtargettag = new NBTTagCompound();
 		if(prevtarget!=null){
 			prevtarget.writeEntityToNBT(prevtargettag);
@@ -1114,7 +1093,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			if(textureArmorName.equals("")){
 				textureArmorName = "default_Origin";
 			}
-			
+
 			byte b = par1nbtTagCompound.getByte("ModeColor");
 			setColor(b & 0x0f);
 			switch ((b & 0xf0) >> 4) {
@@ -1248,7 +1227,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}catch(Exception e){
 			prevtarget = null;
 		}
-		
+
 
 		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
@@ -1796,9 +1775,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 			}
 		}
-		
+
 		if(getMaidModeInt()==LMM_EntityMode_Healer.mmode_Healer){
-			
+
 		}
 
 		superLivingUpdate();
@@ -1814,7 +1793,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if ((grave||isCollidedHorizontally) && !isMaidWait() && onGround) {
 			jump();
 		}
-		
+
 		 ItemStack itemstack = this.getInventory()[0];
 
 		 if (itemstack != null)
@@ -2499,7 +2478,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return maidInventory.getCurrentItem();
 	}
 
-	
+
 	@Override
 	public ItemStack getHeldItem() {
 		return maidInventory.getCurrentItem();
