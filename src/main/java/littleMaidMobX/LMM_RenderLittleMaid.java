@@ -4,11 +4,15 @@ import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelZombie;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
+import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -32,6 +36,49 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		super(manager,f);
 		
 		addLayer(new MMMLayerHeldItem(this));
+		LayerArmorBase layerbipedarmor = new LayerArmorBase(this){
+			public ModelBase func_177175_a(int i) {
+				//1.8試験
+				return modelFATT;
+			}
+
+			@Override
+			protected void func_177179_a(ModelBase paramModelBase, int paramInt) {
+				// TODO 自動生成されたメソッド・スタブ
+			}
+
+			@Override
+			protected void func_177177_a() {
+				// TODO 自動生成されたメソッド・スタブ
+				field_177189_c = modelFATT;
+				field_177186_d = modelFATT;
+			}
+		};
+		addLayer(layerbipedarmor);
+	}
+	
+	public class MMMLayerArmor extends LayerArmorBase{
+
+		public RendererLivingEntity p1;
+
+		public MMMLayerArmor(RendererLivingEntity p_i46125_1_) {
+			super(p_i46125_1_);
+			// TODO 自動生成されたコンストラクター・スタブ
+			p1 = p_i46125_1_;
+		}
+
+		@Override
+		protected void func_177177_a() {
+			// TODO 自動生成されたメソッド・スタブ
+			
+		}
+
+		@Override
+		protected void func_177179_a(ModelBase paramModelBase, int paramInt) {
+			// TODO 自動生成されたメソッド・スタブ
+			
+		}
+		
 	}
 	
 	public class MMMLayerHeldItem extends LayerHeldItem{
@@ -95,11 +142,10 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 
 		
 	}
-
+	
 	@Override
 	public void setModelValues(EntityLivingBase par1EntityLiving, double par2,
 			double par4, double par6, float par8, float par9, IModelCaps pEntityCaps) {
-
 		LMM_EntityLittleMaid lmaid = (LMM_EntityLittleMaid)par1EntityLiving;
 		super.setModelValues(par1EntityLiving, par2, par4, par6, par8, par9, pEntityCaps);
 		

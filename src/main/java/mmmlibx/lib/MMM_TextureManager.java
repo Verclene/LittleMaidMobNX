@@ -213,8 +213,8 @@ public class MMM_TextureManager {
 	}
 
 	protected void getArmorPrefix() {
-		//1.8後回し
-		armorFilenamePrefix = null;/*RenderBiped.bipedArmorFilenamePrefix*/
+		//1.8検討
+		armorFilenamePrefix = new String[]{"leather","chainmail","iron","diamond","gold"};
 /*
 		// アーマーファイルのプリフィックスを獲得
 		try {

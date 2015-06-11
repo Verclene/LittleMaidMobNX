@@ -341,7 +341,6 @@ public class LMM_GuiInventory extends GuiContainer {
 		int ii = i - guiLeft;
 		int jj = j - guiTop;
 		//1.8後回し
-		/*
 		if (ii > 25 && ii < 78 && jj > 7 && jj < 60) {
 			// ボタンの表示
 			txbutton[0].visible = true;
@@ -380,13 +379,12 @@ public class LMM_GuiInventory extends GuiContainer {
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		} else {
-		*/
 			txbutton[0].visible = false;
 			txbutton[1].visible = false;
 			txbutton[2].visible = false;
 			txbutton[3].visible = false;
 			selectbutton.visible = false;
-		//}
+		}
 		
 	}
 
@@ -463,11 +461,9 @@ public class LMM_GuiInventory extends GuiContainer {
 		super.onGuiClosed();
 		 entitylittlemaid.onGuiClosed();
 		//1.8後回し
-		/*
 		if (isChangeTexture) {
 			entitylittlemaid.sendTextureToServer();
 		}
-		*/
 	}
 
 	private void displayDebuffEffects() {
