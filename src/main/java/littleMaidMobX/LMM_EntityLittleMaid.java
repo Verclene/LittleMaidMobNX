@@ -207,7 +207,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// ActiveModeClass
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
-	private int livingSoundTick;
+	private int livingSoundTick = 2;
 	//特殊フラグ
 	public boolean creeperAttacking;
 	public EntityLivingBase prevtarget;
@@ -629,6 +629,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	protected String getLivingSound() {
 		// 普段の声
+		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		livingSoundTick--;
 		LMM_EnumSound so = LMM_EnumSound.Null;
 		if (getHealth() < 10)
@@ -662,10 +663,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 
-		if(livingSoundTick==0){
+		if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
 			playLittleMaidSound(so, false);
-			livingSoundTick = 120;
+			livingSoundTick = 2;
 		}
 		return null;
 	}
@@ -682,6 +683,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * ネットワーク対応音声再生
 	 */
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
+		playLittleMaidSound(enumsound,force);
 		/*
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
@@ -709,7 +711,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * 通常の再生ではネットワーク越しになるのでその対策。
 	 */
 	public void playLittleMaidSound(LMM_EnumSound enumsound, boolean force) {
-		/*
 		// 音声の再生
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
@@ -727,12 +728,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
 			}
 		}
-		*/
 	}
 
 	@Override
 	public void playLivingSound() {
 		// TODO 自動生成されたメソッド・スタブ
+		getLivingSound();
+		super.playLivingSound();
 	}
 
 	@Override

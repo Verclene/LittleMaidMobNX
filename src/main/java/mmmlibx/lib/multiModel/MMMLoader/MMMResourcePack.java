@@ -28,7 +28,7 @@ import com.google.common.collect.ImmutableSet;
 public class MMMResourcePack implements IResourcePack {
 
 	protected ModContainer ownerContainer;
-
+	
 
 	public MMMResourcePack(ModContainer pContainer) {
 		ownerContainer = pContainer;
@@ -47,8 +47,6 @@ public class MMMResourcePack implements IResourcePack {
 	private InputStream getResourceStream(ResourceLocation resource, boolean b) {
 		String path = resource.getResourcePath();
 		InputStream lis = null;//MMMResourcePack.class.getResourceAsStream(path);
-		LMM_LittleMaidMobNX.Debug("DEBUG INFO = get domain %s", resource.getResourceDomain());
-		LMM_LittleMaidMobNX.Debug("DEBUG INFO = get path %s", resource.getResourcePath());
 		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
 		{
 			if(lis==null)
@@ -56,15 +54,13 @@ public class MMMResourcePack implements IResourcePack {
 				lis = LMM_SoundManager.getResourceStream(resource);
 			}
 
-			MMMLib.Debug("getResource:"+b+":%s : %s", resource, lis);
+			LMM_LittleMaidMobNX.Debug("getResource:"+b+":%s : %s", resource, lis);
 		}
 		return lis;
 	}
 
 	@Override
 	public boolean resourceExists(ResourceLocation resource) {
-		LMM_LittleMaidMobNX.Debug("DEBUG INFO = check domain %s", resource.getResourceDomain());
-		LMM_LittleMaidMobNX.Debug("DEBUG INFO = check path %s", resource.getResourcePath());
 		InputStream is = getResourceStream(resource, false);
 		// TODO ★ このInputStream はクローズしなくていいの？
 		return is != null;
