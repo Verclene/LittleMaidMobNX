@@ -9,12 +9,11 @@ import mmmlibx.lib.Client;
 import mmmlibx.lib.gui.GuiButtonNextPage;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +26,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
-import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
 
 public class LMM_GuiInventory extends GuiContainer {
@@ -84,55 +82,72 @@ public class LMM_GuiInventory extends GuiContainer {
 				lowerChestInventory.getName()), 8, 64, 0x404040);
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
 				upperChestInventory.getName()), 8, 114, 0x404040);
-//		fontRenderer.drawString(StatCollector.translateToLocal(
-//				"littleMaidMob.text.Health"), 86, 8, 0x404040);
-//		fontRenderer.drawString(StatCollector.translateToLocal(
-//				"littleMaidMob.text.AP"), 86, 32, 0x404040);
+		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.Health"), 86, 8, 0x404040);
+		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.AP"), 86, 32, 0x404040);
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
 				"littleMaidMob.text.STATUS"), 86, 8, 0x404040);
-		
+
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
 				"littleMaidMob.mode.".concat(entitylittlemaid.getMaidModeString())), 86, 61, 0x404040);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		
+//	      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
 		// キャラ
 		int lj = 0;
 		int lk = 0;
-		GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-		GL11.glPushMatrix();
-		GL11.glTranslatef(lj + 51, lk + 57, 50F);
+//		      GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
+//	      GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+//	      GL11.glPushMatrix();
+//	      GL11.glTranslatef(lj + 51, lk + 57, 50F);
+		GlStateManager.enableRescaleNormal();
+		GlStateManager.enableColorMaterial();
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(lj + 51, lk + 57, 50F);
 		float f1 = 30F;
-		GL11.glScalef(-f1, f1, f1);
-		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+//	      GL11.glScalef(-f1, f1, f1);
+//	      GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+		GlStateManager.scale(-f1, f1, f1);
+		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
 		float f2 = entitylittlemaid.renderYawOffset;
 		float f3 = entitylittlemaid.rotationYaw;
 		float f4 = entitylittlemaid.rotationYawHead;
 		float f5 = entitylittlemaid.rotationPitch;
-//		float f8 = (float) (lj + 51) - xSize_lo;
-//		float f9 = (float) (lk + 75) - 50 - ySize_lo;
+//	      float f8 = (float) (lj + 51) - xSize_lo;
+//	      float f9 = (float) (lk + 75) - 50 - ySize_lo;
 		float f8 = (float)(guiLeft + 51 - par1);
 		float f9 = (float)(guiTop + 22 - par2);
-		GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
+//	      GL11.glRotatef(135F, 0.0F, 1.0F, 0.0F);
+//	      RenderHelper.enableStandardItemLighting();
+//	      GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
+//	      GL11.glRotatef(-(float) Math.atan(f9 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(135F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
-		GL11.glRotatef(-135F, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-(float) Math.atan(f9 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
+		GlStateManager.rotate(-135F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(-(float) Math.atan(f9 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
 		entitylittlemaid.renderYawOffset = (float) Math.atan(f8 / 40F) * 20F;
 		entitylittlemaid.rotationYawHead = entitylittlemaid.rotationYaw = (float) Math.atan(f8 / 40F) * 40F;
 		entitylittlemaid.rotationPitch = -(float) Math.atan(f9 / 40F) * 20F;
 		//1.8後回し
-		GL11.glTranslatef(0.0F, 0.0F/*entitylittlemaid.yOffset*/, 0.0F);
-		Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
+//	      GL11.glTranslatef(0.0F, 0.0F/*entitylittlemaid.yOffset*/, 0.0F);
+//	      Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
+		GlStateManager.translate(0.0F, 0.0F/*entitylittlemaid.yOffset*/, 0.0F);
+		Minecraft.getMinecraft().getRenderManager().setPlayerViewY(180F);
 		Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entitylittlemaid, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		entitylittlemaid.renderYawOffset = f2;
 		entitylittlemaid.rotationYaw = f3;
 		entitylittlemaid.rotationYawHead = f4;
 		entitylittlemaid.rotationPitch = f5;
-		GL11.glPopMatrix();
+//	      GL11.glPopMatrix();
+//	      RenderHelper.disableStandardItemLighting();
+//	      GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
+//	      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F / 1.0F, 240F / 1.0F);
+//	      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.popMatrix();
 		RenderHelper.disableStandardItemLighting();
-		GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F / 1.0F, 240F / 1.0F);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.disableTexture2D();
+		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
 
 	@Override

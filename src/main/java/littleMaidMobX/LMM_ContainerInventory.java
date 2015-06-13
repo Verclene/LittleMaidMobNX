@@ -6,6 +6,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LMM_ContainerInventory extends ContainerPlayer {
 	
@@ -79,6 +82,11 @@ public class LMM_ContainerInventory extends ContainerPlayer {
 					return ItemArmor.func_94602_b(armorIndex);
 				}
 				*/
+				@SideOnly(Side.CLIENT)
+				public String getSlotTexture()
+				{
+					return ItemArmor.EMPTY_SLOT_NAMES[armorIndex];
+				}
 			});
 		}
 	}
