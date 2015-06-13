@@ -1,5 +1,8 @@
 package mmmlibx.lib;
 
+import java.io.IOException;
+
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -45,9 +48,30 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 
 	@Override
 	protected void keyTyped(char par1, int par2) {
+		
 		if (par2 == 1) {
 			mc.displayGuiScreen(owner);
 		}
+	}
+
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
+			throws IOException {
+		// TODO 自動生成されたメソッド・スタブ
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	protected void mouseReleased(int mouseX, int mouseY, int state) {
+		// TODO 自動生成されたメソッド・スタブ
+		super.mouseReleased(mouseX, mouseY, state);
+	}
+
+	@Override
+	protected void mouseClickMove(int mouseX, int mouseY,
+			int clickedMouseButton, long timeSinceLastClick) {
+		// TODO 自動生成されたメソッド・スタブ
+		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 	}
 
 	@Override
@@ -55,8 +79,6 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 		drawDefaultBackground();
 		selectPanel.drawScreen(par1, par2, par3);
 		drawCenteredString(mc.fontRendererObj, StatCollector.translateToLocal(screenTitle), width / 2, 4, 0xffffff);
-		
-		super.drawScreen(par1, par2, par3);
 		
 		GL11.glPushMatrix();
 		GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
@@ -89,10 +111,13 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 		}
 		GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
 		GL11.glPopMatrix();
+		super.drawScreen(par1, par2, par3);
+		
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton) {
+		LMM_LittleMaidMobNX.Debug("PERFORMED %d", par1GuiButton.id);
 		switch (par1GuiButton.id) {
 		case 100:
 			modeButton[0].enabled = false;

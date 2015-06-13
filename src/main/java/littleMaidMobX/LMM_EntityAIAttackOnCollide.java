@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
@@ -44,15 +45,23 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 			return false;
 		}
 		if (lentity == null) {
-			lentity = theMaid.getAttackTarget();
-			if (lentity == null) {
-				return false;
+			return false;
+		}
+		
+		if(theMaid.getMaidModeInt() == LMM_EntityMode_Fencer.mmode_Fencer && lentity instanceof EntityCreeper){
+			if(theMaid.getMaidMasterEntity()==null||((EntityCreeper) lentity).getAttackTarget()==null){
+				setPrevTarget();
+			}else if(!((EntityCreeper) lentity).getAttackTarget().equals(theMaid.getMaidMasterEntity())){
+				setPrevTarget();
 			}
 		}
-		if(theMaid.creeperAttacking&&!lentity.equals(theMaid.prevtarget)){
-			theMaid.setAttackTarget(theMaid.prevtarget);
-			lentity = theMaid.prevtarget;
+		if(theMaid.prevtarget!=null){
+			if(!theMaid.prevtarget.equals(theMaid.getAttackTarget())){
+				theMaid.playLittleMaidSound(theMaid.isBloodsuck() ? LMM_EnumSound.findTarget_B : LMM_EnumSound.findTarget_N, true);
+			}
 		}
+		lentity = theMaid.getAttackTarget();
+		if(lentity==null) return false;
 		
 		entityTarget = lentity;
 		if(lentity instanceof EntityLivingBase){
@@ -74,12 +83,33 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 		}
 		
 	}
+	
+	public boolean setPrevTarget(){
+		if(theMaid.prevtarget!=null){
+			if(theMaid.prevtarget.isDead) theMaid.prevtarget=null;
+			theMaid.setAttackTarget(theMaid.prevtarget);
+			return true;
+		}else{
+			theMaid.setAttackTarget(null);
+			return false;
+		}
+	}
 
 	@Override
 	public void startExecuting() {
+		Entity lentity = theMaid.getAttackTarget();
+		if(theMaid.getMaidModeInt() == LMM_EntityMode_Fencer.mmode_Fencer && lentity instanceof EntityCreeper){
+			if(theMaid.getMaidMasterEntity()==null||((EntityCreeper) lentity).getAttackTarget()==null){
+			}else if(!((EntityCreeper) lentity).getAttackTarget().equals(theMaid.getMaidMasterEntity())){
+			}else{
+				theMaid.playLittleMaidSound(theMaid.isBloodsuck() ? LMM_EnumSound.findTarget_B : LMM_EnumSound.findTarget_N, true);
+			}
+		}else if(!lentity.isDead){
+			theMaid.playLittleMaidSound(theMaid.isBloodsuck() ? LMM_EnumSound.findTarget_B : LMM_EnumSound.findTarget_N, true);
+		}
+		if(theMaid.getAttackTarget()==null) return;
 		theMaid.getNavigator().setPath(pathToTarget, moveSpeed);
 		rerouteTimer = 0;
-		theMaid.playLittleMaidSound(theMaid.isBloodsuck() ? LMM_EnumSound.findTarget_B : LMM_EnumSound.findTarget_N, true);
 		theMaid.maidAvatar.stopUsingItem();
 	}
 
@@ -97,6 +127,9 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 			theMaid.setAttackTarget(null);
 			theMaid.setRevengeTarget(null);
 			theMaid.getNavigator().clearPathEntity();
+			if(theMaid.prevtarget.equals(entityTarget)){
+				theMaid.prevtarget = null;
+			}
 			return false;
 		}
 		

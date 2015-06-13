@@ -1,6 +1,27 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.*;
+import static littleMaidMobX.LMM_Statics.dataWatch_Absoption;
+import static littleMaidMobX.LMM_Statics.dataWatch_Color;
+import static littleMaidMobX.LMM_Statics.dataWatch_DominamtArm;
+import static littleMaidMobX.LMM_Statics.dataWatch_ExpValue;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Aimebow;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterest;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterestAXIS;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_remainsContract;
+import static littleMaidMobX.LMM_Statics.dataWatch_Free;
+import static littleMaidMobX.LMM_Statics.dataWatch_Gotcha;
+import static littleMaidMobX.LMM_Statics.dataWatch_ItemUse;
+import static littleMaidMobX.LMM_Statics.dataWatch_Mode;
+import static littleMaidMobX.LMM_Statics.dataWatch_Parts;
+import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -47,6 +68,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityHorse;
@@ -683,35 +705,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * ネットワーク対応音声再生
 	 */
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
-		playLittleMaidSound(enumsound,force);
-		/*
-		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
-		maidSoundInterval = 20;
-		if (worldObj.isRemote) {
-			// Client
-//			String lsound = LMM_SoundManager.getSoundValue(enumsound, textureName, maidColor & 0x00ff);
-//			float lpitch = mod_LMM_littleMaidMob.VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-//			worldObj.playSound(posX, posY, posZ, lsound, getSoundVolume(), lpitch, false);
-		} else {
-			// Server
-			LMM_LittleMaidMobNX.Debug("id:%d-%s, seps:%04x-%s", getEntityId(), worldObj.isRemote ? "Client" : "Server",  enumsound.index, enumsound.name());
-			byte[] lbuf = new byte[] {
-					LMM_Statics.LMN_Client_PlaySound,
-					0, 0, 0, 0,
-					0, 0, 0, 0
-			};
-			MMM_Helper.setInt(lbuf, 5, enumsound.index);
-			LMM_Net.sendToAllEClient(this, lbuf);
-		}
-		*/
-	}
-
-	/**
-	 * 音声再生用。
-	 * 通常の再生ではネットワーク越しになるのでその対策。
-	 */
-	public void playLittleMaidSound(LMM_EnumSound enumsound, boolean force) {
-		// 音声の再生
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
 		if (worldObj.isRemote) {
@@ -727,6 +720,55 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
 				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
 			}
+//			String lsound = LMM_SoundManager.getSoundValue(enumsound, textureName, maidColor & 0x00ff);
+//			float lpitch = mod_LMM_littleMaidMob.VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
+//			worldObj.playSound(posX, posY, posZ, lsound, getSoundVolume(), lpitch, false);
+		}/* else {
+			// Server
+			LMM_LittleMaidMobNX.Debug("id:%d-%s, seps:%04x-%s", getEntityId(), worldObj.isRemote ? "Client" : "Server",  enumsound.index, enumsound.name());
+			byte[] lbuf = new byte[] {
+					LMM_Statics.LMN_Client_PlaySound,
+					0, 0, 0, 0,
+					0, 0, 0, 0
+			};
+			MMM_Helper.setInt(lbuf, 5, enumsound.index);
+			LMM_Net.sendToAllEClient(this, lbuf);
+		}*/
+	}
+
+	/**
+	 * 音声再生用。
+	 * 通常の再生ではネットワーク越しになるのでその対策。
+	 */
+	public void playLittleMaidSound(LMM_EnumSound enumsound, boolean force) {
+		// 音声の再生
+		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
+		maidSoundInterval = 20;
+		if (worldObj.isRemote) {
+			// Cliient
+			/*
+			String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
+			if(!s.isEmpty() && !s.startsWith("minecraft:"))
+			{
+				s = LMM_LittleMaidMobNX.DOMAIN + ":" + s;
+			}
+			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
+			if(!s.isEmpty())
+			{
+				float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
+				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
+			}
+			*/
+		}else{
+			// Server
+			LMM_LittleMaidMobNX.Debug("id:%d-%s, seps:%04x-%s", getEntityId(), worldObj.isRemote ? "Client" : "Server",  enumsound.index, enumsound.name());
+			byte[] lbuf = new byte[] {
+					LMM_Statics.LMN_Client_PlaySound,
+					0, 0, 0, 0,
+					0, 0, 0, 0
+			};
+			MMM_Helper.setInt(lbuf, 5, enumsound.index);
+			LMM_Net.sendToAllEClient(this, lbuf);
 		}
 	}
 
@@ -975,7 +1017,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public boolean attackEntityAsMob(Entity par1Entity) {
 		//反撃設定
-		if(par1Entity instanceof EntityMob){
+		if(par1Entity instanceof EntityMob && !(par1Entity instanceof EntityCreeper)){
 
 			((EntityMob) par1Entity).setAttackTarget(this);
 			((EntityMob) par1Entity).setRevengeTarget(this);
@@ -2003,20 +2045,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			this.func_180466_bG();
 		}
 
-		if (this.isJumping)
-		{
-			/*
-			else if (this.onGround && this.jumpTicks == 0)
-			{
-				this.jump();
-				this.jumpTicks = 120;
-			}*/
-		}
-		else
-		{
-			//if(motionX!=0&&motionZ!=0&&isBlocking()) jump();
-		}
-
 		this.worldObj.theProfiler.endSection();
 
 		this.worldObj.theProfiler.startSection("travel");
@@ -2037,15 +2065,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	@Override
-	protected void jump() {
-		// TODO 自動生成されたメソッド・スタブ
-		super.jump();
-	}
-
-	@Override
 	protected float func_175134_bD()
 	{
-		return super.func_175134_bD();
+		return super.func_175134_bD()*1.2F;
 	}
 
 	@Override
