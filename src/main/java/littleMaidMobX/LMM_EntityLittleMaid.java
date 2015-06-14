@@ -660,7 +660,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected String getLivingSound() {
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
-		livingSoundTick--;
+		//livingSoundTick--;
 		LMM_EnumSound so = LMM_EnumSound.Null;
 		if (getHealth() < 10)
 			so = LMM_EnumSound.living_whine;
@@ -693,11 +693,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 
-		if(livingSoundTick<=0){
+		//if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
 			playLittleMaidSound(so, false);
-			livingSoundTick = 2;
-		}
+		//	livingSoundTick = 1;
+		//}
 		return null;
 	}
 
@@ -2075,7 +2075,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	protected float func_175134_bD()
 	{
-		return super.func_175134_bD()*1.2F;
+		return super.func_175134_bD()*1.25F;
 	}
 
 	@Override
