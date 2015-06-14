@@ -473,6 +473,7 @@ public class LMM_SoundManager {
 	{
 		for(File file : FileManager.dirMods.listFiles())
 		{
+			System.out.println("DEBUG FILE "+file.getName());
 			if(file.isDirectory())
 			{
 				if(searchSoundCfgDir(file))

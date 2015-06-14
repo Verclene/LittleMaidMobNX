@@ -30,10 +30,4 @@ public class MMMModContainer extends DummyModContainer {
 		return true;
 	}
 
-	@Override
-	public Class<?> getCustomResourcePackClass() {
-		// 古いリソースを読み込むためのリソースパック
-		return MMMResourcePack.class;
-	}
-
 }

@@ -1,12 +1,15 @@
 package littleMaidMobX;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
-import mmmlibx.lib.FileManager;
-import mmmlibx.lib.MMM_Config;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
+import mmmlibx.lib.multiModel.MMMLoader.MMMResourcePack;
 import net.blacklab.lib.ConfigList;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Items;
@@ -15,9 +18,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -223,6 +228,9 @@ public class LMM_LittleMaidMobNX {
 			ModLoader.addLocalization("littleMaidMob.text.STATUS", "Status");
 			ModLoader.addLocalization("littleMaidMob.text.STATUS", "ja_JP", "メイド状態");
 			*/
+			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
+			
+			defaultResourcePacks.add(new MMMResourcePack());
 
 			// デフォルトモデルの設定
 			proxy.init();

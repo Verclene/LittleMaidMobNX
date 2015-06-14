@@ -281,6 +281,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		// 野生種用初期値設定
 		setHealth(15F);
+		String ls;
+		if (LMM_LittleMaidMobNX.cfg_defaultTexture.isEmpty()) {
+			ls = MMM_TextureManager.instance.getRandomTextureString(rand);
+		} else {
+			ls = LMM_LittleMaidMobNX.cfg_defaultTexture;
+		}
+		textureData.setTextureInitServer(ls);
+		LMM_LittleMaidMobNX.Debug("init-ID:%d, %s:%d", getEntityId(), textureData.textureBox[0].textureName, textureData.getColor());
+		setTexturePackIndex(textureData.getColor(), textureData.textureIndex);
 
 		//1.8検討
 		// 移動用フィジカル設定
@@ -313,8 +322,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return (LMM_IEntityLittleMaidAvatarBase)maidAvatar;
 	}
 
-	//1.8後回し
-	public void onSpawnWithEgg(IEntityLivingData par1EntityLivingData) {
+	public void onSpawnWithEgg() {
 		// テクスチャーをランダムで選択
 		String ls;
 		if (LMM_LittleMaidMobNX.cfg_defaultTexture.isEmpty()) {
@@ -325,7 +333,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		textureData.setTextureInitServer(ls);
 		LMM_LittleMaidMobNX.Debug("init-ID:%d, %s:%d", getEntityId(), textureData.textureBox[0].textureName, textureData.getColor());
 		setTexturePackIndex(textureData.getColor(), textureData.textureIndex);
-		setMaidMode("Wild");
+		if(!isContract()) setMaidMode("Wild");
 	}
 
 	protected void applyEntityAttributes() {
@@ -698,7 +706,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * 簡易音声再生、標準の音声のみ使用すること。
 	 */
 	public void playSound(String pname) {
-		playSound(pname, 0.5F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+		if(!worldObj.isRemote) playSound(pname, 0.5F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 	}
 
 	/**
@@ -1834,7 +1842,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ - (double)width * 0.34999999999999998D);
 		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ + (double)width * 0.34999999999999998D);
 
-		if ((grave||isCollidedHorizontally) && !isMaidWait() && onGround) {
+		if (grave || (!isMaidWait() && isCollidedHorizontally && onGround)) {
 			jump();
 		}
 

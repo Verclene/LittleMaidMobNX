@@ -27,11 +27,7 @@ import com.google.common.collect.ImmutableSet;
  */
 public class MMMResourcePack implements IResourcePack {
 
-	protected ModContainer ownerContainer;
-	
-
-	public MMMResourcePack(ModContainer pContainer) {
-		ownerContainer = pContainer;
+	public MMMResourcePack() {
 	}
 
 	@Override

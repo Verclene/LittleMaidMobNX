@@ -140,7 +140,7 @@ public class LMM_ItemSpawnEgg extends Item
 			((LMM_EntityLittleMaid)entity).setTextureNames();
 			//entityliving.rotationYawHead = entityliving.rotationYaw;
 			//entityliving.renderYawOffset = entityliving.rotationYaw;
-			((LMM_EntityLittleMaid) entityliving).onSpawnWithEgg((IEntityLivingData)null);
+			((LMM_EntityLittleMaid) entityliving).onSpawnWithEgg();
 			par0World.spawnEntityInWorld(entity);
 			//entityliving.playLivingSound();
 		} catch (Exception e) {
