@@ -2870,13 +2870,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								}
 
 								return true;
-							}/*else if(itemstack1.getItem() == Items.stick){
+							}else if(itemstack1.getItem() == Items.stick){
 								if(maidDominantArm==0){
 									setDominantArm(1);
 								}else{
 									setDominantArm(0);
 								}
-							}*/
+								return true;
+							}
 						} else {
 							// ストライキ
 							if (itemstack1.getItem() == Items.sugar) {
