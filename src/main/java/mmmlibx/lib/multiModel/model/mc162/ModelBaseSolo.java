@@ -4,6 +4,7 @@ import java.util.Map;
 
 import mmmlibx.lib.Client;
 import net.minecraft.client.model.TextureOffset;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.Entity;
@@ -87,7 +88,8 @@ public class ModelBaseSolo extends ModelBaseNihil implements IModelBaseMMM {
 			
 //			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			//GL11.glDisable(GL11.GL_ALPHA_TEST);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glDepthMask(true);
 		}
 //		textures = blanks;

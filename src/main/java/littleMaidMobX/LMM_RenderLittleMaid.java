@@ -102,21 +102,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				{
 					GlStateManager.pushMatrix();
 					
-					/*
-					if (this.field_177206_a.getMainModel().isChild)
-					{
-						float f7 = 0.5F;
-						GlStateManager.translate(0.0F, 0.625F, 0.0F);
-						GlStateManager.rotate(-20.0F, -1.0F, 0.0F, 0.0F);
-						GlStateManager.scale(f7, f7, f7);
-					}
-		
-					((ModelBiped)this.field_177206_a.getMainModel()).postRenderHiddenArm(0.0625F);
-					*/
-					modelMain.model.Arms[0].postRender(0.0625F);
-					//((ModelBiped)this.renderer.getMainModel()).postRenderHiddenArm(0.0625F);
-					//GlStateManager.translate(-0.0625F, 0.4375F, 0.0625F);
-					//GlStateManager.translate(r.offsetX, r.offsetY, r.offsetZ);
+					modelMain.model.Arms[lmm.maidDominantArm].postRender(0.0625F);
 					
 					Item item = itemstack.getItem();
 					Minecraft minecraft = Minecraft.getMinecraft();
@@ -270,7 +256,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 //		doRenderLitlleMaid(lmm, par2, par4, par6, par8, par9);
 		renderModelMulti(lmm, par2, par4, par6, par8, par9, fcaps);
 		renderString(lmm, par2, par4, par6, par8, par9);
-		
 		// ロープ
 //		func_110827_b(lmm, par2, par4 - modelMain.model.getLeashOffset(lmm.maidCaps), par6, par8, par9);
 	}
