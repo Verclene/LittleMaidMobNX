@@ -229,7 +229,6 @@ public class LMM_LittleMaidMobNX {
 			ModLoader.addLocalization("littleMaidMob.text.STATUS", "ja_JP", "メイド状態");
 			*/
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
-			
 			defaultResourcePacks.add(new MMMResourcePack());
 
 			// デフォルトモデルの設定

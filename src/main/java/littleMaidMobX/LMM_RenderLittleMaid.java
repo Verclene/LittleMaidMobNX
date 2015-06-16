@@ -1,18 +1,19 @@
 package littleMaidMobX;
 
+import mmmlibx.lib.Client;
+import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
+import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
 import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelZombie;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
-import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -30,7 +31,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 
 	// Feilds
 
-
 	// Method
 	public LMM_RenderLittleMaid(RenderManager manager,float f) {
 		super(manager,f);
@@ -42,41 +42,78 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 	public class MMMLayerArmor extends LayerArmorBase{
 
 		public RendererLivingEntity p1;
+		public ModelBaseDuo mmodel;
+		public RendererLivingEntity field_177190_a;
+		public float field_177184_f;
+		public float field_177185_g;
+		public float field_177192_h;
+		public float field_177187_e;
+		public boolean field_177193_i;
+		public LMM_EntityLittleMaid lmm;
+		private int renderCount;
 
 		public MMMLayerArmor(RendererLivingEntity p_i46125_1_) {
 			super(p_i46125_1_);
 			// TODO 自動生成されたコンストラクター・スタブ
 			p1 = p_i46125_1_;
+			mmodel = modelFATT;
+			this.field_177189_c = mmodel;
+			this.field_177186_d = mmodel;
 		}
 
 		@Override
 		protected void func_177177_a() {
 			// TODO 自動生成されたメソッド・スタブ
 			
+			this.field_177189_c = mmodel;
+			this.field_177186_d = mmodel;
 		}
 
 		@Override
 		protected void func_177179_a(ModelBase paramModelBase, int paramInt) {
 			// TODO 自動生成されたメソッド・スタブ
-			
+			ModelBaseDuo model = (ModelBaseDuo) paramModelBase;
+			model.showArmorParts(paramInt);
 		}
 		
 		@Override
-		public void doRenderLayer(EntityLivingBase p_177141_1_,
-				float p_177141_2_, float p_177141_3_, float p_177141_4_,
-				float p_177141_5_, float p_177141_6_, float p_177141_7_,
-				float p_177141_8_) {
+		public void doRenderLayer(EntityLivingBase par1EntityLiving,
+				float par2, float par3, float par4,
+				float par5, float par6, float par7,
+				float par8) {
 			// TODO 自動生成されたメソッド・スタブ
-			/*
-			super.doRenderLayer(p_177141_1_, p_177141_2_, p_177141_3_, p_177141_4_,
-					p_177141_5_, p_177141_6_, p_177141_7_, p_177141_8_);
-					*/
-			
+			lmm = (LMM_EntityLittleMaid) par1EntityLiving;
+			//this.render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 3);
+			this.render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 2);
+			//this.render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 1);
+			//this.render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 0);
 		}
 		
+		public void setModelValues(EntityLivingBase par1EntityLiving, IModelCaps pEntityCaps) {
+			if (par1EntityLiving instanceof ITextureEntity) {
+				ITextureEntity ltentity = (ITextureEntity)par1EntityLiving;
+				mmodel.modelInner = ltentity.getTextureData().textureModel[1];
+				mmodel.modelOuter = ltentity.getTextureData().textureModel[2];
+				mmodel.textureInner = ltentity.getTextures(1);
+				mmodel.textureOuter = ltentity.getTextures(2);
+				mmodel.textureInnerLight = ltentity.getTextures(3);
+				mmodel.textureOuterLight = ltentity.getTextures(4);
+				mmodel.textureLightColor = (float[])modelFATT.getCapsValue(IModelCaps.caps_textureLightColor, pEntityCaps);
+				mmodel.entityCaps = lmm.maidCaps;
+			}
+			mmodel.setEntityCaps(pEntityCaps);
+			mmodel.setRender(LMM_RenderLittleMaid.this);
+			mmodel.showAllParts();
+			mmodel.isAlphablend = true;
+			mmodel.renderCount = 0;
+		}
 		
-
-		
+		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
+			this.setModelValues(lmm, lmm.maidCaps);
+			mmodel.modelOuter.showArmorParts(2, 0);
+			Client.setTexture(mmodel.textureOuter[2]);
+			mmodel.modelOuter.mainFrame.render(0.0625F, true);
+		}
 	}
 	
 	public class MMMLayerHeldItem extends LayerHeldItem{

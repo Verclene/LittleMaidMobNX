@@ -281,15 +281,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		// 野生種用初期値設定
 		setHealth(15F);
-		String ls;
-		if (LMM_LittleMaidMobNX.cfg_defaultTexture.isEmpty()) {
-			ls = MMM_TextureManager.instance.getRandomTextureString(rand);
-		} else {
-			ls = LMM_LittleMaidMobNX.cfg_defaultTexture;
-		}
-		textureData.setTextureInitServer(ls);
-		LMM_LittleMaidMobNX.Debug("init-ID:%d, %s:%d", getEntityId(), textureData.textureBox[0].textureName, textureData.getColor());
-		setTexturePackIndex(textureData.getColor(), textureData.textureIndex);
 
 		//1.8検討
 		// 移動用フィジカル設定
@@ -3564,7 +3555,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public ResourceLocation[] getTextures(int pIndex) {
-		return textureData.getTextures(pIndex);
+		ResourceLocation[] r = textureData.getTextures(pIndex);
+		return r;
 	}
 
 	@Override

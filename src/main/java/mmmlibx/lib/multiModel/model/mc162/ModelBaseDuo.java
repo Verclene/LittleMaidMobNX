@@ -2,6 +2,7 @@ package mmmlibx.lib.multiModel.model.mc162;
 
 import java.util.Map;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.Client;
 import net.minecraft.client.model.TextureOffset;
 import net.minecraft.client.renderer.entity.Render;
@@ -72,8 +73,12 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 			if (textureInner != null && lri) {
 				if (textureInner[renderParts] != null) {
 					// 通常パーツ
-					Client.setTexture(textureInner[renderParts]);
-					modelInner.render(entityCaps, par2, par3, par4, par5, par6, par7, isRendering);
+					try{
+						Client.setTexture(textureInner[renderParts]);
+						modelInner.render(entityCaps, par2, par3, par4, par5, par6, par7, isRendering);
+					}catch(Exception e){
+						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
+					}
 				}
 			} else {
 				// ほぼエンチャントエフェクト用
@@ -82,7 +87,11 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 			if (textureInnerLight != null && renderCount == 0) {
 				// 発光テクスチャ表示処理
 				if (textureInnerLight[renderParts] != null) {
-					Client.setTexture(textureInnerLight[renderParts]);
+					try{
+						Client.setTexture(textureInnerLight[renderParts]);
+					}catch(Exception e){
+						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
+					}
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
 					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
@@ -103,7 +112,7 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 					Client.setLightmapTextureCoords(lighting);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					GL11.glDisable(GL11.GL_BLEND);
-					GL11.glEnable(GL11.GL_ALPHA_TEST);
+					GL11.glDisable(GL11.GL_ALPHA_TEST);
 				}
 			}
 		}
@@ -111,8 +120,12 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 			if (textureOuter != null && lri) {
 				// 通常パーツ
 				if (textureOuter[renderParts] != null) {
-					Client.setTexture(textureOuter[renderParts]);
-					modelOuter.render(entityCaps, par2, par3, par4, par5, par6, par7, isRendering);
+					try{
+						Client.setTexture(textureOuter[renderParts]);
+						modelOuter.render(entityCaps, par2, par3, par4, par5, par6, par7, isRendering);
+					}catch(Exception e){
+						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
+					}
 				}
 			} else {
 				// ほぼエンチャントエフェクト用
@@ -121,7 +134,11 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 			if (textureOuterLight != null && renderCount == 0) {
 				// 発光テクスチャ表示処理
 				if (textureOuterLight[renderParts] != null) {
-					Client.setTexture(textureOuterLight[renderParts]);
+					try{
+						Client.setTexture(textureOuterLight[renderParts]);
+					}catch(Exception e){
+						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
+					}
 					float var4 = 1.0F;
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -143,7 +160,7 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 					Client.setLightmapTextureCoords(lighting);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					GL11.glDisable(GL11.GL_BLEND);
-					GL11.glEnable(GL11.GL_ALPHA_TEST);
+					GL11.glDisable(GL11.GL_ALPHA_TEST);
 				}
 			}
 		}

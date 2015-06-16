@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelCapsHelper;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -93,6 +94,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 		// indexは0x40,0x50番台
 		// lightも追加
 		/*
+		if(itemstack == null) return null;
 		int renderIndex = ((ItemArmor)itemstack.getItem()).renderIndex;
 		int l = 0;
 		if (itemstack.getMaxDamage() > 0) {
@@ -110,11 +112,10 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 			renderIndex = renderIndex % MMM_TextureManager.armorFilenamePrefix.length;
 		}
 		*/
-		return new ResourceLocation("");//getArmorTextureName(pIndex, MMM_TextureManager.armorFilenamePrefix[renderIndex], l);
+		return getArmorTextureName(pIndex, MMM_TextureManager.armorFilenamePrefix[0], 0);
 	}
 	public ResourceLocation getArmorTextureName(int pIndex, String pArmorPrefix, int pDamage) {
 		//1.8後回し
-		/*
 		// indexは0x40,0x50番台
 		if (armors.isEmpty() || pArmorPrefix == null) return null;
 
@@ -132,8 +133,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 			ls = m.get(i);
 			if (ls != null) break;
 		}
-		*/
-		return new ResourceLocation("");
+		return ls;
 	}
 
 	/**
