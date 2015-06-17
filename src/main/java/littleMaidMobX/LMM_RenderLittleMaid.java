@@ -110,9 +110,15 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
 			this.setModelValues(lmm, lmm.maidCaps);
-			mmodel.modelOuter.showArmorParts(2, 0);
+			mmodel.modelOuter.showAllParts(lmm.maidCaps);
+			mmodel.modelOuter.HeadMount.isRendering=true;
 			Client.setTexture(mmodel.textureOuter[2]);
-			mmodel.modelOuter.mainFrame.render(0.0625F, true);
+			mmodel.setLivingAnimations(lmm, par2, par3, par4);
+			
+			mmodel.modelOuter.setRotationAngles(par2, par3, par4, par5, par6, 0.0625F, lmm.maidCaps);
+			mmodel.modelOuter.render(lmm.maidCaps, par2, par3, par4, par5, par6, 0.0625F, true);
+			//mmodel.modelOuter.mainFrame.render(0.0625F, true);
+			
 		}
 	}
 	
