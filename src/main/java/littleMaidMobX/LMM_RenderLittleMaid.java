@@ -29,6 +29,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
@@ -99,8 +100,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				}
 			}
 			if(lmm.getInventory()[3]!=null) render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 2);
-			if(lmm.getInventory()[2]!=null) render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 1);
-			if(lmm.getInventory()[1]!=null) render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 0);
+			if(lmm.getInventory()[2]!=null) render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 1);
+			if(lmm.getInventory()[1]!=null) render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 0);
 		}
 		
 		public void setModelValues(EntityLivingBase par1EntityLiving, IModelCaps pEntityCaps) {
@@ -122,13 +123,35 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		}
 		
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
+			//初回のみ指定値設定
 			if(renderCount==0) this.setModelValues(lmm, lmm.maidCaps);
+			
+			//総合
 			mmodel.showArmorParts(renderParts);
-			Client.setTexture(mmodel.textureOuter[2]);
-			mmodel.modelOuter.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
-			mmodel.modelOuter.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, lmm.maidCaps);
-			mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, 0.0F, par6, 0.0625F, true);
-			//mmodel.modelOuter.mainFrame.render(0.0625F, true);
+			
+			//Inner
+			ResourceLocation texInner = mmodel.textureInner[renderParts];
+			INNER:{
+				if(texInner==null||mmodel.modelInner==null) break INNER;
+				Client.setTexture(texInner);
+				mmodel.modelInner.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
+				mmodel.modelInner.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, lmm.maidCaps);
+				mmodel.modelInner.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
+				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
+			}
+			
+			//Outer
+			ResourceLocation texOuter = mmodel.textureOuter[renderParts];
+			OUTER:{
+				if(texOuter==null||mmodel.modelOuter==null) break OUTER;
+				Client.setTexture(texOuter);
+				mmodel.modelOuter.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
+				mmodel.modelOuter.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, lmm.maidCaps);
+				mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
+				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
+			}
+			
+			//カウントインクリメント
 			renderCount++;
 			if(renderCount>=300) renderCount=30;
 		}
