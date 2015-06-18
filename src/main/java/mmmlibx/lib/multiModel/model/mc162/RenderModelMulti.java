@@ -1,12 +1,9 @@
 package mmmlibx.lib.multiModel.model.mc162;
 
-import mmmlibx.lib.Client;
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.MMMLib;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;

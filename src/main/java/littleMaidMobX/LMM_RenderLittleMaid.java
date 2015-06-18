@@ -1,9 +1,15 @@
 package littleMaidMobX;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import mmmlibx.lib.Client;
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
+import mmmlibx.lib.multiModel.model.mc162.ModelMultiMMMBase;
+import mmmlibx.lib.multiModel.model.mc162.ModelRenderer;
 import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -19,7 +25,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -83,8 +88,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				float par8) {
 			// TODO 自動生成されたメソッド・スタブ
 			lmm = (LMM_EntityLittleMaid) par1EntityLiving;
-			//this.render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 3);
-			this.render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 2);
+			render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 3);
 			//this.render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 1);
 			//this.render(par1EntityLiving, par2, par3, par4, par5, par6, par7, 0);
 		}
@@ -109,16 +113,29 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		}
 		
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
-			this.setModelValues(lmm, lmm.maidCaps);
+			if(renderCount==0) this.setModelValues(lmm, lmm.maidCaps);
 			mmodel.modelOuter.showAllParts(lmm.maidCaps);
-			mmodel.modelOuter.HeadMount.isRendering=true;
+			mmodel.modelOuter.HeadMount.isRendering=false;
 			Client.setTexture(mmodel.textureOuter[2]);
-			mmodel.setLivingAnimations(lmm, par2, par3, par4);
-			
+			//mmodel.setLivingAnimations(lmm, par2, par3, par4);
 			mmodel.modelOuter.setRotationAngles(par2, par3, par4, par5, par6, 0.0625F, lmm.maidCaps);
-			mmodel.modelOuter.render(lmm.maidCaps, par2, par3, par4, par5, par6, 0.0625F, true);
-			//mmodel.modelOuter.mainFrame.render(0.0625F, true);
-			
+			/*
+			try{
+				Class clazz = mmodel.modelOuter.getClass();
+				Field field = clazz.getField("bipedHead");
+				Method method = ModelRenderer.class.getMethod("setRotateAngles", float.class, float.class, float.class);
+				method.invoke(field.get(mmodel.modelOuter), 0F, 0F, 0F);
+			} catch(NoSuchMethodException e){
+			} catch (IllegalAccessException e) {
+			} catch (IllegalArgumentException e) {
+			} catch (InvocationTargetException e) {
+			} catch (NoSuchFieldException e) {
+			} catch (SecurityException e) {
+			}
+			*/
+			//mmodel.modelOuter.render(lmm.maidCaps, par2, par3, 0.0F, 0.0F, par6, 0.0625F, true);
+			mmodel.modelOuter.mainFrame.render(0.0625F, true);
+			renderCount++;
 		}
 	}
 	

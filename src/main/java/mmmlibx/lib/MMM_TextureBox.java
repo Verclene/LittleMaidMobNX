@@ -114,6 +114,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 		*/
 		return getArmorTextureName(pIndex, MMM_TextureManager.armorFilenamePrefix[0], 0);
 	}
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ResourceLocation getArmorTextureName(int pIndex, String pArmorPrefix, int pDamage) {
 		//1.8後回し
 		// indexは0x40,0x50番台
