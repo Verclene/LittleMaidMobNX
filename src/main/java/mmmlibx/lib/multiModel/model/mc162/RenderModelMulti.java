@@ -1,5 +1,6 @@
 package mmmlibx.lib.multiModel.model.mc162;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.MMMLib;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -17,8 +18,6 @@ public class RenderModelMulti extends RenderLiving {
 	public ModelBaseSolo modelMain;
 	public ModelBaseDuo modelFATT;
 	public IModelCaps fcaps;
-
-
 
 	public RenderModelMulti(RenderManager manager,float pShadowSize) {
 		super(manager, null, pShadowSize);
