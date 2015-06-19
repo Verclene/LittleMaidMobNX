@@ -1,5 +1,9 @@
 package mmmlibx.lib.multiModel.model.mc162;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -141,7 +145,20 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 	@Override
 	public void setLivingAnimations(IModelCaps pEntityCaps, float par2, float par3, float pRenderPartialTicks) {
 		float angle = ModelCapsHelper.getCapsValueFloat(pEntityCaps, caps_interestedAngle, (Float)pRenderPartialTicks);
-		bipedHead.setRotateAngleZ(angle);
+		ItemStack is = (ItemStack) pEntityCaps.getCapsValue(IModelCaps.caps_HeadMount);
+		boolean flag = true;
+		if(is!=null){
+			if(is.getItem() instanceof ItemArmor){
+				if(((ItemArmor)is.getItem()).armorType==0){
+					flag = false;
+				}
+			}
+		}
+		if(flag){
+			bipedHead.setRotateAngleZ(angle);
+		}else{
+			bipedHead.setRotateAngleZ(0f);
+		}
 	}
 
 	/**

@@ -1,15 +1,9 @@
 package littleMaidMobX;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import mmmlibx.lib.Client;
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
-import mmmlibx.lib.multiModel.model.mc162.ModelMultiMMMBase;
-import mmmlibx.lib.multiModel.model.mc162.ModelRenderer;
 import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -130,27 +124,60 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			mmodel.showArmorParts(renderParts);
 			
 			//Inner
-			ResourceLocation texInner = mmodel.textureInner[renderParts];
 			INNER:{
-				if(texInner==null||mmodel.modelInner==null) break INNER;
-				Client.setTexture(texInner);
+				if(mmodel.modelInner==null) break INNER;
+				ResourceLocation texInner = mmodel.textureInner[renderParts];
+				if(texInner!=null) try{
+					Client.setTexture(texInner);
+				}catch(Exception e){}
+
 				mmodel.modelInner.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
 				mmodel.modelInner.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, lmm.maidCaps);
 				mmodel.modelInner.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
 				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
 			}
 			
+			if (renderCount == 0) {
+				// 発光Inner
+				ResourceLocation texInnerLight = mmodel.textureInnerLight[renderParts];
+				if (texInnerLight != null) {
+					try{
+						Client.setTexture(texInnerLight);
+					}catch(Exception e){
+						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
+					}
+					GL11.glEnable(GL11.GL_BLEND);
+					GL11.glEnable(GL11.GL_ALPHA_TEST);
+					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+					GL11.glDepthFunc(GL11.GL_LEQUAL);
+					
+					Client.setLightmapTextureCoords(0x00f000f0);//61680
+					if (mmodel.textureLightColor == null) {
+						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					} else {
+						//発光色を調整
+						GL11.glColor4f(
+								mmodel.textureLightColor[0],
+								mmodel.textureLightColor[1],
+								mmodel.textureLightColor[2],
+								mmodel.textureLightColor[3]);
+					}
+					mmodel.modelInner.render(lmm.maidCaps, par2, par3, par4, par5, par6, par7, true);
+					Client.setLightmapTextureCoords(mmodel.lighting);
+					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					GL11.glDisable(GL11.GL_BLEND);
+					GL11.glDisable(GL11.GL_ALPHA_TEST);
+				}
+			}
+
 			//Outer
 			ResourceLocation texOuter = mmodel.textureOuter[renderParts];
-			OUTER:{
-				if(texOuter==null||mmodel.modelOuter==null) break OUTER;
-				Client.setTexture(texOuter);
-				mmodel.modelOuter.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
-				mmodel.modelOuter.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, lmm.maidCaps);
-				mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
-				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
-			}
-			
+			if(!(texOuter==null||mmodel.modelOuter==null)) Client.setTexture(texOuter);
+			mmodel.modelOuter.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
+			mmodel.modelOuter.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, lmm.maidCaps);
+			mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
+			//mmodel.modelOuter.mainFrame.render(0.0625F, true);
+
 			//カウントインクリメント
 			renderCount++;
 			if(renderCount>=300) renderCount=30;
