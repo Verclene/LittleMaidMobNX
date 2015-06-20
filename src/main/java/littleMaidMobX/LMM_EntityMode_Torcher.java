@@ -20,6 +20,8 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	
 	public static final int mmode_Torcher = 0x0020;
 
+	public static final double Limit_Distance_Follow  = 100D;
+	public static final double Limit_Distance_Freedom = 360D;
 
 	public LMM_EntityMode_Torcher(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
@@ -116,8 +118,20 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 
 	protected int getBlockLighting(int i, int j, int k) {
 		World worldObj = owner.worldObj;
-		IBlockState bm1 = worldObj.getBlockState(new BlockPos(i, j - 1, k));
-		IBlockState b0  = worldObj.getBlockState(new BlockPos(i, j    , k));
+
+		//離れすぎている
+		if(owner.isFreedom()){
+			//自由行動時
+			if(owner.func_180486_cf().distanceSqToCenter(i,j,k) > Limit_Distance_Freedom)
+				return 15;
+		}else{
+			//追従時
+			if(owner.getMaidMasterEntity()!=null){
+				if(owner.getMaidMasterEntity().getPosition().distanceSqToCenter(i,j,k) > Limit_Distance_Follow)
+					return 15;
+			}
+		}
+
 		if (!owner.isMaidWait()) {
 			int a = worldObj.getLight(new BlockPos(i,j,k),true);
 			return a;
@@ -128,19 +142,6 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
 		int v = getBlockLighting(px, py, pz);
-		
-		//離れすぎている
-		if(owner.isFreedom()){
-			//自由行動時
-			if(owner.func_180486_cf().distanceSqToCenter(px,py,pz) > 400D)
-				return false;
-		}else{
-			//追従時
-			if(owner.getMaidMasterEntity()!=null){
-				if(owner.getMaidMasterEntity().getPosition().distanceSqToCenter(px,py,pz) > 144D)
-					return false;
-			}
-		}
 		
 		if (v < 8 && canBlockBeSeen(px, py - 1, pz, true, true, false) && !owner.isMaidWait()) {
 			if (owner.getNavigator().tryMoveToXYZ(px, py, pz, 1.0F) ) {
@@ -233,7 +234,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 			for (int x = -1; x < 2; x++) {
 				for (int z = -1; z < 2; z++) {
 					for (int lyi : lil) {
-						int lv = lworld.getLight(new BlockPos(lxx + x, lyi, lzz + z),true);
+						int lv = getBlockLighting(lxx + x, lyi, lzz + z);
 						if (ll > lv && lii instanceof ItemBlock &&
 								canPlaceItemBlockOnSide(lworld, lxx + x, lyi - 1, lzz + z, EnumFacing.UP, owner.maidAvatar, lis, (ItemBlock)lii)
 								&& canBlockBeSeen(lxx + x, lyi - 1, lzz + z, true, false, true)) {
