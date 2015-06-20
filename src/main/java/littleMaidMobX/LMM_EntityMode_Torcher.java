@@ -3,6 +3,7 @@ package littleMaidMobX;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +15,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	
@@ -106,17 +106,19 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 
 	@Override
 	public boolean isSearchBlock() {
-		return true;
+		return !owner.isMaidWait();
 	}
 
 	@Override
 	public boolean shouldBlock(int pMode) {
-		return !(owner.getCurrentEquippedItem() == null);
+		return !(owner.getCurrentEquippedItem() == null)&&!owner.isMaidWait();
 	}
 
 	protected int getBlockLighting(int i, int j, int k) {
 		World worldObj = owner.worldObj;
-		if (worldObj.getBlockState(new BlockPos(i, j - 1, k)).getBlock().getMaterial().isSolid() && worldObj.getBlockState(new BlockPos(i, j, k)).getBlock() == Blocks.air) {
+		IBlockState bm1 = worldObj.getBlockState(new BlockPos(i, j - 1, k));
+		IBlockState b0  = worldObj.getBlockState(new BlockPos(i, j    , k));
+		if (!owner.isMaidWait()) {
 			int a = worldObj.getLight(new BlockPos(i,j,k),true);
 			return a;
 		}
@@ -127,9 +129,22 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
 		int v = getBlockLighting(px, py, pz);
 		
-		if (v < 8 && canBlockBeSeen(px, py - 1, pz, true, true, false)) {
+		//離れすぎている
+		if(owner.isFreedom()){
+			//自由行動時
+			if(owner.func_180486_cf().distanceSqToCenter(px,py,pz) > 400D)
+				return false;
+		}else{
+			//追従時
+			if(owner.getMaidMasterEntity()!=null){
+				if(owner.getMaidMasterEntity().getPosition().distanceSqToCenter(px,py,pz) > 144D)
+					return false;
+			}
+		}
+		
+		if (v < 8 && canBlockBeSeen(px, py - 1, pz, true, true, false) && !owner.isMaidWait()) {
 			if (owner.getNavigator().tryMoveToXYZ(px, py, pz, 1.0F) ) {
-				owner.playLittleMaidSound(LMM_EnumSound.findTarget_D, true);
+				//owner.playLittleMaidSound(LMM_EnumSound.findTarget_D, true);
 				return true;
 			}
 		}
@@ -164,31 +179,29 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		// TODO:マルチ対策用、ItemBlockから丸パクリバージョンアップ時は確認すること
 		Block var8 = par1World.getBlockState(new BlockPos(par2, par3, par4)).getBlock();
 		
-		/*
 		if (Block.isEqualTo(var8, Blocks.snow)) {
-			par5 = 1;
+			par5 = EnumFacing.UP;
 		} else if (!Block.isEqualTo(var8, Blocks.vine) && !Block.isEqualTo(var8, Blocks.tallgrass) &&
 				!Block.isEqualTo(var8, Blocks.deadbush)) {
-			if (par5 == 0) {
+			if (par5 == EnumFacing.DOWN) {
 				--par3;
 			}
-			if (par5 == 1) {
+			if (par5 == EnumFacing.UP) {
 				++par3;
 			}
-			if (par5 == 2) {
+			if (par5 == EnumFacing.NORTH) {
 				--par4;
 			}
-			if (par5 == 3) {
+			if (par5 == EnumFacing.SOUTH) {
 				++par4;
 			}
-			if (par5 == 4) {
+			if (par5 == EnumFacing.WEST) {
 				--par2;
 			}
-			if (par5 == 5) {
+			if (par5 == EnumFacing.EAST) {
 				++par2;
 			}
 		}
-		*/
 		
 		Material lmat = par1World.getBlockState(new BlockPos(par2, par3, par4)).getBlock().getMaterial();
 		if (lmat instanceof MaterialLiquid) {
@@ -201,7 +214,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	@Override
 	public void updateAITick(int pMode) {
 		// トーチの設置
-		if (pMode == mmode_Torcher && owner.getNextEquipItem()) {
+		if (pMode == mmode_Torcher && !owner.isMaidWait() && owner.getNextEquipItem()) {
 			ItemStack lis = owner.getCurrentEquippedItem();
 			int lic = lis.stackSize;
 			Item lii = lis.getItem();
@@ -222,7 +235,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 					for (int lyi : lil) {
 						int lv = lworld.getLight(new BlockPos(lxx + x, lyi, lzz + z),true);
 						if (ll > lv && lii instanceof ItemBlock &&
-								canPlaceItemBlockOnSide(lworld, lxx + x, lyi - 1, lzz + z, EnumFacing.NORTH, owner.maidAvatar, lis, (ItemBlock)lii)
+								canPlaceItemBlockOnSide(lworld, lxx + x, lyi - 1, lzz + z, EnumFacing.UP, owner.maidAvatar, lis, (ItemBlock)lii)
 								&& canBlockBeSeen(lxx + x, lyi - 1, lzz + z, true, false, true)) {
 //						if (ll > lv && lworld.getBlockMaterial(lxx + x, lyi - 1, lzz + z).isSolid()
 //								&& (lworld.getBlockMaterial(lxx + x, lyi, lzz + z) == Material.air
@@ -238,7 +251,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 				}
 			}
 			
-			if (ll < 8 && lis.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(ltx, lty, ltz), EnumFacing.NORTH, 0.5F, 1.0F, 0.5F)) {
+			if (ll < 8 && lis.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(ltx, lty, ltz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
 //				mod_LMM_littleMaidMob.Debug("torch-inst: %d, %d, %d: %d", ltx, lty, ltz, ll);
 				owner.setSwing(10, LMM_EnumSound.installation);
 				owner.getNavigator().clearPathEntity();
