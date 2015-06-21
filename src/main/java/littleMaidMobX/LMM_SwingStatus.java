@@ -69,7 +69,10 @@ public class LMM_SwingStatus {
 		swingProgress = (float)swingProgressInt / (float)li;
 		
 		if (isUsingItem()) {
-			ItemStack itemstack = pEntity.maidInventory.getStackInSlot(index);
+			ItemStack itemstack;
+			try{
+				itemstack = pEntity.maidInventory.getStackInSlot(index);
+			}catch(Exception e){ return; }
 			Entity lrentity = pEntity.worldObj.isRemote ? null : pEntity;
 			
 			if (itemstack != itemInUse) {

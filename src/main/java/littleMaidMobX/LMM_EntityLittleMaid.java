@@ -229,7 +229,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// ActiveModeClass
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
-	private int livingSoundTick = 3;
+	private int livingSoundTick = 2;
 
 	//モデル
 	public String textureModelName;
@@ -744,7 +744,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
 		if (worldObj.isRemote) {
-			// Cliient
+			// Client
 			/*
 			String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
 			if(!s.isEmpty() && !s.startsWith("minecraft:"))
@@ -1016,7 +1016,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean attackEntityAsMob(Entity par1Entity) {
 		//反撃設定
 		if(par1Entity instanceof EntityMob && !(par1Entity instanceof EntityCreeper)){
-
 			((EntityMob) par1Entity).setAttackTarget(this);
 			((EntityMob) par1Entity).setRevengeTarget(this);
 			((EntityMob) par1Entity).getNavigator().setPath(getNavigator().getPath(), ((EntityMob)par1Entity).moveForward);

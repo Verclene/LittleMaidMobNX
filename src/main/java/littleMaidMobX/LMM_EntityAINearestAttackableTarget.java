@@ -75,10 +75,10 @@ public class LMM_EntityAINearestAttackableTarget extends EntityAINearestAttackab
 		super.startExecuting();
 		BREAK: if (targetEntity instanceof EntityLivingBase) {
 			if(theMaid.getMaidModeInt() == LMM_EntityMode_Fencer.mmode_Fencer && targetEntity instanceof EntityCreeper){
-				if(theMaid.getMaidMasterEntity()==null || ((EntityLivingBase) targetEntity).getAITarget()==null){
+				if(theMaid.getMaidMasterEntity()==null || ((EntityCreeper) targetEntity).getAttackTarget()==null){
 					theMaid.setAttackTarget(null);
 					break BREAK;
-				}else if(!((EntityLivingBase) targetEntity).getAITarget().equals(theMaid.getMaidMasterEntity())){
+				}else if(!((EntityCreeper) targetEntity).getAttackTarget().equals(theMaid.getMaidMasterEntity())){
 					theMaid.setAttackTarget(null);
 					break BREAK;
 				}
