@@ -229,8 +229,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// ActiveModeClass
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
-	
-	private int livingSoundTick = 3;
+	private int livingSoundTick = 2;
 	//特殊フラグ
 	public boolean creeperAttacking;
 	public EntityLivingBase prevtarget;
@@ -263,10 +262,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		// 形態形成場
 		textureData = new MMM_TextureData(this, maidCaps);
+		textureData.setColor(12);
 		MMM_TextureBox ltb[] = new MMM_TextureBox[2];
 		ltb[0] = ltb[1] = MMM_TextureManager.instance.getDefaultTexture(this);
 		setTexturePackName(ltb);
-		setColor(12);
 
 		entityIdFactor = (float)(getEntityId() * 70);
 		// 腕振り
@@ -292,6 +291,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// TODO:これはテスト
 //		maidStabilizer.put("HeadTop", MMM_StabilizerManager.getStabilizer("WitchHat", "HeadTop"));
 
+
+
 		// EntityModeの追加
 		maidEntityModeList = LMM_EntityModeManager.getModeList(this);
 		// モードリスト
@@ -304,13 +305,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 初期化時実行コード
 		for (LMM_EntityModeBase lem : maidEntityModeList) {
 			lem.initEntity();
-		}
-		
-		if(!par1World.isRemote){
-			NBTTagCompound t = new NBTTagCompound();
-			writeEntityToNBT(t);
-			readEntityFromNBT(t);
-			t = null;
 		}
 	}
 
@@ -657,7 +651,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected String getLivingSound() {
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
-		if(livingSoundTick>0) livingSoundTick--;
+		//livingSoundTick--;
 		LMM_EnumSound so = LMM_EnumSound.Null;
 		if (getHealth() < 10)
 			so = LMM_EnumSound.living_whine;
@@ -690,10 +684,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 
-		if(livingSoundTick<=0){
+		//if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
 			playLittleMaidSound(so, false);
-		}
+		//	livingSoundTick = 1;
+		//}
 		return null;
 	}
 
