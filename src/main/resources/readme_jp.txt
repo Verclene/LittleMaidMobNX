@@ -52,10 +52,11 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
     本トリガー
 
 更新履歴
-    20150620    openbeta-0.4-unstable-mc18f1446
+    20150621    openbeta-0.4.1-unstable-mc18f1446
         防具表示の暫定実装
         Torcherの挙動調整
         自然スポーン時、メイドが透明化しているバグの修正
+        火薬トランザム修正
         戦闘系AI調整
     20150614    openbeta-0.3-unstable-mc18f1446
         ビルドベース変更(#1334→#1446)
