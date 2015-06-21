@@ -1940,7 +1940,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					if (lattackentity != null) {
 
 						//1.8後回し
-						PathEntity pe = getNavigator().getPathToEntityLiving(this);//getPathEntityToEntity(this, lattackentity, 16F, true, false, false, true);
+						PathEntity pe = getNavigator().getPathToEntityLiving(lattackentity);//getPathEntityToEntity(this, lattackentity, 16F, true, false, false, true);
 						if (pe != null) {
 							pe.incrementPathIndex();
 							if (!pe.isFinished()) {

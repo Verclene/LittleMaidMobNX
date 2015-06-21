@@ -98,7 +98,8 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 	@Override
 	public void startExecuting() {
 		Entity lentity = theMaid.getAttackTarget();
-		if(theMaid.getMaidModeInt() == LMM_EntityMode_Fencer.mmode_Fencer && lentity instanceof EntityCreeper){
+		if((theMaid.getMaidModeInt() == LMM_EntityMode_Fencer.mmode_Fencer || theMaid.getMaidModeInt() == LMM_EntityMode_Ripper.mmode_Ripper
+				 || theMaid.getMaidModeInt() == LMM_EntityMode_Ripper.mmode_TNTD) && lentity instanceof EntityCreeper){
 			if(theMaid.getMaidMasterEntity()==null||((EntityCreeper) lentity).getAttackTarget()==null){
 			}else if(!((EntityCreeper) lentity).getAttackTarget().equals(theMaid.getMaidMasterEntity())){
 			}else{
