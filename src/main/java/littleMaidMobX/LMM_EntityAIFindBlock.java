@@ -132,13 +132,7 @@ public class LMM_EntityAIFindBlock extends EntityAIBase implements LMM_IEntityAI
 
 	@Override
 	public boolean continueExecuting() {
-		if(theMaid.isMaidWait()){
-			theMaid.getNavigator().setPath(null, 0d);
-			return false;
-		}
-
 		fmodeBase.updateBlock();
-
 		// 移動中は継続
 		if (!theMaid.getNavigator().noPath()) return true;
 		
@@ -159,9 +153,6 @@ public class LMM_EntityAIFindBlock extends EntityAIBase implements LMM_IEntityAI
 	@Override
 	public void startExecuting() {
 		fmodeBase.startBlock(theMaid.maidMode);
-		if(theMaid.getMaidModeInt() == LMM_EntityMode_Torcher.mmode_Torcher){
-			theMaid.playLittleMaidSound(LMM_EnumSound.findTarget_D, true);
-		}
 	}
 
 	@Override

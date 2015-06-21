@@ -57,6 +57,8 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				return false;
 			}
 			
+			//1.8後回し
+			
 			if (theMaid.func_180486_cf().distanceSqToCenter(
 					MathHelper.floor_double(theMaid.posX),
 					MathHelper.floor_double(theMaid.posY),
