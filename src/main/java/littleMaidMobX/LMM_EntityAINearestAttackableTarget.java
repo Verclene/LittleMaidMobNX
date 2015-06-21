@@ -73,16 +73,16 @@ public class LMM_EntityAINearestAttackableTarget extends EntityAINearestAttackab
 	@Override
 	public void startExecuting() {
 		super.startExecuting();
-		if (targetEntity instanceof EntityLivingBase) {
-			/*
+		BREAK: if (targetEntity instanceof EntityLivingBase) {
 			if(theMaid.getMaidModeInt() == LMM_EntityMode_Fencer.mmode_Fencer && targetEntity instanceof EntityCreeper){
 				if(theMaid.getMaidMasterEntity()==null || ((EntityLivingBase) targetEntity).getAITarget()==null){
 					theMaid.setAttackTarget(null);
+					break BREAK;
 				}else if(!((EntityLivingBase) targetEntity).getAITarget().equals(theMaid.getMaidMasterEntity())){
 					theMaid.setAttackTarget(null);
+					break BREAK;
 				}
 			}
-			*/
 			theMaid.setAttackTarget((EntityLivingBase)targetEntity);
 		} else {
 			//1.8後回し

@@ -67,7 +67,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 	@Override
 	public void startExecuting() {
 		super.startExecuting();
-		fMaid.playLittleMaidSound(fMaid.isBloodsuck() ? LMM_EnumSound.findTarget_B : LMM_EnumSound.findTarget_N, true);
+		//fMaid.playLittleMaidSound(fMaid.isBloodsuck() ? LMM_EnumSound.findTarget_B : LMM_EnumSound.findTarget_N, true);
 		swingState = fMaid.getSwingStatusDominant();
 	}
 

@@ -229,10 +229,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// ActiveModeClass
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
-	private int livingSoundTick = 2;
-	//特殊フラグ
-	public boolean creeperAttacking;
-	public EntityLivingBase prevtarget;
+	private int livingSoundTick = 3;
+
 	//モデル
 	public String textureModelName;
 	public String textureArmorName;
@@ -707,6 +705,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
 		if (worldObj.isRemote) {
+			livingSoundTick--;
+			if(livingSoundTick>0) return;
 			// Client
 			String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
 			if(!s.isEmpty() && !s.startsWith("minecraft:"))
@@ -781,7 +781,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void onKillEntity(EntityLivingBase par1EntityLiving) {
 		super.onKillEntity(par1EntityLiving);
-		creeperAttacking = false;
 		if (isBloodsuck()) {
 //			mod_LMM_littleMaidMob.Debug("nice Kill.");
 			playLittleMaidSound(LMM_EnumSound.laughter, true);
@@ -1067,16 +1066,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setInteger("Color", textureData.getColor());
 		par1nbtTagCompound.setString("texName", textureData.getTextureName(0));
 		par1nbtTagCompound.setString("texArmor", textureData.getTextureName(1));
-		par1nbtTagCompound.setBoolean("creePerAttacking", creeperAttacking);
 		if(textureModelName==null) textureModelName = "default_Origin";
 		par1nbtTagCompound.setString("textureModelName", textureModelName);
 		if(textureArmorName==null) textureArmorName = "default_Origin";
 		par1nbtTagCompound.setString("textureArmorName", textureArmorName);
 
 		NBTTagCompound prevtargettag = new NBTTagCompound();
-		if(prevtarget!=null){
-			prevtarget.writeEntityToNBT(prevtargettag);
-		}
 		par1nbtTagCompound.setTag("prevtarget", prevtargettag);
 		// HomePosition
 		par1nbtTagCompound.setInteger("homeX", func_180486_cf().getX());
@@ -1264,13 +1259,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 		onInventoryChanged();
-		creeperAttacking = par1nbtTagCompound.getBoolean("creeperAttacking");
-		try{
-			prevtarget = (EntityLivingBase) EntityList.createEntityFromNBT(par1nbtTagCompound.getCompoundTag("prevtarget"), worldObj);
-		}catch(Exception e){
-			prevtarget = null;
-		}
-
 
 		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
