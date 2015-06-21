@@ -1,6 +1,5 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -117,7 +116,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	public void updateAITick(int pMode) {
 		ItemStack litemstack = owner.maidInventory.getCurrentItem();
 		if (litemstack != null
-				&& (owner.getAttackTarget() instanceof EntityCreeper/* || owner.getAITarget() instanceof EntityTNTPrimed*/)) {
+				&& (owner.getAttackTarget() instanceof EntityCreeper/* || owner.getAttackTarget().getClass().isAssignableFrom(EntityTNTPrimed.class)*/)) {
 			if (pMode == mmode_Ripper) {
 				owner.setMaidMode("TNT-D");
 				owner.maidOverDriveTime.setEnable(true);
@@ -257,12 +256,12 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 					e.printStackTrace();
 				}
 //				((EntityCreeper)pEntity).timeSinceIgnited = 0;
-				owner.setSwing(20, LMM_EnumSound.attack);
+				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck);
 			} else if (pEntity instanceof EntityTNTPrimed) {
 				pEntity.setDead();
 				lis.damageItem(1, owner);
 //				lis.damageItem(1, owner.maidAvatar);
-				owner.setSwing(20, LMM_EnumSound.attack);
+				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck);
 			} else {
 				owner.maidAvatar.interactWith(pEntity);
 				owner.setSwing(20, LMM_EnumSound.attack);
@@ -298,11 +297,6 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 			}
 		case mmode_TNTD :
 			if (pEntity instanceof EntityCreeper) {
-				if(owner.getMaidMasterEntity()!=null&&((EntityCreeper)pEntity).getAttackTarget()!=null){
-					if(!((EntityCreeper)pEntity).getAttackTarget().equals(owner.getMaidMasterEntity())){
-						return false;
-					}
-				}
 				return true;
 			}
 			if (pEntity instanceof EntityTNTPrimed) {
