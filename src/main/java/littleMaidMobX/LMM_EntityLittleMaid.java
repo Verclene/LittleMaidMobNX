@@ -782,7 +782,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void playLivingSound() {
 		// TODO 自動生成されたメソッド・スタブ
 		getLivingSound();
-		super.playLivingSound();
 	}
 
 	@Override

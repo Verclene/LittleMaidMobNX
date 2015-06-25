@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.common.collect.Lists;
+
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.MMMLib;
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -61,7 +63,7 @@ public class MMMTransformer implements IClassTransformer, Opcodes {
 
 	public static void Debug(String pText, Object... pData) {
 		// デバッグメッセージ
-		if(MMMLib.isDebugMessage)
+		if(LMM_LittleMaidMobNX.cfg_PrintDebugMessage)
 		{
 			System.out.println(String.format("MMMTransformer-" + pText, pData));
 		}

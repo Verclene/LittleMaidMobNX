@@ -33,8 +33,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import network.W_Network;
 
-@Mod(	modid = LMM_LittleMaidMobNX.DOMAIN,
-		name  = LMM_LittleMaidMobNX.DOMAIN)
+@Mod(	modid   = LMM_LittleMaidMobNX.DOMAIN,
+		name    = LMM_LittleMaidMobNX.DOMAIN,
+		version = "openbeta-0.4.3-unstable-mc18f1450")
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";

@@ -3,6 +3,7 @@ package mmmlibx.lib;
 import java.io.File;
 import java.util.List;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.guns.GunsBase;
 import mmmlibx.lib.multiModel.MMMLoader.MMMTransformer;
 import mmmlibx.lib.multiModel.texture.MultiModelManager;
@@ -21,7 +22,7 @@ import network.W_Network;
 
 @Mod(	modid	= "MMMLibX",
 		name	= "MMMLibX",
-		version	= "1.7.x-srg-1")
+		version	= "1.8")
 public class MMMLib {
 
 	public static boolean cfg_isModelAlphaBlend = true;
@@ -37,13 +38,13 @@ public class MMMLib {
 
 	public static void Debug(String pText, Object... pData) {
 		// デバッグメッセージ
-		if (isDebugMessage) {
+		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage) {
 			System.out.println(String.format("MMMLib-" + pText, pData));
 		}
 	}
 	public static void Debug(boolean isRemote, String pText, Object... pData) {
 		// デバッグメッセージ
-		if (isDebugMessage) {
+		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage) {
 			System.out.println(String.format("["+(isRemote? "Client":"Server")+"]MMMLib-" + pText, pData));
 		}
 	}

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,7 @@ public class GunsBase {
 
 	public static void Debug(String pText, Object... pData) {
 		// デバッグメッセージ
-		if (isDebugMessage) {
+		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage) {
 			System.out.println(String.format("GunsBase-" + pText, pData));
 		}
 	}
