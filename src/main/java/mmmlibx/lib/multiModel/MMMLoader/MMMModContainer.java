@@ -28,6 +28,7 @@ public class MMMModContainer extends DummyModContainer {
 	@Override
 	public boolean registerBus(EventBus bus, LoadController controller) {
 		// これ付けないとDisableで判定されちゃう。
+		bus.register(this);
 		return true;
 	}
 
