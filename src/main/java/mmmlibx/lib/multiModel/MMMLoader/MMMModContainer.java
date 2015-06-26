@@ -2,6 +2,7 @@ package mmmlibx.lib.multiModel.MMMLoader;
 
 import java.util.Arrays;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.ModMetadata;
@@ -15,8 +16,8 @@ public class MMMModContainer extends DummyModContainer {
 		ModMetadata lmeta = getMetadata();
 		
 		lmeta.modId		= "OldModelLoader";
-		lmeta.name		= "OldModelLoader";
-		lmeta.version	= "1.0";
+		lmeta.name		= "LMMNX OldModelLoader";
+		lmeta.version	= LMM_LittleMaidMobNX.VERSION;
 		lmeta.authorList	= Arrays.asList("MMM");
 		lmeta.description	= "The MultiModel before 1.6.2 is read.";
 		lmeta.url			= "";

@@ -22,7 +22,7 @@ import network.W_Network;
 
 @Mod(	modid	= "MMMLibX",
 		name	= "MMMLibX",
-		version	= "1.8")
+		version	= LMM_LittleMaidMobNX.VERSION)
 public class MMMLib {
 
 	public static boolean cfg_isModelAlphaBlend = true;
