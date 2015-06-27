@@ -3,10 +3,10 @@ entity.lmmx.LittleMaidX.name=リトルメイド
 item.lmmx:spawn_lmmx_egg.name=リトルメイド
 
 achievement.contract=悟り。
-achievement.contract.desc=メイドさんを入手しました。
+achievement.contract.desc=リトルメイドを雇用する
 
-//littleMaidMob.mode.Archer=射手
-//littleMaidMob.mode.Blazingstar=刃鳴散らす者
+littleMaidMob.mode.Archer=射手
+littleMaidMob.mode.Blazingstar=刃鳴散らす者
 littleMaidMob.mode.Wild=野生種
 littleMaidMob.mode.Escorter=従者
 littleMaidMob.mode.Fencer=護衛剣士
@@ -17,7 +17,8 @@ littleMaidMob.mode.Ripper=毛狩り隊
 littleMaidMob.mode.F-Ripper=自由毛狩り隊
 littleMaidMob.mode.D-Ripper=神速毛狩り隊
 littleMaidMob.mode.T-Ripper=赤石探知毛狩り隊
-//littleMaidMob.mode.TNT-D=TNT-D
+littleMaidMob.mode.TNT-D=TNT-D
+littleMaidMob.mode.Tracer=赤石探知
 
 littleMaidMob.text.AP=メイド装甲
 littleMaidMob.text.Health=メイド強度

@@ -9,7 +9,6 @@ import mmmlibx.lib.multiModel.MMMLoader.MMMTransformer;
 import mmmlibx.lib.multiModel.texture.MultiModelManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -27,7 +26,6 @@ public class MMMLib {
 
 	public static boolean cfg_isModelAlphaBlend = true;
 /**	public static final int cfg_startVehicleEntityID = 0;	Forgeには不要	*/
-	public static boolean isDebugMessage = true;
 	public static boolean isModelAlphaBlend = true;
 
 
@@ -56,11 +54,7 @@ public class MMMLib {
 		MMMTransformer.isEnable = true;
 		
 		// コンフィグの解析・設定
-		File configFile = pEvent.getSuggestedConfigurationFile();
-		Configuration lconf = new Configuration(configFile);
-		lconf.load();
-		isDebugMessage		= lconf.get("MMMLib", "isDebugMessage", false).getBoolean(false);
-		isModelAlphaBlend	= lconf.get("MMMLib", "isModelAlphaBlend", true).getBoolean(true);
+		isModelAlphaBlend	= LMM_LittleMaidMobNX.cfg_isModelAlphaBlend;
 		cfg_isModelAlphaBlend = isModelAlphaBlend;
 		
 		String ls;
@@ -83,8 +77,7 @@ public class MMMLib {
 		lconf.addCustomCategoryComment(ls, "Append Recipes from JSON.");
 		EzRecipes.isDebugMessage = lconf.get(ls, "isDebugMessage", false).getBoolean(false);
 */
-		lconf.save();
-		
+
 		// 独自スクリプトデコーダー
 // TODO ★		(new MMMDecorder()).execute();
 

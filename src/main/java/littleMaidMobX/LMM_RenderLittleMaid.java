@@ -163,15 +163,14 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 					mmodel.modelInner.render(lmm.maidCaps, par2, par3, par4, par5, par6, par7, true);
 					Client.setLightmapTextureCoords(mmodel.lighting);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-//					GL11.glDisable(GL11.GL_BLEND);
-//					GL11.glDisable(GL11.GL_ALPHA_TEST);
+					GL11.glDisable(GL11.GL_BLEND);
+					GL11.glDisable(GL11.GL_ALPHA_TEST);
 //					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				}
 			}
 
 			//Outer
-			GlStateManager.enableBlend();
-			GlStateManager.enableAlpha();
+			if(LMM_LittleMaidMobNX.cfg_isModelAlphaBlend) GL11.glEnable(GL11.GL_BLEND);
 			OUTER:{
 				if(mmodel.modelOuter==null) break OUTER;
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -215,8 +214,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 //					GL11.glDisable(GL11.GL_BLEND);
 //					GL11.glDisable(GL11.GL_ALPHA_TEST);
-//					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				}
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			}
 
 			//カウントインクリメント

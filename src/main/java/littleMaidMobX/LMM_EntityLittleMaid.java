@@ -2898,12 +2898,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 						deathTime = 0;
 						if (!worldObj.isRemote) {
-							//1.8後回し
-							/*
 							if (LMM_LittleMaidMobNX.ac_Contract != null) {
 								par1EntityPlayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Contract);
 							}
-							*/
 							setContract(true);
 							W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));
 							setHealth(20);

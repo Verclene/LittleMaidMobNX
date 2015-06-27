@@ -1,6 +1,5 @@
 package littleMaidMobX;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -15,10 +14,11 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -34,12 +34,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import network.W_Network;
 
 @Mod(	modid   = LMM_LittleMaidMobNX.DOMAIN,
-		name    = LMM_LittleMaidMobNX.DOMAIN,
+		name    = "LittleMaidMobNX",
 		version = LMM_LittleMaidMobNX.VERSION)
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "openbeta-0.4.5-unstable-mc18f1450";
+	public static final String VERSION = "openbeta-0.4.6-unstable-mc18f1450";
 
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
@@ -91,6 +91,9 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_DeathMessage = true;
 //	@MLProp(info="Spawn Anywhere.")
 	public static boolean cfg_Dominant = false;
+	//アルファブレンド
+	public static boolean cfg_isModelAlphaBlend = false;
+
 //	@MLProp(info="true: AlphaBlend(request power), false: AlphaTest(more fast)")
 //	public static boolean AlphaBlend = true;
 //	@MLProp(info="true: Will be hostile, false: Is a pacifist")
@@ -98,7 +101,7 @@ public class LMM_LittleMaidMobNX {
 	public static String cfg_IgnoreItemList = "arsmagica2";
 
 	//1.8後回し
-	//public static Achievement ac_Contract;
+	public static Achievement ac_Contract;
 
 	@SidedProxy(
 			clientSide = "littleMaidMobX.LMM_ProxyClient",
@@ -162,6 +165,7 @@ public class LMM_LittleMaidMobNX {
 		cfg_PrintDebugMessage = cfg.getBoolean("PrintDebugMessage", false);
 		cfg_spawnLimit = cfg.getInt("spawnLimit", 20);
 		cfg_spawnWeight = cfg.getInt("spawnWeight", 5);
+		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
 		
 		try {
 			cfg.saveConfig(getName(), evt);
@@ -201,9 +205,9 @@ public class LMM_LittleMaidMobNX {
 		}
 
 		//1.8後回し
-		/*ac_Contract = new Achievement("achievement.contract", "contract", 0, 0, Items.cake, null).initIndependentStat().registerStat();
+		ac_Contract = (Achievement) new Achievement("achievement.contract", "contract", 0, 0, Items.cake, null).initIndependentStat().registerStat();
 		Achievement[] achievements = new Achievement[] { ac_Contract };
-		AchievementPage.registerAchievementPage(new AchievementPage("LittleMaidX", achievements));*/
+		AchievementPage.registerAchievementPage(new AchievementPage("LittleMaidNX", achievements));
 
 		// AIリストの追加
 		LMM_EntityModeManager.init();
