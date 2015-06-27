@@ -116,9 +116,11 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 				}
 			}
 		}
+		GL11.glEnable(GL11.GL_BLEND);
 		if (modelOuter != null) {
 			if (textureOuter != null && lri) {
 				// 通常パーツ
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				if (textureOuter[renderParts] != null) {
 					try{
 						Client.setTexture(textureOuter[renderParts]);
