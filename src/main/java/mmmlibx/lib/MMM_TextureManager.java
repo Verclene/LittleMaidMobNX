@@ -499,7 +499,8 @@ public class MMM_TextureManager {
 		if (!fname.startsWith("/")) {
 			fname = (new StringBuilder()).append("/").append(fname).toString();
 		}
-		
+
+//		MMMLib.Debug("MMM_TextureManager.addTextureName : %s # %s # %s # %s", fname, pSearch[0], pSearch[1], pSearch[2]);
 		if (fname.startsWith(pSearch[1])) {
 			int i = fname.lastIndexOf("/");
 			if (pSearch[1].length() < i) {
@@ -524,6 +525,7 @@ public class MMM_TextureManager {
 					if (lts == null) {
 						lts = new MMM_TextureBox(pn, pSearch);
 						textures.add(lts);
+						MMMLib.Debug("getTextureName-append-texturePack-%s", pn);
 					}
 					lts.addTexture(lindex, fname);
 				}
