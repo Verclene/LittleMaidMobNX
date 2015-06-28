@@ -498,13 +498,8 @@ public class MMM_TextureManager {
 		// パッケージにテクスチャを登録
 		if (!fname.startsWith("/")) {
 			fname = (new StringBuilder()).append("/").append(fname).toString();
-		} else {
-			
 		}
 		
-
-//		MMMLib.Debug("MMM_TextureManager.addTextureName : %s # %s # %s # %s", fname, pSearch[0], pSearch[1], pSearch[2]);
-		MMMLib.Debug("FETCHING name %s in %s", fname, pSearch[1]);
 		if (fname.startsWith(pSearch[1])) {
 			int i = fname.lastIndexOf("/");
 			if (pSearch[1].length() < i) {
@@ -525,12 +520,10 @@ public class MMM_TextureManager {
 					if (lindex == tx_oldwild) {
 						lindex = tx_wild + 12;
 					}
-					MMMLib.Debug("getTextureName-Detected-name-%s", pn);
 					MMM_TextureBox lts = getTextureBox(pn);
 					if (lts == null) {
 						lts = new MMM_TextureBox(pn, pSearch);
 						textures.add(lts);
-						MMMLib.Debug("getTextureName-append-texturePack-%s", pn);
 					}
 					lts.addTexture(lindex, fname);
 				}
@@ -558,7 +551,6 @@ public class MMM_TextureManager {
 					if (zipentry.getName().endsWith(".class")) {
 						addModelClass(zipentry.getName(), pSearch);
 					} else {
-						MMMLib.Debug("Detected %s",zipentry.getName());
 						addTextureName(zipentry.getName(), pSearch);
 					}
 				}
