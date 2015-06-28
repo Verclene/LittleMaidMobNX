@@ -218,8 +218,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 	}
 
 	public boolean addTexture(int pIndex, String pLocation) {
-		String ls;
-		ls = "/assets/minecraft/";
+		String ls = "/assets/minecraft/";
 		if (pLocation.startsWith(ls)) {
 			pLocation = pLocation.substring(ls.length());
 		} else {

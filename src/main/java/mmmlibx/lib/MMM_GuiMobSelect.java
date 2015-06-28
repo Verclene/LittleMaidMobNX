@@ -1,5 +1,6 @@
 package mmmlibx.lib;
 
+import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +28,13 @@ public abstract class MMM_GuiMobSelect extends GuiScreen {
 	protected GuiSlot selectPanel;
 
 
+
+	@Override
+	public void handleMouseInput() throws IOException {
+		// TODO 自動生成されたメソッド・スタブ
+		super.handleMouseInput();
+		selectPanel.handleMouseInput();
+	}
 
 	public MMM_GuiMobSelect(World pWorld) {
 		entityMap = new TreeMap<String, Entity>();

@@ -39,7 +39,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "openbeta-0.4.6-unstable-mc18f1450";
+	public static final String VERSION = "openbeta-0.4.7-unstable-mc18f1450";
 
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",

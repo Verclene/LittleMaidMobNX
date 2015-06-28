@@ -501,9 +501,10 @@ public class MMM_TextureManager {
 		} else {
 			
 		}
+		
 
 //		MMMLib.Debug("MMM_TextureManager.addTextureName : %s # %s # %s # %s", fname, pSearch[0], pSearch[1], pSearch[2]);
-		
+		MMMLib.Debug("FETCHING name %s in %s", fname, pSearch[1]);
 		if (fname.startsWith(pSearch[1])) {
 			int i = fname.lastIndexOf("/");
 			if (pSearch[1].length() < i) {
@@ -524,6 +525,7 @@ public class MMM_TextureManager {
 					if (lindex == tx_oldwild) {
 						lindex = tx_wild + 12;
 					}
+					MMMLib.Debug("getTextureName-Detected-name-%s", pn);
 					MMM_TextureBox lts = getTextureBox(pn);
 					if (lts == null) {
 						lts = new MMM_TextureBox(pn, pSearch);
@@ -545,6 +547,7 @@ public class MMM_TextureManager {
 			FileInputStream fileinputstream = new FileInputStream(file);
 			ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
 			ZipEntry zipentry;
+			MMMLib.Debug("Start searching %s", file.getName());
 			do {
 				zipentry = zipinputstream.getNextEntry();
 				if(zipentry == null)
@@ -555,6 +558,7 @@ public class MMM_TextureManager {
 					if (zipentry.getName().endsWith(".class")) {
 						addModelClass(zipentry.getName(), pSearch);
 					} else {
+						MMMLib.Debug("Detected %s",zipentry.getName());
 						addTextureName(zipentry.getName(), pSearch);
 					}
 				}
