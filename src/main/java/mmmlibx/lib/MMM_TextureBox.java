@@ -3,7 +3,9 @@ package mmmlibx.lib;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.zip.ZipFile;
 
+import littleMaidMobX.LMM_OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelCapsHelper;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
@@ -216,13 +218,11 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 
 		return lbox;
 	}
-
+	
 	public boolean addTexture(int pIndex, String pLocation) {
 		String ls = "/assets/minecraft/";
 		if (pLocation.startsWith(ls)) {
 			pLocation = pLocation.substring(ls.length());
-		} else {
-//			pLocation = "../.." + pLocation;
 		}
 		boolean lflag = false;
 		switch ((pIndex & 0xfff0)) {

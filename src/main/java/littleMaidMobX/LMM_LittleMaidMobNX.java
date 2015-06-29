@@ -39,7 +39,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "openbeta-0.4.7-unstable-mc18f1450";
+	public static final String VERSION = "openbeta-0.4.8-mc18f1450";
 
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
@@ -243,6 +243,7 @@ public class LMM_LittleMaidMobNX {
 			*/
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
 			defaultResourcePacks.add(new MMMResourcePack());
+			defaultResourcePacks.add(new LMM_OldZipTexturesLoader());
 
 			// デフォルトモデルの設定
 			proxy.init();

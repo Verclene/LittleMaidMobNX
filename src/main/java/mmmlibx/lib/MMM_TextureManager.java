@@ -18,8 +18,10 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import littleMaidMobX.LMM_OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.*;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
@@ -114,8 +116,6 @@ public class MMM_TextureManager {
 	
 	protected List<String[]> searchPrefix = new ArrayList<String[]>();
 
-
-
 	public void init() {
 		// 検索対象ファイル名を登録します。
 		// パターンを登録しない場合、独自名称のMODファイル、テクスチャディレクトリ、クラスが読み込まれません。
@@ -129,6 +129,8 @@ public class MMM_TextureManager {
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/ModelMulti/", "ModelMulti_");
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/littleMaid/", "ModelMulti_");
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/littleMaid/", "ModelLittleMaid_");
+		addSearch("mmmlibx", "/mob/ModelMulti/", "ModelMulti_");
+		addSearch("mmmlibx", "/mob/littleMaid/", "ModelLittleMaid_");
 //		addSearch("assets",  "/assets/minecraft/textures/entity/ModelMulti/", "ModelMulti_");
 //		addSearch("assets",  "/assets/minecraft/textures/entity/littleMaid/", "ModelMulti_");
 //		addSearch("assets",  "/assets/minecraft/textures/entity/littleMaid/", "ModelLittleMaid_");
@@ -494,7 +496,7 @@ public class MMM_TextureManager {
 		}
 	}
 	
-	protected void addTextureName(String fname, String[] pSearch) {
+	protected boolean addTextureName(String fname, String[] pSearch) {
 		// パッケージにテクスチャを登録
 		if (!fname.startsWith("/")) {
 			fname = (new StringBuilder()).append("/").append(fname).toString();
@@ -528,9 +530,11 @@ public class MMM_TextureManager {
 						MMMLib.Debug("getTextureName-append-texturePack-%s", pn);
 					}
 					lts.addTexture(lindex, fname);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	protected boolean addTexturesZip(File file, String[] pSearch) {
@@ -553,7 +557,10 @@ public class MMM_TextureManager {
 					if (zipentry.getName().endsWith(".class")) {
 						addModelClass(zipentry.getName(), pSearch);
 					} else {
-						addTextureName(zipentry.getName(), pSearch);
+						String lt1 = "mob/littleMaid";
+						String lt2 = "mob/ModelMulti";
+						if(addTextureName(zipentry.getName(), pSearch)&&(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
+							LMM_OldZipTexturesLoader.keys.put(zipentry.getName(), file);
 					}
 				}
 			} while(true);
