@@ -22,7 +22,6 @@ public class LMM_OldZipTexturesLoader implements IResourcePack {
 
 	@Override
 	public InputStream getInputStream(ResourceLocation arg0) throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		if(resourceExists(arg0)){
 			String key = arg0.getResourcePath();
 			if(key.startsWith("/")) key = key.substring(1);
@@ -36,32 +35,27 @@ public class LMM_OldZipTexturesLoader implements IResourcePack {
 
 	@Override
 	public BufferedImage getPackImage() throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 
 	@Override
 	public IMetadataSection getPackMetadata(IMetadataSerializer arg0,
 			String arg1) throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 
 	@Override
 	public String getPackName() {
-		// TODO 自動生成されたメソッド・スタブ
 		return "OldTexturesLoader";
 	}
 
 	@Override
 	public Set<String> getResourceDomains() {
-		// TODO 自動生成されたメソッド・スタブ
 		return ImmutableSet.of("minecraft");
 	}
 
 	@Override
 	public boolean resourceExists(ResourceLocation arg0) {
-		// TODO 自動生成されたメソッド・スタブ
 		String key = arg0.getResourcePath();
 		if(key.startsWith("/")) key = key.substring(1);
 		return keys.containsKey(key);

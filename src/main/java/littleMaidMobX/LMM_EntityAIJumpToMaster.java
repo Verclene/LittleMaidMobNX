@@ -57,8 +57,6 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				return false;
 			}
 			
-			//1.8後回し
-			
 			if (theMaid.func_180486_cf().distanceSqToCenter(
 					MathHelper.floor_double(theMaid.posX),
 					MathHelper.floor_double(theMaid.posY),
@@ -213,13 +211,6 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 	 * 転移先のチェック
 	 */
 	protected boolean isCanJump(int px, int py, int pz) {
-		//1.8後回し
-		/*
-		double lw = (double) theMaid.width / 2D;
-		double ly = (double) py - (double) (theMaid.yOffset + theMaid.height);
-		boundingBox.setBounds((double) px - lw, ly, (double) pz - lw,
-				(double) px + lw, ly + (double) theMaid.height, (double) pz + lw);
-		*/
 		return theWorld.getBlockState(new BlockPos(px, py - 1, pz)).getBlock().getMaterial().isSolid()
 				&& theWorld.func_147461_a(boundingBox).isEmpty();
 	}

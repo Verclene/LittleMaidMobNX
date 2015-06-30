@@ -9,6 +9,9 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.jcraft.jorbis.Block;
+
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -26,9 +29,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
@@ -226,9 +231,9 @@ public class MMM_Helper {
 		float lspeed = 1.0F;
 		// 向きに合わせて距離を調整
 		int i = (pTarget.getPos().getY() == MathHelper.floor_double(pEntity.posY) && flag) ? 2 : 1;
-		//1.8後回し
+		// TODO 1.8後回し いらん気もする
 		/*
-		switch (pEntity.worldObj.getBlockState(new BlockPos(pTarget.getPos().getX(), pTarget.getPos().getY(), pTarget.getPos().getZ())) {
+		switch (pEntity.worldObj.getBlockState(new BlockPos(pTarget.getPos().getX(), pTarget.getPos().getY(), pTarget.getPos().getZ())).getValue()) {
 		case 3:
 			return lpn.tryMoveToXYZ(pTarget.getPos().getX(), pTarget.getPos().getY(), pTarget.getPos().getZ() + i, lspeed);
 		case 2:
@@ -441,7 +446,7 @@ public class MMM_Helper {
 		return lf;
 	}
 	protected static float convRevision() {
-		// TODO ★後回し
+		// TODO いる？
 		return 0;// convRevision(MMMLib.Revision);
 	}
 

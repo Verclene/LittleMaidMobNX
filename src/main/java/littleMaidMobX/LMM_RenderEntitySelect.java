@@ -35,7 +35,6 @@ public class LMM_RenderEntitySelect extends RenderModelMulti {
 
 		public MMMLayerArmor(RendererLivingEntity p_i46125_1_) {
 			super(p_i46125_1_);
-			// TODO 自動生成されたコンストラクター・スタブ
 			p1 = p_i46125_1_;
 			mmodel = modelFATT;
 			this.field_177189_c = mmodel;
@@ -44,15 +43,12 @@ public class LMM_RenderEntitySelect extends RenderModelMulti {
 
 		@Override
 		protected void func_177177_a() {
-			// TODO 自動生成されたメソッド・スタブ
-			
 			this.field_177189_c = mmodel;
 			this.field_177186_d = mmodel;
 		}
 
 		@Override
 		protected void func_177179_a(ModelBase paramModelBase, int paramInt) {
-			// TODO 自動生成されたメソッド・スタブ
 			ModelBaseDuo model = (ModelBaseDuo) paramModelBase;
 			model.showArmorParts(paramInt);
 		}
@@ -62,10 +58,9 @@ public class LMM_RenderEntitySelect extends RenderModelMulti {
 				float par2, float par3, float par4,
 				float par5, float par6, float par7,
 				float par8) {
-			// TODO 自動生成されたメソッド・スタブ
 			lmm = (MMM_EntitySelect) par1EntityLiving;
 			if(!lmm.modeArmor) return;
-			//LMM管理の装備スロットとEntityLiving標準の装備スロットがずれているので注意
+			// TODO もっと手っ取り早い方法ない？
 			render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 3);
 			render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 2);
 			render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 1);
@@ -201,7 +196,6 @@ public class LMM_RenderEntitySelect extends RenderModelMulti {
 
 	public LMM_RenderEntitySelect(RenderManager manager, float pShadowSize) {
 		super(manager, pShadowSize);
-		// TODO 自動生成されたコンストラクター・スタブ
 		this.addLayer(new MMMLayerArmor(this));
 	}
 

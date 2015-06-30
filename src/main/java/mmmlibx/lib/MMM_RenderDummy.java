@@ -21,7 +21,6 @@ public class MMM_RenderDummy extends Render {
 	@Override
 	public void doRender(Entity entity, double d, double d1, double d2,
 			float f, float f1) {
-		//1.8後回し
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);

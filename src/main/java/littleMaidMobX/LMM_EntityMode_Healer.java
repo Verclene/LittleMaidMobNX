@@ -118,8 +118,7 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 						&& owner.canEntityBeSeen(owner.mstatMasterEntity)) {
 					EntityPlayer lmaster = owner.getMaidMasterEntity(); 
 					int h = lmaster.getFoodStats().getFoodLevel();
-					// マスクドメイドは賢いな
-					// 1.8後回し
+					// TODO 頭防具がなんとかなるまで後回し
 					/*
 					while (owner.isMaskedMaid()) {
 						// 主の状態に合わせてアイテムを選択

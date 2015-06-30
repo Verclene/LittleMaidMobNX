@@ -18,8 +18,7 @@ public class RenderModelMulti extends RenderLiving {
 	public ModelBaseSolo modelMain;
 	public ModelBaseDuo modelFATT;
 	public IModelCaps fcaps;
-	public boolean renderMode;
-	
+
 	public RenderModelMulti(RenderManager manager,float pShadowSize) {
 		super(manager, null, pShadowSize);
 		modelFATT = new ModelBaseDuo(this);
@@ -45,14 +44,6 @@ public class RenderModelMulti extends RenderLiving {
 		return -1;
 	}
 	
-	//1.8後回し
-	/*
-	@Override
-	protected int shouldRenderPass(EntityLivingBase par1EntityLiving, int par2, float par3) {
-		return showArmorParts((EntityLivingBase)par1EntityLiving, par2, par3);
-	}
-	*/
-
 	@Override
 	protected void preRenderCallback(EntityLivingBase entityliving, float f) {
 		Float lscale = (Float)modelMain.getCapsValue(IModelCaps.caps_ScaleFactor);
@@ -106,8 +97,6 @@ public class RenderModelMulti extends RenderLiving {
 	public void renderModelMulti(EntityLiving par1EntityLiving, double par2,
 			double par4, double par6, float par8, float par9, IModelCaps pEntityCaps) {
 		setModelValues(par1EntityLiving, par2, par4, par6, par8, par9, pEntityCaps);
-		// TODO:1.6.2-MCP805 なぜか変なとこに飛んでループする
-//		super.func_130000_a(par1EntityLiving, par2, par4, par6, par8, par9);
 		super.doRender(par1EntityLiving, par2, par4, par6, par8, par9);
 	}
 
@@ -122,7 +111,6 @@ public class RenderModelMulti extends RenderLiving {
 	protected void renderLeash(EntityLiving par1EntityLiving, double par2,
 			double par4, double par6, float par8, float par9) {
 		// 縄の位置のオフセット
-		// TODO：MCP-804対策
 		float lf = 0F;
 		if (modelMain.model != null && fcaps != null) {
 			lf = modelMain.model.getLeashOffset(fcaps);
@@ -142,7 +130,7 @@ public class RenderModelMulti extends RenderLiving {
 		mainModel.render(par1EntityLiving, par2, par3, par4, par5, par6, par7);
 	}
 
-	//1.8後回し
+	// TODO いらん？
 	/*
 	@Override
 	protected void renderEquippedItems(EntityLivingBase par1EntityLiving, float par2) {
@@ -166,13 +154,6 @@ public class RenderModelMulti extends RenderLiving {
 		return super.getColorMultiplier(par1EntityLivingBase, par2, par3);
 	}
 
-	@Override
-	protected int inheritRenderPass(EntityLivingBase par1EntityLivingBase,
-			int par2, float par3) {
-		int li = super.inheritRenderPass(par1EntityLivingBase, par2, par3);
-		modelFATT.renderCount = 16;
-		return li;
-	}
 	*/
 	
 	@Override

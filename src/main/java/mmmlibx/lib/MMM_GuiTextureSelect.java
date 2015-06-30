@@ -57,20 +57,17 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 			throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		// TODO 自動生成されたメソッド・スタブ
 		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	@Override
 	protected void mouseClickMove(int mouseX, int mouseY,
 			int clickedMouseButton, long timeSinceLastClick) {
-		// TODO 自動生成されたメソッド・スタブ
 		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 	}
 
@@ -120,19 +117,16 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 
 	@Override
 	public void handleInput() throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		super.handleInput();
 	}
 
 	@Override
 	public void handleKeyboardInput() throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		super.handleKeyboardInput();
 	}
 
 	@Override
 	public void handleMouseInput() throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		super.handleMouseInput();
 		selectPanel.handleMouseInput();
 	}

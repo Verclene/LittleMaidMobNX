@@ -84,9 +84,6 @@ public class LMM_EntityAINearestAttackableTarget extends EntityAINearestAttackab
 				}
 			}
 			theMaid.setAttackTarget((EntityLivingBase)targetEntity);
-		} else {
-			//1.8後回し
-			//theMaid.setAttackTarget(targetEntity);
 		}
 		fcanAttack = 0;
 		fretryCounter = 0;

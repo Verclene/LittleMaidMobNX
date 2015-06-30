@@ -31,7 +31,6 @@ public abstract class MMM_GuiMobSelect extends GuiScreen {
 
 	@Override
 	public void handleMouseInput() throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		super.handleMouseInput();
 		selectPanel.handleMouseInput();
 	}

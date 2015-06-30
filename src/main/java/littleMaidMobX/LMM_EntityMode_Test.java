@@ -182,19 +182,16 @@ public class LMM_EntityMode_Test extends LMM_EntityModeBase implements ICommand 
 	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args,
 			BlockPos pos) {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 
 	@Override
 	public String getName() {
-		// TODO 自動生成されたメソッド・スタブ
 		return "LMMtest";
 	}
 
 	@Override
 	public List getAliases() {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 

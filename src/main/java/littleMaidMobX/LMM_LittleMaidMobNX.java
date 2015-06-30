@@ -39,7 +39,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "openbeta-0.4.8-mc18f1450";
+	public static final String VERSION = "openbeta-0.4.9-mc18f1450";
 
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
@@ -151,7 +151,6 @@ public class LMM_LittleMaidMobNX {
 		try {
 			cfg.loadConfig(getName(), evt);
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 		cfg_Aggressive = cfg.getBoolean("Aggressive", true);
@@ -177,7 +176,6 @@ public class LMM_LittleMaidMobNX {
 		try {
 			cfg.saveConfig(getName(), evt);
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 
@@ -211,7 +209,6 @@ public class LMM_LittleMaidMobNX {
 			});
 		}
 
-		//1.8後回し
 		ac_Contract = (Achievement) new Achievement("achievement.contract", "contract", 0, 0, Items.cake, null).initIndependentStat().registerStat();
 		Achievement[] achievements = new Achievement[] { ac_Contract };
 		AchievementPage.registerAchievementPage(new AchievementPage("LittleMaidNX", achievements));

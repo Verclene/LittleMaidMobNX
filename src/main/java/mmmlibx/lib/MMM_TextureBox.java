@@ -92,7 +92,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 	}
 
 	public ResourceLocation getArmorTextureName(int pIndex, ItemStack itemstack) {
-		//1.8後回し
+		// TODO レイヤー化しちゃってるのでもし本気で復活するなら別の手を打たないと…
 		// indexは0x40,0x50番台
 		// lightも追加
 		/*
@@ -118,7 +118,6 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ResourceLocation getArmorTextureName(int pIndex, String pArmorPrefix, int pDamage) {
-		//1.8後回し
 		// indexは0x40,0x50番台
 		if (armors.isEmpty() || pArmorPrefix == null) return null;
 

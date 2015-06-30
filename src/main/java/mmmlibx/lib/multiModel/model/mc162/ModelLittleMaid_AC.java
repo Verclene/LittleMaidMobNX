@@ -35,7 +35,6 @@ public class ModelLittleMaid_AC extends ModelMultiMMMBase {
 
 	@Override
 	public void initModel(float psize, float pyoffset) {
-		// TODO Auto-generated method stub
 		/*
 		Arms = new ModelRenderer[18];
 		// バイプロダクトエフェクター
@@ -87,8 +86,6 @@ public class ModelLittleMaid_AC extends ModelMultiMMMBase {
 	
 	@Override
 	public void renderItems(IModelCaps pEntityCaps) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

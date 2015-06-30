@@ -146,7 +146,6 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 		try {
 			super.handleMouseInput();
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 		int i = Mouse.getEventDWheel();

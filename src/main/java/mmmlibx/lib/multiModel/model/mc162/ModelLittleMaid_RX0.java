@@ -220,7 +220,6 @@ public class ModelLittleMaid_RX0 extends ModelLittleMaidBase {
 	@Override
 	public void setDefaultPause(float par1, float par2, float pTicksExisted,
 			float pHeadYaw, float pHeadPitch, float par6, IModelCaps pEntityCaps) {
-		// TODO Auto-generated method stub
 		super.setDefaultPause(par1, par2, pTicksExisted, pHeadYaw, pHeadPitch, par6, pEntityCaps);
 		int lvisible = ModelCapsHelper.getCapsValueInt(pEntityCaps, caps_PartsVisible);
 		

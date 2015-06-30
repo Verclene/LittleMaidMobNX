@@ -36,6 +36,7 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 	private double appendY;
 	private double appendZ;
 
+	// TODO クライアント用のあばたーはお飾りでよくね？もっと削れるかも
 
 	public LMM_EntityLittleMaidAvatar(World par1World)
 	{
@@ -148,7 +149,6 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 			// Client
 			LMM_LittleMaidMobNX.proxy.onCriticalHit(this, par1Entity);
 		} else {
-//TODO GGG			((WorldServer)worldObj).getEntityTracker().func_151248_b(avatar, new S0BPacketAnimation(par1Entity, 6));
 		}
 	}
 
@@ -157,13 +157,11 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 		if (worldObj.isRemote) {
 			LMM_LittleMaidMobNX.proxy.onEnchantmentCritical(this, par1Entity);
 		} else {
-//TODO GGG			((WorldServer)worldObj).getEntityTracker().func_151248_b(avatar, new S0BPacketAnimation(par1Entity, 7));
 		}
 	}
 
 	@Override
 	public void attackTargetEntityWithCurrentItem(Entity par1Entity) {
-		// TODO:
 		float ll = 0;
 		if (par1Entity instanceof EntityLivingBase) {
 			ll = ((EntityLivingBase)par1Entity).getHealth();
@@ -182,7 +180,6 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 
 	@Override
 	public ItemStack getCurrentArmor(int par1) {
-		//TODO GGG		return avatar.func_130225_q(par1);
 		return avatar.getCurrentArmor(par1);
 	}
 
@@ -203,7 +200,8 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 	@Override
 	public void destroyCurrentEquippedItem() {
 		// アイテムが壊れたので次の装備を選択
-		// TODO:但し、Forge等でプレーヤーイベントを設定しているものだとぬるぽ落ちするので、何らかの対策が必要。
+		/* TODO 但し、Forge等でプレーヤーイベントを設定しているものだとぬるぽ落ちするので、何らかの対策が必要。
+		 * ↑FakePlayerでスキップしてくれない？ */
 //		super.destroyCurrentEquippedItem();
 		inventory.setInventorySlotContents(inventory.currentItem, (ItemStack)null);
 		avatar.getNextEquipItem();
@@ -592,7 +590,6 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 
 	@Override
 	public boolean isSpectator() {
-		// TODO 自動生成されたメソッド・スタブ
 		return false;
 	}
 }

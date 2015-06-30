@@ -110,8 +110,6 @@ public class MMM_GuiTextureSlot extends GuiSlot {
 
 	@Override
 	protected void drawBackground() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

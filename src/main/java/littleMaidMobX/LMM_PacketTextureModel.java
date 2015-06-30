@@ -37,7 +37,6 @@ public class LMM_PacketTextureModel implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		// TODO 自動生成されたメソッド・スタブ
 		mode = buf.getByte(0);
 		ByteBuf bbuf = buf.slice(1, buf.readableBytes()-1);
 		text = bbuf.toString(Charset.forName("UTF-8"));
@@ -45,7 +44,6 @@ public class LMM_PacketTextureModel implements IMessage {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		// TODO 自動生成されたメソッド・スタブ
 		buf.writeByte(mode);
 		buf.writeBytes(text.getBytes(Charset.forName("UTF-8")));
 	}

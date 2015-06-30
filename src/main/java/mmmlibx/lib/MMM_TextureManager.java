@@ -269,7 +269,7 @@ public class MMM_TextureManager {
 			}
 		}
 		
-		// TODO:実験コード
+		// TODO 実験コード
 		buildCrafterTexture();
 		
 		// テクスチャパッケージにモデルクラスを紐付け
@@ -486,7 +486,6 @@ public class MMM_TextureManager {
 			}
 			catch (Exception exception) {
 				MMMLib.Debug("getModelClass-Exception: %s", fname);
-			// TODO ★一時的に無効化
 				exception.printStackTrace();
 			}
 			catch (Error error) {

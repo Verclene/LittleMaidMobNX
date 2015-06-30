@@ -46,7 +46,6 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 
 	@Override
 	public int priority() {
-		// TODO Auto-generated method stub
 		return 9000;
 	}
 	
@@ -289,8 +288,6 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 					// TODO:現状無意味
 					// 移動が固まらないように乱数加速
 					LMM_LittleMaidMobNX.Debug("Assert.");
-					//1.8後回し
-					//owner.updateWanderPath();
 					lf = true;
 				} else {
 					lf = MMM_Helper.setPathToTile(owner, (TileEntity)myInventory, false);
@@ -436,8 +433,6 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 						if (distance == lastdistance) {
 							// TODO: 現状無意味
 							LMM_LittleMaidMobNX.Debug("Assert.");
-							//1.8後回し
-							//owner.updateWanderPath();
 						} else {
 							owner.getNavigator().tryMoveToXYZ(lentity.posX, lentity.posY, lentity.posZ, 1.0F);
 						}
@@ -480,18 +475,14 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 			if (owner.isEntityAlive() && owner.isMaidContractOwner(pentityplayer)) {
 				if (pitemstack != null) {
 					// 追加分の処理
-					//1.8後回し
+					// TODO いる？
 					//owner.setPathToEntity(null);
 					if (owner.isRemainsContract()) {
 						if (pitemstack.getItem() instanceof ItemAppleGold) {
 							// ゴールデンアッポー
-							//1.8後回し
-							/*
 							if(!owner.worldObj.isRemote) {
-								((ItemAppleGold)pitemstack.getItem()).onFoodEaten(pitemstack, owner.worldObj, owner.maidAvatar);
+								((ItemAppleGold)pitemstack.getItem()).onItemUseFinish(pitemstack, owner.worldObj, owner.maidAvatar);
 							}
-							*/
-// TODO ★ onEatenに変えたのでいらない？		MMM_Helper.decPlayerInventory(pentityplayer, -1, 1);
 							return true;
 						}
 						else if (pitemstack.getItem() instanceof ItemBucketMilk && !owner.getActivePotionEffects().isEmpty()) {

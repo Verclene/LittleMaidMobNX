@@ -58,7 +58,7 @@ public class ModelBaseSolo extends ModelBaseNihil implements IModelBaseMMM {
 			// Actors用
 			model.setRotationAngles(par2, par3, par4, par5, par6, par7, entityCaps);
 			// Face
-			// TODO:テクスチャのロードはなんか考える。
+			// TODO テクスチャのロードはなんか考える。
 			Client.setTexture(textures[2]);
 			model.setCapsValue(caps_renderFace, entityCaps, par2, par3, par4, par5, par6, par7, isRendering);
 			// Body
