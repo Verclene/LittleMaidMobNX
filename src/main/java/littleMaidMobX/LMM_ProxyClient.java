@@ -29,7 +29,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 
 	public void init() {
 		RenderingRegistry.registerEntityRenderingHandler(LMM_EntityLittleMaid.class,new LMM_RenderLittleMaid(Minecraft.getMinecraft().getRenderManager(),0.3F));
-		RenderingRegistry.registerEntityRenderingHandler(MMM_EntitySelect.class,	new RenderModelMulti(Minecraft.getMinecraft().getRenderManager(), 0.0F));
+		RenderingRegistry.registerEntityRenderingHandler(MMM_EntitySelect.class,	new LMM_RenderEntitySelect(Minecraft.getMinecraft().getRenderManager(), 0.0F));
 		RenderingRegistry.registerEntityRenderingHandler(MMM_EntityDummy.class,		new MMM_RenderDummy());
 		
 		

@@ -23,7 +23,7 @@ public class MMM_EntitySelect extends EntityLiving implements IModelCaps, ITextu
 //	};
 	protected MMM_EntityCaps entityCaps;
 	public MMM_TextureData textureData;
-
+	public boolean modeArmor = false;
 
 	public MMM_EntitySelect(World par1World) {
 		super(par1World);

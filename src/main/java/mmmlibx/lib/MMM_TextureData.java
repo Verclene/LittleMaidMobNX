@@ -134,10 +134,6 @@ public class MMM_TextureData  {
 					// もう諦める
 				}
 			}
-			try{
-				MMMLib.Debug("TEXTURE SELECT=%s:%s", textures[0][0].getResourceDomain(), textures[0][0].getResourcePath());
-				MMMLib.Debug("TEXTURE SELECT=%s", textures[0][1].getResourcePath());
-			}catch(Exception e){}
 		} else {
 			textureBox[0] = MMM_TextureManager.instance.getTextureBoxServerIndex(textureIndex[0]);
 		}

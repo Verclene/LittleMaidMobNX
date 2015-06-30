@@ -18,7 +18,8 @@ public class RenderModelMulti extends RenderLiving {
 	public ModelBaseSolo modelMain;
 	public ModelBaseDuo modelFATT;
 	public IModelCaps fcaps;
-
+	public boolean renderMode;
+	
 	public RenderModelMulti(RenderManager manager,float pShadowSize) {
 		super(manager, null, pShadowSize);
 		modelFATT = new ModelBaseDuo(this);

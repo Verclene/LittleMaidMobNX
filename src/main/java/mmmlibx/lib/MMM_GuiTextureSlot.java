@@ -1,8 +1,10 @@
 package mmmlibx.lib;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
 import net.minecraft.client.Minecraft;
@@ -146,12 +148,13 @@ public class MMM_GuiTextureSlot extends GuiSlot {
 		MMM_TextureManager.instance.checkTextureBoxServer(lbox);
 		GL11.glDisable(GL11.GL_BLEND);
 		
-		owner.drawString(this.owner.mc.fontRendererObj, lbox.textureName, var2 + 16, var3 + 25, -1);
+		owner.drawString(this.owner.mc.fontRendererObj, lbox.textureName, var2 + (mode?32:16), var3 + 25, -1);
 		GL11.glTranslatef(var2 + 8F, var3 + 25F, 50F);
 		GL11.glScalef(12F, -12F, 12F);
 		entity.renderYawOffset = 30F;
 		entity.rotationYawHead = 15F;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+		entity.modeArmor = mode;
 		if (mode) {
 			// アーマー
 			ResourceLocation ltxname[];
@@ -167,20 +170,9 @@ public class MMM_GuiTextureSlot extends GuiSlot {
 				entity.setTextureNames("default");
 				Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 			}
-			for (String ls : MMM_TextureManager.armorFilenamePrefix) {
-				GL11.glTranslatef(1F, 0, 0);
-				if (lbox.armors.containsKey(ls)) {
-//					ltxname = entity.getTextures(1);
-//					ltxname[0] = ltxname[1] = ltxname[2] = ltxname[3] =
-//							lbox.getArmorTextureName(MMM_TextureManager.tx_armor1, ls, 0);
-//					ltxname = entity.getTextures(2);
-//					ltxname[0] = ltxname[1] = ltxname[2] = ltxname[3] =
-//							lbox.getArmorTextureName(MMM_TextureManager.tx_armor2, ls, 0);
-					entity.setTextureNames(ls);
-					Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-					Client.setLightmapTextureCoords(0x00f0);//61680
-				}
-			}
+			entity.setTextureNames((String) lbox.armors.keySet().toArray()[0]);
+			Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+			Client.setLightmapTextureCoords(0x00f0);//61680
 		} else {
 			// テクスチャ表示
 			for (int li = 0; li < 16; li++) {
@@ -213,6 +205,7 @@ public class MMM_GuiTextureSlot extends GuiSlot {
 
 	public void setMode(boolean pFlag) {
 		scrollBy(slotHeight * -getSize());
+		entity.modeArmor = pFlag;
 		if (pFlag) {
 			selected = texsel[1];
 			mode = true;

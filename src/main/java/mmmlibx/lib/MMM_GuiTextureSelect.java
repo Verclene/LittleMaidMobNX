@@ -93,6 +93,7 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 		selectPanel.entity.renderYawOffset = -25F;
 		selectPanel.entity.rotationYawHead = -10F;
 		ResourceLocation ltex[];
+		selectPanel.entity.modeArmor = selectPanel.mode;
 		if (selectPanel.mode) {
 			selectPanel.entity.textureData.textureBox[0] = selectPanel.blankBox;
 			selectPanel.entity.textureData.textureBox[1] = lbox;
