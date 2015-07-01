@@ -101,11 +101,8 @@ public class LMM_LittleMaidMobNX {
 //	@MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
 	public static String cfg_IgnoreItemList = "arsmagica2";
-	
-	//サウンド試験調整
-	public static boolean cfg_ignoreForceSound = false;
-	public static int cfg_soundPlayChance = 2;
 
+	//1.8後回し
 	public static Achievement ac_Contract;
 
 	@SidedProxy(
@@ -170,10 +167,6 @@ public class LMM_LittleMaidMobNX {
 		cfg_spawnLimit = cfg.getInt("spawnLimit", 20);
 		cfg_spawnWeight = cfg.getInt("spawnWeight", 5);
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
-		
-		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
-		cfg_soundPlayChance = cfg.getInt("soundPlayChance", 3);
-		if(cfg_soundPlayChance<1) cfg_soundPlayChance = 1;
 		
 		try {
 			cfg.saveConfig(getName(), evt);
