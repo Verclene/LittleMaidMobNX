@@ -8,7 +8,6 @@ public class LMM_PacketTextureModelHandler implements IMessageHandler<LMM_Packet
 
 	@Override
 	public IMessage onMessage(LMM_PacketTextureModel message, MessageContext ctx) {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 

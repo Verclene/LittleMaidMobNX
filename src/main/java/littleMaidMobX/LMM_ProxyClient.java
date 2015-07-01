@@ -29,11 +29,8 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 
 	public void init() {
 		RenderingRegistry.registerEntityRenderingHandler(LMM_EntityLittleMaid.class,new LMM_RenderLittleMaid(Minecraft.getMinecraft().getRenderManager(),0.3F));
-		RenderingRegistry.registerEntityRenderingHandler(MMM_EntitySelect.class,	new RenderModelMulti(Minecraft.getMinecraft().getRenderManager(), 0.0F));
+		RenderingRegistry.registerEntityRenderingHandler(MMM_EntitySelect.class,	new LMMNX_RenderEntitySelect(Minecraft.getMinecraft().getRenderManager(), 0.0F));
 		RenderingRegistry.registerEntityRenderingHandler(MMM_EntityDummy.class,		new MMM_RenderDummy());
-		
-		
-// TODO ★		RenderingRegistry.registerEntityRenderingHandler(EntityItem.class,			new MMM_RenderItem());
 	}
 
 	/* 呼び出し箇所なし
@@ -55,19 +52,20 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	public void onItemPickup(EntityPlayer pAvatar, Entity entity, int i) {
 		// アイテム回収のエフェクト
 		// TODO:こっちを使うか？
-//        mc.effectRenderer.addEffect(new EntityPickupFX(mc.theWorld, entity, avatar, -0.5F));
+//		mc.effectRenderer.addEffect(new EntityPickupFX(mc.theWorld, entity, avatar, -0.5F));
 		MMM_Helper.mc.effectRenderer.addEffect(new EntityPickupFX(MMM_Helper.mc.theWorld, entity, pAvatar, 0.1F));
 	}
 
+	// TODO いらん？
 	public void onCriticalHit(EntityPlayer pAvatar, Entity par1Entity) {
 		//1.8後回し
-		//MMM_Helper.mc.effectRenderer.addEffect(new EntityCrit2FX(MMM_Helper.mc.theWorld, par1Entity));
+//		MMM_Helper.mc.effectRenderer.addEffect(new EntityCrit2FX(MMM_Helper.mc.theWorld, par1Entity));
 	}
 
 	public void onEnchantmentCritical(EntityPlayer pAvatar, Entity par1Entity) {
 		//1.8後回し
-		//EntityCrit2FX entitycrit2fx = new EntityCrit2FX(MMM_Helper.mc.theWorld, par1Entity, "magicCrit");
-		//MMM_Helper.mc.effectRenderer.addEffect(entitycrit2fx);
+//		EntityCrit2FX entitycrit2fx = new EntityCrit2FX(MMM_Helper.mc.theWorld, par1Entity, "magicCrit");
+//		MMM_Helper.mc.effectRenderer.addEffect(entitycrit2fx);
 	}
 
 	

@@ -67,7 +67,6 @@ public class MultiModelManager extends FileLoaderBase {
 
 	@Override
 	public void decodeZip(File pFile) {
-		// TODO Auto-generated method stub
 		super.decodeZip(pFile);
 	}
 

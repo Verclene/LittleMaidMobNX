@@ -14,7 +14,6 @@ public class RenderBulletBase extends Render {
 
 	protected RenderBulletBase(RenderManager p_i46179_1_) {
 		super(p_i46179_1_);
-		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 	@Override
@@ -25,7 +24,6 @@ public class RenderBulletBase extends Render {
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity var1) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

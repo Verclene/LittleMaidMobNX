@@ -192,7 +192,6 @@ public class ModelRenderer {
 		return this;
 	}
 
-	// TODO:アップデート時はここをチェックすること
 	public void render(float par1, boolean pIsRender) {
 		if (isHidden) return;
 		if (!showModel) return;
@@ -369,7 +368,7 @@ public class ModelRenderer {
 		}
 	}
 
-	// TODO:このあたりは要修正
+	// TODO レイヤー化しちゃったのでこの辺はそのうち削除
 	public boolean renderItems(ModelMultiBase pModelMulti, IModelCaps pEntityCaps, boolean pRealBlock, int pIndex) {
 		ItemStack[] litemstacks = (ItemStack[])ModelCapsHelper.getCapsValue(pEntityCaps, caps_Items);
 		if (litemstacks == null) return false;
@@ -393,6 +392,7 @@ public class ModelRenderer {
 		renderItems(pEntityLiving, pRender, pRealBlock, pAction);
 	}
 
+	// TODO レイヤー化したので本質的に要らない？
 	protected void renderItems(EntityLivingBase pEntityLiving, Render pRender, boolean pRealBlock, EnumAction pAction) {
 		if (itemstack == null) return;
 		
@@ -492,7 +492,6 @@ public class ModelRenderer {
 
 			GL11.glDisable(GL11.GL_CULL_FACE);
 		} else {
-			//1.8後回し
 			// アイテムに色付け
 //			pRender.loadTexture("/gui/items.png");
 			/*
@@ -510,6 +509,7 @@ public class ModelRenderer {
 		GL11.glPopMatrix();
 	}
 	
+	// TODO これもいらん？
 	private void renderBlock(ItemStack par2ItemStack)
 	{
 		GL11.glPushMatrix();
@@ -517,7 +517,6 @@ public class ModelRenderer {
 		Item item = par2ItemStack.getItem();
 		Block block = Block.getBlockFromItem(item);
 
-		//1.8後回し
 		/*
 		if (par2ItemStack.getItemSpriteNumber() == 0 && item instanceof ItemBlock)// && RenderBlocks.renderItemIn3d(block.getRenderType()))
 		{

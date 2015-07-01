@@ -261,10 +261,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		// 形態形成場
 		textureData = new MMM_TextureData(this, maidCaps);
+		textureData.setColor(12);
 		MMM_TextureBox ltb[] = new MMM_TextureBox[2];
 		ltb[0] = ltb[1] = MMM_TextureManager.instance.getDefaultTexture(this);
 		setTexturePackName(ltb);
-		setColor(12);
 
 		entityIdFactor = (float)(getEntityId() * 70);
 		// 腕振り
@@ -286,11 +286,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//getNavigator().setAvoidsWater(true);
 		//getNavigator().setBreakDoors(true);
 
-
 		// TODO:これはテスト
 //		maidStabilizer.put("HeadTop", MMM_StabilizerManager.getStabilizer("WitchHat", "HeadTop"));
-
-
 
 		// EntityModeの追加
 		maidEntityModeList = LMM_EntityModeManager.getModeList(this);
@@ -306,12 +303,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			lem.initEntity();
 		}
 		
-		if(!par1World.isRemote){
+		/*
+		if(par1World.isRemote){
 			NBTTagCompound t = new NBTTagCompound();
 			writeEntityToNBT(t);
 			readEntityFromNBT(t);
 			t = null;
 		}
+		*/
 	}
 
 	public LMM_IEntityLittleMaidAvatarBase getAvatarIF()
@@ -836,7 +835,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public AxisAlignedBB getEntityBoundingBox() {
-		// TODO 自動生成されたメソッド・スタブ
 		return super.getEntityBoundingBox();
 	}
 
@@ -884,7 +882,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			double d6 = rand.nextGaussian() * d + d3;
 			double d7 = rand.nextGaussian() * d1 + d4;
 			double d8 = rand.nextGaussian() * d2 + d5;
-			//1.8後回し
+
 			worldObj.spawnParticle(s, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d6, d7, d8);
 		}
 	}
@@ -903,7 +901,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			double d6 = a * 0.3D;
 			double d7 = a;
 			double d8 = a * 0.3D;
-			//1.8後回し
+
 			worldObj.spawnParticle(EnumParticleTypes.NOTE, posX, posY + height + 0.1D, posZ, d6, d7, d8);
 			break;
 		case 12:
@@ -1342,7 +1340,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	/*
-	 * 1.8後回し
 	@Override
 	public double getYOffset() {
 		if(ridingEntity instanceof EntityPlayer) {
@@ -1461,12 +1458,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void setLooksWithInterest(boolean f) {
 		if (looksWithInterest != f) {
 			looksWithInterest = f;
-			//1.8後回し
-			/*
-			if (numTicksToChaseTarget <= 0) {
-				looksWithInterestAXIS = rand.nextBoolean();
-			}
-			*/
+
 			int li = dataWatcher.getWatchableObjectInt(dataWatch_Flags);
 			li = looksWithInterest ? (li | dataWatch_Flags_looksWithInterest) : (li & ~dataWatch_Flags_looksWithInterest);
 			li = looksWithInterestAXIS ? (li | dataWatch_Flags_looksWithInterestAXIS) : (li & ~dataWatch_Flags_looksWithInterestAXIS);
@@ -1867,13 +1859,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							entity.onCollideWithPlayer(maidAvatar);
 						}
 					}
-					//1.8後回し
-					//アイテムが一杯になっていてアイテムにタゲをとっている場合はタゲをクリア
-					/*
-					if (getAITarget() instanceof EntityItem && maidInventory.getFirstEmptyStack() == -1) {
-						setTarget(null);
-					}
-					*/
 				}
 			}
 			// 時計を持っている
@@ -1919,7 +1904,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					mstatSwingStatus[li].attackTime--;
 				}
 				if (maidOverDriveTime.isEnable()) {
-					//1.8後回し
 					worldObj.spawnParticle(EnumParticleTypes.REDSTONE, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, 1.2D, 0.4D, 0.4D);
 				}
 				if (!worldObj.isRemote) {
@@ -1928,8 +1912,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						lattackentity = getAITarget();
 					}
 					if (lattackentity != null) {
-
-						//1.8後回し
 						PathEntity pe = getNavigator().getPathToEntityLiving(lattackentity);//getPathEntityToEntity(this, lattackentity, 16F, true, false, false, true);
 						if (pe != null) {
 							pe.incrementPathIndex();
@@ -1969,7 +1951,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	private void superLivingUpdate() {
-		// TODO 自動生成されたメソッド・スタブ
 		/*
 		if (this.jumpTicks > 0)
 		{
@@ -2195,12 +2176,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		prevRotateAngleHead = rotateAngleHead;
 		if (getLooksWithInterest()) {
 			rotateAngleHead = rotateAngleHead + (1.0F - rotateAngleHead) * 0.4F;
-			//1.8後回し
-			//numTicksToChaseTarget = 10;
 		} else {
 			rotateAngleHead = rotateAngleHead + (0.0F - rotateAngleHead) * 0.4F;
-			//1.8後回し
-			//if (numTicksToChaseTarget > 0) numTicksToChaseTarget--;
 		}
 
 		if (getAttackTarget() != null || getAITarget() != null) {
@@ -2575,7 +2552,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public boolean isMovementBlocked() {
-		// TODO 自動生成されたメソッド・スタブ
 		return super.isMovementBlocked();
 	}
 
@@ -2727,8 +2703,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				if (lhealth > 0F && isMaidContractOwner(par1EntityPlayer)) {
 					if (itemstack1 != null) {
 						// 追加分の処理
-						//1.8後回し
-						//setPathToEntity(null);
 						// プラグインでの処理を先に行う
 						for (int li = 0; li < maidEntityModeList.size(); li++) {
 							if (maidEntityModeList.get(li).interact(par1EntityPlayer, itemstack1)) {
@@ -2845,8 +2819,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							else if (isFreedom() && itemstack1.getItem() == Items.redstone) {
 								// Tracer
 								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-								//1.8後回し
-								//setPathToEntity(null);
 								setMaidWait(false);
 								setTracer(!isTracer());
 								if (isTracer()) {

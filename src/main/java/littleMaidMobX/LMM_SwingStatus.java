@@ -245,9 +245,8 @@ public class LMM_SwingStatus {
 			this.updateItemUse(pEntityPlayer, 16);
 			int var1 = this.itemInUse.stackSize;
 			
-			/*
-			 * 1.8後回し
-			ItemStack var2 = itemInUse.onEaten(pEntityPlayer.worldObj, pEntityPlayer);
+			// TODO いる？
+			ItemStack var2 = itemInUse.onItemUseFinish(pEntityPlayer.worldObj, pEntityPlayer);
 			
 			if (var2 != this.itemInUse || var2 != null && var2.stackSize != var1) {
 				if (var2.stackSize == 0) {
@@ -256,7 +255,6 @@ public class LMM_SwingStatus {
 					pEntityPlayer.inventory.setInventorySlotContents(index, var2);
 				}
 			}
-			*/
 			
 			clearItemInUse(pEntityPlayer);
 		}

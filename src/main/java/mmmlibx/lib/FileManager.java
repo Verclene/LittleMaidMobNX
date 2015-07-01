@@ -27,7 +27,7 @@ public class FileManager {
 	static {
 		Object[] lo = FMLInjectionData.data();
 		dirMinecraft = (File)lo[6];
-		minecraftDir = dirMinecraft.getPath();	// TODO ★
+		minecraftDir = dirMinecraft.getPath();
 		dirMods = new File(dirMinecraft, "mods");
 		dirModsVersion = new File(dirMods, (String)lo[4]);
 		MMMLib.Debug("init FileManager.");
@@ -60,7 +60,7 @@ public class FileManager {
 	 * バージョンごとの物も含む。
 	 * @return
 	 */
-	/* TODO ★一時的に無効化
+	/*
 	public static List<File> getAllmodsFiles() {
 		List<File> llist = new ArrayList<File>();
 		if (dirMods.exists()) {

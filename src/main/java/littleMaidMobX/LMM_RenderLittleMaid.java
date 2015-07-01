@@ -41,6 +41,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 	}
 	
 	public class MMMLayerArmor extends LayerArmorBase{
+		
+		//レイヤーと化した防具描画
 
 		public RendererLivingEntity p1;
 		public ModelBaseDuo mmodel;
@@ -55,7 +57,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 
 		public MMMLayerArmor(RendererLivingEntity p_i46125_1_) {
 			super(p_i46125_1_);
-			// TODO 自動生成されたコンストラクター・スタブ
 			p1 = p_i46125_1_;
 			mmodel = modelFATT;
 			this.field_177189_c = mmodel;
@@ -64,15 +65,12 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 
 		@Override
 		protected void func_177177_a() {
-			// TODO 自動生成されたメソッド・スタブ
-			
 			this.field_177189_c = mmodel;
 			this.field_177186_d = mmodel;
 		}
 
 		@Override
 		protected void func_177179_a(ModelBase paramModelBase, int paramInt) {
-			// TODO 自動生成されたメソッド・スタブ
 			ModelBaseDuo model = (ModelBaseDuo) paramModelBase;
 			model.showArmorParts(paramInt);
 		}
@@ -82,10 +80,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				float par2, float par3, float par4,
 				float par5, float par6, float par7,
 				float par8) {
-			// TODO 自動生成されたメソッド・スタブ
 			lmm = (LMM_EntityLittleMaid) par1EntityLiving;
 			//LMM管理の装備スロットとEntityLiving標準の装備スロットがずれているので注意
-			
 			if(lmm.maidInventory.mainInventory[17]!=null){
 				if(lmm.maidInventory.mainInventory[17].getItem() instanceof ItemArmor){
 					if(((ItemArmor)lmm.maidInventory.mainInventory[17].getItem()).armorType==0){
@@ -226,10 +222,11 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 	
 	public class MMMLayerHeldItem extends LayerHeldItem{
 
+		//レイヤーと化したアイテム描画
+		
 		protected RendererLivingEntity renderer;
 		public MMMLayerHeldItem(RendererLivingEntity p_i46115_1_) {
 			super(p_i46115_1_);
-			// TODO 自動生成されたコンストラクター・スタブ
 			renderer = p_i46115_1_;
 		}
 		
@@ -238,7 +235,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				float p_177141_2_, float p_177141_3_, float p_177141_4_,
 				float p_177141_5_, float p_177141_6_, float p_177141_7_,
 				float p_177141_8_) {
-			// TODO 自動生成されたメソッド・スタブ
 			LMM_EntityLittleMaid lmm = (LMM_EntityLittleMaid) p_177141_1_;
 			if(!lmm.isMaidWait()){
 				ItemStack itemstack = lmm.getCurrentEquippedItem();
@@ -304,7 +300,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 
 	protected void renderString(LMM_EntityLittleMaid plittleMaid, double px, double py, double pz, float f, float f1) {
 		// ひも
-		//1.8後回し
+		// TODO 傍目にみた表示がおかしい
 		if(plittleMaid.mstatgotcha != null && plittleMaid.mstatgotcha instanceof EntityLivingBase) {
 			EntityLivingBase lel = (EntityLivingBase)plittleMaid.mstatgotcha;
 			py -= 0.5D;
@@ -426,18 +422,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		for (int li = 0; li < llmm.maidEntityModeList.size(); li++) {
 			llmm.maidEntityModeList.get(li).showSpecial(this, par2, par4, par6);
 		}
-	}
-
-	@Override
-	protected boolean canRenderName(EntityLiving targetEntity) {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
-	}
-
-	@Override
-	protected boolean canRenderName(EntityLivingBase targetEntity) {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
 	}
 
 	@Override

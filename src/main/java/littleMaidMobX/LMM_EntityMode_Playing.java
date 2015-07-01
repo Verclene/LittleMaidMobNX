@@ -75,7 +75,6 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 		return snowCnt >= 5;
 	}
 
-	@SuppressWarnings("unused")
 	protected boolean movePlaying() {
 		//
 		int x = MathHelper.floor_double(owner.posX);
@@ -83,9 +82,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 		int z = MathHelper.floor_double(owner.posZ);
 		PathEntity pe = null;
 		
-		//1.8後回し
 		// CW方向に検索領域を広げる 
-		/*
 		loop_search:
 			for (int a = 2; a < 18 && pe == null; a += 2) {
 				x--;
@@ -94,7 +91,8 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 					// N
 					for (int c = 0; c < 4; c++) {
 						if (checkSnows(x, y, z)) {
-							pe = owner.worldObj.getEntityPathToXYZ(owner, x, y - 1, z, 10F, true, false, false, true);
+							pe = owner.getNavigator().getPathToXYZ(x, y - 1, z);
+//							pe = owner.getNavigator().getEntityPathToXYZ(owner, x, y - 1, z, 10F, true, false, false, true);
 							if (pe != null) {
 								break loop_search;
 							}
@@ -106,7 +104,6 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 					}
 				}
 			}
-		*/
 		if (pe != null) {
 			owner.getNavigator().setPath(pe, 1.0F);
 			LMM_LittleMaidMobNX.Debug("Find Snow Area-%d:%d, %d, %d.", owner.getEntityId(), x, y, z);

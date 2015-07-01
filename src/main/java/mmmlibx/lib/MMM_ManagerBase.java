@@ -26,8 +26,7 @@ public abstract class MMM_ManagerBase {
 		if (lpackage != null) {
 			ls = MMMLib.class.getPackage().getName().replace('.', File.separatorChar);
 		}
-		File lf1 = new File(FileManager.dirMods, ls); // TODO ★
-//		File lf1 = new File(FileManager.minecraftJar, ls); // TODO ★
+		File lf1 = new File(FileManager.dirMods, ls);
 		
 		if (lf1.isDirectory()) {
 			// ディレクトリの解析

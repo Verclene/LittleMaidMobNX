@@ -39,7 +39,7 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 	@Override
 	public void initGui() {
 		selectPanel = new MMM_GuiTextureSlot(this);
-		selectPanel.registerScrollButtons(3, 4);
+		selectPanel.registerScrollButtons(4, 5);
 		buttonList.add(modeButton[0] = new GuiButton(100, width / 2 - 55, height - 55, 80, 20, "Texture"));
 		buttonList.add(modeButton[1] = new GuiButton(101, width / 2 + 30, height - 55, 80, 20, "Armor"));
 		buttonList.add(new GuiButton(200, width / 2 - 10, height - 30, 120, 20, "Select"));
@@ -57,20 +57,17 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton)
 			throws IOException {
-		// TODO 自動生成されたメソッド・スタブ
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
-		// TODO 自動生成されたメソッド・スタブ
 		super.mouseReleased(mouseX, mouseY, state);
 	}
 
 	@Override
 	protected void mouseClickMove(int mouseX, int mouseY,
 			int clickedMouseButton, long timeSinceLastClick) {
-		// TODO 自動生成されたメソッド・スタブ
 		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 	}
 
@@ -93,6 +90,7 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 		selectPanel.entity.renderYawOffset = -25F;
 		selectPanel.entity.rotationYawHead = -10F;
 		ResourceLocation ltex[];
+		selectPanel.entity.modeArmor = selectPanel.mode;
 		if (selectPanel.mode) {
 			selectPanel.entity.textureData.textureBox[0] = selectPanel.blankBox;
 			selectPanel.entity.textureData.textureBox[1] = lbox;
@@ -110,9 +108,27 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 			}
 		}
 		GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		
 		GL11.glPopMatrix();
 		super.drawScreen(par1, par2, par3);
 		
+	}
+
+	@Override
+	public void handleInput() throws IOException {
+		super.handleInput();
+	}
+
+	@Override
+	public void handleKeyboardInput() throws IOException {
+		super.handleKeyboardInput();
+	}
+
+	@Override
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
+		selectPanel.handleMouseInput();
 	}
 
 	@Override

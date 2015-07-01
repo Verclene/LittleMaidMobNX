@@ -107,14 +107,12 @@ public class LMM_SoundManager {
 				try {
 					return soundsZipFile.getInputStream(soundsZipFile.getEntry(soundsStreamEntryName.get(fileName)));
 				} catch (IOException e) {
-					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
 				}
 			}else if(tableSwitch.equals("dir")){
 				try {
 					return new FileInputStream(soundsStreamFile.get(fileName));
 				} catch (FileNotFoundException e) {
-					// TODO 自動生成された catch ブロック
 					e.printStackTrace();
 				}
 			}
@@ -365,11 +363,11 @@ public class LMM_SoundManager {
 					int index = -1;
 					if (name.startsWith("se_")) {
 
-						// TODO ★ サウンドパックのファイル構成が正しいとは限らないため、ファイル構造を無視して読みだす
+						//サウンドパックのファイル構成が正しいとは限らないため、ファイル構造を無視して読みだす
 						int cd = value.lastIndexOf('.');
 						if(cd >= 0) value = value.substring(cd+1);
 
-						// TODO ★ 音声ファイルの指定文字列の末尾に数値が付いてしまっているパックがあるので削除
+						//音声ファイルの指定文字列の末尾に数値が付いてしまっているパックがあるので削除
 						value = value.replaceAll("\\d+$", ""); // ファイルの終わりの数値部分を削除
 						
 						String ss = name.substring(3);

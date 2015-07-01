@@ -127,9 +127,8 @@ public class LMM_GuiInventory extends GuiContainer {
 		entitylittlemaid.renderYawOffset = (float) Math.atan(f8 / 40F) * 20F;
 		entitylittlemaid.rotationYawHead = entitylittlemaid.rotationYaw = (float) Math.atan(f8 / 40F) * 40F;
 		entitylittlemaid.rotationPitch = -(float) Math.atan(f9 / 40F) * 20F;
-		//1.8後回し
-//	      GL11.glTranslatef(0.0F, 0.0F/*entitylittlemaid.yOffset*/, 0.0F);
-//	      Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
+//		GL11.glTranslatef(0.0F, 0.0F/*entitylittlemaid.yOffset*/, 0.0F);
+//		Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
 		GlStateManager.translate(0.0F, 0.0F/*entitylittlemaid.yOffset*/, 0.0F);
 		Minecraft.getMinecraft().getRenderManager().setPlayerViewY(180F);
 		Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entitylittlemaid, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
@@ -355,7 +354,6 @@ public class LMM_GuiInventory extends GuiContainer {
 		
 		int ii = i - guiLeft;
 		int jj = j - guiTop;
-		//1.8後回し
 		if (ii > 25 && ii < 78 && jj > 7 && jj < 60) {
 			// ボタンの表示
 			txbutton[0].visible = true;
@@ -414,7 +412,6 @@ public class LMM_GuiInventory extends GuiContainer {
 		try {
 			super.mouseClicked(i, j, k);
 		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 /*
@@ -475,7 +472,6 @@ public class LMM_GuiInventory extends GuiContainer {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		 entitylittlemaid.onGuiClosed();
-		//1.8後回し
 		if (isChangeTexture) {
 			entitylittlemaid.sendTextureToServer();
 		}

@@ -3,7 +3,9 @@ package mmmlibx.lib;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.zip.ZipFile;
 
+import littleMaidMobX.LMMNX_OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelCapsHelper;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
@@ -90,7 +92,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 	}
 
 	public ResourceLocation getArmorTextureName(int pIndex, ItemStack itemstack) {
-		//1.8後回し
+		// TODO レイヤー化しちゃってるのでもし本気で復活するなら別の手を打たないと…
 		// indexは0x40,0x50番台
 		// lightも追加
 		/*
@@ -116,7 +118,6 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ResourceLocation getArmorTextureName(int pIndex, String pArmorPrefix, int pDamage) {
-		//1.8後回し
 		// indexは0x40,0x50番台
 		if (armors.isEmpty() || pArmorPrefix == null) return null;
 
@@ -216,14 +217,11 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 
 		return lbox;
 	}
-
+	
 	public boolean addTexture(int pIndex, String pLocation) {
-		String ls;
-		ls = "/assets/minecraft/";
+		String ls = "/assets/minecraft/";
 		if (pLocation.startsWith(ls)) {
 			pLocation = pLocation.substring(ls.length());
-		} else {
-//			pLocation = "../.." + pLocation;
 		}
 		boolean lflag = false;
 		switch ((pIndex & 0xfff0)) {

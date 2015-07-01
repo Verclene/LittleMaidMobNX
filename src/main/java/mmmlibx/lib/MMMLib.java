@@ -58,7 +58,7 @@ public class MMMLib {
 		cfg_isModelAlphaBlend = isModelAlphaBlend;
 		
 		String ls;
-/* TODO ★
+/*
 		ls = "DestroyAll";
 		lconf.addCustomCategoryComment(ls, "Package destruction of the fixed range is carried out.");
 		DestroyAllManager.isDebugMessage = lconf.get(ls, "isDebugMessage", false).getBoolean(false);
@@ -77,9 +77,6 @@ public class MMMLib {
 		lconf.addCustomCategoryComment(ls, "Append Recipes from JSON.");
 		EzRecipes.isDebugMessage = lconf.get(ls, "isDebugMessage", false).getBoolean(false);
 */
-
-		// 独自スクリプトデコーダー
-// TODO ★		(new MMMDecorder()).execute();
 
 		MMM_StabilizerManager.init();
 

@@ -79,7 +79,7 @@ public class MMMTransformer implements IClassTransformer, Opcodes {
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 
-		// TODO ★ MMMLibが立ち上がった時点で旧モデル置き換えを開始
+		//MMMLibが立ち上がった時点で旧モデル置き換えを開始
 		MMMTransformer.isEnable = true;
 
 		for(String header : ignoreNameSpace){
