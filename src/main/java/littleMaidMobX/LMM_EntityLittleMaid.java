@@ -261,10 +261,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		// 形態形成場
 		textureData = new MMM_TextureData(this, maidCaps);
+		textureData.setColor(12);
 		MMM_TextureBox ltb[] = new MMM_TextureBox[2];
 		ltb[0] = ltb[1] = MMM_TextureManager.instance.getDefaultTexture(this);
 		setTexturePackName(ltb);
-		if(getTextureData().getTextureName(0).startsWith("default")) setColor(12);
 
 		entityIdFactor = (float)(getEntityId() * 70);
 		// 腕振り
@@ -286,11 +286,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//getNavigator().setAvoidsWater(true);
 		//getNavigator().setBreakDoors(true);
 
-
 		// TODO:これはテスト
 //		maidStabilizer.put("HeadTop", MMM_StabilizerManager.getStabilizer("WitchHat", "HeadTop"));
-
-
 
 		// EntityModeの追加
 		maidEntityModeList = LMM_EntityModeManager.getModeList(this);
@@ -306,12 +303,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			lem.initEntity();
 		}
 		
-		if(!par1World.isRemote){
+		/*
+		if(par1World.isRemote){
 			NBTTagCompound t = new NBTTagCompound();
 			writeEntityToNBT(t);
 			readEntityFromNBT(t);
 			t = null;
 		}
+		*/
 	}
 
 	public LMM_IEntityLittleMaidAvatarBase getAvatarIF()
