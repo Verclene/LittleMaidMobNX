@@ -264,7 +264,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		MMM_TextureBox ltb[] = new MMM_TextureBox[2];
 		ltb[0] = ltb[1] = MMM_TextureManager.instance.getDefaultTexture(this);
 		setTexturePackName(ltb);
-		setColor(12);
+		if(getTextureData().getTextureName(0).startsWith("default")) setColor(12);
 
 		entityIdFactor = (float)(getEntityId() * 70);
 		// 腕振り
