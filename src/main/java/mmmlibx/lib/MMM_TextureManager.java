@@ -21,7 +21,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import littleMaidMobX.LMM_OldZipTexturesLoader;
+import littleMaidMobX.LMMNX_OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.*;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
@@ -559,7 +559,7 @@ public class MMM_TextureManager {
 						String lt1 = "mob/littleMaid";
 						String lt2 = "mob/ModelMulti";
 						if(addTextureName(zipentry.getName(), pSearch)&&(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
-							LMM_OldZipTexturesLoader.keys.put(zipentry.getName(), file);
+							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file);
 					}
 				}
 			} while(true);

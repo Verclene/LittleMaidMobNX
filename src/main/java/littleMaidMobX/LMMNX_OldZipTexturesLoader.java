@@ -16,7 +16,7 @@ import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.util.ResourceLocation;
 
-public class LMM_OldZipTexturesLoader implements IResourcePack {
+public class LMMNX_OldZipTexturesLoader implements IResourcePack {
 	
 	public static Map<String, File> keys = new HashMap<String,File>();
 

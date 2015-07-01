@@ -18,7 +18,7 @@ import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
 import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 
-public class LMM_RenderEntitySelect extends RenderModelMulti {
+public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 	
 	public class MMMLayerArmor extends LayerArmorBase{
 
@@ -80,7 +80,7 @@ public class LMM_RenderEntitySelect extends RenderModelMulti {
 //				mmodel.entityCaps = lmm.maidCaps;
 			}
 //			mmodel.setEntityCaps(pEntityCaps);
-			mmodel.setRender(LMM_RenderEntitySelect.this);
+			mmodel.setRender(LMMNX_RenderEntitySelect.this);
 			mmodel.showAllParts();
 			mmodel.isAlphablend = true;
 		}
@@ -194,7 +194,7 @@ public class LMM_RenderEntitySelect extends RenderModelMulti {
 	}
 
 
-	public LMM_RenderEntitySelect(RenderManager manager, float pShadowSize) {
+	public LMMNX_RenderEntitySelect(RenderManager manager, float pShadowSize) {
 		super(manager, pShadowSize);
 		this.addLayer(new MMMLayerArmor(this));
 	}

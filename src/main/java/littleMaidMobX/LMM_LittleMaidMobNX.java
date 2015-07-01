@@ -19,6 +19,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -39,7 +40,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "openbeta-0.4.9-mc18f1450";
+	public static final String VERSION = "openbeta-0.5-mc18f1450";
+	public static final int VERSION_CODE = 1;
 
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
@@ -224,6 +226,8 @@ public class LMM_LittleMaidMobNX {
 
 //		Debug("GUID-sneak: %s", LMM_EntityLittleMaid.maidUUIDSneak.toString());
 		proxy.loadSounds();
+		
+		FMLCommonHandler.instance().bus().register(new LMMNX_LoggedInEvent());
 	}
 
 	@EventHandler
@@ -240,7 +244,7 @@ public class LMM_LittleMaidMobNX {
 			*/
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
 			defaultResourcePacks.add(new MMMResourcePack());
-			defaultResourcePacks.add(new LMM_OldZipTexturesLoader());
+			defaultResourcePacks.add(new LMMNX_OldZipTexturesLoader());
 
 			// デフォルトモデルの設定
 			proxy.init();
