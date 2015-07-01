@@ -22,7 +22,7 @@ public class Version {
 	/**
 	 * バージョンチェック用。HTTPにアクセスし、現在最新のバージョンコードを返す。
 	 * 基本的に別スレッドで呼ばれるので、なんか繋がらない時も待たされることはないはず
-	 * @return バージョンコードの整数値
+	 * @return 
 	 */
 	
 	public static VersionData getLatestVersion(){
