@@ -29,6 +29,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class MMM_TextureManager {
 
@@ -558,7 +560,13 @@ public class MMM_TextureManager {
 					} else {
 						String lt1 = "mob/littleMaid";
 						String lt2 = "mob/ModelMulti";
+<<<<<<< HEAD
 						if(addTextureName(zipentry.getName(), pSearch)&&(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
+=======
+						addTextureName(zipentry.getName(), pSearch);
+						if(FMLCommonHandler.instance().getSide()==Side.CLIENT&&
+								(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
+>>>>>>> c3a04f710dc6f01df316d6e490f363dc87a3a6fa
 							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file);
 					}
 				}

@@ -374,7 +374,11 @@ public class MMM_TextureData  {
 	}
 
 	public String getTextureName(int pIndex) {
-		return textureBox[pIndex].textureName;
+		try{
+			return textureBox[pIndex].textureName;
+		}catch(Exception e){
+			return "default";
+		}
 	}
 
 	public ResourceLocation getGUITexture() {
