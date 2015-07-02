@@ -26,7 +26,7 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
     configディレクトリにある「littleMaidMobNX.cfg」で設定できます。
     
 使用方法
-    Forgeを導入し、modsに放り込む。
+    Forgeを導入し、このMODのjarをmodsに放り込む。
 
 利用条件
     ・readme_LMM1.6.2.txt に従って下さい。
@@ -41,10 +41,11 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
     一度に認識できるサウンドパックは1つのみです。先に認識された方を優先して使用します。
     ※パック内に日本語を含む名前のファイルがある場合は、パックを解凍してください。
 
-マルチモデル導入方法
+マルチモデル・テクスチャパック導入方法
     zipのままmodsに入れれば読み取ります。
-    ※現在公開されているマルチモデルは、対応しているものと対応していないものがあります
-    　モデルが表示されても、Beverly等特殊なアニメーション処理を行っているモデルに関しては、
+    ※対応している旧版マルチモデル・テクスチャパックはLittleMaidMob(1.6.2版)用とLittleMaidMobX(1.7.x版)用のパックです。
+    ※なお、LittleMaidMobNX(1.8版)用パックはLMMX用に準じているので、ほぼ同じ構造で制作することができます。
+    ※モデルが表示されても、Beverly等特殊なアニメーション処理を行っているモデルに関してアニメーションが異常になる場合、
     　LittleMaidMobNX用に再コンパイルする必要があります
     ※αブレンド(半透明)テクスチャに対応しています。
     　使用する場合はlittleMaidMobNX.cfgの「isModelAlphaBlend」が「true」(デフォルト)になっていることを確認してください。
@@ -55,10 +56,17 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
 
 更新履歴
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     20150702    openbeta-0.5.1-mc18f1450
         いくつかの変更の差し戻し
 >>>>>>> c3a04f710dc6f01df316d6e490f363dc87a3a6fa
+=======
+    20150702    openbeta-0.5.2-mc18f1450
+        Added Achievement translate
+    20150702    openbeta-0.5.1-mc18f1450
+        いくつかの変更の差し戻し
+>>>>>>> develop
     20150701    openbeta-0.5-mc18f1450
         テクスチャセレクトGUI実装
         旧LMM(1.6.2版)テクスチャパック読み込み対応

@@ -1,5 +1,8 @@
 entity.lmmx.LittleMaidX.name=女仆酱
 
+achievement.contract=签订契约了 我的主人
+achievement.contract.desc=捕获一只野生女仆
+
 item.lmmx:spawn_lmmx_egg.name=女仆酱
 
 littleMaidMob.mode.Torcher=照明模式

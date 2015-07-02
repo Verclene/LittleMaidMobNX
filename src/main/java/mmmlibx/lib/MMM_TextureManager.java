@@ -561,12 +561,18 @@ public class MMM_TextureManager {
 						String lt1 = "mob/littleMaid";
 						String lt2 = "mob/ModelMulti";
 <<<<<<< HEAD
+<<<<<<< HEAD
 						if(addTextureName(zipentry.getName(), pSearch)&&(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
 =======
 						addTextureName(zipentry.getName(), pSearch);
 						if(FMLCommonHandler.instance().getSide()==Side.CLIENT&&
 								(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
 >>>>>>> c3a04f710dc6f01df316d6e490f363dc87a3a6fa
+=======
+						addTextureName(zipentry.getName(), pSearch);
+						if(FMLCommonHandler.instance().getSide()==Side.CLIENT&&
+								(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
+>>>>>>> develop
 							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file);
 					}
 				}
