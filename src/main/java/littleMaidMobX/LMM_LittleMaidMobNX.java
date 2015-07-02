@@ -40,15 +40,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-<<<<<<< HEAD
-<<<<<<< HEAD
-	public static final String VERSION = "openbeta-0.5-mc18f1450";
-=======
-	public static final String VERSION = "openbeta-0.5.1-mc18f1450";
->>>>>>> c3a04f710dc6f01df316d6e490f363dc87a3a6fa
-=======
 	public static final String VERSION = "openbeta-0.5.2-mc18f1450";
->>>>>>> develop
 	public static final int VERSION_CODE = 1;
 
 	public static String[] cfg_comment = {

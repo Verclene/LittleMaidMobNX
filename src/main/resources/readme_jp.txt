@@ -55,18 +55,10 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
     本トリガー
 
 更新履歴
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    20150702    openbeta-0.5.1-mc18f1450
-        いくつかの変更の差し戻し
->>>>>>> c3a04f710dc6f01df316d6e490f363dc87a3a6fa
-=======
     20150702    openbeta-0.5.2-mc18f1450
         Added Achievement translate
     20150702    openbeta-0.5.1-mc18f1450
         いくつかの変更の差し戻し
->>>>>>> develop
     20150701    openbeta-0.5-mc18f1450
         テクスチャセレクトGUI実装
         旧LMM(1.6.2版)テクスチャパック読み込み対応
