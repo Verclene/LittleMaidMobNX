@@ -158,8 +158,8 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 					timeSinceIgnited = -1;
 					owner.setDead();
 					// Mobによる破壊の是非
-//					boolean lflag = owner.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-//					owner.worldObj.createExplosion(owner, owner.posX, owner.posY, owner.posZ, 3F, lflag);
+					boolean lflag = owner.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+					owner.worldObj.createExplosion(owner, owner.posX, owner.posY, owner.posZ, 3F, lflag);
 				}
 			}
 		}
