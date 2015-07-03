@@ -23,7 +23,7 @@ import wrapper.W_Common;
 
 
 
-public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEntityLittleMaidAvatarBase
+public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEntityLittleMaidAvatar
 {
 	public LMM_EntityLittleMaid avatar;
 	/** いらん？ **/
@@ -591,5 +591,10 @@ public class LMM_EntityLittleMaidAvatar extends EntityPlayer implements LMM_IEnt
 	@Override
 	public boolean isSpectator() {
 		return false;
+	}
+
+	@Override
+	public LMM_EntityLittleMaid getMaid() {
+		return avatar;
 	}
 }

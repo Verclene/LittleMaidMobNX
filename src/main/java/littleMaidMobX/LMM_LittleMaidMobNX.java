@@ -40,8 +40,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "openbeta-0.5.2-mc18f1450";
-	public static final int VERSION_CODE = 1;
+	public static final String VERSION = "1.8-NXR1-F1450";
+	public static final int VERSION_CODE = 2;
 
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
@@ -227,7 +227,6 @@ public class LMM_LittleMaidMobNX {
 //		Debug("GUID-sneak: %s", LMM_EntityLittleMaid.maidUUIDSneak.toString());
 		proxy.loadSounds();
 		
-		FMLCommonHandler.instance().bus().register(new LMMNX_LoggedInEvent());
 	}
 
 	@EventHandler

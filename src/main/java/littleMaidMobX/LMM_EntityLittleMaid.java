@@ -313,9 +313,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		*/
 	}
 
-	public LMM_IEntityLittleMaidAvatarBase getAvatarIF()
+	public LMM_IEntityLittleMaidAvatar getAvatarIF()
 	{
-		return (LMM_IEntityLittleMaidAvatarBase)maidAvatar;
+		return (LMM_IEntityLittleMaidAvatar)maidAvatar;
 	}
 
 	public void onSpawnWithEgg() {

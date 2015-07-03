@@ -24,7 +24,7 @@ import wrapper.W_Common;
 
 
 
-public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEntityLittleMaidAvatarBase
+public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEntityLittleMaidAvatar
 {
 	public LMM_EntityLittleMaid avatar;
 	/** いらん？ **/
@@ -627,5 +627,10 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	@Override
 	public float W_applyPotionDamageCalculations(DamageSource par1DamageSource, float par2) {
 		return applyPotionDamageCalculations(par1DamageSource, par2);
+	}
+	
+	@Override
+	public LMM_EntityLittleMaid getMaid() {
+		return avatar;
 	}
 }

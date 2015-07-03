@@ -41,9 +41,9 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 		setMutexBits(3);
 	}
 	
-	public LMM_IEntityLittleMaidAvatarBase getAvatarIF()
+	public LMM_IEntityLittleMaidAvatar getAvatarIF()
 	{
-		return (LMM_IEntityLittleMaidAvatarBase)fAvatar;
+		return (LMM_IEntityLittleMaidAvatar)fAvatar;
 	}
 	
 	@Override
@@ -154,7 +154,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 				}
 				
 				if (litemstack != null && !(litemstack.getItem() instanceof ItemFood) && !fMaid.weaponReload) {
-					int lastentityid = worldObj.loadedEntityList.size();
+//					int lastentityid = worldObj.loadedEntityList.size();
 					int itemcount = litemstack.stackSize;
 					fMaid.mstatAimeBow = true;
 					getAvatarIF().getValueVectorFire(atx, aty, atz, atl);
@@ -262,6 +262,8 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 					}
 					
 					// 発生したEntityをチェックしてmaidAvatarEntityが居ないかを確認
+					// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)
+					/*
 					List<Entity> newentitys = worldObj.loadedEntityList.subList(lastentityid, worldObj.loadedEntityList.size());
 					boolean shootingflag = false;
 					if (newentitys != null && newentitys.size() > 0) {
@@ -303,6 +305,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 							}
 						}
 					}
+					*/
 				}
 			}
 		} else {
