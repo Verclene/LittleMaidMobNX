@@ -800,7 +800,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	protected boolean canDespawn() {
 		// デスポーン判定
-		return LMM_LittleMaidMobNX.cfg_canDespawn || super.canDespawn();
+		return isTamed()||hasCustomName() ? false : LMM_LittleMaidMobNX.cfg_canDespawn;
 	}
 
 	@Override
