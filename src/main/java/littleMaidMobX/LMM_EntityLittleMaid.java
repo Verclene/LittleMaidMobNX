@@ -230,11 +230,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// ActiveModeClass
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
-	private int livingSoundTick = 1;
+	
+	private int soundTick = 2;
 
 	//モデル
 	public String textureModelName;
 	public String textureArmorName;
+	
+	private int playingTick;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -672,8 +675,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
 		if (worldObj.isRemote) {
-			livingSoundTick--;
-			if(livingSoundTick>0) return;
+			if(soundTick-->0) return;
 			
 			// Client
 			String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
@@ -1695,16 +1697,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected void updateAITick() {
 //		// AI対応型はこっちが呼ばれる
 //		dataWatcher.updateObject(dataWatch_Health, Integer.valueOf(getHealth()));
-
 		// 追加分
 		super.updateAITick();
-		for (LMM_EntityModeBase ieml : maidEntityModeList) {
-			ieml.updateAITick(getMaidModeInt());
-		}
 	}
 	public void updateAITasks()
 	{
 		super.updateAITasks();
+		if(++playingTick==3){
+			for (LMM_EntityModeBase ieml : maidEntityModeList) {
+				ieml.updateAITick(getMaidModeInt());
+			}
+			playingTick = 0;
+		}
 	}
 
 	@Override
@@ -1806,9 +1810,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 
+		//雪合戦試験
+		if (maidFreedom && (maidMode==0||maidMode==1)){
+			setPlayingRole(0x0010);
+		}
+		/*
 		if(getMaidModeInt()==LMM_EntityMode_Healer.mmode_Healer){
 
-		}
+		}*/
 
 		superLivingUpdate();
 
@@ -2143,7 +2152,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		for (LMM_EntityModeBase leb : maidEntityModeList) {
 			leb.onUpdate(maidMode);
 		}
-
 
 		super.onUpdate();
 		// SwingUpdate
@@ -3274,7 +3282,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		aiTracer.setEnable(false);
 //		setAIMoveSpeed(pFlag ? moveSpeed_Nomal : moveSpeed_Max);
 //		setMoveForward(0.0F);
-
 		if (maidFreedom && isContract()) {
 			func_175449_a(
 //			setHomeArea(
@@ -3285,7 +3292,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			detachHome();
 			setPlayingRole(0);
 		}
-
 		setMaidFlags(maidFreedom, dataWatch_Flags_Freedom);
 	}
 

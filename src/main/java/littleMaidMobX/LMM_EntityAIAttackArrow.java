@@ -224,7 +224,8 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 										LMM_LittleMaidMobNX.Debug("id:%d redygun.", fMaid.getEntityId());
 									}
 								} else {
-									LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire FullAuto.", fMaid.getEntityId()));
+									if(fMaid.maidMode!=LMM_EntityMode_Playing.mmode_Playing)
+										LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire FullAuto.", fMaid.getEntityId()));
 								}
 							}
 						} 
@@ -238,7 +239,8 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 									fMaid.setSwing(10, (litemstack.stackSize == itemcount) ? LMM_EnumSound.shoot_burst : LMM_EnumSound.Null);
 									LMM_LittleMaidMobNX.Debug(String.format("id:%d throw weapon.(%d:%f:%f)", fMaid.getEntityId(), swingState.attackTime, fMaid.rotationYaw, fMaid.rotationYawHead));
 								} else {
-									LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire throw weapon.", fMaid.getEntityId()));
+									if(fMaid.maidMode!=LMM_EntityMode_Playing.mmode_Playing)
+										LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire throw weapon.", fMaid.getEntityId()));
 								}
 							}
 						} else {

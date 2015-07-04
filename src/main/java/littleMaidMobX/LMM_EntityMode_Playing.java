@@ -31,6 +31,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public LMM_EntityMode_Playing(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
 		fcounter = 0;
+		isAnytimeUpdate = true;
 	}
 
 	@Override
@@ -60,12 +61,12 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 //		ltasks[1].addTask(4, new LMM_EntityAINearestAttackableTarget(owner, EntityLiving.class, 16F, 0, true));
 		
 		owner.addMaidMode(ltasks, "Playing", mmode_Playing);
-		
 	}
 
 	protected boolean checkSnows(int x, int y, int z) {
 		// 周りが雪か？
 		int snowCnt = 0;
+		LMM_LittleMaidMobNX.Debug("Search Snow");
 		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x,   y, z  )).getBlock(), Blocks.snow_layer) ? 3: 0;
 		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x+1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
 		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x-1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
@@ -323,6 +324,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public boolean setMode(int pMode) {
 		switch (pMode) {
 		case mmode_Playing :
+			LMM_LittleMaidMobNX.Debug("Changed to playing");
 			owner.aiAttack.setEnable(false);
 			owner.aiShooting.setEnable(true);
 			owner.setBloodsuck(false);
