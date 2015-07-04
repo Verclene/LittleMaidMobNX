@@ -26,6 +26,8 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public static final int mpr_QuickShooter = 0x0010;
 	public static final int mpr_StockShooter = 0x0020;
 	
+	public int playingTick = 0;
+	
 	public int fcounter;
 
 	public LMM_EntityMode_Playing(LMM_EntityLittleMaid pEntity) {
@@ -241,6 +243,11 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 
 	@Override
 	public void updateAITick(int pMode) {
+		if(playingTick++<3){
+			return;
+		}else{
+			playingTick = 0;
+		}
 		if (owner.isFreedom()) {
 			// 自由行動中の固体は虎視眈々と隙をうかがう。
 			if (owner.worldObj.isDaytime()) {

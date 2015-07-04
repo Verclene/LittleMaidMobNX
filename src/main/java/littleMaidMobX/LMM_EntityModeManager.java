@@ -1,24 +1,15 @@
 package littleMaidMobX;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import mmmlibx.lib.FileManager;
 import mmmlibx.lib.MMM_ManagerBase;
 
 public class LMM_EntityModeManager extends MMM_ManagerBase {
-	// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/c226adf6c2fbe888eb45613d16a95460fb4ebba4)
-	
-	public static class EntityPriorityComparator implements Comparator<LMM_EntityModeBase> {
-		@Override
-		public int compare(LMM_EntityModeBase o1, LMM_EntityModeBase o2) {
-			return o1.priority() - o2.priority();
-		}
-	}
 
 	public static final String prefix = "EntityMode";
-	public static final List<LMM_EntityModeBase> maidModeList = new ArrayList<LMM_EntityModeBase>();
+	public static List<LMM_EntityModeBase> maidModeList = new ArrayList<LMM_EntityModeBase>();
 
 
 	public static void init() {
@@ -47,7 +38,7 @@ public class LMM_EntityModeManager extends MMM_ManagerBase {
 			LMM_EntityModeBase lemb = null;
 			lemb = (LMM_EntityModeBase)pclass.getConstructor(LMM_EntityLittleMaid.class).newInstance((LMM_EntityLittleMaid)null);
 			lemb.init();
-			/*
+			
 			if (maidModeList.isEmpty() || lemb.priority() >= maidModeList.get(maidModeList.size() - 1).priority()) {
 				maidModeList.add(lemb);
 			} else {
@@ -57,12 +48,11 @@ public class LMM_EntityModeManager extends MMM_ManagerBase {
 						break;
 					}
 				}
-			}*/
-			maidModeList.add(lemb);
+			}
+
 			return true;
 		} catch (Exception e) {
-			LMM_LittleMaidMobNX.Debug("Failed to load Entity Mode class %s!" + pclass.getName());
-			e.printStackTrace();
+		} catch (Error e) {
 		}
 
 		return false;
