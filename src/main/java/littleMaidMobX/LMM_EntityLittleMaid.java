@@ -1699,16 +1699,22 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //		dataWatcher.updateObject(dataWatch_Health, Integer.valueOf(getHealth()));
 		// 追加分
 		super.updateAITick();
+		for (LMM_EntityModeBase ieml : maidEntityModeList) {
+			ieml.updateAITick(getMaidModeInt());
+		}
 	}
+
 	public void updateAITasks()
 	{
 		super.updateAITasks();
+		/*
 		if(++playingTick==3){
 			for (LMM_EntityModeBase ieml : maidEntityModeList) {
-				ieml.updateAITick(getMaidModeInt());
+				if(ieml.isAnytimeUpdate) ieml.updateAITick(getMaidModeInt());
 			}
 			playingTick = 0;
 		}
+		*/
 	}
 
 	@Override
@@ -1810,10 +1816,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 
+		/*
 		//雪合戦試験
 		if (maidFreedom && (maidMode==0||maidMode==1)){
 			setPlayingRole(0x0010);
 		}
+		*/
+		
 		/*
 		if(getMaidModeInt()==LMM_EntityMode_Healer.mmode_Healer){
 

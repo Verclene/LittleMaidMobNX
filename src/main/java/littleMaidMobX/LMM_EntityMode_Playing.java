@@ -36,7 +36,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 
 	@Override
 	public int priority() {
-		return 900;
+		return 9100;
 	}
 
 	@Override
