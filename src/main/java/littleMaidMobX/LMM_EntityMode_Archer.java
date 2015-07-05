@@ -27,6 +27,7 @@ public class LMM_EntityMode_Archer extends LMM_EntityModeBase {
 
 	public LMM_EntityMode_Archer(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
+		isAnytimeUpdate = true;
 	}
 
 	@Override

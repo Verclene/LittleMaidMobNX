@@ -78,6 +78,7 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
@@ -231,13 +232,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
 	
-	private int soundTick = 2;
+	private int soundTick = 1;
 
 	//モデル
 	public String textureModelName;
 	public String textureArmorName;
 	
-	private int playingTick;
+	public int playingTick = 0;
+	public int coolingTick = 0;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -645,7 +647,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// 効果音の設定
 	@Override
 	protected String getHurtSound() {
-		playLittleMaidSound(maidDamegeSound, !isPlaying());
+		playLittleMaidSound(maidDamegeSound, true);
 		return null;
 	}
 
@@ -791,10 +793,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void onKillEntity(EntityLivingBase par1EntityLiving) {
 		super.onKillEntity(par1EntityLiving);
 		if (isBloodsuck()) {
-//			mod_LMM_littleMaidMob.Debug("nice Kill.");
-			playLittleMaidSound(LMM_EnumSound.laughter, true);
+			playLittleMaidSound(LMM_EnumSound.laughter, false);
 		} else {
-			//setTarget(null);
 			setAttackTarget(null);
 		}
 	}
@@ -1544,6 +1544,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
 		Entity entity = par1DamageSource.getEntity();
+		boolean force = true;
+		
+		if(par1DamageSource.getSourceOfDamage() instanceof EntitySnowball) force = false;
 
 		if(par1DamageSource.getDamageType().equalsIgnoreCase("thrown"))
 		{
@@ -1570,6 +1573,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (par2 > 0) {
 			// 遊びは終わりだ！
 			setPlayingRole(0);
+//			coolingTick  = 200;
 			getNextEquipItem();
 		}
 		// ゲーム難易度によるダメージの補正
@@ -1591,7 +1595,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			if (maidDamegeSound == LMM_EnumSound.hurt) {
 				maidDamegeSound = LMM_EnumSound.hurt_nodamege;
 			}
-			playLittleMaidSound(maidDamegeSound, !isPlaying());
+			playLittleMaidSound(maidDamegeSound, force);
 //			playSound("random.successful_hit");
 			return false;
 		}
@@ -1692,16 +1696,22 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			aiAvoidPlayer.setActive();
 		}
 	}
-
+	
 	public void updateAITasks()
 	{
 		super.updateAITasks();
 //		if(++playingTick==2){
 			for (LMM_EntityModeBase ieml : maidEntityModeList) {
-				/*if(ieml.isAnytimeUpdate)*/ ieml.updateAITick(getMaidModeInt());
+				ieml.updateAITick(getMaidModeInt());
 			}
 //			playingTick = 0;
 //		}
+	}
+
+	@Override
+	protected void updateAITick() {
+		// TODO 自動生成されたメソッド・スタブ
+		super.updateAITick();
 	}
 
 	@Override
@@ -1802,10 +1812,21 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 			}
 		}
+		
+		if(coolingTick>0){
+			coolingTick--;
+		}
 
 		//雪合戦試験
 		if (maidFreedom && worldObj.isDaytime() && !isPlaying() && (maidMode==0||maidMode==1)){
-			setPlayingRole(0x0010);
+			if(LMM_EntityMode_Playing.checkSnows(
+						MathHelper.floor_double(posX),
+						MathHelper.floor_double(posY),
+						MathHelper.floor_double(posZ), worldObj)){
+				setPlayingRole(0x0010);
+			}else{
+				setPlayingRole(0);
+			}
 		}
 		
 		/*
@@ -3108,10 +3129,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			setSwinging(pArm, enumsound, force);
 		}
 		if (!worldObj.isRemote) {
-			if(!force) if(new Random().nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
 			byte[] lba = new byte[] {
 				LMM_Statics.LMN_Client_SwingArm,
-				0, 0, 0, 0,
+				(byte) (force ? 1: 0), 0, 0, 0,
 				(byte)pArm,
 				0, 0, 0, 0
 			};
@@ -3246,6 +3266,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	// お遊びモード
 	public void setPlayingRole(int pValue) {
+		if(pValue!=0 && coolingTick>0) return;
+
 		if (mstatPlayingRole != pValue) {
 			mstatPlayingRole = pValue;
 			if (pValue == 0) {

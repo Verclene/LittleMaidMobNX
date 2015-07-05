@@ -10,13 +10,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemSnowball;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 
 public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 
@@ -65,15 +65,14 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 		owner.addMaidMode(ltasks, "Playing", mmode_Playing);
 	}
 
-	protected boolean checkSnows(int x, int y, int z) {
+	public static boolean checkSnows(int x, int y, int z, World world) {
 		// 周りが雪か？
 		int snowCnt = 0;
-		LMM_LittleMaidMobNX.Debug("Search Snow");
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x,   y, z  )).getBlock(), Blocks.snow_layer) ? 3: 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x+1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x-1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x,   y, z+1)).getBlock(), Blocks.snow_layer) ? 1: 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x,   y, z-1)).getBlock(), Blocks.snow_layer) ? 1: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x,   y, z  )).getBlock(), Blocks.snow_layer) ? 3: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x+1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x-1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x,   y, z+1)).getBlock(), Blocks.snow_layer) ? 1: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x,   y, z-1)).getBlock(), Blocks.snow_layer) ? 1: 0;
 		
 		return snowCnt >= 5;
 	}
@@ -93,7 +92,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				for (int b = 0; b < a; b++) {
 					// N
 					for (int c = 0; c < 4; c++) {
-						if (checkSnows(x, y, z)) {
+						if (checkSnows(x, y, z, owner.worldObj)) {
 							pe = owner.getNavigator().getPathToXYZ(x, y - 1, z);
 //							pe = owner.getNavigator().getEntityPathToXYZ(owner, x, y - 1, z, 10F, true, false, false, true);
 							if (pe != null) {
@@ -169,7 +168,8 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				if (checkSnows(
 						MathHelper.floor_double(owner.posX),
 						MathHelper.floor_double(owner.posY),
-						MathHelper.floor_double(owner.posZ))) {
+						MathHelper.floor_double(owner.posZ),
+						owner.worldObj)) {
 //					owner.isMaidChaseWait = true;
 					//1.8検討
 					//owner.attackTime = 30;
@@ -243,10 +243,10 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 
 	@Override
 	public void updateAITick(int pMode) {
-		if(playingTick++<3||pMode!=mmode_Playing){
+		if(owner.playingTick++<3||pMode!=mmode_Playing){
 			return;
 		}else{
-			playingTick = 0;
+			owner.playingTick = 0;
 		}
 		if (owner.isFreedom()) {
 			// 自由行動中の固体は虎視眈々と隙をうかがう。

@@ -27,6 +27,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	public LMM_EntityMode_Ripper(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
 		timeSinceIgnited = -1;
+		isAnytimeUpdate = true;
 	}
 
 	@Override
