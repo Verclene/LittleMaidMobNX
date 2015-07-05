@@ -147,7 +147,7 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 						if (itemstack1.getItem() instanceof ItemFood) {
 							// 食料を突っ込む
 							if (h < 18) {
-								owner.setSwing(10, LMM_EnumSound.healing);
+								owner.setSwing(10, LMM_EnumSound.healing, true);
 								itemstack1 = ((ItemFood)itemstack1.getItem()).onItemUseFinish(itemstack1, owner.worldObj, lmaster);
 //	                        	owner.worldObj.playSoundAtEntity(lmaster, lmaster.getHurtSound(), 0.5F, (owner.rand.nextFloat() - owner.rand.nextFloat()) * 0.2F + 1.0F);
 								if (itemstack1.stackSize <= 0) {
@@ -184,7 +184,7 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 							}
 							
 							if (lswing) {
-								owner.setSwing(10, LMM_EnumSound.healing_potion);
+								owner.setSwing(10, LMM_EnumSound.healing_potion, true);
 								owner.usePotionTotarget(lmaster);
 //	                        	owner.worldObj.playSoundAtEntity(lmaster, lmaster.getHurtSound(), 0.5F, (owner.rand.nextFloat() - owner.rand.nextFloat()) * 0.2F + 1.0F);
 								owner.getNextEquipItem();

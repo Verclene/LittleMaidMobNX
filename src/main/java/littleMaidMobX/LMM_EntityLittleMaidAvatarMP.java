@@ -24,7 +24,7 @@ import wrapper.W_Common;
 
 
 
-public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEntityLittleMaidAvatarBase
+public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEntityLittleMaidAvatar
 {
 	public LMM_EntityLittleMaid avatar;
 	/** いらん？ **/
@@ -557,7 +557,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 		avatar.motionX = motionX;
 		avatar.motionY = motionY;
 		avatar.motionZ = motionZ;
-		if (isSwingInProgress) avatar.setSwinging(LMM_EnumSound.Null);
+		if (isSwingInProgress) avatar.setSwinging(LMM_EnumSound.Null, false);
 
 	}
 
@@ -578,7 +578,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 		avatar.motionX = motionX;
 		avatar.motionY = motionY;
 		avatar.motionZ = motionZ;
-		if (isSwingInProgress) avatar.setSwinging(LMM_EnumSound.Null);
+		if (isSwingInProgress) avatar.setSwinging(LMM_EnumSound.Null, false);
 	}
 
 	public void W_damageArmor(float par1){
@@ -627,5 +627,10 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	@Override
 	public float W_applyPotionDamageCalculations(DamageSource par1DamageSource, float par2) {
 		return applyPotionDamageCalculations(par1DamageSource, par2);
+	}
+	
+	@Override
+	public LMM_EntityLittleMaid getMaid() {
+		return avatar;
 	}
 }

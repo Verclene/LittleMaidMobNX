@@ -87,8 +87,9 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		case LMN_Client_SwingArm : 
 			// 腕振り
 			byte larm = var2.data[5];
+			boolean force = var2.data[1]==1 ? true : false;
 			LMM_EnumSound lsound = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(var2.data, 6));
-			lemaid.setSwinging(larm, lsound);
+			lemaid.setSwinging(larm, lsound, force);
 //			mod_LMM_littleMaidMob.Debug(String.format("SwingSound:%s", lsound.name()));
 			break;
 			

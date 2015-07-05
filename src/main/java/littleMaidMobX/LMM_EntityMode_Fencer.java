@@ -23,6 +23,7 @@ public class LMM_EntityMode_Fencer extends LMM_EntityModeBase {
 
 	public LMM_EntityMode_Fencer(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
+		isAnytimeUpdate = true;
 	}
 
 	@Override

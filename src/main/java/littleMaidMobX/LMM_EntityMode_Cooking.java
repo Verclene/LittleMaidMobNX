@@ -158,7 +158,7 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 					if (owner.maidInventory.addItemStackToInventory(litemstack)) {
 						dropExpOrb(litemstack, li - litemstack.stackSize);
 						owner.playSound("random.pop");
-						owner.setSwing(5, LMM_EnumSound.cookingOver);
+						owner.setSwing(5, LMM_EnumSound.cookingOver, false);
 //                    	if (!pEntityLittleMaid.maidInventory.isItemBurned(pEntityLittleMaid.maidInventory.currentItem)) {
 						owner.getNextEquipItem();
 //                    	}
@@ -185,7 +185,7 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 						owner.maidInventory.setInventorySlotContents(li, null);
 					}
 					owner.playSound("random.pop");
-					owner.setSwing(5, LMM_EnumSound.cookingStart);
+					owner.setSwing(5, LMM_EnumSound.cookingStart, false);
 					lflag = true;
 				}
 			}
@@ -205,7 +205,7 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 					}
 					owner.getNextEquipItem();
 					owner.playSound("random.pop");
-					owner.setSwing(5, LMM_EnumSound.addFuel);
+					owner.setSwing(5, LMM_EnumSound.addFuel, false);
 					lflag = true;
 				} else {
 					if (ltile.isBurning()) {
@@ -215,7 +215,7 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 						ItemStack litemstack2 = ltile.getStackInSlotOnClosing(0);
 						if (owner.maidInventory.addItemStackToInventory(litemstack2)) {
 							owner.playSound("random.pop");
-							owner.setSwing(5, LMM_EnumSound.Null);
+							owner.setSwing(5, LMM_EnumSound.Null, false);
 							owner.getNextEquipItem();
 							lflag = false;
 						} else {
@@ -230,7 +230,7 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 				ItemStack litemstack2 = ltile.getStackInSlotOnClosing(1);
 				if (owner.maidInventory.addItemStackToInventory(litemstack2)) {
 					owner.playSound("random.pop");
-					owner.setSwing(5, LMM_EnumSound.Null);
+					owner.setSwing(5, LMM_EnumSound.Null, false);
 					owner.getNextEquipItem();
 					lflag = owner.maidInventory.isItemBurned(owner.getCurrentEquippedItem());
 				} else {

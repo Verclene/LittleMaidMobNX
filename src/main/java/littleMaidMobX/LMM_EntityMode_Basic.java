@@ -389,7 +389,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 				}
 				if (f) {
 					owner.playSound("random.pop");
-					owner.setSwing(2, LMM_EnumSound.Null);
+					owner.setSwing(2, LMM_EnumSound.Null, false);
 				}
 			}
 //			mod_littleMaidMob.Debug(String.format("getchest3:%d", maidSearchCount));

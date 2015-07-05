@@ -7,7 +7,6 @@ public abstract class LMM_EntityModeBlockBase extends LMM_EntityModeBase {
 //	protected TileEntity fTile;
 	protected double fDistance;
 
-
 	public LMM_EntityModeBlockBase(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
 	}

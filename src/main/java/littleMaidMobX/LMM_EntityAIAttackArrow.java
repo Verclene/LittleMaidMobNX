@@ -41,9 +41,9 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 		setMutexBits(3);
 	}
 	
-	public LMM_IEntityLittleMaidAvatarBase getAvatarIF()
+	public LMM_IEntityLittleMaidAvatar getAvatarIF()
 	{
-		return (LMM_IEntityLittleMaidAvatarBase)fAvatar;
+		return (LMM_IEntityLittleMaidAvatar)fAvatar;
 	}
 	
 	@Override
@@ -67,7 +67,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 	@Override
 	public void startExecuting() {
 		super.startExecuting();
-		//fMaid.playLittleMaidSound(fMaid.isBloodsuck() ? LMM_EnumSound.findTarget_B : LMM_EnumSound.findTarget_N, true);
+//		fMaid.playLittleMaidSound(fMaid.isBloodsuck() ? LMM_EnumSound.findTarget_B : LMM_EnumSound.findTarget_N, false);
 		swingState = fMaid.getSwingStatusDominant();
 	}
 
@@ -154,7 +154,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 				}
 				
 				if (litemstack != null && !(litemstack.getItem() instanceof ItemFood) && !fMaid.weaponReload) {
-					int lastentityid = worldObj.loadedEntityList.size();
+//					int lastentityid = worldObj.loadedEntityList.size();
 					int itemcount = litemstack.stackSize;
 					fMaid.mstatAimeBow = true;
 					getAvatarIF().getValueVectorFire(atx, aty, atz, atl);
@@ -207,7 +207,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 						// フルオート武器は射撃停止
 						LMM_LittleMaidMobNX.Debug("id:%d shoot.", fMaid.getEntityId());
 						fAvatar.stopUsingItem();
-						fMaid.setSwing(30, LMM_EnumSound.shoot);
+						fMaid.setSwing(30, LMM_EnumSound.shoot, !fMaid.isPlaying());
 					} else {
 						// チャージ
 						if (litemstack.getMaxItemUseDuration() > 500) {
@@ -219,12 +219,13 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 									// フルオート兵装の場合は射線確認
 									int at = ((helmid == Items.iron_helmet) || (helmid == Items.diamond_helmet)) ? 26 : 16;
 									if (swingState.attackTime < at) {
-										fMaid.setSwing(at, LMM_EnumSound.sighting);
+										fMaid.setSwing(at, LMM_EnumSound.sighting, !fMaid.isPlaying());
 										litemstack = litemstack.useItemRightClick(worldObj, fAvatar);
 										LMM_LittleMaidMobNX.Debug("id:%d redygun.", fMaid.getEntityId());
 									}
 								} else {
-									LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire FullAuto.", fMaid.getEntityId()));
+									if(fMaid.maidMode!=LMM_EntityMode_Playing.mmode_Playing)
+										LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire FullAuto.", fMaid.getEntityId()));
 								}
 							}
 						} 
@@ -235,10 +236,11 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 									litemstack = litemstack.useItemRightClick(worldObj, fAvatar);
 									// 意図的にショートスパンで音が鳴るようにしてある
 									fMaid.mstatAimeBow = false;
-									fMaid.setSwing(10, (litemstack.stackSize == itemcount) ? LMM_EnumSound.shoot_burst : LMM_EnumSound.Null);
+									fMaid.setSwing(10, (litemstack.stackSize == itemcount) ? LMM_EnumSound.shoot_burst : LMM_EnumSound.Null, !fMaid.isPlaying());
 									LMM_LittleMaidMobNX.Debug(String.format("id:%d throw weapon.(%d:%f:%f)", fMaid.getEntityId(), swingState.attackTime, fMaid.rotationYaw, fMaid.rotationYawHead));
 								} else {
-									LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire throw weapon.", fMaid.getEntityId()));
+									if(fMaid.maidMode!=LMM_EntityMode_Playing.mmode_Playing)
+										LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire throw weapon.", fMaid.getEntityId()));
 								}
 							}
 						} else {
@@ -262,6 +264,8 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 					}
 					
 					// 発生したEntityをチェックしてmaidAvatarEntityが居ないかを確認
+					// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)
+					/*
 					List<Entity> newentitys = worldObj.loadedEntityList.subList(lastentityid, worldObj.loadedEntityList.size());
 					boolean shootingflag = false;
 					if (newentitys != null && newentitys.size() > 0) {
@@ -303,6 +307,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 							}
 						}
 					}
+					*/
 				}
 			}
 		} else {

@@ -10,13 +10,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemSnowball;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
 
 public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 
@@ -26,16 +26,19 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public static final int mpr_QuickShooter = 0x0010;
 	public static final int mpr_StockShooter = 0x0020;
 	
+	public int playingTick = 0;
+	
 	public int fcounter;
 
 	public LMM_EntityMode_Playing(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
 		fcounter = 0;
+		isAnytimeUpdate = true;
 	}
 
 	@Override
 	public int priority() {
-		return 900;
+		return 9100;
 	}
 
 	@Override
@@ -60,17 +63,16 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 //		ltasks[1].addTask(4, new LMM_EntityAINearestAttackableTarget(owner, EntityLiving.class, 16F, 0, true));
 		
 		owner.addMaidMode(ltasks, "Playing", mmode_Playing);
-		
 	}
 
-	protected boolean checkSnows(int x, int y, int z) {
+	public static boolean checkSnows(int x, int y, int z, World world) {
 		// 周りが雪か？
 		int snowCnt = 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x,   y, z  )).getBlock(), Blocks.snow_layer) ? 3: 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x+1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x-1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x,   y, z+1)).getBlock(), Blocks.snow_layer) ? 1: 0;
-		snowCnt += Block.isEqualTo(owner.worldObj.getBlockState(new BlockPos(x,   y, z-1)).getBlock(), Blocks.snow_layer) ? 1: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x,   y, z  )).getBlock(), Blocks.snow_layer) ? 3: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x+1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x-1, y, z  )).getBlock(), Blocks.snow_layer) ? 1: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x,   y, z+1)).getBlock(), Blocks.snow_layer) ? 1: 0;
+		snowCnt += Block.isEqualTo(world.getBlockState(new BlockPos(x,   y, z-1)).getBlock(), Blocks.snow_layer) ? 1: 0;
 		
 		return snowCnt >= 5;
 	}
@@ -90,7 +92,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				for (int b = 0; b < a; b++) {
 					// N
 					for (int c = 0; c < 4; c++) {
-						if (checkSnows(x, y, z)) {
+						if (checkSnows(x, y, z, owner.worldObj)) {
 							pe = owner.getNavigator().getPathToXYZ(x, y - 1, z);
 //							pe = owner.getNavigator().getEntityPathToXYZ(owner, x, y - 1, z, 10F, true, false, false, true);
 							if (pe != null) {
@@ -166,7 +168,8 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				if (checkSnows(
 						MathHelper.floor_double(owner.posX),
 						MathHelper.floor_double(owner.posY),
-						MathHelper.floor_double(owner.posZ))) {
+						MathHelper.floor_double(owner.posZ),
+						owner.worldObj)) {
 //					owner.isMaidChaseWait = true;
 					//1.8検討
 					//owner.attackTime = 30;
@@ -191,10 +194,10 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				if (owner.maidInventory.addItemStackToInventory(new ItemStack(Items.snowball))) {
 					owner.playSound("random.pop");
 					if (owner.getPlayingRole() == mpr_StockShooter) {
-						owner.setSwing(5, LMM_EnumSound.collect_snow);
+						owner.setSwing(5, LMM_EnumSound.collect_snow, false);
 						fcounter = 0;
 					} else {
-						owner.setSwing(30, LMM_EnumSound.collect_snow);
+						owner.setSwing(30, LMM_EnumSound.collect_snow, false);
 						fcounter++;
 					}
 				} else {
@@ -217,7 +220,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 //			isMaidChaseWait = true;
 			if (owner.arrowHitTimer <= 0) {
 				if (owner.maidInventory.addItemStackToInventory(new ItemStack(Items.snowball))) {
-					owner.setSwing(5, LMM_EnumSound.collect_snow);
+					owner.setSwing(5, LMM_EnumSound.collect_snow, false);
 					owner.playSound("random.pop");
 					fcounter = 0;
 				} else {
@@ -240,6 +243,11 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 
 	@Override
 	public void updateAITick(int pMode) {
+		if(owner.playingTick++<3||pMode!=mmode_Playing){
+			return;
+		}else{
+			owner.playingTick = 0;
+		}
 		if (owner.isFreedom()) {
 			// 自由行動中の固体は虎視眈々と隙をうかがう。
 			if (owner.worldObj.isDaytime()) {
@@ -281,18 +289,10 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				}
 				
 			} else {
-				// 夜のお遊び
-				if (!owner.isPlaying()) {
-					// 条件判定
-					
-				} else if (owner.getPlayingRole() < 0x8000) {
+				if (owner.getPlayingRole() != mpr_NULL) {
 					// 昼の部終了
 					owner.setPlayingRole(mpr_NULL);
 					fcounter = 0;
-					
-				} else {
-					// お遊びの実行をここに書く？
-					
 				}
 			}
 			
@@ -309,7 +309,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 		if (par1DamageSource.getSourceOfDamage() instanceof EntitySnowball) {
 			// お遊び判定用、雪玉かどうか判定
 			owner.maidDamegeSound = LMM_EnumSound.hurt_snow;
-			if (!owner.isContract() || owner.isFreedom()) {
+			if (!owner.isContract() || (owner.isFreedom()&&owner.maidMode==1)) {
 				owner.setPlayingRole(mpr_QuickShooter);
 				owner.setMaidWait(false);
 				owner.setMaidWaitCount(0);

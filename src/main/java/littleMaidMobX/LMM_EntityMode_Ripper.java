@@ -27,6 +27,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	public LMM_EntityMode_Ripper(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
 		timeSinceIgnited = -1;
+		isAnytimeUpdate = true;
 	}
 
 	@Override
@@ -158,8 +159,8 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 					timeSinceIgnited = -1;
 					owner.setDead();
 					// Mobによる破壊の是非
-//					boolean lflag = owner.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
-//					owner.worldObj.createExplosion(owner, owner.posX, owner.posY, owner.posZ, 3F, lflag);
+					boolean lflag = owner.worldObj.getGameRules().getGameRuleBooleanValue("mobGriefing");
+					owner.worldObj.createExplosion(owner, owner.posX, owner.posY, owner.posZ, 3F, lflag);
 				}
 			}
 		}
@@ -256,15 +257,15 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 					e.printStackTrace();
 				}
 //				((EntityCreeper)pEntity).timeSinceIgnited = 0;
-				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck);
+				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck, !owner.isPlaying());
 			} else if (pEntity instanceof EntityTNTPrimed) {
 				pEntity.setDead();
 				lis.damageItem(1, owner);
 //				lis.damageItem(1, owner.maidAvatar);
-				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck);
+				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck, !owner.isPlaying());
 			} else {
 				owner.maidAvatar.interactWith(pEntity);
-				owner.setSwing(20, LMM_EnumSound.attack);
+				owner.setSwing(20, LMM_EnumSound.attack, !owner.isPlaying());
 			}
 			if (lis.stackSize <= 0) {
 				owner.maidInventory.setInventoryCurrentSlotContents(null);

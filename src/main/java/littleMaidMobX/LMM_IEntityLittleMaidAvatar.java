@@ -2,7 +2,7 @@ package littleMaidMobX;
 
 import net.minecraft.util.DamageSource;
 
-public interface LMM_IEntityLittleMaidAvatarBase
+public interface LMM_IEntityLittleMaidAvatar
 {
 	// --------------------------------------------------------------------------------------------------------
 	// EntityPlayer へのアクセス
@@ -27,4 +27,6 @@ public interface LMM_IEntityLittleMaidAvatarBase
 	public void getValue();
 
 	public boolean getIsItemReload();
+	
+	public LMM_EntityLittleMaid getMaid();
 }

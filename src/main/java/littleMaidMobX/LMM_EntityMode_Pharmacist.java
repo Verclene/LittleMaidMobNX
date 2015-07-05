@@ -180,7 +180,7 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 				if (owner.maidInventory.addItemStackToInventory(litemstack2)) {
 					ltile.setInventorySlotContents(3, null);
 					owner.playSound("random.pop");
-					owner.setSwing(5, LMM_EnumSound.Null);
+					owner.setSwing(5, LMM_EnumSound.Null, false);
 				}
 			}
 			// 完成品
@@ -191,7 +191,7 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 					if (litemstack1 != null && owner.maidInventory.addItemStackToInventory(litemstack1)) {
 						ltile.setInventorySlotContents(li, null);
 						owner.playSound("random.pop");
-						owner.setSwing(5, LMM_EnumSound.Null);
+						owner.setSwing(5, LMM_EnumSound.cookingOver, false);
 						lflag = true;
 					}
 				}
@@ -211,7 +211,7 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 						ltile.setInventorySlotContents(li, litemstack1);
 						owner.maidInventory.setInventoryCurrentSlotContents(null);
 						owner.playSound("random.pop");
-						owner.setSwing(5, LMM_EnumSound.Null);
+						owner.setSwing(5, LMM_EnumSound.cookingStart, false);
 						owner.getNextEquipItem();
 						lflag = true;
 					}
@@ -237,7 +237,7 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 					ltile.setInventorySlotContents(3, litemstack1);
 					owner.maidInventory.setInventorySlotContents(inventryPos, null);
 					owner.playSound("random.pop");
-					owner.setSwing(15, LMM_EnumSound.Null);
+					owner.setSwing(15, LMM_EnumSound.Null, false);
 					lflag = true;
 				} 
 				else if (litemstack1 == null || (litemstack1.getItem() instanceof ItemPotion && MMM_Helper.hasEffect(litemstack1)) || !litemstack1.getItem().isPotionIngredient(litemstack1)) {

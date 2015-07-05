@@ -25,7 +25,8 @@ import net.minecraft.world.World;
 public abstract class LMM_EntityModeBase {
 
 	public final LMM_EntityLittleMaid owner;
-
+	
+	public boolean isAnytimeUpdate = false;
 
 	/**
 	 * 初期化

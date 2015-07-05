@@ -23,6 +23,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 
 	public LMM_EntityMode_Torcher(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
+		isAnytimeUpdate = true;
 	}
 
 	@Override
@@ -163,7 +164,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		int li = lis.stackSize;
 		// TODO:当たり判定をどうするか
 		if (lis.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px, py - 1, pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
-			owner.setSwing(10, LMM_EnumSound.installation);
+			owner.setSwing(10, LMM_EnumSound.installation, false);
 			
 			if (owner.maidAvatar.capabilities.isCreativeMode) {
 				lis.stackSize = li;
@@ -255,7 +256,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 			
 			if (ll < 8 && lis.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(ltx, lty, ltz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
 //				mod_LMM_littleMaidMob.Debug("torch-inst: %d, %d, %d: %d", ltx, lty, ltz, ll);
-				owner.setSwing(10, LMM_EnumSound.installation);
+				owner.setSwing(10, LMM_EnumSound.installation, false);
 				owner.getNavigator().clearPathEntity();
 				if (owner.maidAvatar.capabilities.isCreativeMode) {
 					lis.stackSize = lic;
