@@ -194,10 +194,10 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				if (owner.maidInventory.addItemStackToInventory(new ItemStack(Items.snowball))) {
 					owner.playSound("random.pop");
 					if (owner.getPlayingRole() == mpr_StockShooter) {
-						owner.setSwing(5, LMM_EnumSound.collect_snow);
+						owner.setSwing(5, LMM_EnumSound.collect_snow, false);
 						fcounter = 0;
 					} else {
-						owner.setSwing(30, LMM_EnumSound.collect_snow);
+						owner.setSwing(30, LMM_EnumSound.collect_snow, false);
 						fcounter++;
 					}
 				} else {
@@ -220,7 +220,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 //			isMaidChaseWait = true;
 			if (owner.arrowHitTimer <= 0) {
 				if (owner.maidInventory.addItemStackToInventory(new ItemStack(Items.snowball))) {
-					owner.setSwing(5, LMM_EnumSound.collect_snow);
+					owner.setSwing(5, LMM_EnumSound.collect_snow, false);
 					owner.playSound("random.pop");
 					fcounter = 0;
 				} else {
@@ -243,7 +243,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 
 	@Override
 	public void updateAITick(int pMode) {
-		if(playingTick++<3){
+		if(playingTick++<3||pMode!=mmode_Playing){
 			return;
 		}else{
 			playingTick = 0;
@@ -289,18 +289,10 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 				}
 				
 			} else {
-				// 夜のお遊び
-				if (!owner.isPlaying()) {
-					// 条件判定
-					
-				} else if (owner.getPlayingRole() < 0x8000) {
+				if (owner.getPlayingRole() != mpr_NULL) {
 					// 昼の部終了
 					owner.setPlayingRole(mpr_NULL);
 					fcounter = 0;
-					
-				} else {
-					// お遊びの実行をここに書く？
-					
 				}
 			}
 			
@@ -317,7 +309,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 		if (par1DamageSource.getSourceOfDamage() instanceof EntitySnowball) {
 			// お遊び判定用、雪玉かどうか判定
 			owner.maidDamegeSound = LMM_EnumSound.hurt_snow;
-			if (!owner.isContract() || owner.isFreedom()) {
+			if (!owner.isContract() || (owner.isFreedom()&&owner.maidMode==1)) {
 				owner.setPlayingRole(mpr_QuickShooter);
 				owner.setMaidWait(false);
 				owner.setMaidWaitCount(0);
@@ -331,7 +323,6 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public boolean setMode(int pMode) {
 		switch (pMode) {
 		case mmode_Playing :
-			LMM_LittleMaidMobNX.Debug("Changed to playing");
 			owner.aiAttack.setEnable(false);
 			owner.aiShooting.setEnable(true);
 			owner.setBloodsuck(false);

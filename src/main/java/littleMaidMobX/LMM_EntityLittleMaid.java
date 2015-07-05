@@ -645,7 +645,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// 効果音の設定
 	@Override
 	protected String getHurtSound() {
-		playLittleMaidSound(maidDamegeSound, true);
+		playLittleMaidSound(maidDamegeSound, !isPlaying());
 		return null;
 	}
 
@@ -1040,7 +1040,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		// 標準処理
-		setSwing(20, isBloodsuck() ? LMM_EnumSound.attack_bloodsuck : LMM_EnumSound.attack);
+		setSwing(20, isBloodsuck() ? LMM_EnumSound.attack_bloodsuck : LMM_EnumSound.attack, !isPlaying());
 		maidAvatar.attackTargetEntityWithCurrentItem(par1Entity);
 		return true;
 	}
@@ -1591,7 +1591,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			if (maidDamegeSound == LMM_EnumSound.hurt) {
 				maidDamegeSound = LMM_EnumSound.hurt_nodamege;
 			}
-			playLittleMaidSound(maidDamegeSound, true);
+			playLittleMaidSound(maidDamegeSound, !isPlaying());
 //			playSound("random.successful_hit");
 			return false;
 		}
@@ -1693,26 +1693,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 	}
 
-	@Override
-	protected void updateAITick() {
-//		// AI対応型はこっちが呼ばれる
-//		dataWatcher.updateObject(dataWatch_Health, Integer.valueOf(getHealth()));
-		// 追加分
-		super.updateAITick();
-		for (LMM_EntityModeBase ieml : maidEntityModeList) {
-			ieml.updateAITick(getMaidModeInt());
-		}
-	}
-
 	public void updateAITasks()
 	{
 		super.updateAITasks();
-		if(++playingTick==1){
+//		if(++playingTick==2){
 			for (LMM_EntityModeBase ieml : maidEntityModeList) {
-				if(ieml.isAnytimeUpdate) ieml.updateAITick(getMaidModeInt());
+				/*if(ieml.isAnytimeUpdate)*/ ieml.updateAITick(getMaidModeInt());
 			}
-			playingTick = 0;
-		}
+//			playingTick = 0;
+//		}
 	}
 
 	@Override
@@ -1815,7 +1804,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		//雪合戦試験
-		if (maidFreedom && (maidMode==0||maidMode==1)){
+		if (maidFreedom && worldObj.isDaytime() && !isPlaying() && (maidMode==0||maidMode==1)){
 			setPlayingRole(0x0010);
 		}
 		
@@ -3059,6 +3048,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setRevengeTarget(null);
 		//setPathToEntity(null);
 		getNavigator().clearPathEntity();
+		setPlayingRole(0);
 		if(pflag){
 			//setMaidModeAITasks(null,null);
 			getNavigator().setPath(null, 0);
@@ -3106,17 +3096,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	// 腕振り
-	public void setSwing(int attacktime, LMM_EnumSound enumsound) {
-		setSwing(attacktime, enumsound, maidDominantArm);
+	public void setSwing(int attacktime, LMM_EnumSound enumsound, boolean force) {
+		setSwing(attacktime, enumsound, maidDominantArm, force);
 	}
-	public void setSwing(int pattacktime, LMM_EnumSound enumsound, int pArm) {
+
+	public void setSwing(int pattacktime, LMM_EnumSound enumsound, int pArm, boolean force) {
 		mstatSwingStatus[pArm].attackTime = pattacktime;
 //		maidAttackSound = enumsound;
 //		soundInterval = 0;// いるか？
 		if (!weaponFullAuto) {
-			setSwinging(pArm, enumsound);
+			setSwinging(pArm, enumsound, force);
 		}
 		if (!worldObj.isRemote) {
+			if(!force) if(new Random().nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
 			byte[] lba = new byte[] {
 				LMM_Statics.LMN_Client_SwingArm,
 				0, 0, 0, 0,
@@ -3128,11 +3120,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 	}
 
-	public void setSwinging(LMM_EnumSound pSound) {
-		setSwinging(maidDominantArm, pSound);
+	public void setSwinging(LMM_EnumSound pSound, boolean force) {
+		setSwinging(maidDominantArm, pSound, force);
 	}
-	public void setSwinging(int pArm, LMM_EnumSound pSound) {
-		playLittleMaidSound(pSound, true);
+	public void setSwinging(int pArm, LMM_EnumSound pSound, boolean force) {
+		playLittleMaidSound(pSound, force);
 		if (mstatSwingStatus[pArm].setSwinging()) {
 			maidAvatar.swingProgressInt = -1;
 //			maidAvatar.swingProgressInt = -1;
@@ -3187,7 +3179,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public void eatSugar(boolean motion, boolean recontract) {
 		if (motion) {
-			setSwing(2, (getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar);
+			setSwing(2, (getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar, false);
 		}
 		int h = hurtResistantTime;
 		heal(1);
@@ -3287,6 +3279,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		aiTracer.setEnable(false);
 //		setAIMoveSpeed(pFlag ? moveSpeed_Nomal : moveSpeed_Max);
 //		setMoveForward(0.0F);
+		setPlayingRole(0);
 		if (maidFreedom && isContract()) {
 			func_175449_a(
 //			setHomeArea(
@@ -3295,7 +3288,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					MathHelper.floor_double(posZ)), 16);
 		} else {
 			detachHome();
-			setPlayingRole(0);
 		}
 		setMaidFlags(maidFreedom, dataWatch_Flags_Freedom);
 	}

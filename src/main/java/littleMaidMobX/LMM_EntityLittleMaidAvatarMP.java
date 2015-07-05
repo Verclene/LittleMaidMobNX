@@ -557,7 +557,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 		avatar.motionX = motionX;
 		avatar.motionY = motionY;
 		avatar.motionZ = motionZ;
-		if (isSwingInProgress) avatar.setSwinging(LMM_EnumSound.Null);
+		if (isSwingInProgress) avatar.setSwinging(LMM_EnumSound.Null, false);
 
 	}
 
@@ -578,7 +578,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 		avatar.motionX = motionX;
 		avatar.motionY = motionY;
 		avatar.motionZ = motionZ;
-		if (isSwingInProgress) avatar.setSwinging(LMM_EnumSound.Null);
+		if (isSwingInProgress) avatar.setSwinging(LMM_EnumSound.Null, false);
 	}
 
 	public void W_damageArmor(float par1){

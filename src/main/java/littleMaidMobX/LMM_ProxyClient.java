@@ -86,9 +86,10 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		switch (lmode) {
 		case LMN_Client_SwingArm : 
 			// 腕振り
+			// soundPlayChance周りは送信元で決めているので問題はないはず
 			byte larm = var2.data[5];
 			LMM_EnumSound lsound = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(var2.data, 6));
-			lemaid.setSwinging(larm, lsound);
+			lemaid.setSwinging(larm, lsound, true);
 //			mod_LMM_littleMaidMob.Debug(String.format("SwingSound:%s", lsound.name()));
 			break;
 			

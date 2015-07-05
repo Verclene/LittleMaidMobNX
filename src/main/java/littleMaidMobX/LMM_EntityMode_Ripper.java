@@ -256,15 +256,15 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 					e.printStackTrace();
 				}
 //				((EntityCreeper)pEntity).timeSinceIgnited = 0;
-				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck);
+				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck, !owner.isPlaying());
 			} else if (pEntity instanceof EntityTNTPrimed) {
 				pEntity.setDead();
 				lis.damageItem(1, owner);
 //				lis.damageItem(1, owner.maidAvatar);
-				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck);
+				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck, !owner.isPlaying());
 			} else {
 				owner.maidAvatar.interactWith(pEntity);
-				owner.setSwing(20, LMM_EnumSound.attack);
+				owner.setSwing(20, LMM_EnumSound.attack, !owner.isPlaying());
 			}
 			if (lis.stackSize <= 0) {
 				owner.maidInventory.setInventoryCurrentSlotContents(null);
