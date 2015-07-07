@@ -7,7 +7,6 @@ import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.MMMLoader.MMMResourcePack;
 import net.blacklab.lib.ConfigList;
-import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -40,15 +39,9 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX1B27-1.8-F1450";
+	public static final String VERSION = "NX1B32-1.8-F1450";
 	public static final int VERSION_CODE = 3;
 	
-	/**
-	 * 開発環境でEntityModeやModelの開発を行う際はNOT_IN_DEVMODE「以外」にしてください。
-	 * 開発環境外であるか、eclipseを使用して開発環境を構築しているかの設定です。LMMNX_DevModeの値を指定してください。
-	 */
-	public static final LMMNX_DevMode DEVMODE = LMMNX_DevMode.DEVMODE_ECLIPSE;
-
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
 		"spawnLimit = Maximum spawn count in the World.",

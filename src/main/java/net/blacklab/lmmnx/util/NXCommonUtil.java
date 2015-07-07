@@ -21,8 +21,7 @@ public class NXCommonUtil {
 	 */
 	public static String getClassName(String path, String root){
 		if(!path.endsWith(".class")) return null; 
-		if(path.contains("\\")||path.contains("/.")||path.contains("\\.")) path = getLinuxAntiDotName(path);
-		if(root.contains("\\")||root.contains("/.")||root.contains("\\.")) path = getLinuxAntiDotName(path);
+		LMM_LittleMaidMobNX.Debug("CN %s - %s", path, root);
 		
 		if(root!=null){
 			if(!root.isEmpty()&&path.startsWith(root)){
@@ -30,7 +29,7 @@ public class NXCommonUtil {
 			}
 		}
 		if(path.startsWith("/")) path = path.substring(1);
-		path = path.substring(0,path.lastIndexOf(".class"));
+		if(path.endsWith(".class")) path = path.substring(0,path.lastIndexOf(".class"));
 		LMM_LittleMaidMobNX.Debug("CN %s", path.replace("/", "."));
 		return path.replace("/", ".");
 	}

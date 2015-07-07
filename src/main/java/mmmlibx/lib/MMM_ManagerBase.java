@@ -31,8 +31,8 @@ public abstract class MMM_ManagerBase {
 			ls = MMMLib.class.getPackage().getName().replace('.', File.separatorChar);
 		}
 		
-		if(LMM_LittleMaidMobNX.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
-			startSearch(FileManager.dirEclipseDev);
+		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
+			startSearch(FileManager.dirDevClasses);
 		}
 		
 		File lf1 = new File(FileManager.dirMods, ls);
@@ -48,7 +48,7 @@ public abstract class MMM_ManagerBase {
 			decodeZip(root);
 		}
 		
-		
+		/*
 		// mods
 		for (Entry<String, List<File>> le : FileManager.fileList.entrySet()) {
 			for (File lf : le.getValue()) {
@@ -61,6 +61,7 @@ public abstract class MMM_ManagerBase {
 				}
 			}
 		}
+		*/
 	}
 
 	private void decodeDirectory(File pfile, File pRoot) {
@@ -71,7 +72,9 @@ public abstract class MMM_ManagerBase {
 				if (lname.indexOf(getPreFix()) >= 0 && lname.endsWith(".class")) {
 					// 対象クラスファイルなのでロード
 					//ディレクトリはパスを自動で治してくれないので、手動で。
-					loadClass(NXCommonUtil.getClassName(lf.getAbsolutePath(), pRoot.getAbsolutePath()));
+					loadClass(NXCommonUtil.getClassName(
+							NXCommonUtil.getLinuxAntiDotName(lf.getAbsolutePath()), 
+							NXCommonUtil.getLinuxAntiDotName(pRoot.getAbsolutePath())));
 				}
 			}else{
 				//ディレクトリの場合は中身も捜索
@@ -115,7 +118,7 @@ public abstract class MMM_ManagerBase {
 		try {
 			ClassLoader lclassLoader = MMMLib.class.getClassLoader();
 			Package lpackage = MMMLib.class.getPackage();
-			lclassname = pname.replace(".class", "");
+			lclassname = pname.endsWith(".class") ? pname.substring(pname.lastIndexOf(".class")) : pname;
 			Class lclass;
 			if(lpackage != null) {
 	// TODO ★	lclassname = (new StringBuilder(String.valueOf(lpackage.getName()))).append(".").append(lclassname).toString();

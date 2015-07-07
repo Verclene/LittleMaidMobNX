@@ -10,6 +10,7 @@ import java.util.Map;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
+import net.blacklab.lmmnx.util.NXCommonUtil;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 
 public class FileManager {
@@ -17,7 +18,8 @@ public class FileManager {
 	public static File dirMinecraft;
 	public static File dirMods;
 	public static File dirModsVersion;
-	public static File dirEclipseDev;
+	public static File dirDevClasses;
+	public static File dirDevClassAssets;
 	
 	public static List<File> files;
 	public static String minecraftDir	= "";
@@ -33,13 +35,25 @@ public class FileManager {
 		minecraftDir = dirMinecraft.getPath();
 		dirMods = new File(dirMinecraft, "mods");
 		//開発モード
-		if(LMM_LittleMaidMobNX.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
 			//Linux準拠の形式に変更
-			String path = dirMods.getAbsolutePath().replace("\\", "/").replace("./", "");
+			String path = NXCommonUtil.getLinuxAntiDotName(dirMods.getAbsolutePath());
+			String pathd = path;
+			String patha;
 			String tail = "/eclipse/mods";
 			if(path.endsWith(tail)){
-				path = path.substring(0, path.indexOf(tail))+"/bin";
-				dirEclipseDev = new File(path);
+				if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+					pathd = path.substring(0, path.indexOf(tail))+"/bin";
+				}else if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE){
+					pathd = path.substring(0, path.indexOf(tail))+"/build/classes/main";
+					patha = path.substring(0, path.indexOf(tail))+"/build/resources/main";
+					dirDevClassAssets = new File(patha);
+				}
+				dirDevClasses = new File(pathd);
+				if(!dirDevClasses.exists()||!dirDevClasses.isDirectory())
+					throw new IllegalStateException("Could not get dev class path: Maybe your source codes are out of src/main/java?");
+			}else{
+				throw new IllegalStateException("Run Directory is incorrect: You must run at \"<PROJECT>/eclipse\"!");
 			}
 		}
 		dirModsVersion = new File(dirMods, (String)lo[4]);
@@ -171,9 +185,10 @@ public class FileManager {
 		
 		MMMLib.Debug("getModFile:[%s]:%s", pname, dirMods.getAbsolutePath());
 		// ファイル・ディレクトリを検索
-		if(LMM_LittleMaidMobNX.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
 			//開発モード時はそちらを優先
-			llist.add(dirEclipseDev);
+			llist.add(dirDevClasses);
+			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE) llist.add(dirDevClassAssets);
 		}
 
 		try {
