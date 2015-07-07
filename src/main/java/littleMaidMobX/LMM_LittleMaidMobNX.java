@@ -39,7 +39,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX1B32-1.8-F1450";
+	public static final String VERSION = "NX1B33-1.8-F1450";
 	public static final int VERSION_CODE = 3;
 	
 	public static String[] cfg_comment = {

@@ -32,23 +32,25 @@ public abstract class MMM_ManagerBase {
 		}
 		
 		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
-			startSearch(FileManager.dirDevClasses);
+			startSearch(FileManager.dirDevClasses, true);
 		}
 		
 		File lf1 = new File(FileManager.dirMods, ls);
-		startSearch(lf1);
+		startSearch(lf1, false);
 	}
 	
-	private void startSearch(File root){
-		if (root.isDirectory()) {
-			// ディレクトリの解析
-			decodeDirectory(root, root);
-		} else {
-			// Zipの解析
-			decodeZip(root);
+	private void startSearch(File root, boolean dev){
+		if(dev){
+			if (root.isDirectory()) {
+				// ディレクトリの解析
+				decodeDirectory(root, root);
+			} else {
+				// Zipの解析
+				decodeZip(root);
+			}
+			return;
 		}
 		
-		/*
 		// mods
 		for (Entry<String, List<File>> le : FileManager.fileList.entrySet()) {
 			for (File lf : le.getValue()) {
@@ -61,7 +63,6 @@ public abstract class MMM_ManagerBase {
 				}
 			}
 		}
-		*/
 	}
 
 	private void decodeDirectory(File pfile, File pRoot) {
