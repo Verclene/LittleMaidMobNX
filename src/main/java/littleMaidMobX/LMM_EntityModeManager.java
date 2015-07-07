@@ -39,6 +39,9 @@ public class LMM_EntityModeManager extends MMM_ManagerBase {
 			lemb = (LMM_EntityModeBase)pclass.getConstructor(LMM_EntityLittleMaid.class).newInstance((LMM_EntityLittleMaid)null);
 			lemb.init();
 			
+			//既存
+			if(maidModeList.contains(lemb)) return false;
+			
 			if (maidModeList.isEmpty() || lemb.priority() >= maidModeList.get(maidModeList.size() - 1).priority()) {
 				maidModeList.add(lemb);
 			} else {

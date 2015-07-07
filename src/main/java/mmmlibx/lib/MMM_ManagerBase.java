@@ -8,6 +8,10 @@ import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
+import net.blacklab.lmmnx.util.LMMNX_DevMode;
+import net.blacklab.lmmnx.util.NXCommonUtil;
+
 public abstract class MMM_ManagerBase {
 
 	protected abstract String getPreFix();
@@ -26,14 +30,22 @@ public abstract class MMM_ManagerBase {
 		if (lpackage != null) {
 			ls = MMMLib.class.getPackage().getName().replace('.', File.separatorChar);
 		}
-		File lf1 = new File(FileManager.dirMods, ls);
 		
-		if (lf1.isDirectory()) {
+		if(LMM_LittleMaidMobNX.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+			startSearch(FileManager.dirEclipseDev);
+		}
+		
+		File lf1 = new File(FileManager.dirMods, ls);
+		startSearch(lf1);
+	}
+	
+	private void startSearch(File root){
+		if (root.isDirectory()) {
 			// ディレクトリの解析
-			decodeDirectory(lf1);
+			decodeDirectory(root, root);
 		} else {
 			// Zipの解析
-			decodeZip(lf1);
+			decodeZip(root);
 		}
 		
 		
@@ -42,7 +54,7 @@ public abstract class MMM_ManagerBase {
 			for (File lf : le.getValue()) {
 				if (lf.isDirectory()) {
 					// ディレクトリの解析
-					decodeDirectory(lf);
+					decodeDirectory(lf, root);
 				} else {
 					// Zipの解析
 					decodeZip(lf);
@@ -51,15 +63,19 @@ public abstract class MMM_ManagerBase {
 		}
 	}
 
-	private void decodeDirectory(File pfile) {
+	private void decodeDirectory(File pfile, File pRoot) {
 		// ディレクトリ内のクラスを検索
 		for (File lf : pfile.listFiles()) {
 			if (lf.isFile()) {
 				String lname = lf.getName();
 				if (lname.indexOf(getPreFix()) >= 0 && lname.endsWith(".class")) {
 					// 対象クラスファイルなのでロード
-					loadClass(lf.getName());
+					//ディレクトリはパスを自動で治してくれないので、手動で。
+					loadClass(NXCommonUtil.getClassName(lf.getAbsolutePath(), pRoot.getAbsolutePath()));
 				}
+			}else{
+				//ディレクトリの場合は中身も捜索
+				decodeDirectory(lf, pRoot);
 			}
 		}
 	}

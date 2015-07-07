@@ -22,7 +22,10 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import littleMaidMobX.LMMNX_OldZipTexturesLoader;
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.multiModel.model.mc162.*;
+import net.blacklab.lmmnx.util.LMMNX_DevMode;
+import net.blacklab.lmmnx.util.NXCommonUtil;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -455,7 +458,7 @@ public class MMM_TextureManager {
 	protected void addModelClass(String fname, String[] pSearch) {
 		// モデルを追加
 		int lfindprefix = fname.indexOf(pSearch[2]);
-		if (lfindprefix > -1 && fname.endsWith(".class")) {
+		if (lfindprefix > -1/* && fname.endsWith(".class")*/) {
 			String cn = fname.replace(".class", "");
 			String pn = cn.substring(pSearch[2].length() + lfindprefix);
 			
@@ -636,8 +639,16 @@ public class MMM_TextureManager {
 				if(t.isDirectory()) {
 					addTexturesDir(t, pSearch);
 				} else {
-					if (t.getName().endsWith(".class")) {
-						addModelClass(t.getName(), pSearch);
+					ADDMODEL: if (t.getName().endsWith(".class")) {
+						String tn = NXCommonUtil.getLinuxAntiDotName(t.getAbsolutePath());
+						String rmn = NXCommonUtil.getLinuxAntiDotName(FileManager.dirMods.getAbsolutePath());
+						if(LMM_LittleMaidMobNX.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+							String rdn = NXCommonUtil.getLinuxAntiDotName(FileManager.dirEclipseDev.getAbsolutePath());
+							if(tn.startsWith(rdn)){
+								addModelClass(NXCommonUtil.getClassName(tn, rdn),pSearch);
+								break ADDMODEL;
+							}
+						}else if(tn.startsWith(rmn)) addModelClass(NXCommonUtil.getClassName(tn, rmn), pSearch);
 					} else {
 						String s = t.getPath().replace('\\', '/');
 						int i = s.indexOf(pSearch[1]);

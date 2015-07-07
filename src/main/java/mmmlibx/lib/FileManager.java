@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
+import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 
 public class FileManager {
@@ -15,6 +17,7 @@ public class FileManager {
 	public static File dirMinecraft;
 	public static File dirMods;
 	public static File dirModsVersion;
+	public static File dirEclipseDev;
 	
 	public static List<File> files;
 	public static String minecraftDir	= "";
@@ -29,6 +32,16 @@ public class FileManager {
 		dirMinecraft = (File)lo[6];
 		minecraftDir = dirMinecraft.getPath();
 		dirMods = new File(dirMinecraft, "mods");
+		//開発モード
+		if(LMM_LittleMaidMobNX.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+			//Linux準拠の形式に変更
+			String path = dirMods.getAbsolutePath().replace("\\", "/").replace("./", "");
+			String tail = "/eclipse/mods";
+			if(path.endsWith(tail)){
+				path = path.substring(0, path.indexOf(tail))+"/bin";
+				dirEclipseDev = new File(path);
+			}
+		}
 		dirModsVersion = new File(dirMods, (String)lo[4]);
 		MMMLib.Debug("init FileManager.");
 	}
@@ -158,6 +171,11 @@ public class FileManager {
 		
 		MMMLib.Debug("getModFile:[%s]:%s", pname, dirMods.getAbsolutePath());
 		// ファイル・ディレクトリを検索
+		if(LMM_LittleMaidMobNX.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+			//開発モード時はそちらを優先
+			llist.add(dirEclipseDev);
+		}
+
 		try {
 			if (dirMods.isDirectory()) {
 				MMMLib.Debug("getModFile-get:%d.", dirMods.list().length);
