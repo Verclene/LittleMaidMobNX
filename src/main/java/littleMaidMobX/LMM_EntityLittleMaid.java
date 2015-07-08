@@ -138,7 +138,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public int fencerDefDetonateTick = 0;
 
-	public int jumpTicks;
+//	public int jumpTicks;
 
 	public LMM_InventoryLittleMaid maidInventory;
 	public EntityPlayer maidAvatar;
@@ -1792,6 +1792,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		return false;
 	}
+	
+	private static final int[] ZBOUND_BLOCKOFFS = new int[]{ -1, -1,  0,  1,  1,  1,  0, -1};
+	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0,  1,  1,  1,  0, -1, -1, -1};
+
 
 	@Override
 	public void onLivingUpdate() {
@@ -1849,21 +1853,24 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		
 		//壁衝突判定
 		//pitchはデフォルト+-180度が北方向(Z負)
-		//180を加算してN=0に正規化
-		float pitch = rotationPitch + 180F;
-		int[] zo = new int[]{ -1, -1,  0,  1,  1,  1,  0, -1};
-		int[] xo = new int[]{  0,  1,  1,  1,  0, -1, -1, -1};
-		int pitchindex = MathHelper.floor_float((pitch+22.5F)/45F);
+		//向いてる方向のブロックを厳密に計算するとめんどくさいから
+		//北方向から八方位に分割して割り出す
+		int pitchindex = MathHelper.floor_float((rotationPitch+180F+22.5F)/45F);
 		if(pitchindex<0) pitchindex+=8;
-		
 		int px = MathHelper.floor_double(posX);
 		int pz = MathHelper.floor_double(posZ);
 		int py = MathHelper.floor_double(getEntityBoundingBox().minY);
-		if(isCollidedHorizontally && onGround && World.doesBlockHaveSolidTopSurface(worldObj, new BlockPos(px+xo[pitchindex], py-1, pz+zo[pitchindex]))){
-			LMM_LittleMaidMobNX.Debug("PITCH S %f", pitch);
-			jump();
-			motionX = 0.00005D + xo[pitchindex];
-			motionZ = 0.00005D + zo[pitchindex];
+		float movespeed = getAIMoveSpeed();
+		if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && onGround &&
+				World.doesBlockHaveSolidTopSurface(worldObj, new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py-1, pz+ZBOUND_BLOCKOFFS[pitchindex]))){
+			//ジャンプとかさせるとめんどくさいから、Yだけ先に変える
+			setLocationAndAngles(posX, posY+1D, posZ, rotationYaw, rotationPitch);
+			//弧度法に変換。MathHelper.sinの実装が怪しいのでMath.sinを使う
+			double archDegPitch = rotationPitch / 180D * Math.PI;
+			//ナニユエ100分の1がちょうどいいのかは知らん
+			motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
+			motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
+//			jump();
 		}
 
 		 ItemStack itemstack = this.getInventory()[0];
@@ -2079,12 +2086,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		this.worldObj.theProfiler.endSection();
-	}
-
-	@Override
-	protected float func_175134_bD()
-	{
-		return super.func_175134_bD()*1.25F;
 	}
 
 	@Override
