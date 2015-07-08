@@ -54,7 +54,6 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -1844,8 +1843,27 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ - (double)width * 0.34999999999999998D);
 		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ + (double)width * 0.34999999999999998D);
 
-		if (grave || (!isMaidWait() && isCollidedHorizontally && onGround)) {
+		if (grave) {
 			jump();
+		}
+		
+		//壁衝突判定
+		//pitchはデフォルト+-180度が北方向(Z負)
+		//180を加算してN=0に正規化
+		float pitch = rotationPitch + 180F;
+		int[] zo = new int[]{ -1, -1,  0,  1,  1,  1,  0, -1};
+		int[] xo = new int[]{  0,  1,  1,  1,  0, -1, -1, -1};
+		int pitchindex = MathHelper.floor_float((pitch+22.5F)/45F);
+		if(pitchindex<0) pitchindex+=8;
+		
+		int px = MathHelper.floor_double(posX);
+		int pz = MathHelper.floor_double(posZ);
+		int py = MathHelper.floor_double(getEntityBoundingBox().minY);
+		if(isCollidedHorizontally && onGround && World.doesBlockHaveSolidTopSurface(worldObj, new BlockPos(px+xo[pitchindex], py-1, pz+zo[pitchindex]))){
+			LMM_LittleMaidMobNX.Debug("PITCH S %f", pitch);
+			jump();
+			motionX = 0.00005D + xo[pitchindex];
+			motionZ = 0.00005D + zo[pitchindex];
 		}
 
 		 ItemStack itemstack = this.getInventory()[0];
