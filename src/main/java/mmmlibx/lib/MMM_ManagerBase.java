@@ -29,11 +29,11 @@ public abstract class MMM_ManagerBase {
 		if (lpackage != null) {
 			ls = MMMLib.class.getPackage().getName().replace('.', File.separatorChar);
 		}
-		
+
 		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
 			startSearch(FileManager.dirDevClasses, true);
 		}
-		
+
 		File lf1 = new File(FileManager.dirMods, ls);
 		startSearch(lf1, false);
 	}
@@ -118,7 +118,7 @@ public abstract class MMM_ManagerBase {
 		try {
 			ClassLoader lclassLoader = MMMLib.class.getClassLoader();
 			Package lpackage = MMMLib.class.getPackage();
-			lclassname = pname.endsWith(".class") ? pname.substring(pname.lastIndexOf(".class")) : pname;
+			lclassname = pname.endsWith(".class") ? pname.substring(0, pname.lastIndexOf(".class")) : pname;
 			Class lclass;
 			if(lpackage != null) {
 	// TODO ★	lclassname = (new StringBuilder(String.valueOf(lpackage.getName()))).append(".").append(lclassname).toString();

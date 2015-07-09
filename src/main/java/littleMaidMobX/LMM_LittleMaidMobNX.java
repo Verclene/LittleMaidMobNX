@@ -2,6 +2,7 @@ package littleMaidMobX;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
@@ -39,7 +40,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX1B43-1.8-F1450";
+	public static final String VERSION = "NX1B48-1.8-F1450";
 	public static final int VERSION_CODE = 3;
 	
 	public static String[] cfg_comment = {
@@ -123,7 +124,7 @@ public class LMM_LittleMaidMobNX {
 			System.out.println(String.format("littleMaidMob-" + pText, pVals));
 		}
 	}
-
+	
 	public String getName() {
 		return "littleMaidMobNX";
 	}
@@ -136,6 +137,8 @@ public class LMM_LittleMaidMobNX {
 	public String getVersion() {
 		return "1.8";
 	}
+	
+	public static Random randomSoundChance;
 
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent evt)
@@ -147,6 +150,8 @@ public class LMM_LittleMaidMobNX {
 //		MMM_Helper.checkRevision("6");
 		//MMM_Config.checkConfig(this.getClass());
 		
+		randomSoundChance = new Random();
+
 		//Config
 		cfg = new ConfigList();
 		try {
@@ -305,7 +310,8 @@ public class LMM_LittleMaidMobNX {
 	}
 
 
-	// 特定のMODのアイテムを持つとクラッシュする不具合対策====================================
+	// TODO ここから下はとりあえずいらんと思う
+	
 	private static String ignoreItemList[] = new String[]{};
 
 	public static boolean isMaidIgnoreItem(ItemStack item)
@@ -330,5 +336,4 @@ public class LMM_LittleMaidMobNX {
 		return false;
 
 	}
-	// 特定のMODのアイテムを持つとクラッシュする不具合対策====================================
 }

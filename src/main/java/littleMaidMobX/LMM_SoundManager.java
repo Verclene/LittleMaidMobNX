@@ -103,7 +103,6 @@ public class LMM_SoundManager {
 		{
 			//1.8だとInputStreamをマップに入れておけない
 			if(tableSwitch.equals("zip")){
-				LMM_LittleMaidMobNX.Debug("DEBUG INFO=ZIPMODE");
 				try {
 					return soundsZipFile.getInputStream(soundsZipFile.getEntry(soundsStreamEntryName.get(fileName)));
 				} catch (IOException e) {

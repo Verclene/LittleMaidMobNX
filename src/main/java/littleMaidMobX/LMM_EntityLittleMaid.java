@@ -239,6 +239,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	public int playingTick = 0;
 	public int coolingTick = 0;
+	private int damageSoundTick = 0;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -646,6 +647,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// 効果音の設定
 	@Override
 	protected String getHurtSound() {
+		damageSoundTick  = 20;
 		playLittleMaidSound(maidDamegeSound, true);
 		return null;
 	}
@@ -673,37 +675,30 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * ネットワーク対応音声再生
 	 */
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
-		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
-		maidSoundInterval = 20;
+		if (enumsound == LMM_EnumSound.Null) return;
 		if (worldObj.isRemote) {
+			//Client
 			if(soundTick-->0) return;
+			// NX1B47:サウンド乱数制限をクライアント依存に
+			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
+				if(LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0){
+					LMM_LittleMaidMobNX.Debug("PPPSKIP");
+					return;
+				}
+			}
 			
-			// Client
 			String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
+			//まさかな…
+			if(s==null) return;
 			if(!s.isEmpty() && !s.startsWith("minecraft:"))
 			{
 				s = LMM_LittleMaidMobNX.DOMAIN + ":" + s;
 			}
 			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
-			if(!s.isEmpty())
-			{
-				float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
-			}
-//			String lsound = LMM_SoundManager.getSoundValue(enumsound, textureName, maidColor & 0x00ff);
-//			float lpitch = mod_LMM_littleMaidMob.VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-//			worldObj.playSound(posX, posY, posZ, lsound, getSoundVolume(), lpitch, false);
-		}/* else {
-			// Server
-			LMM_LittleMaidMobNX.Debug("id:%d-%s, seps:%04x-%s", getEntityId(), worldObj.isRemote ? "Client" : "Server",  enumsound.index, enumsound.name());
-			byte[] lbuf = new byte[] {
-					LMM_Statics.LMN_Client_PlaySound,
-					0, 0, 0, 0,
-					0, 0, 0, 0
-			};
-			MMM_Helper.setInt(lbuf, 5, enumsound.index);
-			LMM_Net.sendToAllEClient(this, lbuf);
-		}*/
+
+			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
+			worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
+		}
 	}
 
 	/**
@@ -712,33 +707,20 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public void playLittleMaidSound(LMM_EnumSound enumsound, boolean force) {
 		// 音声の再生
-		if ((maidSoundInterval > 0 && !force) || enumsound == LMM_EnumSound.Null) return;
+		if (enumsound == LMM_EnumSound.Null) return;
 		maidSoundInterval = 20;
-		if (worldObj.isRemote) {
-			// Client
-			/*
-			String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
-			if(!s.isEmpty() && !s.startsWith("minecraft:"))
-			{
-				s = LMM_LittleMaidMobNX.DOMAIN + ":" + s;
-			}
-			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
-			if(!s.isEmpty())
-			{
-				float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
-			}
-			*/
-		}else{
+		if (!worldObj.isRemote) {
 			// Server
-			if((LMM_LittleMaidMobNX.cfg_ignoreForceSound || !force) && new Random().nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
-			LMM_LittleMaidMobNX.Debug("id:%d-%s, seps:%04x-%s", getEntityId(), worldObj.isRemote ? "Client" : "Server",  enumsound.index, enumsound.name());
+//			if((LMM_LittleMaidMobNX.cfg_ignoreForceSound || !force) && new Random().nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
+			LMM_LittleMaidMobNX.Debug("id:%d-%s, seps:%04x-%s", getEntityId(), "Server",  enumsound.index, enumsound.name());
 			byte[] lbuf = new byte[] {
 					LMM_Statics.LMN_Client_PlaySound,
+					0, 0, 0, 0,
 					0, 0, 0, 0,
 					0, 0, 0, 0
 			};
 			MMM_Helper.setInt(lbuf, 5, enumsound.index);
+			MMM_Helper.setInt(lbuf, 9, force?1:0);
 			LMM_Net.sendToAllEClient(this, lbuf);
 		}
 	}
@@ -748,6 +730,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		//livingSoundTick--;
+		if(getAttackTarget()!=null) return;
 		LMM_EnumSound so = LMM_EnumSound.Null;
 		if (getHealth() < 10)
 			so = LMM_EnumSound.living_whine;
@@ -1816,9 +1799,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 		
-		if(coolingTick>0){
-			coolingTick--;
-		}
+		if(coolingTick>0)coolingTick--;
+		if(damageSoundTick>0)damageSoundTick--;
 
 		//雪合戦試験
 		if (maidFreedom && worldObj.isDaytime() && !isPlaying() && (maidMode==0||maidMode==1)){
@@ -1870,7 +1852,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			//ナニユエ100分の1がちょうどいいのかは知らん
 			motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
 			motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
-//			jump();
 		}
 
 		 ItemStack itemstack = this.getInventory()[0];
@@ -3150,11 +3131,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (!worldObj.isRemote) {
 			byte[] lba = new byte[] {
 				LMM_Statics.LMN_Client_SwingArm,
-				(byte) (force ? 1: 0), 0, 0, 0,
+				0, 0, 0, 0,
 				(byte)pArm,
+				0, 0, 0, 0,
 				0, 0, 0, 0
 			};
 			MMM_Helper.setInt(lba, 6, enumsound.index);
+			MMM_Helper.setInt(lba, 10, force?1:0);
 			LMM_Net.sendToAllEClient(this, lba);
 		}
 	}
@@ -3218,13 +3201,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public void eatSugar(boolean motion, boolean recontract) {
 		if (motion) {
-			setSwing(2, (getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar, false);
+			setSwing(2, damageSoundTick==0?((getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar):LMM_EnumSound.Null, false);
 		}
 		int h = hurtResistantTime;
 		heal(1);
 		hurtResistantTime = h;
 		playSound("random.pop");
-		LMM_LittleMaidMobNX.Debug(("eat Suger." + worldObj.isRemote));
+		LMM_LittleMaidMobNX.Debug(("eat Sugar." + worldObj.isRemote));
 
 		if (recontract) {
 			// 契約期間の延長

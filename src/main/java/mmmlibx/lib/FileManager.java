@@ -60,15 +60,13 @@ public class FileManager {
 		MMMLib.Debug("init FileManager.");
 	}
 	
-	// MODロード直後に実行すること。
-	// 引数にはMODのベースとなるフルパスを渡す
-	// C:\~~~~\minecraft\mods\littleMaidMobX または
-	// C:\~~~~\minecraft\mods\1.7.2\littleMaidMobX
+	// TODO 今後使用しなさそう
+	/*
 	public static void setSrcPath(File file)
 	{
 		assetsDir = file.getPath() + "/assets";
 		MMMLib.Debug("mods path =" + dirMods.getAbsolutePath());
-		/*
+
 		// eclipseの環境の場合、eclipseフォルダ配下のmodsを見に行く
 		isDevdir = file.getName().equalsIgnoreCase("bin");
 		if(isDevdir)
@@ -79,8 +77,8 @@ public class FileManager {
 		{
 			dirMods = new File(file.getParent());
 		}
-		*/
 	}
+	*/
 
 	/**
 	 * modsディレクトリに含まれるファイルを全て返す。<br>
@@ -190,7 +188,6 @@ public class FileManager {
 			llist.add(dirDevClasses);
 			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE) llist.add(dirDevClassAssets);
 		}
-
 		try {
 			if (dirMods.isDirectory()) {
 				MMMLib.Debug("getModFile-get:%d.", dirMods.list().length);
@@ -210,12 +207,12 @@ public class FileManager {
 				// まずありえない
 				MMMLib.Debug("getModFile-fail.");
 			}
-			return llist;
 		}
 		catch (Exception exception) {
 			MMMLib.Debug("getModFile-Exception.");
-			return null;
 		}
+		return llist;
+
 	}
 	public static void debugPrintAllFileList()
 	{
