@@ -120,6 +120,41 @@ public class LMM_SoundManager {
 
 		return null;
 	}
+	
+	public static boolean getResourceExists(ResourceLocation resource)
+	{
+		String path = resource.getResourcePath().toLowerCase();
+		
+		// よく分からんが .mcmeta はいらないのと思うので消す
+		if(path.endsWith(".mcmeta"))
+		{
+			path = path.substring(0, path.length()-7);
+		}
+
+		if(path.equalsIgnoreCase("sounds.json"))
+		{
+			return true;
+		}
+		
+		String fileName = path;
+		int c = fileName.lastIndexOf('/');
+		if(c >= 0)
+		{
+			fileName = fileName.substring(c+1);
+		}
+		
+		if((soundsStreamFile.size() > 0||soundsStreamEntryName.size() > 0) && fileName.endsWith(".ogg"))
+		{
+			//1.8だとInputStreamをマップに入れておけない
+			if(tableSwitch.equals("zip")){
+				return soundsStreamEntryName.containsKey(fileName);
+			}else if(tableSwitch.equals("dir")){
+				soundsStreamFile.containsKey(fileName);
+			}
+		}
+
+		return false;
+	}
 
 	public static void setSoundRate(int soundindex, String value, String target) {
 		// 文字列を解析して値を設定

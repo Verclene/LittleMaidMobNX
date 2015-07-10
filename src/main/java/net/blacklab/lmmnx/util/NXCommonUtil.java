@@ -10,7 +10,9 @@ public class NXCommonUtil {
 	 * @return
 	 */
 	public static String getLinuxAntiDotName(String par1){
-		return par1.replace("\\", "/").replace("/.", "");
+		par1 = par1.replace("\\", "/").replace("/./", "/");
+		if(par1.endsWith("/.")) par1.substring(0, par1.lastIndexOf("/."));
+		return par1;
 	}
 	
 	/**
@@ -20,6 +22,7 @@ public class NXCommonUtil {
 	 * @return
 	 */
 	public static String getClassName(String path, String root){
+		LMM_LittleMaidMobNX.Debug("GETCLASS %s - %s", path, root);
 		if(!path.endsWith(".class")) return null; 
 		
 		if(root!=null){

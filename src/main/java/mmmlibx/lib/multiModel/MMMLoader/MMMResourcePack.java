@@ -1,6 +1,7 @@
 package mmmlibx.lib.multiModel.MMMLoader;
 
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,9 +58,8 @@ public class MMMResourcePack implements IResourcePack {
 
 	@Override
 	public boolean resourceExists(ResourceLocation resource) {
-		InputStream is = getResourceStream(resource, false);
-		// TODO ★ このInputStream はクローズしなくていいの？
-		return is != null;
+		// TODO いちいちInputStreamを取得してるからエラー落ちしている可能性が…？
+		return LMM_SoundManager.getResourceExists(resource);
 	}
 
 	public static final Set lmmxResourceDomains = ImmutableSet.of(LMM_LittleMaidMobNX.DOMAIN);
