@@ -233,7 +233,6 @@ public class LMM_LittleMaidMobNX {
 
 //		Debug("GUID-sneak: %s", LMM_EntityLittleMaid.maidUUIDSneak.toString());
 		proxy.loadSounds();
-		
 	}
 
 	@EventHandler
@@ -310,6 +309,11 @@ public class LMM_LittleMaidMobNX {
 
 		// IFFのロード
 		LMM_IFF.loadIFFs();
+		
+		if(evt.getSide()==Side.CLIENT){
+			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread = new LMM_ProxyClient.SoundTickCountingThread();
+			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread.start();
+		}
 	}
 
 

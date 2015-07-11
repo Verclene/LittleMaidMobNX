@@ -105,13 +105,11 @@ public class LMM_SoundManager {
 			if(tableSwitch.equals("zip")){
 				try {
 					return soundsZipFile.getInputStream(soundsZipFile.getEntry(soundsStreamEntryName.get(fileName)));
-				} catch (Exception e) {
-				}catch(Error e){}
+				} catch (Exception e) {}
 			}else if(tableSwitch.equals("dir")){
 				try {
 					return new FileInputStream(soundsStreamFile.get(fileName));
-				} catch (Exception e) {
-				}catch(Error e){}
+				} catch (Exception e) {}
 			}
 			//return soundStreamMap.get(fileName);
 		}
@@ -145,11 +143,11 @@ public class LMM_SoundManager {
 			if(tableSwitch.equals("zip")){
 				try{
 					return soundsStreamEntryName.containsKey(fileName);
-				}catch(Exception e){}catch(Error e){}
+				}catch(Exception e){}
 			}else if(tableSwitch.equals("dir")){
 				try{
 					return soundsStreamFile.containsKey(fileName);
-				}catch(Exception e){}catch(Error e){}
+				}catch(Exception e){}
 			}
 		}
 

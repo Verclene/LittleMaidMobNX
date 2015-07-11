@@ -7,15 +7,11 @@ import mmmlibx.lib.MMM_EntityDummy;
 import mmmlibx.lib.MMM_EntitySelect;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_RenderDummy;
-import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityCrit2FX;
 import net.minecraft.client.particle.EntityPickupFX;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import network.W_Message;
 
@@ -26,6 +22,30 @@ import network.W_Message;
  */
 public class LMM_ProxyClient extends LMM_ProxyCommon
 {
+	public static int OFFSET_COUNT = 0;
+
+	public static class SoundTickCountingThread extends Thread{
+		private boolean running = true;
+
+		@Override
+		public void run() {
+			// TODO 自動生成されたメソッド・スタブ
+			while(running){
+				if(OFFSET_COUNT>0) OFFSET_COUNT--;
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO 自動生成された catch ブロック
+				}
+			}
+		}
+		
+		public void cancel(){
+			running = false;
+		}
+
+	}
+	public SoundTickCountingThread countingThread;
 
 	public void init() {
 		RenderingRegistry.registerEntityRenderingHandler(LMM_EntityLittleMaid.class,new LMM_RenderLittleMaid(Minecraft.getMinecraft().getRenderManager(),0.3F));
@@ -135,5 +155,18 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	public boolean isSinglePlayer()
 	{
 		return Minecraft.getMinecraft().isSingleplayer();
+	}
+	
+	@Override
+	public void runCountThread(){
+	}
+	
+	@Override
+	public void playLittleMaidSound(World par1World, double x, double y, double z, String s, float v, float p, boolean b) {
+		// TODO 自動生成されたメソッド・スタブ
+		if(OFFSET_COUNT==0){
+			par1World.playSound(x, y, z, s, v, p, b);
+			OFFSET_COUNT=1;
+		}
 	}
 }

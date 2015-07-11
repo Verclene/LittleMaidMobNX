@@ -50,7 +50,6 @@ public class LMM_SoundResourcePack implements IResourcePack {
 
 	@Override
 	public boolean resourceExists(ResourceLocation resource) {
-		// TODO いちいちInputStreamを取得してるからエラー落ちしている可能性が…？
 		return LMM_SoundManager.getResourceExists(resource);
 	}
 

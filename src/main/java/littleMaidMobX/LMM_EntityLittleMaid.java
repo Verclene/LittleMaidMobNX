@@ -231,7 +231,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
 	
-	private int soundTick = 20;
+	private int soundTick = 30;
 
 	//モデル
 	public String textureModelName;
@@ -697,9 +697,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
 
 			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-			try{
-				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
-			}catch(Exception e){}
+			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, s, getSoundVolume(), lpitch, false);
 		}
 	}
 
