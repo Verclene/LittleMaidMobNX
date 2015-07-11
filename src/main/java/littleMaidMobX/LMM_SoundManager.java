@@ -99,21 +99,19 @@ public class LMM_SoundManager {
 			fileName = fileName.substring(c+1);
 		}
 		
-		if((soundsStreamFile.size() > 0||soundsStreamEntryName.size() > 0) && fileName.endsWith(".ogg"))
+		if(/*(soundsStreamFile.size() > 0||soundsStreamEntryName.size() > 0) && */fileName.endsWith(".ogg"))
 		{
 			//1.8だとInputStreamをマップに入れておけない
 			if(tableSwitch.equals("zip")){
 				try {
 					return soundsZipFile.getInputStream(soundsZipFile.getEntry(soundsStreamEntryName.get(fileName)));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				} catch (Exception e) {
+				}catch(Error e){}
 			}else if(tableSwitch.equals("dir")){
 				try {
 					return new FileInputStream(soundsStreamFile.get(fileName));
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
+				} catch (Exception e) {
+				}catch(Error e){}
 			}
 			//return soundStreamMap.get(fileName);
 		}
@@ -124,11 +122,9 @@ public class LMM_SoundManager {
 	public static boolean getResourceExists(ResourceLocation resource)
 	{
 		String path = resource.getResourcePath().toLowerCase();
-		
-		// よく分からんが .mcmeta はいらないのと思うので消す
 		if(path.endsWith(".mcmeta"))
 		{
-			path = path.substring(0, path.length()-7);
+			return false;
 		}
 
 		if(path.equalsIgnoreCase("sounds.json"))
@@ -143,13 +139,17 @@ public class LMM_SoundManager {
 			fileName = fileName.substring(c+1);
 		}
 		
-		if((soundsStreamFile.size() > 0||soundsStreamEntryName.size() > 0) && fileName.endsWith(".ogg"))
+		if(fileName.endsWith(".ogg"))
 		{
 			//1.8だとInputStreamをマップに入れておけない
 			if(tableSwitch.equals("zip")){
-				return soundsStreamEntryName.containsKey(fileName);
+				try{
+					return soundsStreamEntryName.containsKey(fileName);
+				}catch(Exception e){}catch(Error e){}
 			}else if(tableSwitch.equals("dir")){
-				soundsStreamFile.containsKey(fileName);
+				try{
+					return soundsStreamFile.containsKey(fileName);
+				}catch(Exception e){}catch(Error e){}
 			}
 		}
 

@@ -565,7 +565,7 @@ public class MMM_TextureManager {
 						addTextureName(zipentry.getName(), pSearch);
 						if(FMLCommonHandler.instance().getSide()==Side.CLIENT&&
 								(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
-							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file);
+							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file.getAbsolutePath());
 					}
 				}
 			} while(true);

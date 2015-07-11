@@ -6,7 +6,6 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
-import mmmlibx.lib.multiModel.MMMLoader.MMMResourcePack;
 import net.blacklab.lib.ConfigList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
@@ -105,6 +104,9 @@ public class LMM_LittleMaidMobNX {
 	//サウンド試験調整
 	public static boolean cfg_ignoreForceSound = false;
 	public static int cfg_soundPlayChance = 2;
+	
+	public static boolean cfg_forceLivingSound = false;
+	public static int cfg_coolTimePlaySound = 20;
 
 	public static Achievement ac_Contract;
 
@@ -176,8 +178,9 @@ public class LMM_LittleMaidMobNX {
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
 		
 		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
-		cfg_soundPlayChance = cfg.getInt("soundPlayChance", 3);
-		if(cfg_soundPlayChance<1) cfg_soundPlayChance = 1;
+		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
+		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
+		cfg_coolTimePlaySound = Math.max(cfg.getInt("coolTimePlaySound", 5),20);
 		
 		try {
 			cfg.saveConfig(getName(), evt);
@@ -246,7 +249,7 @@ public class LMM_LittleMaidMobNX {
 			ModLoader.addLocalization("littleMaidMob.text.STATUS", "ja_JP", "メイド状態");
 			*/
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
-			defaultResourcePacks.add(new MMMResourcePack());
+			defaultResourcePacks.add(new LMM_SoundResourcePack());
 			defaultResourcePacks.add(new LMMNX_OldZipTexturesLoader());
 
 			// デフォルトモデルの設定

@@ -113,7 +113,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
-
+	
 	// 定数はStaticsへ移動
 //	protected static final UUID maidUUID = UUID.nameUUIDFromBytes("lmm.littleMaidMob".getBytes());
 	protected static final UUID maidUUID = UUID.fromString("e2361272-644a-3028-8416-8536667f0efb");
@@ -231,7 +231,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
 	
-	private int soundTick = 1;
+	private int soundTick = 20;
 
 	//モデル
 	public String textureModelName;
@@ -678,7 +678,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (enumsound == LMM_EnumSound.Null) return;
 		if (worldObj.isRemote) {
 			//Client
-			if(soundTick-->0) return;
+			if(soundTick>0) return;
 			// NX1B47:サウンド乱数制限をクライアント依存に
 			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
 				if(LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0){
@@ -697,7 +697,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
 
 			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-			worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
+			try{
+				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
+			}catch(Exception e){}
 		}
 	}
 
@@ -765,7 +767,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		//if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
-			playLittleMaidSound(so, false);
+			playLittleMaidSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
 		//	livingSoundTick = 1;
 		//}
 
@@ -1782,6 +1784,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onLivingUpdate() {
+		if(soundTick>0) soundTick--;
+		
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {
