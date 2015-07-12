@@ -172,7 +172,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		// TODO 自動生成されたメソッド・スタブ
 		if(OFFSET_COUNT==0){
 			par1World.playSound(x, y, z, s, v, p, b);
-			OFFSET_COUNT=1;
+			OFFSET_COUNT=2;
 		}
 	}
 }

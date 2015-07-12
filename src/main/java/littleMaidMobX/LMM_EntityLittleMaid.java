@@ -235,6 +235,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public String textureModelName;
 	public String textureArmorName;
 	
+	private int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
+	
 	public int playingTick = 0;
 	public int coolingTick = 0;
 	private int damageSoundTick = 0;
@@ -678,6 +680,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (enumsound == LMM_EnumSound.Null) return;
 		if (worldObj.isRemote) {
 			//Client
+			if(soundTick>0) return;
+
 			// NX1B47:サウンド乱数制限をクライアント依存に
 			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
 				if(LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0){
@@ -1577,12 +1581,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				maidDamegeSound = LMM_EnumSound.hurt_nodamege;
 			}
 			playLittleMaidSound(maidDamegeSound, force);
-//			playSound("random.successful_hit");
 			return false;
 		}
 
 		if(super.attackEntityFrom(par1DamageSource, par2)) {
 			//契約者の名前チェックはマルチ用
+			if(force) playSound("game.player.hurt");
 			if (isContract() && entity != null) {
 				if (getIFF(entity) && !isPlaying()) {
 					//1.8検討
@@ -1781,6 +1785,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onLivingUpdate() {
+		if(soundTick>0) soundTick--;
+
 		if(!isWildSaved&&!isContract()){
 			setColor(12);
 			setTextureNames();
