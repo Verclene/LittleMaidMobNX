@@ -99,27 +99,59 @@ public class LMM_SoundManager {
 			fileName = fileName.substring(c+1);
 		}
 		
-		if((soundsStreamFile.size() > 0||soundsStreamEntryName.size() > 0) && fileName.endsWith(".ogg"))
+		if(/*(soundsStreamFile.size() > 0||soundsStreamEntryName.size() > 0) && */fileName.endsWith(".ogg"))
 		{
 			//1.8だとInputStreamをマップに入れておけない
 			if(tableSwitch.equals("zip")){
-				LMM_LittleMaidMobNX.Debug("DEBUG INFO=ZIPMODE");
 				try {
 					return soundsZipFile.getInputStream(soundsZipFile.getEntry(soundsStreamEntryName.get(fileName)));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				} catch (Exception e) {}
 			}else if(tableSwitch.equals("dir")){
 				try {
 					return new FileInputStream(soundsStreamFile.get(fileName));
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
+				} catch (Exception e) {}
 			}
 			//return soundStreamMap.get(fileName);
 		}
 
 		return null;
+	}
+	
+	public static boolean getResourceExists(ResourceLocation resource)
+	{
+		String path = resource.getResourcePath().toLowerCase();
+		if(path.endsWith(".mcmeta"))
+		{
+			return false;
+		}
+
+		if(path.equalsIgnoreCase("sounds.json"))
+		{
+			return true;
+		}
+		
+		String fileName = path;
+		int c = fileName.lastIndexOf('/');
+		if(c >= 0)
+		{
+			fileName = fileName.substring(c+1);
+		}
+		
+		if(fileName.endsWith(".ogg"))
+		{
+			//1.8だとInputStreamをマップに入れておけない
+			if(tableSwitch.equals("zip")){
+				try{
+					return soundsStreamEntryName.containsKey(fileName);
+				}catch(Exception e){}
+			}else if(tableSwitch.equals("dir")){
+				try{
+					return soundsStreamFile.containsKey(fileName);
+				}catch(Exception e){}
+			}
+		}
+
+		return false;
 	}
 
 	public static void setSoundRate(int soundindex, String value, String target) {

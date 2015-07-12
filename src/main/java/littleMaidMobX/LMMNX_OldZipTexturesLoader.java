@@ -18,16 +18,16 @@ import net.minecraft.util.ResourceLocation;
 
 public class LMMNX_OldZipTexturesLoader implements IResourcePack {
 	
-	public static Map<String, File> keys = new HashMap<String,File>();
+	public static Map<String, String> keys = new HashMap<String, String>();
 
 	@Override
 	public InputStream getInputStream(ResourceLocation arg0) throws IOException {
 		if(resourceExists(arg0)){
 			String key = arg0.getResourcePath();
 			if(key.startsWith("/")) key = key.substring(1);
-			File zipFile = keys.get(key);
-			ZipFile t = new ZipFile(zipFile);
-			InputStream i = t.getInputStream(t.getEntry(key));
+			File file = new File(keys.get(key));
+			ZipFile zip = new ZipFile(file);
+			InputStream i = zip.getInputStream(zip.getEntry(key));
 			return i;
 		}
 		return null;

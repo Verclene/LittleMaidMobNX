@@ -2,10 +2,10 @@ package littleMaidMobX;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
-import mmmlibx.lib.multiModel.MMMLoader.MMMResourcePack;
 import net.blacklab.lib.ConfigList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
@@ -19,7 +19,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -40,9 +39,9 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX1B20-1.8-F1450";
-	public static final int VERSION_CODE = 2;
-
+	public static final String VERSION = "NX1B52-1.8-F1450";
+	public static final int VERSION_CODE = 3;
+	
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
 		"spawnLimit = Maximum spawn count in the World.",
@@ -101,6 +100,12 @@ public class LMM_LittleMaidMobNX {
 //	@MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
 	public static String cfg_IgnoreItemList = "arsmagica2";
+	//サウンド試験調整
+	public static boolean cfg_ignoreForceSound = false;
+	public static int cfg_soundPlayChance = 2;
+	
+	public static boolean cfg_forceLivingSound = false;
+	public static int cfg_coolTimePlaySound = 20;
 
 	//1.8後回し
 	public static Achievement ac_Contract;
@@ -121,7 +126,7 @@ public class LMM_LittleMaidMobNX {
 			System.out.println(String.format("littleMaidMob-" + pText, pVals));
 		}
 	}
-
+	
 	public String getName() {
 		return "littleMaidMobNX";
 	}
@@ -134,6 +139,8 @@ public class LMM_LittleMaidMobNX {
 	public String getVersion() {
 		return "1.8";
 	}
+	
+	public static Random randomSoundChance;
 
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent evt)
@@ -145,6 +152,8 @@ public class LMM_LittleMaidMobNX {
 //		MMM_Helper.checkRevision("6");
 		//MMM_Config.checkConfig(this.getClass());
 		
+		randomSoundChance = new Random();
+
 		//Config
 		cfg = new ConfigList();
 		try {
@@ -167,6 +176,11 @@ public class LMM_LittleMaidMobNX {
 		cfg_spawnLimit = cfg.getInt("spawnLimit", 20);
 		cfg_spawnWeight = cfg.getInt("spawnWeight", 5);
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
+		
+		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
+		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
+		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
+		cfg_coolTimePlaySound = Math.max(cfg.getInt("coolTimePlaySound", 5),20);
 		
 		try {
 			cfg.saveConfig(getName(), evt);
@@ -219,7 +233,6 @@ public class LMM_LittleMaidMobNX {
 
 //		Debug("GUID-sneak: %s", LMM_EntityLittleMaid.maidUUIDSneak.toString());
 		proxy.loadSounds();
-		
 	}
 
 	@EventHandler
@@ -235,7 +248,7 @@ public class LMM_LittleMaidMobNX {
 			ModLoader.addLocalization("littleMaidMob.text.STATUS", "ja_JP", "メイド状態");
 			*/
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
-			defaultResourcePacks.add(new MMMResourcePack());
+			defaultResourcePacks.add(new LMM_SoundResourcePack());
 			defaultResourcePacks.add(new LMMNX_OldZipTexturesLoader());
 
 			// デフォルトモデルの設定
@@ -296,10 +309,16 @@ public class LMM_LittleMaidMobNX {
 
 		// IFFのロード
 		LMM_IFF.loadIFFs();
+		
+		if(evt.getSide()==Side.CLIENT){
+			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread = new LMM_ProxyClient.SoundTickCountingThread();
+			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread.start();
+		}
 	}
 
 
-	// 特定のMODのアイテムを持つとクラッシュする不具合対策====================================
+	// TODO ここから下はとりあえずいらんと思う
+	
 	private static String ignoreItemList[] = new String[]{};
 
 	public static boolean isMaidIgnoreItem(ItemStack item)
@@ -324,5 +343,4 @@ public class LMM_LittleMaidMobNX {
 		return false;
 
 	}
-	// 特定のMODのアイテムを持つとクラッシュする不具合対策====================================
 }

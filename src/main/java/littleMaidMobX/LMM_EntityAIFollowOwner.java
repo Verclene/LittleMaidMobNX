@@ -3,6 +3,7 @@ package littleMaidMobX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.world.World;
 
 public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntityAI {
@@ -75,6 +76,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		field_48310_h = 0;
 		//lastAvoidWater = petPathfinder.getAvoidsWater();
 		//petPathfinder.setAvoidsWater(false);
+		((PathNavigateGround)this.theMaid.getNavigator()).func_179690_a(false);
 	}
 
 	/**
@@ -83,6 +85,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 	public void resetTask() {
 		theMaid.setSprinting(false);
 		theOwner = null;
+		((PathNavigateGround)this.theMaid.getNavigator()).func_179690_a(true);
 		petPathfinder.clearPathEntity();
 		//petPathfinder.setAvoidsWater(lastAvoidWater);
 	}

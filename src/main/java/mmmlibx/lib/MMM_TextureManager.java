@@ -23,6 +23,8 @@ import java.util.zip.ZipInputStream;
 
 import littleMaidMobX.LMMNX_OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.*;
+import net.blacklab.lmmnx.util.LMMNX_DevMode;
+import net.blacklab.lmmnx.util.NXCommonUtil;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -455,8 +457,8 @@ public class MMM_TextureManager {
 	protected void addModelClass(String fname, String[] pSearch) {
 		// モデルを追加
 		int lfindprefix = fname.indexOf(pSearch[2]);
-		if (lfindprefix > -1 && fname.endsWith(".class")) {
-			String cn = fname.replace(".class", "");
+		if (lfindprefix > -1/* && fname.endsWith(".class")*/) {
+			String cn = fname.endsWith(".class") ? fname.substring(0,fname.lastIndexOf(".class")) : fname;
 			String pn = cn.substring(pSearch[2].length() + lfindprefix);
 			
 			if (modelMap.containsKey(pn)) return;
@@ -563,7 +565,7 @@ public class MMM_TextureManager {
 						addTextureName(zipentry.getName(), pSearch);
 						if(FMLCommonHandler.instance().getSide()==Side.CLIENT&&
 								(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
-							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file);
+							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file.getAbsolutePath());
 					}
 				}
 			} while(true);
@@ -636,8 +638,16 @@ public class MMM_TextureManager {
 				if(t.isDirectory()) {
 					addTexturesDir(t, pSearch);
 				} else {
-					if (t.getName().endsWith(".class")) {
-						addModelClass(t.getName(), pSearch);
+					ADDMODEL: if (t.getName().endsWith(".class")) {
+						String tn = NXCommonUtil.getLinuxAntiDotName(t.getAbsolutePath());
+						String rmn = NXCommonUtil.getLinuxAntiDotName(FileManager.dirMods.getAbsolutePath());
+						if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
+							String rdn = NXCommonUtil.getLinuxAntiDotName(FileManager.dirDevClasses.getAbsolutePath());
+							if(tn.startsWith(rdn)){
+								addModelClass(NXCommonUtil.getClassName(tn, rdn),pSearch);
+								break ADDMODEL;
+							}
+						}else if(tn.startsWith(rmn)) addModelClass(NXCommonUtil.getClassName(tn, rmn), pSearch);
 					} else {
 						String s = t.getPath().replace('\\', '/');
 						int i = s.indexOf(pSearch[1]);

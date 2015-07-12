@@ -1,6 +1,7 @@
-package mmmlibx.lib.multiModel.MMMLoader;
+package littleMaidMobX;
 
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,8 +9,6 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import littleMaidMobX.LMM_LittleMaidMobNX;
-import littleMaidMobX.LMM_SoundManager;
 import mmmlibx.lib.MMMLib;
 import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.client.resources.IResourcePack;
@@ -21,45 +20,37 @@ import net.minecraftforge.fml.common.ModContainer;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * 旧リソースを扱えるようにするクラス。<br>
- * 基本的にクラスローダーでマップされたリソースにアクセスできるようにするだけなので、特殊なマップ方法でロードされている場合は対応できない。
- *
+ * サウンドパック用
  */
-public class MMMResourcePack implements IResourcePack {
+public class LMM_SoundResourcePack implements IResourcePack {
 
-	public MMMResourcePack() {
+	public LMM_SoundResourcePack() {
 	}
 
 	@Override
 	public InputStream getInputStream(ResourceLocation par1ResourceLocation) throws IOException {
-		InputStream inputstream = getResourceStream(par1ResourceLocation, true);
-		if (inputstream != null) {
+		InputStream inputstream = getResourceStream(par1ResourceLocation);
+//		if (inputstream != null) {
 			return inputstream;
-		} else {
-			throw new FileNotFoundException(par1ResourceLocation.getResourcePath());
-		}
+//		} else {
+//			throw new FileNotFoundException(par1ResourceLocation.getResourcePath());
+//		}
 	}
 
-	private InputStream getResourceStream(ResourceLocation resource, boolean b) {
+	private InputStream getResourceStream(ResourceLocation resource) {
 		String path = resource.getResourcePath();
-		InputStream lis = null;//MMMResourcePack.class.getResourceAsStream(path);
+		InputStream lis = null;
 		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
 		{
-			if(lis==null)
-			{
-				lis = LMM_SoundManager.getResourceStream(resource);
-			}
-
-			LMM_LittleMaidMobNX.Debug("getResource:"+b+":%s : %s", resource, lis);
+			lis = LMM_SoundManager.getResourceStream(resource);
+			LMM_LittleMaidMobNX.Debug("getResource:%s : %s", resource, lis);
 		}
 		return lis;
 	}
 
 	@Override
 	public boolean resourceExists(ResourceLocation resource) {
-		InputStream is = getResourceStream(resource, false);
-		// TODO ★ このInputStream はクローズしなくていいの？
-		return is != null;
+		return LMM_SoundManager.getResourceExists(resource);
 	}
 
 	public static final Set lmmxResourceDomains = ImmutableSet.of(LMM_LittleMaidMobNX.DOMAIN);

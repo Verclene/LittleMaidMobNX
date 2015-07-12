@@ -7,15 +7,11 @@ import mmmlibx.lib.MMM_EntityDummy;
 import mmmlibx.lib.MMM_EntitySelect;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_RenderDummy;
-import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityCrit2FX;
 import net.minecraft.client.particle.EntityPickupFX;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import network.W_Message;
 
@@ -26,6 +22,44 @@ import network.W_Message;
  */
 public class LMM_ProxyClient extends LMM_ProxyCommon
 {
+	public static int OFFSET_COUNT = 0;
+
+	public static class SoundTickCountingThread extends Thread{
+		private boolean running = true;
+		
+		@Override
+		public synchronized void start() {
+			// TODO 自動生成されたメソッド・スタブ
+			super.start();
+		}
+
+		@Override
+		public void run() {
+			// TODO 自動生成されたメソッド・スタブ
+			while(running){
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO 自動生成された catch ブロック
+				}
+				if(OFFSET_COUNT>0){
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+					OFFSET_COUNT--;
+				}
+			}
+		}
+		
+		public void cancel(){
+			running = false;
+		}
+
+	}
+	public SoundTickCountingThread countingThread;
 
 	public void init() {
 		RenderingRegistry.registerEntityRenderingHandler(LMM_EntityLittleMaid.class,new LMM_RenderLittleMaid(Minecraft.getMinecraft().getRenderManager(),0.3F));
@@ -89,7 +123,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			byte larm = var2.data[5];
 			boolean force = var2.data[1]==1 ? true : false;
 			LMM_EnumSound lsound = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(var2.data, 6));
-			lemaid.setSwinging(larm, lsound, force);
+			lemaid.setSwinging(larm, lsound, MMM_Helper.getInt(var2.data, 10)==1);
 //			mod_LMM_littleMaidMob.Debug(String.format("SwingSound:%s", lsound.name()));
 			break;
 			
@@ -105,7 +139,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		case LMN_Client_PlaySound : 
 			// 音声再生
 			LMM_EnumSound lsound9 = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(var2.data, 5));
-			lemaid.playSound(lsound9, true);
+			lemaid.playSound(lsound9, MMM_Helper.getInt(var2.data, 9)==1);
 			LMM_LittleMaidMobNX.Debug(String.format("playSound:%s", lsound9.name()));
 			break;
 			
@@ -136,5 +170,20 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	public boolean isSinglePlayer()
 	{
 		return Minecraft.getMinecraft().isSingleplayer();
+	}
+	
+	@Override
+	public void runCountThread(){
+	}
+	
+	@Override
+	public void playLittleMaidSound(World par1World, double x, double y, double z, String s, float v, float p, boolean b) {
+		// TODO 自動生成されたメソッド・スタブ
+		if(OFFSET_COUNT==0){
+			LMM_LittleMaidMobNX.Debug("SOUND START");
+			OFFSET_COUNT=1;
+			par1World.playSound(x, y, z, s, v, p, b);
+			LMM_LittleMaidMobNX.Debug("SOUND END");
+		}
 	}
 }

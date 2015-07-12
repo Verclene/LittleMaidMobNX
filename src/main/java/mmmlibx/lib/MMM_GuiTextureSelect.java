@@ -133,7 +133,6 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton) {
-		LMM_LittleMaidMobNX.Debug("PERFORMED %d", par1GuiButton.id);
 		switch (par1GuiButton.id) {
 		case 100:
 			modeButton[0].enabled = false;
