@@ -231,8 +231,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
 	
-	private int soundTick = 30;
-
 	//モデル
 	public String textureModelName;
 	public String textureArmorName;
@@ -240,6 +238,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public int playingTick = 0;
 	public int coolingTick = 0;
 	private int damageSoundTick = 0;
+	
+	private boolean isWildSaved = false;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -678,7 +678,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (enumsound == LMM_EnumSound.Null) return;
 		if (worldObj.isRemote) {
 			//Client
-			if(soundTick>0) return;
 			// NX1B47:サウンド乱数制限をクライアント依存に
 			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
 				if(LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0){
@@ -1782,8 +1781,16 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onLivingUpdate() {
-		if(soundTick>0) soundTick--;
-		
+		if(!isWildSaved&&!isContract()){
+			setColor(12);
+			setTextureNames();
+			NBTTagCompound t = new NBTTagCompound();
+			writeEntityToNBT(t);
+			readEntityFromNBT(t);
+			t = null;
+			isWildSaved = true;
+		}
+
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {

@@ -49,23 +49,6 @@ public class LMM_EventHook
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
 		new RunThread(event).start();
-//		if(FMLCommonHandler.instance().getSide()==Side.CLIENT){
-//			if(event.player.equals(Minecraft.getMinecraft().thePlayer)){
-//				((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread = new LMM_ProxyClient.SoundTickCountingThread();
-//				((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread.start();
-//			}
-//		}
-	}
-	
-	@SubscribeEvent
-	public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event){
-//		if(FMLCommonHandler.instance().getSide()==Side.CLIENT){
-//			if(event.player.equals(Minecraft.getMinecraft().thePlayer)){
-//				if(((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread!=null){
-//					((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread.cancel();
-//				}
-//			}
-//		}
 	}
 	
 	// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)

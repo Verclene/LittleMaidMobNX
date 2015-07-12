@@ -3,7 +3,7 @@
 □開発環境構築について
 
     ソースコードはhttp://github.com/Verclene/LittleMaidMobNXに公開しています。
-    以下は、NX1 Build 50以降での開発環境構築の手順になります。
+    以下は、NX1 Build 51以降での開発環境構築の手順になります。
 
 ◇ソースコードから構築する場合
 

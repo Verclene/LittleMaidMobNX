@@ -26,17 +26,23 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 
 	public static class SoundTickCountingThread extends Thread{
 		private boolean running = true;
+		
+		@Override
+		public synchronized void start() {
+			// TODO 自動生成されたメソッド・スタブ
+			super.start();
+		}
 
 		@Override
 		public void run() {
 			// TODO 自動生成されたメソッド・スタブ
 			while(running){
-				if(OFFSET_COUNT>0) OFFSET_COUNT--;
 				try {
 					Thread.sleep(50);
 				} catch (InterruptedException e) {
 					// TODO 自動生成された catch ブロック
 				}
+				if(OFFSET_COUNT>0) OFFSET_COUNT--;
 			}
 		}
 		
