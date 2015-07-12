@@ -38,11 +38,19 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			// TODO 自動生成されたメソッド・スタブ
 			while(running){
 				try {
-					Thread.sleep(50);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					// TODO 自動生成された catch ブロック
 				}
-				if(OFFSET_COUNT>0) OFFSET_COUNT--;
+				if(OFFSET_COUNT>0){
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO 自動生成された catch ブロック
+						e.printStackTrace();
+					}
+					OFFSET_COUNT--;
+				}
 			}
 		}
 		
@@ -171,8 +179,10 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	public void playLittleMaidSound(World par1World, double x, double y, double z, String s, float v, float p, boolean b) {
 		// TODO 自動生成されたメソッド・スタブ
 		if(OFFSET_COUNT==0){
+			LMM_LittleMaidMobNX.Debug("SOUND START");
+			OFFSET_COUNT=1;
 			par1World.playSound(x, y, z, s, v, p, b);
-			OFFSET_COUNT=2;
+			LMM_LittleMaidMobNX.Debug("SOUND END");
 		}
 	}
 }
