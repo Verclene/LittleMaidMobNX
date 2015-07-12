@@ -1825,7 +1825,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void onLivingUpdate() {
 		if(soundTick>0) soundTick--;
 
-		if(!isWildSaved&&!isContract()){
+		if(!isWildSaved&&!isContract()&&!worldObj.isRemote){
 			setColor(12);
 			setTextureNames();
 			NBTTagCompound t = new NBTTagCompound();

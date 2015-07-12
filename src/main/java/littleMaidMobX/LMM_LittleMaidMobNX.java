@@ -22,6 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -39,7 +40,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX1B52-1.8-F1450";
+	public static final String VERSION = "NX1B53-1.8-F1450";
 	public static final int VERSION_CODE = 3;
 	
 	public static String[] cfg_comment = {
@@ -264,7 +265,7 @@ public class LMM_LittleMaidMobNX {
 		// "aaa, bbb,ccc  " -> "aaa" "bbb" "ccc"
 		ignoreItemList = cfg_IgnoreItemList.trim().split("\\s*,\\s*");
 
-		MinecraftForge.EVENT_BUS.register(new LMM_EventHook());
+		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
 
 		// デフォルトモデルの設定
 		MMM_TextureManager.instance.setDefaultTexture(LMM_EntityLittleMaid.class, MMM_TextureManager.instance.getTextureBox("default_Orign"));
