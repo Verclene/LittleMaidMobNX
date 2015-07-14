@@ -22,6 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -39,8 +40,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX1B52-1.8-F1450";
-	public static final int VERSION_CODE = 3;
+	public static final String VERSION = "NX2B1-1.8-F1450";
+	public static final int VERSION_CODE = 4;
 	
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
@@ -100,7 +101,6 @@ public class LMM_LittleMaidMobNX {
 //	@MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
 	public static String cfg_IgnoreItemList = "arsmagica2";
-	
 	//サウンド試験調整
 	public static boolean cfg_ignoreForceSound = false;
 	public static int cfg_soundPlayChance = 2;
@@ -108,6 +108,7 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_forceLivingSound = false;
 	public static int cfg_coolTimePlaySound = 20;
 
+	//1.8後回し
 	public static Achievement ac_Contract;
 
 	@SidedProxy(
@@ -264,7 +265,7 @@ public class LMM_LittleMaidMobNX {
 		// "aaa, bbb,ccc  " -> "aaa" "bbb" "ccc"
 		ignoreItemList = cfg_IgnoreItemList.trim().split("\\s*,\\s*");
 
-		MinecraftForge.EVENT_BUS.register(new LMM_EventHook());
+		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
 
 		// デフォルトモデルの設定
 		MMM_TextureManager.instance.setDefaultTexture(LMM_EntityLittleMaid.class, MMM_TextureManager.instance.getTextureBox("default_Orign"));

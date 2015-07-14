@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.UUID;
 
 import mmmlibx.lib.ITextureEntity;
@@ -44,6 +43,7 @@ import mmmlibx.lib.MMM_TextureData;
 import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
+import net.blacklab.lmmnx.api.LMMNX_IItemSpecialSugar;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockLeaves;
@@ -230,18 +230,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// ActiveModeClass
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
-	
+
 	//モデル
 	public String textureModelName;
 	public String textureArmorName;
 	
-	private int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
+	protected int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
 	
 	public int playingTick = 0;
 	public int coolingTick = 0;
-	private int damageSoundTick = 0;
+	protected int damageSoundTick = 0;
 	
-	private boolean isWildSaved = false;
+	protected boolean isWildSaved = false;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -662,6 +662,46 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	protected String getLivingSound() {
+		// 普段の声
+		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
+		//livingSoundTick--;
+		LMM_EnumSound so = LMM_EnumSound.Null;
+		if (getHealth() < 10)
+			so = LMM_EnumSound.living_whine;
+		else if (rand.nextFloat() < maidSoundRate) {
+			if (mstatTime > 23500 || mstatTime < 1500) {
+				so = LMM_EnumSound.living_morning;
+			} else if (mstatTime < 12500) {
+				if (isContract()) {
+					BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(new BlockPos(MathHelper.floor_double(posX + 0.5D), posY, MathHelper.floor_double(posZ + 0.5D)));
+					TempCategory ltemp = biomegenbase.getTempCategory();
+					if (ltemp == TempCategory.COLD) {
+						so = LMM_EnumSound.living_cold;
+					} else if (ltemp == TempCategory.WARM) {
+						so = LMM_EnumSound.living_hot;
+					} else {
+						so = LMM_EnumSound.living_daytime;
+					}
+					if (worldObj.isRaining()) {
+						if (biomegenbase.canSpawnLightningBolt()) {
+							so = LMM_EnumSound.living_rain;
+						} else if (biomegenbase.getEnableSnow()) {
+							so = LMM_EnumSound.living_snow;
+						}
+					}
+				} else {
+					so = LMM_EnumSound.living_daytime;
+				}
+			} else {
+				so = LMM_EnumSound.living_night;
+			}
+		}
+
+		//if(livingSoundTick<=0){
+			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
+			playLittleMaidSound(so, false);
+		//	livingSoundTick = 1;
+		//}
 		return null;
 	}
 
@@ -771,7 +811,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			playLittleMaidSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
 		//	livingSoundTick = 1;
 		//}
-
 	}
 
 	@Override
@@ -1787,7 +1826,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void onLivingUpdate() {
 		if(soundTick>0) soundTick--;
 
-		if(!isWildSaved&&!isContract()){
+		if(!isWildSaved&&!isContract()&&!worldObj.isRemote){
 			setColor(12);
 			setTextureNames();
 			NBTTagCompound t = new NBTTagCompound();
@@ -1813,7 +1852,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 			}
 		}
-		
 		if(coolingTick>0)coolingTick--;
 		if(damageSoundTick>0)damageSoundTick--;
 
@@ -1929,7 +1967,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						}
 
 						if (lsound != LMM_EnumSound.Null) {
-							playLittleMaidSound(lsound, false);
+							playLittleMaidSound(lsound, true);
 							setLooksWithInterest(true);
 						}
 					} else {
@@ -1969,7 +2007,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 			}
 
-			if (!worldObj.isRemote) {
+			HEAL: if (!worldObj.isRemote) {
 				if (getSwingStatusDominant().canAttack()) {
 //					mod_LMM_littleMaidMob.Debug("isRemort:" + worldObj.isRemote);
 					// 回復
@@ -2146,7 +2184,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			lf = maidOverDriveTime.isEnable();
 			if (getMaidFlags(dataWatch_Flags_OverDrive) != lf) {
 				if (lf) {
-					playLittleMaidSound(LMM_EnumSound.TNT_D, false);
+					playLittleMaidSound(LMM_EnumSound.TNT_D, true);
 				}
 				setMaidFlags(lf, dataWatch_Flags_OverDrive);
 			}
@@ -2749,10 +2787,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						}
 						if (isRemainsContract()) {
 							// 通常
-							if (itemstack1.getItem() == Items.sugar) {
+							if (itemstack1.getItem() == Items.sugar||itemstack1.getItem() instanceof LMMNX_IItemSpecialSugar) {
 								// モード切替
 								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
 								eatSugar(false, true);
+								if(itemstack1.getItem() instanceof LMMNX_IItemSpecialSugar){
+									if(!((LMMNX_IItemSpecialSugar)itemstack1.getItem()).onSugarInteract(worldObj, par1EntityPlayer, this)) return true;
+								}
 								worldObj.setEntityState(this, (byte)11);
 
 								LMM_LittleMaidMobNX.Debug("give suger." + worldObj.isRemote);
@@ -3146,7 +3187,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (!worldObj.isRemote) {
 			byte[] lba = new byte[] {
 				LMM_Statics.LMN_Client_SwingArm,
-				0, 0, 0, 0,
+				(byte) (force ? 1: 0), 0, 0, 0,
 				(byte)pArm,
 				0, 0, 0, 0,
 				0, 0, 0, 0
