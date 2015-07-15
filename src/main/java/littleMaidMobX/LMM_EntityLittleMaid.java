@@ -1844,9 +1844,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					if (!isBloodsuck()) {
 						// 通常時は回復優先
 						if (lhealth < getMaxHealth()) {
-							if (maidInventory.consumeInventoryItem(Items.sugar)) {
-								eatSugar(true, false);
-							}
+							consumeSugar(EnumConsumeSugar.CONSUMESUGAR_HEAL);
 						}
 					}
 				}
@@ -2007,25 +2005,23 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 			}
 
-			HEAL: if (!worldObj.isRemote) {
+			if (!worldObj.isRemote) {
 				if (getSwingStatusDominant().canAttack()) {
 //					mod_LMM_littleMaidMob.Debug("isRemort:" + worldObj.isRemote);
 					// 回復
 					if (getHealth() < getMaxHealth()) {
-						if (maidInventory.consumeInventoryItem(Items.sugar)) {
-							eatSugar(true, false);
-						}
+						consumeSugar(EnumConsumeSugar.CONSUMESUGAR_HEAL);
 					}
 					// つまみ食い
-					if (rand.nextInt(50000) == 0 && maidInventory.consumeInventoryItem(Items.sugar)) {
-						eatSugar(true, false);
+					if (rand.nextInt(50000) == 0) {
+						consumeSugar(EnumConsumeSugar.CONSUMESUGAR_OTHER);
 					}
 					// 契約更新
 					if (isContractEX()) {
 						float f = getContractLimitDays();
-						if (f <= 6 && maidInventory.consumeInventoryItem(Items.sugar)) {
+						if (f <= 6) {
 							// 契約更新
-							eatSugar(true, true);
+							consumeSugar(EnumConsumeSugar.CONSUMESUGAR_RECONTRACT);
 						}
 					}
 				}
@@ -2789,11 +2785,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							// 通常
 							if (itemstack1.getItem() == Items.sugar||itemstack1.getItem() instanceof LMMNX_IItemSpecialSugar) {
 								// モード切替
-								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-								eatSugar(false, true);
+								boolean cmode = true;
 								if(itemstack1.getItem() instanceof LMMNX_IItemSpecialSugar){
-									if(!((LMMNX_IItemSpecialSugar)itemstack1.getItem()).onSugarInteract(worldObj, par1EntityPlayer, this)) return true;
+									cmode = ((LMMNX_IItemSpecialSugar)itemstack1.getItem()).onSugarInteract(worldObj, par1EntityPlayer, itemstack1, this);
 								}
+								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
+								eatSugar(true, false, true);
+								if(!cmode) return true;
 								worldObj.setEntityState(this, (byte)11);
 
 								LMM_LittleMaidMobNX.Debug("give suger." + worldObj.isRemote);
@@ -3249,18 +3247,58 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean isLookSuger() {
 		return mstatLookSuger;
 	}
-
-	/**
-	 * ペロッ・・・これは・・・砂糖ッ！！
-	 * motion : 腕を振るか？
-	 * recontract : 契約延長効果アリ？
+	
+	public static enum EnumConsumeSugar{
+		/**通常回復**/CONSUMESUGAR_HEAL,
+		/**契約更新**/CONSUMESUGAR_RECONTRACT,
+		/**その他（つまみ食いとか）**/CONSUMESUGAR_OTHER
+	};
+	
+	/** 砂糖を食べる。インベントリの左上から消費する。
+	 * @param mode EnumConsumeSugar型の定数
 	 */
-	public void eatSugar(boolean motion, boolean recontract) {
+	public void consumeSugar(EnumConsumeSugar mode){
+		ItemStack[] stacklist = maidInventory.mainInventory;
+		ItemStack stack = null;
+		Item item = null;
+		int index = -1;
+		for(int i=0;i<stacklist.length;i++){
+			ItemStack ts = stacklist[i];
+			if(ts==null)continue;
+			Item ti = ts.getItem();
+			if(ti == Items.sugar||ti instanceof LMMNX_IItemSpecialSugar){
+				stack = ts;
+				item = ti;
+				index = i;
+				break;
+			}
+		}
+		if(item==null||stack==null||index==-1) return;
+		if(item==Items.sugar){
+			eatSugar(true, true, mode==EnumConsumeSugar.CONSUMESUGAR_RECONTRACT);
+		}else if(item instanceof LMMNX_IItemSpecialSugar){
+			//モノグサ実装。良い子の皆さんはちゃんとif使うように…
+			eatSugar(
+					mode==EnumConsumeSugar.CONSUMESUGAR_RECONTRACT
+							?((LMMNX_IItemSpecialSugar)item).onSugarEatenRecontract(this, stack)
+							:((LMMNX_IItemSpecialSugar)item).onSugarEatenHeal(this, mode==EnumConsumeSugar.CONSUMESUGAR_HEAL, stack),
+					true, false);
+		}
+		maidInventory.decrStackSize(index, 1);
+	}
+
+	/** 主に砂糖を食べる仕草やその後のこと。 
+	 * ペロッ・・・これは・・・砂糖ッ！！
+	 * @param heal デフォルトの1回復をするか？
+	 * @param motion 腕を振るか？
+	 * @param recontract 契約延長効果アリ？
+	 */
+	protected void eatSugar(boolean heal, boolean motion, boolean recontract) {
 		if (motion) {
 			setSwing(2, damageSoundTick==0?((getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar):LMM_EnumSound.Null, false);
 		}
 		int h = hurtResistantTime;
-		heal(1);
+		if(heal) heal(1);
 		hurtResistantTime = h;
 		playSound("random.pop");
 		LMM_LittleMaidMobNX.Debug(("eat Sugar." + worldObj.isRemote));
