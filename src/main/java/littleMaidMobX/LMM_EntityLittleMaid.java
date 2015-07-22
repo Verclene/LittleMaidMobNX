@@ -44,6 +44,7 @@ import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import net.blacklab.lmmnx.api.LMMNX_IItemSpecialSugar;
+import net.blacklab.lmmnx.api.LMMNX_IItemSweetsGear;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockLeaves;
@@ -895,15 +896,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	// エフェクト表示
-	protected void showParticleFX(EnumParticleTypes s) {
+	public void showParticleFX(EnumParticleTypes s) {
 		showParticleFX(s, 1D, 1D, 1D);
 	}
 
-	protected void showParticleFX(EnumParticleTypes s, double d, double d1, double d2) {
+	public void showParticleFX(EnumParticleTypes s, double d, double d1, double d2) {
 		showParticleFX(s, d, d1, d2, 0D, 0D, 0D);
 	}
 
-	protected void showParticleFX(EnumParticleTypes s, double d, double d1, double d2, double d3, double d4, double d5 ) {
+	public void showParticleFX(EnumParticleTypes s, double d, double d1, double d2, double d3, double d4, double d5 ) {
 		for (int i = 0; i < 7; i++) {
 			double d6 = rand.nextGaussian() * d + d3;
 			double d7 = rand.nextGaussian() * d1 + d4;
@@ -1884,6 +1885,27 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			jump();
 		}
 		
+		//所持品チェック
+		if(isContractEX()){
+			Map<LMMNX_IItemSweetsGear.MultipleTag,Integer> multiple = new HashMap<LMMNX_IItemSweetsGear.MultipleTag,Integer>(); 
+			for(int i=0;i<maidInventory.mainInventory.length;i++){
+				ItemStack ts = maidInventory.getStackInSlot(i);
+				if(ts==null) continue;
+				Item it = ts.getItem();
+				if(it!=null){
+					if(it instanceof LMMNX_IItemSweetsGear){
+						LMMNX_IItemSweetsGear iti = (LMMNX_IItemSweetsGear) it;
+						LMMNX_IItemSweetsGear.MultipleTag tag = iti.getMultipleTag();
+						if(!multiple.containsKey(tag)) multiple.put(tag, 0);
+						if(multiple.get(tag)<tag.count&&iti.shouldGearExecute(this, ts)){
+							iti.itemInSkirt(this, ts);
+							multiple.put(tag, multiple.get(tag)+1);
+						}
+					}
+				}
+			}
+		}
+		
 		//壁衝突判定
 		//pitchはデフォルト+-180度が北方向(Z負)
 		//向いてる方向のブロックを厳密に計算するとめんどくさいから
@@ -2296,7 +2318,22 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					}
 					// インベントリの中身が変わった
 					if (lchange || maidInventory.isChanged(li)) {
-						((WorldServer)worldObj).getEntityTracker().func_151248_b(this, new S04PacketEntityEquipment(this.getEntityId(), (li | lselect << 8) + 5, maidInventory.getStackInSlot(li)));
+						ItemStack st = maidInventory.getStackInSlot(li);
+						ItemStack bt = maidInventory.prevItems[li];
+						Item sti = null;
+						Item bti = null;
+						if(st!=null) sti = st.getItem();
+						if(bt!=null) bti = bt.getItem();
+						//SweetsGearがセットされた
+						if(sti instanceof LMMNX_IItemSweetsGear&&sti!=bti){
+							((LMMNX_IItemSweetsGear)sti).onGearSet(this, st);
+						}
+						//SweetsGearが離れた
+						if(bti instanceof LMMNX_IItemSweetsGear&&bti!=sti){
+							((LMMNX_IItemSweetsGear)bti).onGearLeft(this, bt);
+						}
+						
+						((WorldServer)worldObj).getEntityTracker().func_151248_b(this, new S04PacketEntityEquipment(this.getEntityId(), (li | lselect << 8) + 5, st));
 						maidInventory.resetChanged(li);
 						LMM_LittleMaidMobNX.Debug(String.format("ID:%d-%s - Slot(%x:%d-%d,%d) Update.", getEntityId(), worldObj.isRemote ? "Client" : "Server", lselect, li, mstatSwingStatus[0].index, mstatSwingStatus[1].index));
 					}
@@ -2958,6 +2995,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							setMaidMode("Escorter");
 							setMaidWait(false);
 							setFreedom(false);
+							setPlayingRole(0);
 							playLittleMaidSound(LMM_EnumSound.getCake, true);
 //							playLittleMaidSound(LMM_EnumSound.getCake, true);
 //							playTameEffect(true);
