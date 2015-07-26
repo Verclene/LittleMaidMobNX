@@ -44,7 +44,6 @@ import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import net.blacklab.lmmnx.api.LMMNX_IItemSpecialSugar;
-import net.blacklab.lmmnx.api.LMMNX_IItemSweetsGear;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockLeaves;
@@ -329,10 +328,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void onSpawnWithEgg() {
 		// テクスチャーをランダムで選択
 		String ls;
-		if (LMM_LittleMaidMobNX.cfg_defaultTexture.isEmpty()) {
-			ls = MMM_TextureManager.instance.getRandomTextureString(rand);
+		if (LMM_LittleMaidMobNX.cfg_isFixedWildMaid) {
+			ls = "default_Orign";
 		} else {
-			ls = LMM_LittleMaidMobNX.cfg_defaultTexture;
+			ls = MMM_TextureManager.instance.getRandomTextureString(rand);
 		}
 		textureData.setTextureInitServer(ls);
 		LMM_LittleMaidMobNX.Debug("init-ID:%d, %s:%d", getEntityId(), textureData.textureBox[0].textureName, textureData.getColor());
@@ -1091,6 +1090,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setBoolean("Wait", isMaidWait());
 		par1nbtTagCompound.setBoolean("Freedom", isFreedom());
 		par1nbtTagCompound.setBoolean("Tracer", isTracer());
+		par1nbtTagCompound.setBoolean("isWildSaved", isWildSaved);
 		par1nbtTagCompound.setInteger("LimitCount", maidContractLimit);
 		par1nbtTagCompound.setLong("Anniversary", maidAnniversary);
 		par1nbtTagCompound.setInteger("EXP", experienceValue);
@@ -1151,6 +1151,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			setMaidWait(par1nbtTagCompound.getBoolean("Wait"));
 			setFreedom(par1nbtTagCompound.getBoolean("Freedom"));
 			setTracer(par1nbtTagCompound.getBoolean("Tracer"));
+			isWildSaved = par1nbtTagCompound.getBoolean("isWildSaved");
 			textureData.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texName"));
 			textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texArmor"));
 			textureData.textureBox[0] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[0]);
@@ -1315,7 +1316,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		} else {
 			LMM_LittleMaidMobNX.Debug(String.format("Load ID:%d, MaidMaster:%s, x:%.1f, y:%.1f, z:%.1f, %d" ,getEntityId(), getMaidMaster(), posX, posY, posZ, maidAnniversary));
 		}
-
 	}
 
 	public boolean canBePushed()
@@ -1626,7 +1626,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		if(super.attackEntityFrom(par1DamageSource, par2)) {
 			//契約者の名前チェックはマルチ用
-			if(force) playSound("game.player.hurt");
+//			if(force) playSound("game.player.hurt");
 			if (isContract() && entity != null) {
 				if (getIFF(entity) && !isPlaying()) {
 					//1.8検討
@@ -1822,20 +1822,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private static final int[] ZBOUND_BLOCKOFFS = new int[]{ -1, -1,  0,  1,  1,  1,  0, -1};
 	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0,  1,  1,  1,  0, -1, -1, -1};
 
-
 	@Override
 	public void onLivingUpdate() {
 		if(soundTick>0) soundTick--;
-
-		if(!isWildSaved&&!isContract()&&!worldObj.isRemote){
-			setColor(12);
-			setTextureNames();
-			NBTTagCompound t = new NBTTagCompound();
-			writeEntityToNBT(t);
-			readEntityFromNBT(t);
-			t = null;
-			isWildSaved = true;
-		}
 
 		// 回復判定
 		float lhealth = getHealth();
@@ -1883,27 +1872,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		if (grave) {
 			jump();
-		}
-		
-		//所持品チェック
-		if(isContractEX()){
-			Map<LMMNX_IItemSweetsGear.MultipleTag,Integer> multiple = new HashMap<LMMNX_IItemSweetsGear.MultipleTag,Integer>(); 
-			for(int i=0;i<maidInventory.mainInventory.length;i++){
-				ItemStack ts = maidInventory.getStackInSlot(i);
-				if(ts==null) continue;
-				Item it = ts.getItem();
-				if(it!=null){
-					if(it instanceof LMMNX_IItemSweetsGear){
-						LMMNX_IItemSweetsGear iti = (LMMNX_IItemSweetsGear) it;
-						LMMNX_IItemSweetsGear.MultipleTag tag = iti.getMultipleTag();
-						if(!multiple.containsKey(tag)) multiple.put(tag, 0);
-						if(multiple.get(tag)<tag.count&&iti.shouldGearExecute(this, ts)){
-							iti.itemInSkirt(this, ts);
-							multiple.put(tag, multiple.get(tag)+1);
-						}
-					}
-				}
-			}
 		}
 		
 		//壁衝突判定
@@ -2320,19 +2288,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					if (lchange || maidInventory.isChanged(li)) {
 						ItemStack st = maidInventory.getStackInSlot(li);
 						ItemStack bt = maidInventory.prevItems[li];
-						Item sti = null;
-						Item bti = null;
-						if(st!=null) sti = st.getItem();
-						if(bt!=null) bti = bt.getItem();
-						//SweetsGearがセットされた
-						if(sti instanceof LMMNX_IItemSweetsGear&&sti!=bti){
-							((LMMNX_IItemSweetsGear)sti).onGearSet(this, st);
-						}
-						//SweetsGearが離れた
-						if(bti instanceof LMMNX_IItemSweetsGear&&bti!=sti){
-							((LMMNX_IItemSweetsGear)bti).onGearLeft(this, bt);
-						}
-						
 						((WorldServer)worldObj).getEntityTracker().func_151248_b(this, new S04PacketEntityEquipment(this.getEntityId(), (li | lselect << 8) + 5, st));
 						maidInventory.resetChanged(li);
 						LMM_LittleMaidMobNX.Debug(String.format("ID:%d-%s - Slot(%x:%d-%d,%d) Update.", getEntityId(), worldObj.isRemote ? "Client" : "Server", lselect, li, mstatSwingStatus[0].index, mstatSwingStatus[1].index));

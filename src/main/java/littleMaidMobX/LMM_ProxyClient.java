@@ -22,8 +22,6 @@ import network.W_Message;
  */
 public class LMM_ProxyClient extends LMM_ProxyCommon
 {
-	public boolean COOLING = false;
-
 	public static class SoundTickCountingThread extends Thread{
 		private boolean running = true;
 		
@@ -40,14 +38,8 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
-					// TODO 自動生成された catch ブロック
 				}
 				if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT>0){
-					try {
-						Thread.sleep(60);
-					} catch (InterruptedException e) {
-						// TODO 自動生成された catch ブロック
-					}
 					LMM_LittleMaidMobNX.proxy.OFFSET_COUNT--;
 				}
 			}
@@ -180,7 +172,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		// TODO 自動生成されたメソッド・スタブ
 		if(!par1World.isRemote) return;
 		if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT==0){
-			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=1;
+			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=20;
 			par1World.playSound(x, y, z, s, v, p, b);
 		}
 	}

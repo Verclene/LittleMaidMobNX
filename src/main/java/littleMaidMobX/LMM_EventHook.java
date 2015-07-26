@@ -1,15 +1,16 @@
 package littleMaidMobX;
 
+import mmmlibx.lib.MMMLib;
 import net.blacklab.lmmnx.util.Version;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class LMM_EventHook
 {
@@ -43,6 +44,24 @@ public class LMM_EventHook
 					e.player.addChatMessage(new ChatComponentText("[LittleMaidMobNX]Go to : http://el-blacklab.net/"));
 				}catch(Exception e){}
 			}
+		}
+	}
+	@SubscribeEvent
+	public void onEntitySpawn(LivingSpawnEvent event){
+		if(event.entityLiving instanceof LMM_EntityLittleMaid){
+			LMM_EntityLittleMaid maid = (LMM_EntityLittleMaid) event.entityLiving;
+			if(maid.isContract()||maid.isWildSaved) return;
+//			NBTTagCompound t = new NBTTagCompound();
+//			maid.writeEntityToNBT(t);
+//			maid.readEntityFromNBT(t);
+			maid.onSpawnWithEgg();
+			int c = maid.getTextureBox()[0].getWildColorBits();
+			if(c<=0) maid.setColor(12); else for(int i=15;i>=0;i--){
+				int x = (int) Math.pow(2, i);
+				if((c&x)==x) maid.setColor(i);
+			}
+			maid.setTextureNames();
+//			event.setResult(Result.ALLOW);
 		}
 	}
 	

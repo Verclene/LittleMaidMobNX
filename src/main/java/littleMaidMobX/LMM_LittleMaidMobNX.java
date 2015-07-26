@@ -40,7 +40,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2B6-1.8-F1450";
+	public static final String VERSION = "NX2B9-1.8-F1450";
 	public static final int VERSION_CODE = 4;
 	
 	public static String[] cfg_comment = {
@@ -95,6 +95,8 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_Dominant = false;
 	//アルファブレンド
 	public static boolean cfg_isModelAlphaBlend = false;
+	//野生テクスチャ
+	public static boolean cfg_isFixedWildMaid = false;
 
 //	@MLProp(info="true: AlphaBlend(request power), false: AlphaTest(more fast)")
 //	public static boolean AlphaBlend = true;
@@ -167,7 +169,7 @@ public class LMM_LittleMaidMobNX {
 		cfg_canDespawn = cfg.getBoolean("canDespawn", false);
 		cfg_checkOwnerName = cfg.getBoolean("checkOwnerName", true);
 		cfg_DeathMessage = cfg.getBoolean("DeathMessage", true);
-		cfg_defaultTexture = cfg.getString("defaultTexture", "default_Origin");
+		cfg_defaultTexture = "";
 		cfg_Dominant = cfg.getBoolean("Dominant", false);
 		cfg_enableSpawnEgg = cfg.getBoolean("enableSpawnEgg", true);
 		cfg_IgnoreItemList = cfg.getString("IgnoreItemList", "");
@@ -177,6 +179,7 @@ public class LMM_LittleMaidMobNX {
 		cfg_spawnLimit = cfg.getInt("spawnLimit", 20);
 		cfg_spawnWeight = cfg.getInt("spawnWeight", 5);
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
+		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
 		
 		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
 		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
@@ -266,9 +269,10 @@ public class LMM_LittleMaidMobNX {
 		ignoreItemList = cfg_IgnoreItemList.trim().split("\\s*,\\s*");
 
 		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
+		MinecraftForge.EVENT_BUS.register(new LMM_EventHook());
 
 		// デフォルトモデルの設定
-		MMM_TextureManager.instance.setDefaultTexture(LMM_EntityLittleMaid.class, MMM_TextureManager.instance.getTextureBox("default_Orign"));
+//		MMM_TextureManager.instance.setDefaultTexture(LMM_EntityLittleMaid.class, MMM_TextureManager.instance.getTextureBox("default_Orign"));
 
 		// Dominant
 		BiomeGenBase[] biomeList = null;

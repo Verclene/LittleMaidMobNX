@@ -320,9 +320,11 @@ public class MMM_TextureManager {
 		}
 		MMMLib.Debug("Rebuild Texture Lists.(%d)", textures.size());
 		for (MMM_TextureBox lbox : textures) {
+			if(lbox.getWildColorBits()>0){
+				setDefaultTexture(EntityLivingBase.class, lbox);
+			}
 			MMMLib.Debug("texture: %s(%s) - hasModel:%b", lbox.textureName, lbox.fileName, lbox.models != null);
 		}
-		
 		
 		setDefaultTexture(EntityLivingBase.class, getTextureBox("default_" + defaultModelName));
 		
