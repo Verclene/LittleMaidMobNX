@@ -47,7 +47,7 @@ public class LMM_EventHook
 		}
 	}
 	@SubscribeEvent
-	public void onEntitySpawn(LivingSpawnEvent event){
+	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn event){
 		if(event.entityLiving instanceof LMM_EntityLittleMaid){
 			LMM_EntityLittleMaid maid = (LMM_EntityLittleMaid) event.entityLiving;
 			if(maid.isContract()||maid.isWildSaved) return;
@@ -61,6 +61,7 @@ public class LMM_EventHook
 				if((c&x)==x) maid.setColor(i);
 			}
 			maid.setTextureNames();
+			maid.isWildSaved = true;
 //			event.setResult(Result.ALLOW);
 		}
 	}

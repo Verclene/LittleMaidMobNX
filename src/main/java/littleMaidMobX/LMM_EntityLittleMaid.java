@@ -241,7 +241,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public int coolingTick = 0;
 	protected int damageSoundTick = 0;
 	
-	protected boolean isWildSaved = false;
+	public boolean isWildSaved = false;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
