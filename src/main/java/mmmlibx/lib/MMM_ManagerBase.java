@@ -3,6 +3,8 @@ package mmmlibx.lib;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
@@ -32,6 +34,11 @@ public abstract class MMM_ManagerBase {
 
 		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
 			startSearch(FileManager.dirDevClasses, true);
+			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+				for(File f:FileManager.dirDevIncludeClasses){
+					startSearch(f, true);
+				}
+			}
 		}
 
 		File lf1 = new File(FileManager.dirMods, ls);
@@ -116,7 +123,16 @@ public abstract class MMM_ManagerBase {
 		String lclassname = "";
 		// 対象ファイルをクラスとしてロード
 		try {
-			ClassLoader lclassLoader = MMMLib.class.getClassLoader();
+			ClassLoader lclassLoader = null;
+			if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE){
+				URL[] u = new URL[LMMNX_DevMode.INCLUDEPROJECT.length];
+				int ix=0;
+				for(File f:FileManager.dirDevIncludeClasses){
+					u[ix++] = f.toURI().toURL();
+				}
+				lclassLoader = new URLClassLoader(u,MMMLib.class.getClassLoader());
+			}
+			else lclassLoader = MMMLib.class.getClassLoader();
 			Package lpackage = MMMLib.class.getPackage();
 			lclassname = pname.endsWith(".class") ? pname.substring(0, pname.lastIndexOf(".class")) : pname;
 			Class lclass;

@@ -1,5 +1,7 @@
 package net.blacklab.lmmnx.util;
 
+import java.io.File;
+
 import littleMaidMobX.LMM_LittleMaidMobNX;
 
 public class NXCommonUtil {
@@ -33,6 +35,16 @@ public class NXCommonUtil {
 		if(path.startsWith("/")) path = path.substring(1);
 		if(path.endsWith(".class")) path = path.substring(0,path.lastIndexOf(".class"));
 		return path.replace("/", ".");
+	}
+	
+	/**与えるパスはgetLinuxAntiDotNameで正規化したものでなくてはならない
+	 * @param path
+	 * @return
+	 */
+	public static String getParentDir(String path){
+		if(path.endsWith("/.")) path=path.substring(0,path.length()-1);
+		if(path.endsWith("/")) path=path.substring(0,path.length()-1);
+		return path.substring(0,path.lastIndexOf("/"));
 	}
 
 }

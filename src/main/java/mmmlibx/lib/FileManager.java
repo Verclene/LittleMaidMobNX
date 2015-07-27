@@ -20,6 +20,8 @@ public class FileManager {
 	public static File dirModsVersion;
 	public static File dirDevClasses;
 	public static File dirDevClassAssets;
+	public static List<File> dirDevIncludeClasses = new ArrayList<File>();
+//	public static File[] dirDevIncludeAssets = new File[]{};
 	
 	public static List<File> files;
 	public static String minecraftDir	= "";
@@ -52,6 +54,14 @@ public class FileManager {
 				dirDevClasses = new File(pathd);
 				if(!dirDevClasses.exists()||!dirDevClasses.isDirectory())
 					throw new IllegalStateException("Could not get dev class path: Maybe your source codes are out of src/main/java?");
+				
+				for(int i=0;i<LMMNX_DevMode.INCLUDEPROJECT.length;i++){
+					if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+						String c = NXCommonUtil.getParentDir(path.substring(0, path.indexOf(tail)))+"/"+LMMNX_DevMode.INCLUDEPROJECT[i]+"/bin";
+						dirDevIncludeClasses.add(new File(c));
+					}else if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE){
+					}
+				}
 			}else{
 				throw new IllegalStateException("Run Directory is incorrect: You must run at \"<PROJECT>/eclipse\"!");
 			}
@@ -187,6 +197,11 @@ public class FileManager {
 			//開発モード時はそちらを優先
 			llist.add(dirDevClasses);
 			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE) llist.add(dirDevClassAssets);
+			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
+				for(File f:dirDevIncludeClasses){
+					llist.add(f);
+				}
+			}
 		}
 		try {
 			if (dirMods.isDirectory()) {
