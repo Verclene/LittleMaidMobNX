@@ -152,10 +152,9 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	public void loadSounds()
 	{
 		// 音声の解析
-		LMM_SoundManager.init();
+		LMM_SoundManager.instance.init();
 		// サウンドパック
-		LMM_SoundManager.loadDefaultSoundPack();
-		LMM_SoundManager.loadSoundPack();
+		LMM_SoundManager.instance.loadDefaultSoundPack();
 	}
 
 	public boolean isSinglePlayer()

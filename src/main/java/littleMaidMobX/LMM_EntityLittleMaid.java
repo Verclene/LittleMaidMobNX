@@ -1,27 +1,6 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.dataWatch_Absoption;
-import static littleMaidMobX.LMM_Statics.dataWatch_Color;
-import static littleMaidMobX.LMM_Statics.dataWatch_DominamtArm;
-import static littleMaidMobX.LMM_Statics.dataWatch_ExpValue;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Aimebow;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterest;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterestAXIS;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_remainsContract;
-import static littleMaidMobX.LMM_Statics.dataWatch_Free;
-import static littleMaidMobX.LMM_Statics.dataWatch_Gotcha;
-import static littleMaidMobX.LMM_Statics.dataWatch_ItemUse;
-import static littleMaidMobX.LMM_Statics.dataWatch_Mode;
-import static littleMaidMobX.LMM_Statics.dataWatch_Parts;
-import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
+import static littleMaidMobX.LMM_Statics.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -45,6 +24,7 @@ import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import net.blacklab.lmmnx.api.LMMNX_IItemSpecialSugar;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPumpkin;
@@ -113,7 +93,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
-	
+
 	// 定数はStaticsへ移動
 //	protected static final UUID maidUUID = UUID.nameUUIDFromBytes("lmm.littleMaidMob".getBytes());
 	protected static final UUID maidUUID = UUID.fromString("e2361272-644a-3028-8416-8536667f0efb");
@@ -234,13 +214,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	//モデル
 	public String textureModelName;
 	public String textureArmorName;
-	
+
 	protected int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
-	
+
 	public int playingTick = 0;
 	public int coolingTick = 0;
 	protected int damageSoundTick = 0;
-	
+
 	public boolean isWildSaved = false;
 
 	public LMM_EntityLittleMaid(World par1World) {
@@ -309,7 +289,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		for (LMM_EntityModeBase lem : maidEntityModeList) {
 			lem.initEntity();
 		}
-		
+
 		/*
 		if(par1World.isRemote){
 			NBTTagCompound t = new NBTTagCompound();
@@ -729,8 +709,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					return;
 				}
 			}
-			
-			String s = LMM_SoundManager.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
+
+			String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
 			//まさかな…
 			if(s==null) return;
 			if(!s.isEmpty() && !s.startsWith("minecraft:"))
@@ -1501,6 +1481,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	public float getInterestedAngle(float f) {
+		if(maidInventory.mainInventory[17]!=null){
+			if(maidInventory.mainInventory[17].getItem() instanceof ItemArmor){
+				if(((ItemArmor)maidInventory.mainInventory[17].getItem()).armorType==0)
+					return 0f;
+			}
+		}
 		return (prevRotateAngleHead + (rotateAngleHead - prevRotateAngleHead) * f) * ((looksWithInterestAXIS ? 0.08F : -0.08F) * (float)Math.PI);
 	}
 
@@ -1570,7 +1556,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
 		Entity entity = par1DamageSource.getEntity();
 		boolean force = true;
-		
+
 		if(par1DamageSource.getSourceOfDamage() instanceof EntitySnowball) force = false;
 
 		if(par1DamageSource.getDamageType().equalsIgnoreCase("thrown"))
@@ -1721,7 +1707,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			aiAvoidPlayer.setActive();
 		}
 	}
-	
+
 	public void updateAITasks()
 	{
 		super.updateAITasks();
@@ -1818,9 +1804,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		return false;
 	}
-	
-	private static final int[] ZBOUND_BLOCKOFFS = new int[]{ -1, -1,  0,  1,  1,  1,  0, -1};
-	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0,  1,  1,  1,  0, -1, -1, -1};
+
+	private static final int[] ZBOUND_BLOCKOFFS = new int[]{  1,  1,  0, -1, -1, -1,  0,  1};
+	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
+
+	public int DEBUGCOUNT = 0;
 
 	@Override
 	public void onLivingUpdate() {
@@ -1854,7 +1842,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				setPlayingRole(0);
 			}
 		}
-		
+
 		/*
 		if(getMaidModeInt()==LMM_EntityMode_Healer.mmode_Healer){
 
@@ -1863,36 +1851,48 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		superLivingUpdate();
 
 		maidInventory.decrementAnimations();
+
 		// 埋葬対策
 		boolean grave = true;
-		grave &= pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ + (double)width * 0.34999999999999998D);
-		grave &= pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ - (double)width * 0.34999999999999998D);
-		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ - (double)width * 0.34999999999999998D);
-		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY, posZ + (double)width * 0.34999999999999998D);
+		grave &= pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ + (double)width * 0.34999999999999998D);
+		grave &= pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ - (double)width * 0.34999999999999998D);
+		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ - (double)width * 0.34999999999999998D);
+		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ + (double)width * 0.34999999999999998D);
 
 		if (grave) {
 			jump();
 		}
-		
+
 		//壁衝突判定
 		//pitchはデフォルト+-180度が北方向(Z負)
-		//向いてる方向のブロックを厳密に計算するとめんどくさいから
-		//北方向から八方位に分割して割り出す
-		int pitchindex = MathHelper.floor_float((rotationPitch+180F+22.5F)/45F);
-		if(pitchindex<0) pitchindex+=8;
-		int px = MathHelper.floor_double(posX);
-		int pz = MathHelper.floor_double(posZ);
-		int py = MathHelper.floor_double(getEntityBoundingBox().minY);
-		float movespeed = getAIMoveSpeed();
-		if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && onGround &&
-				World.doesBlockHaveSolidTopSurface(worldObj, new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py-1, pz+ZBOUND_BLOCKOFFS[pitchindex]))){
-			//ジャンプとかさせるとめんどくさいから、Yだけ先に変える
-			setLocationAndAngles(posX, posY+1D, posZ, rotationYaw, rotationPitch);
-			//弧度法に変換。MathHelper.sinの実装が怪しいのでMath.sinを使う
-			double archDegPitch = rotationPitch / 180D * Math.PI;
-			//ナニユエ100分の1がちょうどいいのかは知らん
-			motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
-			motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
+		//八方位に分割して割り出す
+		if(!worldObj.isRemote){
+//			float rot = getRotationYawHead();
+			int pitchindex = Math.round(rotationYaw/45F);
+//			if(pitchindex>=8||pitchindex<0) pitchindex = 0;
+			while(pitchindex<0)  pitchindex+=8;
+			while(pitchindex>=8) pitchindex-=8;
+
+			int px = MathHelper.floor_double(posX);
+			int pz = MathHelper.floor_double(posZ);
+			int py = MathHelper.floor_double(getEntityBoundingBox().minY);
+			float movespeed = getAIMoveSpeed();
+			if(++DEBUGCOUNT==5){
+				DEBUGCOUNT = 0;
+				LMM_LittleMaidMobNX.Debug("POS %d(%s); SPEED %s / %s", pitchindex, rotationYaw, movespeed, isCollidedHorizontally);
+			}
+			BlockPos targetPos = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py, pz+ZBOUND_BLOCKOFFS[pitchindex]);
+			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && onGround &&
+					World.doesBlockHaveSolidTopSurface(worldObj, targetPos) &&
+					!(worldObj.getBlockState(targetPos).getBlock() instanceof BlockDoor)){
+				//ジャンプとかさせるとめんどくさいから、Yだけ先に変える
+				setLocationAndAngles(posX, posY+1D, posZ, rotationYaw, rotationPitch);
+				//弧度法に変換。MathHelper.sinの実装が怪しいのでMath.sinを使う
+				double archDegPitch = rotationPitch / 180D * Math.PI;
+				//ナニユエ100分の1がちょうどいいのかは知らん
+				motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
+				motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
+			}
 		}
 
 		 ItemStack itemstack = this.getInventory()[0];
@@ -3240,13 +3240,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean isLookSuger() {
 		return mstatLookSuger;
 	}
-	
+
 	public static enum EnumConsumeSugar{
 		/**通常回復**/CONSUMESUGAR_HEAL,
 		/**契約更新**/CONSUMESUGAR_RECONTRACT,
 		/**その他（つまみ食いとか）**/CONSUMESUGAR_OTHER
 	};
-	
+
 	/** 砂糖を食べる。インベントリの左上から消費する。
 	 * @param mode EnumConsumeSugar型の定数
 	 */
@@ -3280,7 +3280,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		maidInventory.decrStackSize(index, 1);
 	}
 
-	/** 主に砂糖を食べる仕草やその後のこと。 
+	/** 主に砂糖を食べる仕草やその後のこと。
 	 * ペロッ・・・これは・・・砂糖ッ！！
 	 * @param heal デフォルトの1回復をするか？
 	 * @param motion 腕を振るか？
@@ -3584,7 +3584,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //				le.getValue().updateEquippedPoint(pEntity.textureModel0);
 //			}
 //		}
-		maidSoundRate = LMM_SoundManager.getSoundRate(textureData.getTextureName(0), getColor());
+		maidSoundRate = LMM_SoundManager.instance.getSoundRate(textureData.getTextureName(0), getColor());
 
 	}
 

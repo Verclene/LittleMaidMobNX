@@ -35,13 +35,13 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 	// Method
 	public LMM_RenderLittleMaid(RenderManager manager,float f) {
 		super(manager,f);
-		
+
 		addLayer(new MMMLayerHeldItem(this));
 		addLayer(new MMMLayerArmor(this));
 	}
-	
+
 	public class MMMLayerArmor extends LayerArmorBase{
-		
+
 		//レイヤーと化した防具描画
 
 		public RendererLivingEntity p1;
@@ -74,7 +74,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			ModelBaseDuo model = (ModelBaseDuo) paramModelBase;
 			model.showArmorParts(paramInt);
 		}
-		
+
 		@Override
 		public void doRenderLayer(EntityLivingBase par1EntityLiving,
 				float par2, float par3, float par4,
@@ -93,7 +93,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			if(lmm.getInventory()[2]!=null) render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 1);
 			if(lmm.getInventory()[1]!=null) render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 0);
 		}
-		
+
 		public void setModelValues(EntityLivingBase par1EntityLiving, IModelCaps pEntityCaps) {
 			if (par1EntityLiving instanceof ITextureEntity) {
 				ITextureEntity ltentity = (ITextureEntity)par1EntityLiving;
@@ -111,14 +111,14 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			mmodel.showAllParts();
 			mmodel.isAlphablend = true;
 		}
-		
+
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
 			//初回のみ指定値設定
 			if(renderCount==0) this.setModelValues(lmm, lmm.maidCaps);
-			
+
 			//総合
 			mmodel.showArmorParts(renderParts);
-			
+
 			//Inner
 			INNER:{
 				if(mmodel.modelInner==null) break INNER;
@@ -132,7 +132,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				mmodel.modelInner.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
 				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
 			}
-			
+
 			// 発光Inner
 			INNERLIGHT: if (renderCount == 0 && mmodel.modelInner!=null) {
 				ResourceLocation texInnerLight = mmodel.textureInnerLight[renderParts];
@@ -144,7 +144,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
 					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 					GL11.glDepthFunc(GL11.GL_LEQUAL);
-					
+
 					Client.setLightmapTextureCoords(0x00f000f0);//61680
 					if (mmodel.textureLightColor == null) {
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -181,7 +181,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
 				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
 			}
-			
+
 			// 発光Outer
 			OUTERLIGHT: if (renderCount == 0 && mmodel.modelOuter!=null) {
 				ResourceLocation texOuterLight = mmodel.textureOuterLight[renderParts];
@@ -193,7 +193,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
 					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 					GL11.glDepthFunc(GL11.GL_LEQUAL);
-					
+
 					Client.setLightmapTextureCoords(0x00f000f0);//61680
 					if (mmodel.textureLightColor == null) {
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -219,17 +219,17 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			if(renderCount>=300) renderCount=30;
 		}
 	}
-	
+
 	public class MMMLayerHeldItem extends LayerHeldItem{
 
 		//レイヤーと化したアイテム描画
-		
+
 		protected RendererLivingEntity renderer;
 		public MMMLayerHeldItem(RendererLivingEntity p_i46115_1_) {
 			super(p_i46115_1_);
 			renderer = p_i46115_1_;
 		}
-		
+
 		@Override
 		public void doRenderLayer(EntityLivingBase p_177141_1_,
 				float p_177141_2_, float p_177141_3_, float p_177141_4_,
@@ -238,16 +238,16 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			LMM_EntityLittleMaid lmm = (LMM_EntityLittleMaid) p_177141_1_;
 			if(!lmm.isMaidWait()){
 				ItemStack itemstack = lmm.getCurrentEquippedItem();
-		
+
 				if (itemstack != null)
 				{
 					GlStateManager.pushMatrix();
-					
+
 					modelMain.model.Arms[lmm.maidDominantArm].postRender(0.0625F);
-					
+
 					Item item = itemstack.getItem();
 					Minecraft minecraft = Minecraft.getMinecraft();
-		
+
 					if (item instanceof ItemBlock && Block.getBlockFromItem(item).getRenderType() == 2)
 					{
 						GlStateManager.translate(0.0F, 0.1875F, -0.3125F);
@@ -256,30 +256,30 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 						float f8 = 0.375F;
 						GlStateManager.scale(-f8, -f8, f8);
 					}
-		
+
 					minecraft.getItemRenderer().renderItem(lmm, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON);
 					GlStateManager.popMatrix();
-					
+
 				}
-				
+
 			}
 		}
 
-		
+
 	}
-	
+
 	@Override
 	public void setModelValues(EntityLivingBase par1EntityLiving, double par2,
 			double par4, double par6, float par8, float par9, IModelCaps pEntityCaps) {
 		LMM_EntityLittleMaid lmaid = (LMM_EntityLittleMaid)par1EntityLiving;
 		super.setModelValues(par1EntityLiving, par2, par4, par6, par8, par9, pEntityCaps);
-		
+
 //		modelMain.setRender(this);
 //		modelMain.setEntityCaps(pEntityCaps);
 //		modelMain.showAllParts();
 //		modelMain.isAlphablend = true;
 //		modelFATT.isAlphablend = true;
-		
+
 		modelMain.setCapsValue(IModelCaps.caps_heldItemLeft, (Integer)0);
 		modelMain.setCapsValue(IModelCaps.caps_heldItemRight, (Integer)0);
 //		modelMain.setCapsValue(IModelCaps.caps_onGround, renderSwingProgress(lmaid, par9));
@@ -312,12 +312,12 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			float f11 = lel.getSwingProgress(f1);
 			float f12 = MathHelper.sin(MathHelper.sqrt_float(f11) * 3.141593F);
 			Vec3 vec3d = new Vec3(-0.5D, 0.029999999999999999D, 0.55D);
-			
+
 			vec3d.rotatePitch((-(lel.prevRotationPitch + (lel.rotationPitch - lel.prevRotationPitch) * f1) * 3.141593F) / 180F);
 			vec3d.rotateYaw((-(lel.prevRotationYaw + (lel.rotationYaw - lel.prevRotationYaw) * f1) * 3.141593F) / 180F);
 			//vec3d.rotateAroundY(f12 * 0.5F);
 			//vec3d.rotateAroundX(-f12 * 0.7F);
-			
+
 			double d7 = lel.prevPosX + (lel.posX - lel.prevPosX) * (double)f1 + vec3d.xCoord;
 			double d8 = lel.prevPosY + (lel.posY - lel.prevPosY) * (double)f1 + vec3d.yCoord;
 			double d9 = lel.prevPosZ + (lel.posZ - lel.prevPosZ) * (double)f1 + vec3d.zCoord;
@@ -347,7 +347,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				float f5 = (float)j / (float)i;
 				tessellator.getWorldRenderer().addVertex(px + d15 * (double)f5, py + d16 * (double)(f5 * f5 + f5) * 0.5D + (double)(((float)i - (float)j) / ((float)i * 0.75F) + 0.125F), pz + d17 * (double)f5);
 			}
-			
+
 			tessellator.draw();
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -357,7 +357,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 	public void doRenderLitlleMaid(LMM_EntityLittleMaid plittleMaid, double px, double py, double pz, float f, float f1) {
 		// いくつか重複してるのであとで確認
 		// 姿勢による高さ調整
-		
+
 		// ここは本来的には要らない。
 		if (plittleMaid.worldObj instanceof WorldServer) {
 			// RSHUD-ACV用
@@ -382,7 +382,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			modelFATT.textureInnerLight = plittleMaid.textureData.getTextures(3);
 			modelFATT.textureOuterLight = plittleMaid.textureData.getTextures(4);
 		}
-		
+
 //		doRenderLiving(plittleMaid, px, py, pz, f, f1);
 		renderModelMulti(plittleMaid, px, py, pz, f, f1, plittleMaid.maidCaps);
 		renderString(plittleMaid, px, py, pz, f, f1);
@@ -392,7 +392,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 	public void doRender(EntityLiving par1EntityLiving,
 			double par2, double par4, double par6, float par8, float par9) {
 		LMM_EntityLittleMaid lmm = (LMM_EntityLittleMaid)par1EntityLiving;
-		
+
 		fcaps = lmm.maidCaps;
 //		doRenderLitlleMaid(lmm, par2, par4, par6, par8, par9);
 		renderModelMulti(lmm, par2, par4, par6, par8, par9, fcaps);
@@ -416,7 +416,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 	@Override
 	public void passSpecialRender(EntityLivingBase par1EntityLiving, double par2, double par4, double par6) {
 		super.passSpecialRender(par1EntityLiving, par2, par4, par6);
-		
+
 		LMM_EntityLittleMaid llmm = (LMM_EntityLittleMaid)par1EntityLiving;
 		// 追加分
 		for (int li = 0; li < llmm.maidEntityModeList.size(); li++) {

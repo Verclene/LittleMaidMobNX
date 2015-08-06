@@ -1,9 +1,5 @@
 package mmmlibx.lib.multiModel.model.mc162;
 
-import littleMaidMobX.LMM_LittleMaidMobNX;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -53,11 +49,11 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 		Arms[1] = new ModelRenderer(this);
 		Arms[1].setRotationPoint(1F, 5F, -1F);
 		Arms[1].isInvertX = true;
-		
+
 		HeadMount.setRotationPoint(0F, -4F, 0F);
 		HeadTop.setRotationPoint(0F, -13F, 0F);
-		
-		
+
+
 		bipedHead = new ModelRenderer(this, 0, 0);
 		bipedHead.setTextureOffset( 0,  0).addBox(-4F, -8F, -4F, 8, 8, 8, psize);		// Head
 		bipedHead.setTextureOffset(24,  0).addBox(-4F, 0F, 1F, 8, 4, 3, psize);			// Hire
@@ -69,32 +65,32 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 		bipedHead.setMirror(true);
 		bipedHead.setTextureOffset(58, 21).addBox(4.5F, -6.8F, 0.9F, 1, 8, 2, psize);	// SideTailL
 		bipedHead.setRotationPoint(0F, 0F, 0F);
-		
+
 		bipedRightArm = new ModelRenderer(this, 48, 0);
 		bipedRightArm.addBox(-2.0F, -1F, -1F, 2, 8, 2, psize);
 		bipedRightArm.setRotationPoint(-3.0F, 1.5F, 0F);
-		
+
 		bipedLeftArm = new ModelRenderer(this, 56, 0);
 		bipedLeftArm.addBox(0.0F, -1F, -1F, 2, 8, 2, psize);
 		bipedLeftArm.setRotationPoint(3.0F, 1.5F, 0F);
-		
+
 		bipedRightLeg = new ModelRenderer(this, 32, 19);
 		bipedRightLeg.addBox(-2F, 0F, -2F, 3, 9, 4, psize);
 		bipedRightLeg.setRotationPoint(-1F, 0F, 0F);
-		
+
 		bipedLeftLeg = new ModelRenderer(this, 32, 19);
 		bipedLeftLeg.setMirror(true);
 		bipedLeftLeg.addBox(-1F, 0F, -2F, 3, 9, 4, psize);
 		bipedLeftLeg.setRotationPoint(1F, 0F, 0F);
-		
+
 		Skirt = new ModelRenderer(this, 0, 16);
 		Skirt.addBox(-4F, -2F, -4F, 8, 8, 8, psize);
 		Skirt.setRotationPoint(0F, 0F, 0F);
-		
+
 		bipedBody = new ModelRenderer(this, 32, 8);
 		bipedBody.addBox(-3F, 0F, -2F, 6, 7, 4, psize);
 		bipedBody.setRotationPoint(0F, 0F, 0F);
-		
+
 		bipedTorso = new ModelRenderer(this);
 		bipedNeck = new ModelRenderer(this);
 		bipedPelvic = new ModelRenderer(this);
@@ -145,20 +141,7 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 	@Override
 	public void setLivingAnimations(IModelCaps pEntityCaps, float par2, float par3, float pRenderPartialTicks) {
 		float angle = ModelCapsHelper.getCapsValueFloat(pEntityCaps, caps_interestedAngle, (Float)pRenderPartialTicks);
-		ItemStack is = (ItemStack) pEntityCaps.getCapsValue(IModelCaps.caps_HeadMount);
-		boolean flag = true;
-		if(is!=null){
-			if(is.getItem() instanceof ItemArmor){
-				if(((ItemArmor)is.getItem()).armorType==0){
-					flag = false;
-				}
-			}
-		}
-		if(flag){
-			bipedHead.setRotateAngleZ(angle);
-		}else{
-			bipedHead.setRotateAngleZ(0f);
-		}
+		bipedHead.setRotateAngleZ(angle);
 	}
 
 	/**
@@ -169,7 +152,7 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 	public void setRotationAngles(float par1, float par2, float pTicksExisted,
 			float pHeadYaw, float pHeadPitch, float par6, IModelCaps pEntityCaps) {
 		setDefaultPause(par1, par2, pTicksExisted, pHeadYaw, pHeadPitch, par6, pEntityCaps);
-		
+
 		if (isRiding) {
 			// 乗り物に乗っている
 			bipedRightArm.addRotateAngleX(-0.6283185F);
@@ -180,8 +163,8 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 			bipedLeftLeg.setRotateAngleY(-0.3141593F);
 //			mainFrame.rotationPointY += 5.00F;
 		}
-		
-		
+
+
 		// アイテム持ってるときの腕振りを抑える+表示角オフセット
 		if (heldItem[1] != 0) {
 			bipedLeftArm.setRotateAngleX(bipedLeftArm.getRotateAngleX() * 0.5F);
@@ -191,10 +174,10 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 			bipedRightArm.setRotateAngleX(bipedRightArm.getRotateAngleX() * 0.5F);
 			bipedRightArm.addRotateAngleDegX(-18F * (float)heldItem[0]);
 		}
-		
+
 //		bipedRightArm.setRotateAngleY(0.0F);
 //		bipedLeftArm.setRotateAngleY(0.0F);
-		
+
 		if ((onGrounds[0] > -9990F || onGrounds[1] > -9990F) && !aimedBow) {
 			// 腕振り
 			float f6, f7, f8;
@@ -295,7 +278,7 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 	@Override
 	public void setDefaultPause() {
 	}
-	
+
 	@Override
 	public void setDefaultPause(float par1, float par2, float pTicksExisted,
 			float pHeadYaw, float pHeadPitch, float par6, IModelCaps pEntityCaps) {
@@ -316,9 +299,9 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 		bipedRightLeg.setRotateAngle(mh_cos(par1 * 0.6662F) * 1.4F * par2, 0F, 0F);
 		bipedLeftLeg.setRotationPoint(1F, 0F, 0F);
 		bipedLeftLeg.setRotateAngle(mh_cos(par1 * 0.6662F + 3.141593F) * 1.4F * par2, 0F, 0F);
-		
+
 		Skirt.setRotationPoint(0F, 0F, 0F).setRotateAngle(0F, 0F, 0F);
-		
+
 	}
 
 	@Override
@@ -352,7 +335,7 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 		f = parts == 0 ? true : false;
 		bipedRightLeg.setVisible(f);
 		bipedLeftLeg.setVisible(f);
-		
+
 		return -1;
 	}
 

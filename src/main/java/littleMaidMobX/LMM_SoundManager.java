@@ -30,26 +30,27 @@ import net.minecraft.util.ResourceLocation;
 public class LMM_SoundManager {
 	
 	/** mods\littleMaidMobX を保持する */
-	private static File soundDir = null;
+	private File soundDir = null;
 	/** サウンドパックのフォルダまたはZipを保持する。nullの場合はサウンドをロードしない */
-	private static File soundPackDir = null;
+	private File soundPackDir = null;
 
 	public static final String SoundConfigName = "littleMaidMob.cfg";
 
 	// soundindex, value
-	public static Map<Integer, String> soundsDefault = new HashMap<Integer, String>();
+	public Map<Integer, String> soundsDefault = new HashMap<Integer, String>();
 	// soundIndex, texturePack, color, value
-	public static Map<Integer, Map<String, Map<Integer, String>>> soundsTexture = new HashMap<Integer, Map<String,Map<Integer,String>>>();
-	public static float soundRateDefault;
-	public static Map<String, Map<Integer, Float>> soundRateTexture = new HashMap<String,Map<Integer,Float>>();
+	public Map<Integer, Map<String, Map<Integer, String>>> soundsTexture = new HashMap<Integer, Map<String,Map<Integer,String>>>();
+	public float soundRateDefault;
+	public Map<String, Map<Integer, Float>> soundRateTexture = new HashMap<String,Map<Integer,Float>>();
 	
-	public static ZipFile soundsZipFile;
-	public static String tableSwitch = "dir";
-	public static Map<String, File>		soundsStreamFile = new HashMap<String, File>();
-	public static Map<String, String>	soundsStreamEntryName = new HashMap<String, String>();
+	public ZipFile soundsZipFile;
+	public String tableSwitch = "dir";
+	public Map<String, File>		soundsStreamFile = new HashMap<String, File>();
+	public Map<String, String>	soundsStreamEntryName = new HashMap<String, String>();
 
-	
-	public static void init() {
+	public static LMM_SoundManager instance = new LMM_SoundManager();
+
+	public void init() {
 		// 初期設定
 		soundDir = new File(FileManager.dirMods, "/littleMaidMobX/");
 		if (!getSoundDir().exists() || !getSoundDir().isDirectory()) {
@@ -60,12 +61,12 @@ public class LMM_SoundManager {
 		}
 	}
 	
-	public static File getSoundDir()
+	public File getSoundDir()
 	{
 		return soundDir;
 	}
 	
-	public static InputStream getSoundJson()
+	public InputStream getSoundJson()
 	{
 		// 起動時に自動生成される mods/littleMaidMobX/sounds/sounds.json を読み出す
 		try
@@ -77,7 +78,7 @@ public class LMM_SoundManager {
 		return null;
 	}
 	
-	public static InputStream getResourceStream(ResourceLocation resource)
+	public InputStream getResourceStream(ResourceLocation resource)
 	{
 		String path = resource.getResourcePath().toLowerCase();
 		
@@ -89,7 +90,7 @@ public class LMM_SoundManager {
 
 		if(path.equalsIgnoreCase("sounds.json"))
 		{
-			return LMM_SoundManager.getSoundJson();
+			return instance.getSoundJson();
 		}
 		
 		String fileName = path;
@@ -117,7 +118,7 @@ public class LMM_SoundManager {
 		return null;
 	}
 	
-	public static boolean getResourceExists(ResourceLocation resource)
+	public boolean getResourceExists(ResourceLocation resource)
 	{
 		String path = resource.getResourcePath().toLowerCase();
 		if(path.endsWith(".mcmeta"))
@@ -154,7 +155,7 @@ public class LMM_SoundManager {
 		return false;
 	}
 
-	public static void setSoundRate(int soundindex, String value, String target) {
+	public void setSoundRate(int soundindex, String value, String target) {
 		// 文字列を解析して値を設定
 		String arg[] = value.split(",");
 		String tvalue;
@@ -212,7 +213,7 @@ public class LMM_SoundManager {
 		}
 	}
 
-	public static float getSoundRate(String texturename, int colorvalue){
+	public float getSoundRate(String texturename, int colorvalue){
 		if (texturename == null || texturename.length() == 0) texturename = ";";
 		Map<Integer, Float> mif = soundRateTexture.get(texturename);
 		if (mif == null) {
@@ -232,7 +233,7 @@ public class LMM_SoundManager {
 		return lf;
 	}
 
-	public static void setSoundValue(int soundindex, String value, String target) {
+	public void setSoundValue(int soundindex, String value, String target) {
 		// 文字列を解析して値を設定
 		String arg[] = value.split(",");
 		
@@ -258,7 +259,7 @@ public class LMM_SoundManager {
 		}
 	}
 
-	public static void setSoundValue(int soundindex, String value) {
+	public void setSoundValue(int soundindex, String value) {
 		// 文字列を解析して値を設定
 		String arg[] = value.split(",");
 		
@@ -292,7 +293,7 @@ public class LMM_SoundManager {
 		}
 	}
 
-	public static String getSoundValue(LMM_EnumSound enumsound, String texturename, int colorvalue){
+	public String getSoundValue(LMM_EnumSound enumsound, String texturename, int colorvalue){
 		if (enumsound == LMM_EnumSound.Null) return null;
 		
 		Map<String, Map<Integer, String>> msi = soundsTexture.get(enumsound.index);
@@ -319,7 +320,7 @@ public class LMM_SoundManager {
 		return LMM_LittleMaidMobNX.DOMAIN + ":" + s;
 	}
 
-	public static void rebuildSoundPack() {
+	public void rebuildSoundPack() {
 		// 特殊文字を値に変換
 		// Default
 		Map<Integer, String> lmap = new HashMap<Integer, String>();
@@ -373,7 +374,7 @@ public class LMM_SoundManager {
 		}
 	}
 
-	public static void decodeSoundPack(String fileName, Reader reader, boolean iswrite, boolean isdefault) {
+	public void decodeSoundPack(String fileName, Reader reader, boolean iswrite, boolean isdefault) {
 		// サウンドパックを解析して音声を設定
 		try {
 			List<LMM_EnumSound> list1 = new ArrayList<LMM_EnumSound>();
@@ -453,28 +454,7 @@ public class LMM_SoundManager {
 		}
 	}
 
-	public static void loadSoundPack() {
-	/* TODO ★ デフォルトと同じファイルを読み込んでいる？必要？
-		if (sounddir.exists() && sounddir.isDirectory()) {
-			for (File file : sounddir.listFiles()) {
-				if (file.getName().compareToIgnoreCase(SoundConfigName) == 0) {
-					continue;
-				}
-				if (file.isFile() && file.canRead() && file.getName().endsWith(".cfg")) {
-					// 音声定義ファイルと認識
-					LMM_LittleMaidMobNX.Debug("Load SoundPack:" + file.getName());
-					decodeSoundPack(file, false);
-				}
-			}
-		} else {
-			LMM_LittleMaidMobNX.Debug("no Sound Directory.");
-		}
-		
-		rebuildSoundPack();
-	*/
-	}
-
-	public static void loadDefaultSoundPack()
+	public void loadDefaultSoundPack()
 	{
 		try
 		{
@@ -499,7 +479,7 @@ public class LMM_SoundManager {
 	}
 	
 	/** mods 直下のディレクトリとZipを全て検索、ディレクトリ内のZipはチェックしない */
-	public static boolean loadSoundPackCfg() throws IOException
+	public boolean loadSoundPackCfg() throws IOException
 	{
 		for(File file : FileManager.dirMods.listFiles())
 		{
@@ -529,7 +509,7 @@ public class LMM_SoundManager {
 		return false;
 	}
 
-	public static void putAllSoundStream(File dir) throws IOException
+	public void putAllSoundStream(File dir) throws IOException
 	{
 		for(File file : dir.listFiles())
 		{
@@ -547,7 +527,7 @@ public class LMM_SoundManager {
 	
 	// mods配下の全フォルダからコンフィグファイルを検索する
 	// 最初に見つけた時点で終了する。2つ以上サウンドパックを入れた場合、どちらが使われるかは保証できない。
-	public static boolean searchSoundCfgDir(File dir) throws IOException
+	public boolean searchSoundCfgDir(File dir) throws IOException
 	{
 		for(File file : dir.listFiles())
 		{
@@ -574,7 +554,7 @@ public class LMM_SoundManager {
 	
 	// zip配下からコンフィグファイルを検索する
 	// 最初に見つけた時点で終了する。2つ以上サウンドパックを入れたら保証できない。
-	public static boolean searchSoundCfgZip(File file)
+	public boolean searchSoundCfgZip(File file)
 	{
 		boolean foundCfg = false;
 		try
@@ -659,7 +639,7 @@ public class LMM_SoundManager {
 		return foundCfg;
 	}
 
-	public static boolean createDefaultSoundPack(File file1) {
+	public boolean createDefaultSoundPack(File file1) {
 		// サウンドのデフォルト値を設定
 		for (LMM_EnumSound eslm : LMM_EnumSound.values()) {
 			if (eslm == LMM_EnumSound.Null) continue;
@@ -717,7 +697,7 @@ public class LMM_SoundManager {
 	}
 
 	/** 引数には、サウンドが入ったフォルダか、zipを指定 */
-	public static void createSoundJson(File dir)
+	public void createSoundJson(File dir)
 	{
 		if(!getSoundDir().exists() || !getSoundDir().isDirectory())
 		{
