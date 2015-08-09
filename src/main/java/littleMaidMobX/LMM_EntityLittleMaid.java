@@ -1477,7 +1477,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		looksWithInterest = (dataWatcher.getWatchableObjectInt(dataWatch_Flags) & dataWatch_Flags_looksWithInterest) > 0;
 		looksWithInterestAXIS = (dataWatcher.getWatchableObjectInt(dataWatch_Flags) & dataWatch_Flags_looksWithInterestAXIS) > 0;
 
-		return looksWithInterest;
+		return looksWithInterest && !isHeadMount();
 	}
 
 	public float getInterestedAngle(float f) {
@@ -3405,6 +3405,17 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public boolean isFreedom() {
 		return maidFreedom;
+	}
+	
+	public boolean isHeadMount(){
+		if(maidInventory.mainInventory[17]!=null){
+			if(maidInventory.mainInventory[17].getItem() instanceof ItemArmor){
+				if(((ItemArmor)maidInventory.mainInventory[17].getItem()).armorType==0){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 

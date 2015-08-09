@@ -54,6 +54,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		public boolean field_177193_i;
 		public LMM_EntityLittleMaid lmm;
 		private int renderCount;
+		
+		public static final float renderScale = 0.0625F; 
 
 		public MMMLayerArmor(RendererLivingEntity p_i46125_1_) {
 			super(p_i46125_1_);
@@ -128,8 +130,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				}catch(Exception e){}
 
 				mmodel.modelInner.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
-				mmodel.modelInner.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, lmm.maidCaps);
-				mmodel.modelInner.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
+				mmodel.modelInner.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, renderScale, lmm.maidCaps);
+				mmodel.modelInner.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, renderScale, true);
 				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
 			}
 
@@ -156,7 +158,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 								mmodel.textureLightColor[2],
 								mmodel.textureLightColor[3]);
 					}
-					mmodel.modelInner.render(lmm.maidCaps, par2, par3, par4, par5, par6, par7, true);
+					mmodel.modelInner.render(lmm.maidCaps, par2, par3, par4, par5, par6, renderScale, true);
 					Client.setLightmapTextureCoords(mmodel.lighting);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					GL11.glDisable(GL11.GL_BLEND);
@@ -177,8 +179,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				}catch(Exception e){}
 
 				mmodel.modelOuter.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
-				mmodel.modelOuter.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, lmm.maidCaps);
-				mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, 0.0625F, true);
+				mmodel.modelOuter.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, renderScale/1.05F, lmm.maidCaps);
+				mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, renderScale/1.05F, true);
 				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
 			}
 
@@ -205,7 +207,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 								mmodel.textureLightColor[2],
 								mmodel.textureLightColor[3]);
 					}
-					mmodel.modelOuter.render(lmm.maidCaps, par2, par3, par4, par5, par6, par7, true);
+					mmodel.modelOuter.render(lmm.maidCaps, par2, par3, par4, par5, par6, renderScale/1.05F, true);
 					Client.setLightmapTextureCoords(mmodel.lighting);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 //					GL11.glDisable(GL11.GL_BLEND);
