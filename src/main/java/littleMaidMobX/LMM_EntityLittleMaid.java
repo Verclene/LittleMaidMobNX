@@ -23,6 +23,7 @@ import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import net.blacklab.lmmnx.api.LMMNX_IItemSpecialSugar;
+import net.blacklab.lmmnx.util.NXCommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoublePlant;
@@ -1877,10 +1878,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			int pz = MathHelper.floor_double(posZ);
 			int py = MathHelper.floor_double(getEntityBoundingBox().minY);
 			float movespeed = getAIMoveSpeed();
-			if(++DEBUGCOUNT==5){
-				DEBUGCOUNT = 0;
-				LMM_LittleMaidMobNX.Debug("POS %d(%s); SPEED %s / %s", pitchindex, rotationYaw, movespeed, isCollidedHorizontally);
-			}
+
 			BlockPos targetPos = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py, pz+ZBOUND_BLOCKOFFS[pitchindex]);
 			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && onGround &&
 					World.doesBlockHaveSolidTopSurface(worldObj, targetPos) &&
@@ -3193,7 +3191,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setSwinging(maidDominantArm, pSound, force);
 	}
 	public void setSwinging(int pArm, LMM_EnumSound pSound, boolean force) {
-		playLittleMaidSound(pSound, force);
+		if(!pSound.equals(LMM_EnumSound.Null)) playLittleMaidSound(pSound, force);
 		if (mstatSwingStatus[pArm].setSwinging()) {
 			maidAvatar.swingProgressInt = -1;
 //			maidAvatar.swingProgressInt = -1;
@@ -3408,16 +3406,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 	
 	public boolean isHeadMount(){
-		if(maidInventory.mainInventory[17]!=null){
-			if(maidInventory.mainInventory[17].getItem() instanceof ItemArmor){
-				if(((ItemArmor)maidInventory.mainInventory[17].getItem()).armorType==0){
-					return true;
-				}
-			}
-		}
-		return false;
+		return NXCommonUtil.isHelm(maidInventory.mainInventory[17]);
 	}
-
 
 	/**
 	 * サーバーへテクスチャパックのインデックスを送る。

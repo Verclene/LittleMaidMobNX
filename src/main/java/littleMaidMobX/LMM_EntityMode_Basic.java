@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mmmlibx.lib.MMM_Helper;
+import net.blacklab.lmmnx.api.LMMNX_Event;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.entity.Entity;
@@ -17,15 +18,19 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemAppleGold;
 import net.minecraft.item.ItemBucketMilk;
+import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.BlockPos;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 
-	public static final int mmode_Wild		= 0x0000;
-	public static final int mmode_Escorter	= 0x0001;
+	public static final int mmode_Wild			= 0x0000;
+	public static final int mmode_Escorter		= 0x0001;
+	public static final int mmode_FarmerChest	= 0x0024;
 	
 	private IInventory myInventory;
 	private IInventory myChest;
@@ -98,12 +103,20 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 		ltasks[0] = pDefaultMove;
 		ltasks[1] = pDefaultTargeting;
 		owner.addMaidMode(ltasks, "Escorter", mmode_Escorter);
+		owner.addMaidMode(ltasks, "Farmer_C", mmode_FarmerChest);
 		
 	}
 
 	@Override
 	public boolean changeMode(EntityPlayer pentityplayer) {
-		// 強制的に割り当てる
+		ItemStack litemstack = owner.maidInventory.getStackInSlot(0);
+		if (litemstack != null) {
+			if (litemstack.getItem() instanceof ItemHoe ||
+					LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Hoe", litemstack)) {
+				owner.setMaidMode("Farmer_C");
+				return true;
+			}
+		}
 		owner.setMaidMode("Escorter");
 		return true;
 	}
@@ -120,6 +133,8 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 			for (int li = 0; li < owner.mstatSwingStatus.length; li++) {
 				owner.setEquipItem(li, -1);
 			}
+			return true;
+		case mmode_FarmerChest :
 			return true;
 		}
 //		owner.getNavigator().clearPathEntity()
@@ -138,7 +153,8 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 
 	@Override
 	public boolean isSearchBlock() {
-		if (owner.getMaidModeInt() == mmode_Escorter && owner.isFreedom() &&
+		if ((owner.getMaidModeInt() == mmode_Escorter||owner.getMaidModeInt()==mmode_FarmerChest)
+				&& owner.isFreedom() &&
 				owner.maidInventory.getFirstEmptyStack() == -1) {
 			// 対象をまだ見つけていないときは検索を行う。
 			fDistance = 100F;
@@ -182,6 +198,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean overlooksBlock(int pMode) {
 		// チェストカートの検索
 		List<TileEntity> list = owner.worldObj.loadedTileEntityList;
@@ -233,7 +250,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 			myChest = null;
 		}
 		owner.clearTilePos();
-		//owner.setTarget(null);
+		owner.setAttackTarget(null);
 	}
 
 	@Override
@@ -349,48 +366,46 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 			while ((is = owner.maidInventory.getStackInSlot(maidSearchCount)) == null && maidSearchCount < owner.maidInventory.mainInventory.length) {
 				maidSearchCount++;
 			}
-			if (is != null && !(
-					   is.getItem() == Items.sugar
-					|| is.getItem() == Items.clock
-					/*|| (is == owner.maidInventory.armorItemInSlot(3))*/
-//					|| (is.getItem() instanceof ItemArmor && ((ItemArmor)is.getItem()).armorType == 0)
-				))
-			{
-//				mod_littleMaidMob.Debug("getchest2.");
-				boolean f = false;
-				for (int j = 0; j < myChest.getSizeInventory() && is.stackSize > 0; j++)
-				{
-					ItemStack isc = myChest.getStackInSlot(j);
-					if (isc == null)
-					{
-//						mod_littleMaidMob.Debug(String.format("%s -> NULL", is.getItemName()));
-						myChest.setInventorySlotContents(j, is.copy());
-						is.stackSize = 0;
-						f = true;
-						break;
-					}
-					else if (isc.isStackable() && isc.isItemEqual(is))
-					{
-//						mod_littleMaidMob.Debug(String.format("%s -> %s", is.getItemName(), isc.getItemName()));
-						f = true;
-						isc.stackSize += is.stackSize;
-						if (isc.stackSize > isc.getMaxStackSize())
+			LMMNX_Event.LMMNX_ItemPutChestEvent event =
+					new LMMNX_Event.LMMNX_ItemPutChestEvent(owner,myChest,is,maidSearchCount);
+			if (is != null){
+				if(!MinecraftForge.EVENT_BUS.post(event)){
+//						mod_littleMaidMob.Debug("getchest2.");
+						boolean f = false;
+						for (int j = 0; j < myChest.getSizeInventory() && is.stackSize > 0; j++)
 						{
-							is.stackSize = isc.stackSize - isc.getMaxStackSize();
-							isc.stackSize = isc.getMaxStackSize();
-						} else {
-							is.stackSize = 0; 
-							break;
+							ItemStack isc = myChest.getStackInSlot(j);
+							if (isc == null)
+							{
+//								mod_littleMaidMob.Debug(String.format("%s -> NULL", is.getItemName()));
+								myChest.setInventorySlotContents(j, is.copy());
+								is.stackSize = 0;
+								f = true;
+								break;
+							}
+							else if (isc.isStackable() && isc.isItemEqual(is))
+							{
+//								mod_littleMaidMob.Debug(String.format("%s -> %s", is.getItemName(), isc.getItemName()));
+								f = true;
+								isc.stackSize += is.stackSize;
+								if (isc.stackSize > isc.getMaxStackSize())
+								{
+									is.stackSize = isc.stackSize - isc.getMaxStackSize();
+									isc.stackSize = isc.getMaxStackSize();
+								} else {
+									is.stackSize = 0; 
+									break;
+								}
+							}
+						}
+						if (is.stackSize <= 0) {
+							owner.maidInventory.setInventorySlotContents(maidSearchCount, null);
+						}
+						if (f) {
+							owner.playSound("random.pop");
+							owner.setSwing(2, LMM_EnumSound.Null, false);
 						}
 					}
-				}
-				if (is.stackSize <= 0) {
-					owner.maidInventory.setInventorySlotContents(maidSearchCount, null);
-				}
-				if (f) {
-					owner.playSound("random.pop");
-					owner.setSwing(2, LMM_EnumSound.Null, false);
-				}
 			}
 //			mod_littleMaidMob.Debug(String.format("getchest3:%d", maidSearchCount));
 			if (++maidSearchCount >= owner.maidInventory.mainInventory.length) {
@@ -403,6 +418,9 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 				if (owner.maidInventory.getFirstEmptyStack() > -1) {
 					LMM_LittleMaidMobNX.Debug("Search clear.");
 					fusedTiles.clear();
+//					if(owner.getMaidModeInt()==mmode_FarmerChest){
+//						owner.setMaidMode("Farmer");
+//					}
 				}
 			}
 		}

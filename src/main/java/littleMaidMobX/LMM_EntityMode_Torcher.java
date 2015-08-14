@@ -107,7 +107,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 
 	@Override
 	public boolean isSearchBlock() {
-		return !owner.isMaidWait();
+		return !owner.isMaidWait()&&(owner.getCurrentEquippedItem()!=null);
 	}
 
 	@Override

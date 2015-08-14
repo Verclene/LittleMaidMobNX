@@ -1,14 +1,15 @@
 package littleMaidMobX;
 
-import mmmlibx.lib.MMMLib;
+import net.blacklab.lmmnx.api.LMMNX_Event;
+import net.blacklab.lmmnx.util.NXCommonUtil;
 import net.blacklab.lmmnx.util.Version;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -90,6 +91,23 @@ public class LMM_EventHook
 					} */
 					arrow.shootingEntity = avatar.getMaid();
 					LMM_LittleMaidMobNX.Debug("Set "+event.entity.getClass()+" field shootingEntity from avator to maid");
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
+		LMM_LittleMaidMobNX.Debug("EVENT CALLED");
+		LMM_EntityLittleMaid maid = event.maid;
+//		IInventory target = event.target;
+		ItemStack stack = event.stack;
+		if(stack.getItem() == Items.sugar|| stack.getItem() == Items.clock ||
+				(event.maidStackIndex==17&&NXCommonUtil.isHelm(stack))){
+			event.setCanceled(true);
+		}
+		if(maid.getMaidModeInt()==LMM_EntityMode_Basic.mmode_FarmerChest){
+			if(stack.getItem()==Items.wheat_seeds||LMM_EntityMode_Farmer.isHoe(maid, stack)){
+				event.setCanceled(true);
 			}
 		}
 	}

@@ -1,8 +1,8 @@
 package net.blacklab.lmmnx.util;
 
-import java.io.File;
-
 import littleMaidMobX.LMM_LittleMaidMobNX;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
 
 public class NXCommonUtil {
 	
@@ -45,6 +45,17 @@ public class NXCommonUtil {
 		if(path.endsWith("/.")) path=path.substring(0,path.length()-1);
 		if(path.endsWith("/")) path=path.substring(0,path.length()-1);
 		return path.substring(0,path.lastIndexOf("/"));
+	}
+	
+	public static boolean isHelm(ItemStack stack){
+		if(stack!=null){
+			if(stack.getItem() instanceof ItemArmor){
+				if(((ItemArmor)stack.getItem()).armorType==0){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
