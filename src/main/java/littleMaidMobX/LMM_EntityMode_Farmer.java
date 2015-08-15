@@ -28,6 +28,16 @@ import net.minecraft.world.World;
 public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	
 	public static final int mmode_Farmer = 0x0023;
+	public static final double limitDistance_Freedom = 361D;
+	public static final double limitDistance_Follow  = 100D;
+	public static final int WATER_RADIUS = 4;
+
+	public static boolean isHoe(LMM_EntityLittleMaid owner, ItemStack pItemStack){
+		return pItemStack.getItem() instanceof ItemHoe ||
+				LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Hoe", pItemStack);
+	}
+
+	private int clearCount = 0;
 
 	public LMM_EntityMode_Farmer(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
@@ -113,11 +123,6 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		return isHoe(owner, pItemStack);
 	}
 	
-	public static boolean isHoe(LMM_EntityLittleMaid owner, ItemStack pItemStack){
-		return pItemStack.getItem() instanceof ItemHoe ||
-				LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Hoe", pItemStack);
-	}
-
 	@Override
 	public boolean isSearchBlock() {
 		return !owner.isMaidWait()&&(owner.getCurrentEquippedItem()!=null);
@@ -139,6 +144,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				return false;
 			}
 		}
+		if(!canMoveThrough(px, py, pz, false, true, false)) return false;
 		if(isUnfarmedLand(px,py,pz)) return true;
 		if(isFarmedLand(px,py,pz)){
 			/*耕地が見つかっても、
@@ -209,8 +215,26 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		return false;
 	}
 
-	public static final double limitDistance_Freedom = 361D;
-	public static final double limitDistance_Follow  = 100D;
+	@Override
+	public void updateAITick(int pMode) {
+		if(pMode==mmode_Farmer||pMode==LMM_EntityMode_Basic.mmode_FarmerChest){
+			if(!canBlockBeSeen(owner.maidTile[0], owner.maidTile[1], owner.maidTile[2], false, true, false)){
+				owner.clearTilePosAll();
+				owner.getNavigator().clearPathEntity();
+			}
+		}
+		if (pMode == mmode_Farmer && owner.getNextEquipItem()) {
+			if(owner.getAIMoveSpeed()>0.5F) owner.setAIMoveSpeed(0.5F);
+			if(owner.maidInventory.getFirstEmptyStack()==-1){
+				owner.setMaidMode("Farmer_C");
+			}
+		}
+		if(pMode==LMM_EntityMode_Basic.mmode_FarmerChest &&
+				owner.maidInventory.getFirstEmptyStack()>-1 &&
+				!owner.mstatWorkingCount.isEnable()){
+			owner.setMaidMode("Farmer");
+		}
+	}
 
 	protected boolean isUnfarmedLand(int x, int y, int z){
 		//耕されておらず、直上が空気ブロック
@@ -238,8 +262,6 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		return false;
 	}
 	
-	public static final int WATER_RADIUS = 4;
-	
 	protected boolean isBlockWatered(int x, int y, int z){
 		BlockPos pos = new BlockPos(x,y,z);
 		Iterator iterator = BlockPos.getAllInBoxMutable(pos.add(-WATER_RADIUS, 0, -WATER_RADIUS),
@@ -260,6 +282,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		return true;
 	}
 
+	/*
 	public boolean canPlaceItemBlockOnSide(World par1World, int par2, int par3, int par4, EnumFacing par5,
 			EntityPlayer par6EntityPlayer, ItemStack par7ItemStack, ItemBlock pItemBlock) {
 		// TODO:マルチ対策用、ItemBlockから丸パクリバージョンアップ時は確認すること
@@ -296,19 +319,5 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		
 		return par1World.canBlockBePlaced(Block.getBlockFromItem(pItemBlock), new BlockPos(par2, par3, par4), false, par5, (Entity)null, par7ItemStack);
 	}
-
-	@Override
-	public void updateAITick(int pMode) {
-		if (pMode == mmode_Farmer && owner.getNextEquipItem()) {
-			if(owner.getAIMoveSpeed()>0.5F) owner.setAIMoveSpeed(0.5F);
-			if(owner.maidInventory.getFirstEmptyStack()==-1){
-				owner.setMaidMode("Farmer_C");
-			}
-		}
-		if(pMode==LMM_EntityMode_Basic.mmode_FarmerChest &&
-				owner.maidInventory.getFirstEmptyStack()>-1 &&
-				!owner.mstatWorkingCount.isEnable()){
-			owner.setMaidMode("Farmer");
-		}
-	}
+	*/
 }
