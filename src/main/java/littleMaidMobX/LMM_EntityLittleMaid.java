@@ -1,6 +1,27 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.*;
+import static littleMaidMobX.LMM_Statics.dataWatch_Absoption;
+import static littleMaidMobX.LMM_Statics.dataWatch_Color;
+import static littleMaidMobX.LMM_Statics.dataWatch_DominamtArm;
+import static littleMaidMobX.LMM_Statics.dataWatch_ExpValue;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Aimebow;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterest;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterestAXIS;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_remainsContract;
+import static littleMaidMobX.LMM_Statics.dataWatch_Free;
+import static littleMaidMobX.LMM_Statics.dataWatch_Gotcha;
+import static littleMaidMobX.LMM_Statics.dataWatch_ItemUse;
+import static littleMaidMobX.LMM_Statics.dataWatch_Mode;
+import static littleMaidMobX.LMM_Statics.dataWatch_Parts;
+import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -27,9 +48,11 @@ import net.blacklab.lmmnx.util.NXCommonUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockStainedGlass;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
@@ -176,7 +199,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean weaponFullAuto;	// 装備がフルオート武器かどうか
 	public boolean weaponReload;	// 装備がリロードを欲しているかどうか
 	public boolean maidCamouflage;
-
 
 	// 音声
 //	protected LMM_EnumSound maidAttackSound;
@@ -1854,6 +1876,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		maidInventory.decrementAnimations();
 
 		// 埋葬対策
+		/*
 		boolean grave = true;
 		grave &= pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ + (double)width * 0.34999999999999998D);
 		grave &= pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ - (double)width * 0.34999999999999998D);
@@ -1863,6 +1886,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (grave) {
 			jump();
 		}
+		*/
 
 		//壁衝突判定
 		//pitchはデフォルト+-180度が北方向(Z負)
@@ -1880,9 +1904,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			float movespeed = getAIMoveSpeed();
 
 			BlockPos targetPos = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py, pz+ZBOUND_BLOCKOFFS[pitchindex]);
+			BlockPos targetPosAir = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+1, pz+ZBOUND_BLOCKOFFS[pitchindex]);
 			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && onGround &&
-					World.doesBlockHaveSolidTopSurface(worldObj, targetPos) &&
-					!(worldObj.getBlockState(targetPos).getBlock() instanceof BlockDoor)){
+					(World.doesBlockHaveSolidTopSurface(worldObj, targetPos)||
+							worldObj.getBlockState(targetPos).getBlock() instanceof BlockFarmland) &&
+					!(worldObj.getBlockState(targetPos).getBlock() instanceof BlockDoor) &&
+					(!worldObj.getBlockState(targetPosAir).getBlock().getMaterial().isOpaque() ||
+							worldObj.getBlockState(targetPosAir).getBlock().getMaterial()==Material.air)){
 				//ジャンプとかさせるとめんどくさいから、Yだけ先に変える
 				setLocationAndAngles(posX, posY+1D, posZ, rotationYaw, rotationPitch);
 				//弧度法に変換。MathHelper.sinの実装が怪しいのでMath.sinを使う
@@ -1890,6 +1918,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				//ナニユエ100分の1がちょうどいいのかは知らん
 				motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
 				motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
+			}
+			
+			BlockPos tpos = new BlockPos(px,py+1,pz);
+			if(worldObj.getBlockState(tpos).getBlock().getMaterial().isOpaque() &&
+					worldObj.getBlockState(tpos).getBlock().getMaterial()!=Material.air){
+				jump();
 			}
 		}
 
@@ -3106,7 +3140,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 待機常態の設定、 isMaidWait系でtrueを返すならAIが勝手に移動を停止させる。
 		maidWait = pflag;
 		setMaidFlags(pflag, dataWatch_Flags_Wait);
-
 		aiSit.setSitting(pflag);
 		//maidWait = pflag;
 		isJumping = false;
@@ -3117,7 +3150,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setPlayingRole(0);
 		if(pflag){
 			//setMaidModeAITasks(null,null);
-			getNavigator().setPath(null, 0);
+			setWorking(false);
+			getNavigator().clearPathEntity();
+			clearTilePosAll();
 			/*
 			func_175449_a(
 					new BlockPos(MathHelper.floor_double(lastTickPosX),

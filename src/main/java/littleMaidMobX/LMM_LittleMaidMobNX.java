@@ -1,6 +1,7 @@
 package littleMaidMobX;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -19,10 +20,10 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -40,7 +41,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2B23-1.8-F1450";
+	public static final String VERSION = "NX2 Build 29";
 	public static final int VERSION_CODE = 4;
 	
 	public static String[] cfg_comment = {
@@ -109,6 +110,9 @@ public class LMM_LittleMaidMobNX {
 	
 	public static boolean cfg_forceLivingSound = false;
 	public static int cfg_coolTimePlaySound = 20;
+	
+	public static List<String> cfg_seedItems;
+	public static List<String> cfg_cropItems;
 
 	//1.8後回し
 	public static Achievement ac_Contract;
@@ -185,6 +189,19 @@ public class LMM_LittleMaidMobNX {
 		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
 		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
 		cfg_coolTimePlaySound = Math.max(cfg.getInt("coolTimePlaySound", 5),20);
+		
+		//配列
+		cfg_seedItems = new ArrayList<String>();
+		String seedItemsOrgStr = cfg.getString("seedItems", "wheat_seeds, carrot, potato");
+		for(String s:seedItemsOrgStr.split(" *, *")){
+			cfg_seedItems.add(s);
+		}
+		
+		cfg_cropItems = new ArrayList<String>();
+		String cropItemsOrgStr = cfg.getString("cropItems", "wheat,carrot,potato");
+		for(String s:cropItemsOrgStr.split(" *, *")){
+			cfg_cropItems.add(s);
+		}
 		
 		try {
 			cfg.saveConfig(getName(), evt);

@@ -2,23 +2,21 @@ package littleMaidMobX;
 
 import java.util.Iterator;
 
+import net.blacklab.lib.ItemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.util.MathHelper;
 
 /**
  * メイド農家。付近の農地に移動し耕作可能であれば耕す。
@@ -33,6 +31,8 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	public static final int WATER_RADIUS = 4;
 
 	public static boolean isHoe(LMM_EntityLittleMaid owner, ItemStack pItemStack){
+		if(pItemStack==null) return false;
+		if(pItemStack.getItem()==null) return false;
 		return pItemStack.getItem() instanceof ItemHoe ||
 				LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Hoe", pItemStack);
 	}
@@ -107,7 +107,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				if (litemstack == null) continue;
 				
 				// クワ
-				if (checkItemStack(litemstack)) {
+				if (isHoe(owner,litemstack)) {
 					return li;
 				}
 			}
@@ -120,7 +120,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	@Override
 	public boolean checkItemStack(ItemStack pItemStack) {
 		if(pItemStack==null) return false;
-		return isHoe(owner, pItemStack);
+		return isHoe(owner, pItemStack)||isSeed(pItemStack.getItem())||isCrop(pItemStack.getItem());
 	}
 	
 	@Override
@@ -144,7 +144,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				return false;
 			}
 		}
-		if(!canMoveThrough(px, py, pz, false, true, false)) return false;
+		if(!canMoveThrough(px, py, pz, py==MathHelper.floor_double(owner.posY-1D), true, false)) return false;
 		if(isUnfarmedLand(px,py,pz)) return true;
 		if(isFarmedLand(px,py,pz)){
 			/*耕地が見つかっても、
@@ -157,7 +157,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 					if(isUnfarmedLand(px+ax,py,pz+az)) return false;
 				}
 			}
-			if(owner.maidInventory.getInventorySlotContainItem(Items.wheat_seeds)==-1)
+			if(getHadSeedIndex()==-1)
 				return false;
 			return true;
 		}
@@ -170,7 +170,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 //		if(owner.worldObj.isRemote) return false;
 		ItemStack curStack = owner.getCurrentEquippedItem();
 
-		boolean haveNothing = !checkItemStack(curStack);
+		boolean haveNothing = !isHoe(owner,curStack);
 		
 		if (!haveNothing && isUnfarmedLand(px,py,pz) &&
 				curStack.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px, py, pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
@@ -189,7 +189,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		}
 		if(isFarmedLand(px,py,pz)){
 			//種を持っている
-			int index = owner.maidInventory.getInventorySlotContainItem(Items.wheat_seeds);
+			int index = getHadSeedIndex();
 			if(index!=-1){
 				ItemStack stack = owner.maidInventory.getStackInSlot(index);
 				int li = stack.stackSize;
@@ -200,7 +200,6 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				owner.setSwing(10, LMM_EnumSound.Null, false);
 				if(stack.stackSize<=0){
 					owner.maidInventory.setInventorySlotContents(index, null);
-					return false;
 				}
 			}
 		}
@@ -210,19 +209,52 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 			owner.worldObj.destroyBlock(pos, true);
 			owner.setSwing(10, LMM_EnumSound.Null, false);
 			executeBlock(pMode,px,py-1,pz);
-			return true;
+//			return true;
+		}
+		return false;
+	}
+	
+	protected int getHadSeedIndex(){
+		int r=-1;
+		for(String fname:LMM_LittleMaidMobNX.cfg_seedItems){
+			Item item = ItemUtil.getItemByStringId(fname);
+			r = owner.maidInventory.getInventorySlotContainItem(item);
+			if(r!=-1) break;
+		}
+		return r;
+	}
+	
+	protected static boolean isSeed(Item pItem){
+		for(String fname:LMM_LittleMaidMobNX.cfg_seedItems){
+			Item item = ItemUtil.getItemByStringId(fname);
+			if(pItem==item) return true;
+		}
+		return false;
+	}
+	
+	protected static boolean isCrop(Item pItem){
+		for(String fname:LMM_LittleMaidMobNX.cfg_cropItems){
+			Item item = ItemUtil.getItemByStringId(fname);
+			if(pItem==item) return true;
 		}
 		return false;
 	}
 
 	@Override
-	public void updateAITick(int pMode) {
-		if(pMode==mmode_Farmer||pMode==LMM_EntityMode_Basic.mmode_FarmerChest){
-			if(!canBlockBeSeen(owner.maidTile[0], owner.maidTile[1], owner.maidTile[2], false, true, false)){
-				owner.clearTilePosAll();
-				owner.getNavigator().clearPathEntity();
-			}
+	public void onUpdate(int pMode) {
+		// TODO 自動生成されたメソッド・スタブ
+		if(pMode==mmode_Farmer&&++clearCount>=300){
+			try{
+				if(!owner.isWorking()){
+					if(owner.aiCollectItem.shouldExecute()) owner.aiCollectItem.updateTask();
+				}
+			}catch(NullPointerException e){}
+			clearCount=0;
 		}
+	}
+
+	@Override
+	public void updateAITick(int pMode) {
 		if (pMode == mmode_Farmer && owner.getNextEquipItem()) {
 			if(owner.getAIMoveSpeed()>0.5F) owner.setAIMoveSpeed(0.5F);
 			if(owner.maidInventory.getFirstEmptyStack()==-1){
@@ -262,6 +294,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		return false;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	protected boolean isBlockWatered(int x, int y, int z){
 		BlockPos pos = new BlockPos(x,y,z);
 		Iterator iterator = BlockPos.getAllInBoxMutable(pos.add(-WATER_RADIUS, 0, -WATER_RADIUS),

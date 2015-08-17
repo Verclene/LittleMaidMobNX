@@ -324,8 +324,8 @@ public abstract class LMM_EntityModeBase {
 		}
 		lblock.setBlockBoundsBasedOnState(worldObj, new BlockPos(pX, pY, pZ));
 		
-		Vec3 vec3do = new Vec3(owner.posX, owner.posY+0.5D/* + owner.getEyeHeight()*/, owner.posZ);
-		Vec3 vec3dt = new Vec3((double)pX + 0.5D, (double)pY + 0.5D, (double)pZ + 0.5D);
+		Vec3 vec3do = new Vec3(owner.posX, owner.posY+0.9D/* + owner.getEyeHeight()*/, owner.posZ);
+		Vec3 vec3dt = new Vec3((double)pX + 0.5D, (double)pY + (toTop?1.9D:0.9D), (double)pZ + 0.5D);
 		MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3do, vec3dt, do1, do2, false);
 		
 		if (movingobjectposition != null && movingobjectposition.typeOfHit == MovingObjectType.BLOCK) {

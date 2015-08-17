@@ -1,8 +1,8 @@
 package littleMaidMobX;
 
+import net.blacklab.lib.Version;
 import net.blacklab.lmmnx.api.LMMNX_Event;
 import net.blacklab.lmmnx.util.NXCommonUtil;
-import net.blacklab.lmmnx.util.Version;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -35,7 +35,7 @@ public class LMM_EventHook
 		}
 		
 		public void run(){
-			Version.VersionData v = Version.getLatestVersion();
+			Version.VersionData v = Version.getLatestVersion("http://mc.el-blacklab.net/lmmnxversion.txt");
 			if(LMM_LittleMaidMobNX.VERSION_CODE < v.code){
 				//バージョンが古い
 				// TODO これメイドのAvatarキャッチしない？
