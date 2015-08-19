@@ -30,7 +30,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 
 	public static final int mmode_Wild			= 0x0000;
 	public static final int mmode_Escorter		= 0x0001;
-	public static final int mmode_FarmerChest	= 0x0024;
+	public static final int mmode_FarmPorter		= 0x0024;
 	
 	private IInventory myInventory;
 	private IInventory myChest;
@@ -38,7 +38,6 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 	private boolean isWorking;
 	private double lastdistance;
 	private int maidSearchCount;
-
 	
 	/**
 	 * Wild, Escorter 
@@ -103,7 +102,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 		ltasks[0] = pDefaultMove;
 		ltasks[1] = pDefaultTargeting;
 		owner.addMaidMode(ltasks, "Escorter", mmode_Escorter);
-		owner.addMaidMode(ltasks, "Farmer_C", mmode_FarmerChest);
+		owner.addMaidMode(ltasks, "FarmPorter", mmode_FarmPorter);
 		
 	}
 
@@ -113,7 +112,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() instanceof ItemHoe ||
 					LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Hoe", litemstack)) {
-				owner.setMaidMode("Farmer_C");
+				owner.setMaidMode("FarmPorter");
 				return true;
 			}
 		}
@@ -134,7 +133,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 				owner.setEquipItem(li, -1);
 			}
 			return true;
-		case mmode_FarmerChest :
+		case mmode_FarmPorter :
 			return true;
 		}
 //		owner.getNavigator().clearPathEntity()
@@ -153,7 +152,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 
 	@Override
 	public boolean isSearchBlock() {
-		if ((owner.getMaidModeInt() == mmode_Escorter||owner.getMaidModeInt()==mmode_FarmerChest)
+		if ((owner.getMaidModeInt() == mmode_Escorter||owner.getMaidModeInt()==mmode_FarmPorter)
 				&& owner.isFreedom() &&
 				owner.maidInventory.getFirstEmptyStack() == -1) {
 			// 対象をまだ見つけていないときは検索を行う。
@@ -405,7 +404,7 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 							owner.playSound("random.pop");
 							owner.setSwing(2, LMM_EnumSound.Null, false);
 						}
-					}
+				}
 			}
 //			mod_littleMaidMob.Debug(String.format("getchest3:%d", maidSearchCount));
 			if (++maidSearchCount >= owner.maidInventory.mainInventory.length) {
@@ -456,10 +455,10 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 						}
 						lastdistance = distance;
 //						mod_littleMaidMob.Debug(String.format("Rerute:%b", hasPath()));
-						if (myChest != null) {
-							myChest.closeInventory(owner.maidAvatar);
-							myChest = null;
-						}
+					}
+					if (myChest != null) {
+						myChest.closeInventory(owner.maidAvatar);
+						myChest = null;
 					}
 				}
 			} else {

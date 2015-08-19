@@ -70,6 +70,13 @@ littleMaidMob.mode.F-Detonator=自由-自爆模式
 littleMaidMob.mode.D-Detonator=兴奋-自爆模式
 littleMaidMob.mode.T-Detonator=巡逻-自爆模式
 
+littleMaidMob.mode.Farmer=农民模式
+littleMaidMob.mode.F-Farmer=自由-农民模式
+littleMaidMob.mode.T-Farmer=巡逻-农民模式
+littleMaidMob.mode.FarmPorter=Porter(Disabled)
+littleMaidMob.mode.F-FarmPorter=Porter(Free)
+littleMaidMob.mode.T-FarmPorter=Porter(Trace)
+
 littleMaidMob.text.Health=健康值
 littleMaidMob.text.AP=装甲值
 littleMaidMob.text.STATUS=血量值

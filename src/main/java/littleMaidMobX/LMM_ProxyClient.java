@@ -171,7 +171,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		// TODO 自動生成されたメソッド・スタブ
 		if(!par1World.isRemote) return;
 		if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT==0){
-			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=2;
+			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=4;
 			par1World.playSound(x, y, z, s, v, p, b);
 		}
 	}

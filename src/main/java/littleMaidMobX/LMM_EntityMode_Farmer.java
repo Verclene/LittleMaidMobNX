@@ -214,36 +214,10 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		return false;
 	}
 	
-	protected int getHadSeedIndex(){
-		int r=-1;
-		for(String fname:LMM_LittleMaidMobNX.cfg_seedItems){
-			Item item = ItemUtil.getItemByStringId(fname);
-			r = owner.maidInventory.getInventorySlotContainItem(item);
-			if(r!=-1) break;
-		}
-		return r;
-	}
-	
-	protected static boolean isSeed(Item pItem){
-		for(String fname:LMM_LittleMaidMobNX.cfg_seedItems){
-			Item item = ItemUtil.getItemByStringId(fname);
-			if(pItem==item) return true;
-		}
-		return false;
-	}
-	
-	protected static boolean isCrop(Item pItem){
-		for(String fname:LMM_LittleMaidMobNX.cfg_cropItems){
-			Item item = ItemUtil.getItemByStringId(fname);
-			if(pItem==item) return true;
-		}
-		return false;
-	}
-
 	@Override
 	public void onUpdate(int pMode) {
 		// TODO 自動生成されたメソッド・スタブ
-		if(pMode==mmode_Farmer&&++clearCount>=300){
+		if(pMode==mmode_Farmer&&++clearCount>=300&&owner.getNavigator().noPath()){
 			try{
 				if(!owner.isWorking()){
 					if(owner.aiCollectItem.shouldExecute()) owner.aiCollectItem.updateTask();
@@ -258,14 +232,40 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		if (pMode == mmode_Farmer && owner.getNextEquipItem()) {
 			if(owner.getAIMoveSpeed()>0.5F) owner.setAIMoveSpeed(0.5F);
 			if(owner.maidInventory.getFirstEmptyStack()==-1){
-				owner.setMaidMode("Farmer_C");
+				owner.setMaidMode("FarmPorter");
 			}
 		}
-		if(pMode==LMM_EntityMode_Basic.mmode_FarmerChest &&
+		if(pMode==LMM_EntityMode_Basic.mmode_FarmPorter &&
 				owner.maidInventory.getFirstEmptyStack()>-1 &&
 				!owner.mstatWorkingCount.isEnable()){
 			owner.setMaidMode("Farmer");
 		}
+	}
+
+	public static boolean isSeed(Item pItem){
+		for(String fname:LMM_LittleMaidMobNX.cfg_seedItems){
+			Item item = ItemUtil.getItemByStringId(fname);
+			if(pItem==item) return true;
+		}
+		return false;
+	}
+
+	public static boolean isCrop(Item pItem){
+		for(String fname:LMM_LittleMaidMobNX.cfg_cropItems){
+			Item item = ItemUtil.getItemByStringId(fname);
+			if(pItem==item) return true;
+		}
+		return false;
+	}
+
+	protected int getHadSeedIndex(){
+		int r=-1;
+		for(String fname:LMM_LittleMaidMobNX.cfg_seedItems){
+			Item item = ItemUtil.getItemByStringId(fname);
+			r = owner.maidInventory.getInventorySlotContainItem(item);
+			if(r!=-1) break;
+		}
+		return r;
 	}
 
 	protected boolean isUnfarmedLand(int x, int y, int z){

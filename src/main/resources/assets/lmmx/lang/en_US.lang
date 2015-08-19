@@ -11,8 +11,8 @@ littleMaidMob.mode.D-Torcher=D-Torcher
 littleMaidMob.mode.T-Torcher=T-Torcher
 
 littleMaidMob.mode.Archer=Archer
-littleMaidMob.mode.F-Archer=F-Archer
-littleMaidMob.mode.T-Archer=T-Archer
+littleMaidMob.mode.F-Archer=Area defender(A)
+littleMaidMob.mode.T-Archer=Trace defender(A)
 littleMaidMob.mode.D-Archer=D-Archer
 littleMaidMob.mode.Blazingstar=Blazingstar
 littleMaidMob.mode.F-Blazingstar=F-Blazingstar
@@ -20,9 +20,9 @@ littleMaidMob.mode.T-Blazingstar=T-Blazingstar
 littleMaidMob.mode.D-Blazingstar=D-Blazingstar
 
 littleMaidMob.mode.Playing=Playing
-//littleMaidMob.mode.T-Playing=Playing
-//littleMaidMob.mode.F-Playing=Playing
-//littleMaidMob.mode.D-Playing=Playing
+littleMaidMob.mode.T-Playing=Playing
+littleMaidMob.mode.F-Playing=Playing
+littleMaidMob.mode.D-Playing=Playing
 
 littleMaidMob.mode.Pharmacist=Pharmacist
 littleMaidMob.mode.T-Pharmacist=T-Pharmacist
@@ -47,14 +47,13 @@ littleMaidMob.mode.F-Escorter=Freedom
 littleMaidMob.mode.D-Escorter=D-Escorter
 littleMaidMob.mode.T-Escorter=Tracer
 
-
 littleMaidMob.mode.Fencer=Fencer
-littleMaidMob.mode.F-Fencer=F-Fencer
-littleMaidMob.mode.T-Fencer=T-Fencer
+littleMaidMob.mode.F-Fencer=Area defender(S)
+littleMaidMob.mode.T-Fencer=Trace defender(S)
 littleMaidMob.mode.D-Fencer=D-Fencer
 littleMaidMob.mode.Bloodsucker=Bloodsucker
 littleMaidMob.mode.F-Bloodsucker=F-Bloodsucker
-littleMaidMob.mode.T-Bloodsucker=T-Bloodsucker
+littleMaidMob.mode.T-Bloodsucker=Trace Bloodsucker
 littleMaidMob.mode.D-Bloodsucker=D-Bloodsucker
 
 littleMaidMob.mode.Ripper=Ripper
@@ -69,6 +68,12 @@ littleMaidMob.mode.Detonator=Detonator
 littleMaidMob.mode.F-Detonator=F-Detonator
 littleMaidMob.mode.D-Detonator=D-Detonator
 littleMaidMob.mode.T-Detonator=T-Detonator
+littleMaidMob.mode.Farmer=Harvester girl
+littleMaidMob.mode.F-Farmer=Farmer
+littleMaidMob.mode.T-Farmer=Trace Farmer
+littleMaidMob.mode.FarmPorter=Porter(Disabled)
+littleMaidMob.mode.F-FarmPorter=Porter(Free)
+littleMaidMob.mode.T-FarmPorter=Porter(Trace)
 
 littleMaidMob.text.Health=Health
 littleMaidMob.text.AP=AP

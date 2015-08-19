@@ -31,7 +31,6 @@ public class LMMNX_OldZipTexturesLoader implements IResourcePack {
 			String valuetmp = keys.get(key);
 			if(valuetmp==null){
 				File f = keysf.get(key);
-				MMMLib.Debug("TMPED CALLED");
 				return new FileInputStream(f);
 			}
 			File file = new File(valuetmp);
@@ -67,7 +66,6 @@ public class LMMNX_OldZipTexturesLoader implements IResourcePack {
 	public boolean resourceExists(ResourceLocation arg0) {
 		String key = arg0.getResourcePath();
 		if(key.startsWith("/")) key = key.substring(1);
-		MMMLib.Debug("TMPED CHECK %s", key);
 		return keys.containsKey(key)||keysf.containsKey(key);
 	}
 

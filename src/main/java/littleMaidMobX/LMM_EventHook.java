@@ -97,18 +97,22 @@ public class LMM_EventHook
 	
 	@SubscribeEvent
 	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
-		LMM_LittleMaidMobNX.Debug("EVENT CALLED");
 		LMM_EntityLittleMaid maid = event.maid;
 //		IInventory target = event.target;
 		ItemStack stack = event.stack;
-		if(stack.getItem() == Items.sugar|| stack.getItem() == Items.clock ||
-				(event.maidStackIndex==17&&NXCommonUtil.isHelm(stack))){
+		if(stack.getItem() == Items.sugar|| stack.getItem() == Items.clock){
 			event.setCanceled(true);
 		}
-		if(maid.getMaidModeInt()==LMM_EntityMode_Basic.mmode_FarmerChest){
-			if(stack.getItem()==Items.wheat_seeds||LMM_EntityMode_Farmer.isHoe(maid, stack)){
+		if(maid.getMaidModeInt()==LMM_EntityMode_Basic.mmode_FarmPorter){
+			if(LMM_EntityMode_Farmer.isSeed(stack.getItem())||LMM_EntityMode_Farmer.isHoe(maid, stack)){
 				event.setCanceled(true);
 			}
+			if(event.maidStackIndex>13){
+				event.setCanceled(false);
+			}
+		}
+		if(event.maidStackIndex==17&&NXCommonUtil.isHelm(stack)){
+			event.setCanceled(true);
 		}
 	}
 }
