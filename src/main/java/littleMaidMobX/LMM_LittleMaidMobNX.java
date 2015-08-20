@@ -8,6 +8,7 @@ import java.util.Random;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.ConfigList;
+import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -41,8 +42,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2 Build 29";
-	public static final int VERSION_CODE = 2;
+	public static final String VERSION = "NX2 Build 30";
+	public static final int VERSION_CODE = 4;
 	
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
@@ -111,9 +112,6 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_forceLivingSound = false;
 	public static int cfg_coolTimePlaySound = 20;
 	
-	public static List<String> cfg_seedItems;
-	public static List<String> cfg_cropItems;
-
 	//1.8後回し
 	public static Achievement ac_Contract;
 
@@ -191,16 +189,14 @@ public class LMM_LittleMaidMobNX {
 		cfg_coolTimePlaySound = Math.max(cfg.getInt("coolTimePlaySound", 5),20);
 		
 		//配列
-		cfg_seedItems = new ArrayList<String>();
 		String seedItemsOrgStr = cfg.getString("seedItems", "wheat_seeds, carrot, potato");
 		for(String s:seedItemsOrgStr.split(" *, *")){
-			cfg_seedItems.add(s);
+			LMMNX_API_Farmer.addItemsForSeed(s);
 		}
 		
-		cfg_cropItems = new ArrayList<String>();
-		String cropItemsOrgStr = cfg.getString("cropItems", "wheat,carrot,potato");
+		String cropItemsOrgStr = cfg.getString("cropItems", "wheat, carrot, potato");
 		for(String s:cropItemsOrgStr.split(" *, *")){
-			cfg_cropItems.add(s);
+			LMMNX_API_Farmer.addItemsForCrop(s);
 		}
 		
 		try {

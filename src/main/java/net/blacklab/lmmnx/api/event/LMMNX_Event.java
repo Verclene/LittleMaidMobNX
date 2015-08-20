@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx.api;
+package net.blacklab.lmmnx.api.event;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.inventory.IInventory;

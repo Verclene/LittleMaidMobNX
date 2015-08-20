@@ -111,7 +111,7 @@ public class MMMLib {
 		
 		// 旧モデル用変換開始
 		MMMTransformer.isEnable = true;
-		MultiModelManager.instance.execute();
+//		MultiModelManager.instance.execute();
 		
 		// TODO test
 		List<File> llist = FileManager.getAllmodsFiles(getClass().getClassLoader(), true);

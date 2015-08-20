@@ -23,7 +23,7 @@ public abstract class FileLoaderBase {
 		List<File> llist = FileManager.getAllmodsFiles(getClass().getClassLoader(), true);
 		for (File lf : llist) {
 			String ls = lf.getName();
-			if (isZipLoad() && ls.matches("(.+).(zip|jar)$")) {
+			if (isPrefixMatched(ls) && isZipLoad() && ls.matches("(.+).(zip|jar)$")) {
 				decodeZip(lf);
 			} if (lf.isDirectory()) {
 				decodeDir(lf, lf);
@@ -35,6 +35,14 @@ public abstract class FileLoaderBase {
 				}
 			}
 		}
+	}
+	
+	private static boolean isPrefixMatched(String name){
+		boolean flag = false;
+		for(String f:MMM_TextureManager.searchFileNamePrefix){
+			if(name.indexOf(f)!=-1) flag = true; 
+		}
+		return flag;
 	}
 
 	/**

@@ -1,10 +1,13 @@
 package net.blacklab.lmmnx.util;
 
+import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_LittleMaidMobNX;
+import littleMaidMobX.LMM_TriggerSelect;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 
-public class NXCommonUtil {
+public class LMMNX_Util {
 	
 	/**
 	 * ファイルパスをLinux区切りに変換し、間に挟まった"."を除去します。
@@ -56,6 +59,16 @@ public class NXCommonUtil {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 渡されたItemStackがクワのものかどうか
+	 */
+	public static boolean isHoe(LMM_EntityLittleMaid owner, ItemStack pItemStack){
+		if(pItemStack==null) return false;
+		if(pItemStack.getItem()==null) return false;
+		return pItemStack.getItem() instanceof ItemHoe ||
+				LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Hoe", pItemStack);
 	}
 
 }

@@ -43,8 +43,8 @@ import mmmlibx.lib.MMM_TextureData;
 import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
-import net.blacklab.lmmnx.api.LMMNX_IItemSpecialSugar;
-import net.blacklab.lmmnx.util.NXCommonUtil;
+import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
+import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoublePlant;
@@ -1845,7 +1845,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					if (!isBloodsuck()) {
 						// 通常時は回復優先
 						if (lhealth < getMaxHealth()) {
-							consumeSugar(EnumConsumeSugar.CONSUMESUGAR_HEAL);
+							consumeSugar(EnumConsumeSugar.HEAL);
 						}
 					}
 				}
@@ -2032,18 +2032,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //					mod_LMM_littleMaidMob.Debug("isRemort:" + worldObj.isRemote);
 					// 回復
 					if (getHealth() < getMaxHealth()) {
-						consumeSugar(EnumConsumeSugar.CONSUMESUGAR_HEAL);
+						consumeSugar(EnumConsumeSugar.HEAL);
 					}
 					// つまみ食い
 					if (rand.nextInt(50000) == 0) {
-						consumeSugar(EnumConsumeSugar.CONSUMESUGAR_OTHER);
+						consumeSugar(EnumConsumeSugar.OTHER);
 					}
 					// 契約更新
 					if (isContractEX()) {
 						float f = getContractLimitDays();
 						if (f <= 6) {
 							// 契約更新
-							consumeSugar(EnumConsumeSugar.CONSUMESUGAR_RECONTRACT);
+							consumeSugar(EnumConsumeSugar.RECONTRACT);
 						}
 					}
 				}
@@ -3275,9 +3275,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	public static enum EnumConsumeSugar{
-		/**通常回復**/CONSUMESUGAR_HEAL,
-		/**契約更新**/CONSUMESUGAR_RECONTRACT,
-		/**その他（つまみ食いとか）**/CONSUMESUGAR_OTHER
+		/**通常回復**/HEAL,
+		/**契約更新**/RECONTRACT,
+		/**その他（つまみ食いとか）**/OTHER
 	};
 
 	/** 砂糖を食べる。インベントリの左上から消費する。
@@ -3301,14 +3301,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		if(item==null||stack==null||index==-1) return;
 		if(item==Items.sugar){
-			eatSugar(true, true, mode==EnumConsumeSugar.CONSUMESUGAR_RECONTRACT);
+			eatSugar(true, true, mode==EnumConsumeSugar.RECONTRACT);
 		}else if(item instanceof LMMNX_IItemSpecialSugar){
 			//モノグサ実装。良い子の皆さんはちゃんとif使うように…
-			eatSugar(
-					mode==EnumConsumeSugar.CONSUMESUGAR_RECONTRACT
-							?((LMMNX_IItemSpecialSugar)item).onSugarEatenRecontract(this, stack)
-							:((LMMNX_IItemSpecialSugar)item).onSugarEatenHeal(this, mode==EnumConsumeSugar.CONSUMESUGAR_HEAL, stack),
-					true, false);
+			eatSugar(((LMMNX_IItemSpecialSugar)item).onSugarEaten(this, mode, stack),true, mode==EnumConsumeSugar.RECONTRACT);
 		}
 		maidInventory.decrStackSize(index, 1);
 	}
@@ -3441,7 +3437,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 	
 	public boolean isHeadMount(){
-		return NXCommonUtil.isHelm(maidInventory.mainInventory[17]);
+		return LMMNX_Util.isHelm(maidInventory.mainInventory[17]);
 	}
 
 	/**

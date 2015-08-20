@@ -3,6 +3,8 @@ package littleMaidMobX;
 import java.util.Iterator;
 
 import net.blacklab.lib.ItemUtil;
+import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
+import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockFarmland;
@@ -12,7 +14,6 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -29,13 +30,6 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	public static final double limitDistance_Freedom = 361D;
 	public static final double limitDistance_Follow  = 100D;
 	public static final int WATER_RADIUS = 4;
-
-	public static boolean isHoe(LMM_EntityLittleMaid owner, ItemStack pItemStack){
-		if(pItemStack==null) return false;
-		if(pItemStack.getItem()==null) return false;
-		return pItemStack.getItem() instanceof ItemHoe ||
-				LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Hoe", pItemStack);
-	}
 
 	private int clearCount = 0;
 
@@ -72,7 +66,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		// TODO 自動生成されたメソッド・スタブ
 		ItemStack litemstack = owner.maidInventory.getStackInSlot(0);
 		if (litemstack != null) {
-			if (isHoe(owner, litemstack)) {
+			if (LMMNX_Util.isHoe(owner, litemstack)) {
 				owner.setMaidMode("Farmer");
 				return true;
 			}
@@ -107,7 +101,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				if (litemstack == null) continue;
 				
 				// クワ
-				if (isHoe(owner,litemstack)) {
+				if (LMMNX_Util.isHoe(owner,litemstack)) {
 					return li;
 				}
 			}
@@ -120,7 +114,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	@Override
 	public boolean checkItemStack(ItemStack pItemStack) {
 		if(pItemStack==null) return false;
-		return isHoe(owner, pItemStack)||isSeed(pItemStack.getItem())||isCrop(pItemStack.getItem());
+		return LMMNX_Util.isHoe(owner, pItemStack)||LMMNX_API_Farmer.isSeed(pItemStack.getItem())||LMMNX_API_Farmer.isCrop(pItemStack.getItem());
 	}
 	
 	@Override
@@ -170,7 +164,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 //		if(owner.worldObj.isRemote) return false;
 		ItemStack curStack = owner.getCurrentEquippedItem();
 
-		boolean haveNothing = !isHoe(owner,curStack);
+		boolean haveNothing = !LMMNX_Util.isHoe(owner,curStack);
 		
 		if (!haveNothing && isUnfarmedLand(px,py,pz) &&
 				curStack.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px, py, pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
@@ -242,25 +236,9 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		}
 	}
 
-	public static boolean isSeed(Item pItem){
-		for(String fname:LMM_LittleMaidMobNX.cfg_seedItems){
-			Item item = ItemUtil.getItemByStringId(fname);
-			if(pItem==item) return true;
-		}
-		return false;
-	}
-
-	public static boolean isCrop(Item pItem){
-		for(String fname:LMM_LittleMaidMobNX.cfg_cropItems){
-			Item item = ItemUtil.getItemByStringId(fname);
-			if(pItem==item) return true;
-		}
-		return false;
-	}
-
 	protected int getHadSeedIndex(){
 		int r=-1;
-		for(String fname:LMM_LittleMaidMobNX.cfg_seedItems){
+		for(String fname:LMMNX_API_Farmer.getItemsListForSeed()){
 			Item item = ItemUtil.getItemByStringId(fname);
 			r = owner.maidInventory.getInventorySlotContainItem(item);
 			if(r!=-1) break;
