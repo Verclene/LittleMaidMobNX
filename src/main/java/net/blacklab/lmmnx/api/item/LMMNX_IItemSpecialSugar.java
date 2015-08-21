@@ -25,5 +25,5 @@ public interface LMMNX_IItemSpecialSugar {
 	 * @return falseを返すとモード切替をしなくなる。
 	 */
 	public boolean onSugarInteract(World world, EntityPlayer player, ItemStack stack, LMM_EntityLittleMaid maid);
-
+	
 }

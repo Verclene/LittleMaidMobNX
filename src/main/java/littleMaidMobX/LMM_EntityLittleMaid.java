@@ -43,6 +43,7 @@ import mmmlibx.lib.MMM_TextureData;
 import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
+import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
 import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraft.block.Block;
@@ -727,10 +728,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 			// NX1B47:サウンド乱数制限をクライアント依存に
 			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
-				if(LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0){
-					LMM_LittleMaidMobNX.Debug("PPPSKIP");
+				if(LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0)
 					return;
-				}
 			}
 
 			String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
@@ -1057,7 +1056,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		// 正常時は回復優先処理
-		if (getHealth() < 10 && !isBloodsuck() && maidInventory.hasItem(Items.sugar)) {
+		if (getHealth() < 10 && !isBloodsuck() && LMMNX_API_Item.hasSugar(this)) {
 			return true;
 		}
 
@@ -1076,7 +1075,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean isBreedingItem(ItemStack par1ItemStack) {
 		// お好みは何？
 		if (isContractEX()) {
-			return par1ItemStack.getItem() == Items.sugar;
+			return LMMNX_API_Item.isSugar(par1ItemStack.getItem());
 		} else {
 			return par1ItemStack.getItem() == Items.cake;
 		}
@@ -2807,7 +2806,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						}
 						if (isRemainsContract()) {
 							// 通常
-							if (itemstack1.getItem() == Items.sugar||itemstack1.getItem() instanceof LMMNX_IItemSpecialSugar) {
+							if (LMMNX_API_Item.isSugar(itemstack1.getItem())) {
 								// モード切替
 								boolean cmode = true;
 								if(itemstack1.getItem() instanceof LMMNX_IItemSpecialSugar){
@@ -3292,7 +3291,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			ItemStack ts = stacklist[i];
 			if(ts==null)continue;
 			Item ti = ts.getItem();
-			if(ti == Items.sugar||ti instanceof LMMNX_IItemSpecialSugar){
+			if(LMMNX_API_Item.isSugar(ti)){
 				stack = ts;
 				item = ti;
 				index = i;

@@ -27,7 +27,6 @@ public class LMMNX_Util {
 	 * @return
 	 */
 	public static String getClassName(String path, String root){
-		LMM_LittleMaidMobNX.Debug("GETCLASS %s - %s", path, root);
 		if(!path.endsWith(".class")) return null; 
 		
 		if(root!=null){

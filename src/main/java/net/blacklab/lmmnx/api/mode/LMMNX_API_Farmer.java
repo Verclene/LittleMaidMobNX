@@ -31,20 +31,36 @@ public class LMMNX_API_Farmer {
 		return false;
 	}
 	
+	/**
+	 * 「種」としてアイテムを登録
+	 * @param string 文字列アイテムID
+	 */
 	public static void addItemsForSeed(String string){
 		api_seedItems.add(string);
 	}
 	
+	/**
+	 * 「穀物」としてアイテムを登録
+	 * @param string 文字列アイテムID
+	 */
 	public static void addItemsForCrop(String string){
 		api_cropItems.add(string);
 	}
 	
-	public static List<String> getItemsListForSeed(){
-		return api_seedItems;
+	/**
+	 * 登録されている「種」を取得
+	 * @return 登録アイテムの文字列IDが列挙されたArrayList
+	 */
+	public static ArrayList<String> getItemsListForSeed(){
+		return new ArrayList<String>(api_seedItems);
 	}
 	
-	public static List<String> getItemsListForCrop(){
-		return api_cropItems;
+	/**
+	 * 登録されている「穀物」を取得
+	 * @return 登録アイテムの文字列IDが列挙されたArrayList
+	 */
+	public static ArrayList<String> getItemsListForCrop(){
+		return new ArrayList<String>(api_cropItems);
 	}
 
 }

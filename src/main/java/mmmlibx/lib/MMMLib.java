@@ -6,7 +6,6 @@ import java.util.List;
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.guns.GunsBase;
 import mmmlibx.lib.multiModel.MMMLoader.MMMTransformer;
-import mmmlibx.lib.multiModel.texture.MultiModelManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;

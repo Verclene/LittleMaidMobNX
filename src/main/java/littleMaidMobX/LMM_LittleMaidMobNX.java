@@ -1,7 +1,6 @@
 package littleMaidMobX;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -14,7 +13,6 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -42,9 +40,10 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2 Build 30";
+	public static final String VERSION = "NX2 Build 31";
 	public static final int VERSION_CODE = 4;
-	
+
+	/*
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
 		"spawnLimit = Maximum spawn count in the World.",
@@ -61,9 +60,10 @@ public class LMM_LittleMaidMobNX {
 		"Dominant = Spawn Anywhere.",
 		"Aggressive = true: Will be hostile, false: Is a pacifist",
 		"IgnoreItemList = aaa, bbb, ccc: Items little maid to ignore",
-//		"AchievementID = used Achievement index.(0 = Disable)",
-//		"UniqueEntityId = UniqueEntityId(0 is AutoAssigned. max 255)"
+		"AchievementID = used Achievement index.(0 = Disable)",
+		"UniqueEntityId = UniqueEntityId(0 is AutoAssigned. max 255)"
 	};
+	*/
 
 	public static ConfigList cfg;
 //	@MLProp(info="Relative spawn weight. The lower the less common. 10=pigs. 0=off")
@@ -104,7 +104,6 @@ public class LMM_LittleMaidMobNX {
 //	public static boolean AlphaBlend = true;
 //	@MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
-	public static String cfg_IgnoreItemList = "arsmagica2";
 	//サウンド試験調整
 	public static boolean cfg_ignoreForceSound = false;
 	public static int cfg_soundPlayChance = 2;
@@ -174,7 +173,6 @@ public class LMM_LittleMaidMobNX {
 		cfg_defaultTexture = "";
 		cfg_Dominant = cfg.getBoolean("Dominant", false);
 		cfg_enableSpawnEgg = cfg.getBoolean("enableSpawnEgg", true);
-		cfg_IgnoreItemList = cfg.getString("IgnoreItemList", "");
 		cfg_maxGroupSize = cfg.getInt("maxGroupSize", 3);
 		cfg_minGroupSize = cfg.getInt("minGroupSize", 1);
 		cfg_PrintDebugMessage = cfg.getBoolean("PrintDebugMessage", false);
@@ -211,19 +209,12 @@ public class LMM_LittleMaidMobNX {
 
 		MMM_TextureManager.instance.init();
 
-		EntityRegistry.registerModEntity(LMM_EntityLittleMaid.class, "LittleMaidX", 0, instance, 80, 3, true);
+		EntityRegistry.registerModEntity(LMM_EntityLittleMaid.class, "LittleMaidX", 0, instance, 20, 3, true);
 
-		/* langファイルに移動
-		ModLoader.addLocalization("entity.LittleMaidX.name", "LittleMaidX");
-		ModLoader.addLocalization("entity.LittleMaidX.name", "ja_JP", "リトルメイド");
-		*/
-		// アイテム自体は登録しておき、レシピを隠して無効化
 		spawnEgg = new LMM_ItemSpawnEgg();
 		spawnEgg.setUnlocalizedName(DOMAIN + ":spawn_lmmx_egg");
-		//spawnEgg.setTextureName(DOMAIN + ":spawn_lmmx_egg");
 		GameRegistry.registerItem(spawnEgg, "spawn_lmmx_egg");
 		if (cfg_enableSpawnEgg) {
-			// 招喚用レシピを追加
 			GameRegistry.addRecipe(new ItemStack(spawnEgg, 1), new Object[] {
 				"scs",
 				"sbs",
@@ -248,22 +239,12 @@ public class LMM_LittleMaidMobNX {
 		//Model
 		if(evt.getSide()==Side.CLIENT) ModelLoader.setCustomModelResourceLocation(LMM_LittleMaidMobNX.spawnEgg, 0, new ModelResourceLocation("lmmx:spawn_lmmx_egg","inventory"));
 
-//		Debug("GUID-sneak: %s", LMM_EntityLittleMaid.maidUUIDSneak.toString());
 		proxy.loadSounds();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event){
 		if (MMM_Helper.isClient) {
-			// 名称変換テーブル
-			/* langファイルに移動
-			ModLoader.addLocalization("littleMaidMob.text.Health", "Health");
-			ModLoader.addLocalization("littleMaidMob.text.Health", "ja_JP", "メイド強度");
-			ModLoader.addLocalization("littleMaidMob.text.AP", "AP");
-			ModLoader.addLocalization("littleMaidMob.text.AP", "ja_JP", "メイド装甲");
-			ModLoader.addLocalization("littleMaidMob.text.STATUS", "Status");
-			ModLoader.addLocalization("littleMaidMob.text.STATUS", "ja_JP", "メイド状態");
-			*/
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
 			defaultResourcePacks.add(new LMM_SoundResourcePack());
 			defaultResourcePacks.add(new LMMNX_OldZipTexturesLoader());
@@ -279,8 +260,6 @@ public class LMM_LittleMaidMobNX {
 	{
 		// カンマ区切りのアイテム名のリストを配列にして設定
 		// "aaa, bbb,ccc  " -> "aaa" "bbb" "ccc"
-		ignoreItemList = cfg_IgnoreItemList.trim().split("\\s*,\\s*");
-
 		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
 		MinecraftForge.EVENT_BUS.register(new LMM_EventHook());
 
@@ -296,7 +275,6 @@ public class LMM_LittleMaidMobNX {
 			}
 			else
 			{
-				// 通常スポーン設定バイオームは適当
 				biomeList = new BiomeGenBase[]{
 						BiomeGenBase.desert,
 						BiomeGenBase.plains,
@@ -334,31 +312,4 @@ public class LMM_LittleMaidMobNX {
 		}
 	}
 
-
-	// TODO ここから下はとりあえずいらんと思う
-	
-	private static String ignoreItemList[] = new String[]{};
-
-	public static boolean isMaidIgnoreItem(ItemStack item)
-	{
-		return item!=null && item.getItem()!=null && isMaidIgnoreItem(item.getItem());
-	}
-	public static boolean isMaidIgnoreItem(Item item)
-	{
-		/*
-		if(item!=null)
-		{
-			String name = (String) Item.itemRegistry.getNameForObject(item);
-			for(String ignoreItemName : ignoreItemList)
-			{
-				if(name.indexOf(ignoreItemName) != -1)
-				{
-					return true;
-				}
-			}
-		}
-		*/
-		return false;
-
-	}
 }

@@ -2,6 +2,7 @@ package littleMaidMobX;
 
 import net.blacklab.lib.Version;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
+import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -21,7 +22,7 @@ public class LMM_EventHook
 	{
 		if(event.entityPlayer instanceof LMM_EntityLittleMaidAvatar)
 		{
-			if(event.item!=null && LMM_LittleMaidMobNX.isMaidIgnoreItem(event.item.getEntityItem()))
+			if(event.item!=null)
 			{
 				event.setCanceled(true);
 			}
@@ -101,7 +102,7 @@ public class LMM_EventHook
 		LMM_EntityLittleMaid maid = event.maid;
 //		IInventory target = event.target;
 		ItemStack stack = event.stack;
-		if(stack.getItem() == Items.sugar|| stack.getItem() == Items.clock){
+		if(LMMNX_API_Item.isSugar(stack.getItem())|| stack.getItem() == Items.clock){
 			event.setCanceled(true);
 		}
 		if(maid.getMaidModeInt()==LMM_EntityMode_Basic.mmode_FarmPorter){

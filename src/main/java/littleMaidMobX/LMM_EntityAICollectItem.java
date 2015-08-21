@@ -2,6 +2,7 @@ package littleMaidMobX;
 
 import java.util.List;
 
+import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
@@ -49,7 +50,7 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 								ei.posZ - MathHelper.cos(ep.rotationYaw * 0.01745329252F) * 2.0D) > 7.5D))
 				{
 					ItemStack lstack = ei.getEntityItem();
-					if ((lstack.getItem() != Items.sugar)) {
+					if (!LMMNX_API_Item.isSugar(lstack.getItem())) {
 						if ((theMaid.maidActiveModeClass == null)) {
 							return false;
 						}
