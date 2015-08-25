@@ -52,6 +52,9 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() instanceof ItemPotion && !MMM_Helper.hasEffect(litemstack)) {
 				owner.setMaidMode("Pharmacist");
+				if (LMM_LittleMaidMobNX.ac_Pharmacist != null) {
+					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Pharmacist);
+				}
 				return true;
 			}
 		}

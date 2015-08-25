@@ -56,6 +56,9 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() instanceof ItemFood || (litemstack.getItem() instanceof ItemPotion && MMM_Helper.hasEffect(litemstack))) {
 				owner.setMaidMode("Healer");
+				if (LMM_LittleMaidMobNX.ac_Healer != null) {
+					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Healer);
+				}
 				return true;
 			}
 		}

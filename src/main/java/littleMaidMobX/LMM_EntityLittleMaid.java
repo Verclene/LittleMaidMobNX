@@ -43,9 +43,9 @@ import mmmlibx.lib.MMM_TextureData;
 import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
+import net.blacklab.lib.ItemUtil;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
-import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoublePlant;
@@ -3436,7 +3436,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 	
 	public boolean isHeadMount(){
-		return LMMNX_Util.isHelm(maidInventory.mainInventory[17]);
+		return ItemUtil.isHelm(maidInventory.mainInventory[17]);
 	}
 
 	/**

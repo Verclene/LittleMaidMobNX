@@ -143,10 +143,10 @@ public class LMM_GuiInventory extends GuiContainer {
 //	      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F / 1.0F, 240F / 1.0F);
 //	      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.popMatrix();
-		RenderHelper.disableStandardItemLighting();
+//		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableColorMaterial();
 		GlStateManager.disableRescaleNormal();
-//		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
 		GlStateManager.disableTexture2D();
 		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
@@ -159,7 +159,7 @@ public class LMM_GuiInventory extends GuiContainer {
 			lrl = fguiTex;
 		}
 		Client.setTexture(lrl);
-//		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		int lj = guiLeft;
 		int lk = guiTop;
 		drawTexturedModalRect(lj, lk, 0, 0, xSize, ySize);
@@ -389,9 +389,9 @@ public class LMM_GuiInventory extends GuiContainer {
 				drawString(this.mc.fontRendererObj, ls2, 52 - ltw2 / 2, lby + 10, -1);
 			}
 			GL11.glPopMatrix();
-			RenderHelper.enableStandardItemLighting();
-//			GL11.glEnable(GL11.GL_LIGHTING);
-//			GL11.glEnable(GL11.GL_DEPTH_TEST);
+//			RenderHelper.enableStandardItemLighting();
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		} else {
 			txbutton[0].visible = false;
 			txbutton[1].visible = false;

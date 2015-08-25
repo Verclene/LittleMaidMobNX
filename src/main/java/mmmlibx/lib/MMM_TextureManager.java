@@ -25,8 +25,8 @@ import java.util.zip.ZipInputStream;
 
 import littleMaidMobX.LMMNX_OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.*;
+import net.blacklab.lib.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
-import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -652,23 +652,23 @@ public class MMM_TextureManager {
 				if(nfile.isDirectory()) {
 					addTexturesDir(nfile, pSearch);
 				} else {
-					String tn = LMMNX_Util.getLinuxAntiDotName(nfile.getAbsolutePath());
-					String rmn = LMMNX_Util.getLinuxAntiDotName(FileManager.dirMods.getAbsolutePath());
+					String tn = FileClassUtil.getLinuxAntiDotName(nfile.getAbsolutePath());
+					String rmn = FileClassUtil.getLinuxAntiDotName(FileManager.dirMods.getAbsolutePath());
 					ADDMODEL: if (nfile.getName().endsWith(".class")) {
 						if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
-							String rdn = LMMNX_Util.getLinuxAntiDotName(FileManager.dirDevClasses.getAbsolutePath());
+							String rdn = FileClassUtil.getLinuxAntiDotName(FileManager.dirDevClasses.getAbsolutePath());
 							if(tn.startsWith(rdn)){
-								addModelClass(LMMNX_Util.getClassName(tn, rdn),pSearch);
+								addModelClass(FileClassUtil.getClassName(tn, rdn),pSearch);
 								break ADDMODEL;
 							}
 							for(File f:FileManager.dirDevIncludeClasses){
-								String rin = LMMNX_Util.getLinuxAntiDotName(f.getAbsolutePath());
+								String rin = FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath());
 								if(tn.startsWith(rin)){
-									addModelClass(LMMNX_Util.getClassName(tn, rin),pSearch);
+									addModelClass(FileClassUtil.getClassName(tn, rin),pSearch);
 									break ADDMODEL;
 								}
 							}
-						}else if(tn.startsWith(rmn)) addModelClass(LMMNX_Util.getClassName(tn, rmn), pSearch);
+						}else if(tn.startsWith(rmn)) addModelClass(FileClassUtil.getClassName(tn, rmn), pSearch);
 					} else if(nfile.getName().endsWith(".png")) {
 						String s = nfile.getPath().replace('\\', '/');
 						int i = s.indexOf(pSearch[1]);
@@ -676,7 +676,7 @@ public class MMM_TextureManager {
 							// 対象はテクスチャディレクトリ
 							addTextureName(s.substring(i), pSearch);
 							if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE) for(File f:FileManager.dirDevIncludeClasses){
-								String rin = LMMNX_Util.getLinuxAntiDotName(f.getAbsolutePath());
+								String rin = FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath());
 								if(tn.startsWith(rin)){
 									String cname = tn.substring(rin.length()+1);
 									String pr="assets/minecraft/";

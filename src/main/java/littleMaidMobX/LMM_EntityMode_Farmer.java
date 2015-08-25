@@ -4,7 +4,6 @@ import java.util.Iterator;
 
 import net.blacklab.lib.ItemUtil;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
-import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockFarmland;
@@ -66,8 +65,11 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		// TODO 自動生成されたメソッド・スタブ
 		ItemStack litemstack = owner.maidInventory.getStackInSlot(0);
 		if (litemstack != null) {
-			if (LMMNX_Util.isHoe(owner, litemstack)) {
+			if (LMMNX_API_Farmer.isHoe(owner, litemstack)) {
 				owner.setMaidMode("Farmer");
+				if (LMM_LittleMaidMobNX.ac_Farmer != null) {
+					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Farmer);
+				}
 				return true;
 			}
 		}
@@ -101,7 +103,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				if (litemstack == null) continue;
 				
 				// クワ
-				if (LMMNX_Util.isHoe(owner,litemstack)) {
+				if (LMMNX_API_Farmer.isHoe(owner,litemstack)) {
 					return li;
 				}
 			}
@@ -114,7 +116,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	@Override
 	public boolean checkItemStack(ItemStack pItemStack) {
 		if(pItemStack==null) return false;
-		return LMMNX_Util.isHoe(owner, pItemStack)||LMMNX_API_Farmer.isSeed(pItemStack.getItem())||LMMNX_API_Farmer.isCrop(pItemStack.getItem());
+		return LMMNX_API_Farmer.isHoe(owner, pItemStack)||LMMNX_API_Farmer.isSeed(pItemStack.getItem())||LMMNX_API_Farmer.isCrop(pItemStack.getItem());
 	}
 	
 	@Override
@@ -164,7 +166,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 //		if(owner.worldObj.isRemote) return false;
 		ItemStack curStack = owner.getCurrentEquippedItem();
 
-		boolean haveNothing = !LMMNX_Util.isHoe(owner,curStack);
+		boolean haveNothing = !LMMNX_API_Farmer.isHoe(owner,curStack);
 		
 		if (!haveNothing && isUnfarmedLand(px,py,pz) &&
 				curStack.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px, py, pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {

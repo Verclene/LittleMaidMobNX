@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import net.blacklab.lib.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
-import net.blacklab.lmmnx.util.LMMNX_Util;
 
 public abstract class MMM_ManagerBase {
 
@@ -79,9 +79,9 @@ public abstract class MMM_ManagerBase {
 				if (lname.indexOf(getPreFix()) >= 0 && lname.endsWith(".class")) {
 					// 対象クラスファイルなのでロード
 					//ディレクトリはパスを自動で治してくれないので、手動で。
-					loadClass(LMMNX_Util.getClassName(
-							LMMNX_Util.getLinuxAntiDotName(lf.getAbsolutePath()), 
-							LMMNX_Util.getLinuxAntiDotName(pRoot.getAbsolutePath())));
+					loadClass(FileClassUtil.getClassName(
+							FileClassUtil.getLinuxAntiDotName(lf.getAbsolutePath()), 
+							FileClassUtil.getLinuxAntiDotName(pRoot.getAbsolutePath())));
 				}
 			}else{
 				//ディレクトリの場合は中身も捜索

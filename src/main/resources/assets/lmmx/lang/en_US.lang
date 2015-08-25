@@ -4,6 +4,26 @@ item.lmmx:spawn_lmmx_egg.name=Little Maid
 
 achievement.contract=Realization
 achievement.contract.desc=Employ a LittleMaid
+achievement.fencer=Protect our master!
+achievement.fencer.desc=Make LittleMaid "Fencer" Mode
+achievement.bloodsucker=Ni6HTmAR3 f0R U
+achievement.bloodsucker.desc=Make LittleMaid "Bloodsucker" Mode
+achievement.archer=You can't escape
+achievement.archer.desc=Make LittleMaid "Archer" Mode
+achievement.blazingstar=Anything can't touch me
+achievement.blazingstar.desc=Make LittleMaid "Blazingstar" Mode
+achievement.cooking=I "cooked" iron!?
+achievement.cooking.desc=Make LittleMaid "Cooking" Mode
+achievement.farmer="Can't feel the breeze? Get ShadersMod now..."
+achievement.farmer.desc=Make LittleMaid "Harvester Girl" or "Farmer" Mode
+achievement.healer=Our master is everytime full
+achievement.healer.desc=Make LittleMaid "Healer" Mode
+achievement.pharmacist=C6H4(COOH)(OH)+(CH3CO)2O=?
+achievement.pharmacist.desc=Make LittleMaid "Pharmacist" Mode
+achievement.ripper=Go back, Green!
+achievement.ripper.desc=Make LittleMaid "Ripper" Mode
+achievement.torcher=I'm afraid of ghosts...
+achievement.torcher.desc=Make LittleMaid "Torcher" Mode
 
 littleMaidMob.mode.Torcher=Torcher
 littleMaidMob.mode.F-Torcher=F-Torcher

@@ -58,6 +58,9 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() == Item.getItemFromBlock(Blocks.torch) || LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Torch", litemstack)) {
 				owner.setMaidMode("Torcher");
+				if (LMM_LittleMaidMobNX.ac_Torcher != null) {
+					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Torcher);
+				}
 				return true;
 			}
 		}

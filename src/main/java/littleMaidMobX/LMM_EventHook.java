@@ -1,10 +1,10 @@
 package littleMaidMobX;
 
+import net.blacklab.lib.ItemUtil;
 import net.blacklab.lib.Version;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
-import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -106,14 +106,14 @@ public class LMM_EventHook
 			event.setCanceled(true);
 		}
 		if(maid.getMaidModeInt()==LMM_EntityMode_Basic.mmode_FarmPorter){
-			if(LMMNX_API_Farmer.isSeed(stack.getItem())||LMMNX_Util.isHoe(maid, stack)){
+			if(LMMNX_API_Farmer.isSeed(stack.getItem())||LMMNX_API_Farmer.isHoe(maid, stack)){
 				event.setCanceled(true);
 			}
 			if(event.maidStackIndex>13){
 				event.setCanceled(false);
 			}
 		}
-		if(event.maidStackIndex==17&&LMMNX_Util.isHelm(stack)){
+		if(event.maidStackIndex==17&&ItemUtil.isHelm(stack)){
 			event.setCanceled(true);
 		}
 	}

@@ -3,8 +3,12 @@ package net.blacklab.lmmnx.api.mode;
 import java.util.ArrayList;
 import java.util.List;
 
+import littleMaidMobX.LMM_EntityLittleMaid;
+import littleMaidMobX.LMM_TriggerSelect;
 import net.blacklab.lib.ItemUtil;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemHoe;
+import net.minecraft.item.ItemStack;
 
 public class LMMNX_API_Farmer {
 
@@ -61,6 +65,15 @@ public class LMMNX_API_Farmer {
 	 */
 	public static ArrayList<String> getItemsListForCrop(){
 		return new ArrayList<String>(api_cropItems);
+	}
+	/**
+	 * 渡されたItemStackがクワのものかどうか
+	 */
+	public static boolean isHoe(LMM_EntityLittleMaid owner, ItemStack pItemStack){
+		if(pItemStack==null) return false;
+		if(pItemStack.getItem()==null) return false;
+		return pItemStack.getItem() instanceof ItemHoe ||
+				LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Hoe", pItemStack);
 	}
 
 }

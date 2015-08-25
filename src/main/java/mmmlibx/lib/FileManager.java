@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
+import net.blacklab.lib.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
-import net.blacklab.lmmnx.util.LMMNX_Util;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 
 public class FileManager {
@@ -39,7 +39,7 @@ public class FileManager {
 		//開発モード
 		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
 			//Linux準拠の形式に変更
-			String path = LMMNX_Util.getLinuxAntiDotName(dirMods.getAbsolutePath());
+			String path = FileClassUtil.getLinuxAntiDotName(dirMods.getAbsolutePath());
 			String pathd = path;
 			String patha;
 			String tail = "/eclipse/mods";
@@ -57,7 +57,7 @@ public class FileManager {
 				
 				for(int i=0;i<LMMNX_DevMode.INCLUDEPROJECT.length;i++){
 					if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
-						String c = LMMNX_Util.getParentDir(path.substring(0, path.indexOf(tail)))+"/"+LMMNX_DevMode.INCLUDEPROJECT[i]+"/bin";
+						String c = FileClassUtil.getParentDir(path.substring(0, path.indexOf(tail)))+"/"+LMMNX_DevMode.INCLUDEPROJECT[i]+"/bin";
 						dirDevIncludeClasses.add(new File(c));
 					}else if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE){
 					}
