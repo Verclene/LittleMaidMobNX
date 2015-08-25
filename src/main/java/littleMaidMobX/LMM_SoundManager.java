@@ -45,8 +45,8 @@ public class LMM_SoundManager {
 	
 	public ZipFile soundsZipFile;
 	public String tableSwitch = "dir";
-	public Map<String, File>		soundsStreamFile = new HashMap<String, File>();
-	public Map<String, String>	soundsStreamEntryName = new HashMap<String, String>();
+	public Map<String, File>	soundsStreamFile		= new HashMap<String, File>();
+	public Map<String, String>	soundsStreamEntryName	= new HashMap<String, String>();
 
 	public static LMM_SoundManager instance = new LMM_SoundManager();
 

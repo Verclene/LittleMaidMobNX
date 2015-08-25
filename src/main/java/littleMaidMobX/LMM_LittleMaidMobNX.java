@@ -7,6 +7,7 @@ import java.util.Random;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.ConfigList;
+import net.blacklab.lib.EBLib;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
@@ -21,6 +22,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -41,7 +43,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2 Build 33";
+	public static final String VERSION = "NX2 Build 34";
 	public static final int VERSION_CODE = 4;
 
 	/*
@@ -125,6 +127,10 @@ public class LMM_LittleMaidMobNX {
 	public static Achievement ac_Ripper;
 	public static Achievement ac_Torcher;
 	
+	// EBLib更新関係
+	public static boolean isEBLibNotLoaded = false;
+	public static final String EBLIB_MIN_VERSION_STRING="EL1 Build 4";
+	public static final int EBLIB_MIN_VERSION_CODE = 1;
 
 	@SidedProxy(
 			clientSide = "littleMaidMobX.LMM_ProxyClient",
@@ -158,6 +164,7 @@ public class LMM_LittleMaidMobNX {
 	
 	public static Random randomSoundChance;
 
+	@SuppressWarnings("unused")
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent evt)
 	{
@@ -169,6 +176,19 @@ public class LMM_LittleMaidMobNX {
 		//MMM_Config.checkConfig(this.getClass());
 		
 		randomSoundChance = new Random();
+		
+		try{
+			if(Loader.isModLoaded("net.blacklab.lib")){
+				if(EBLib.VERSION_CODE<EBLIB_MIN_VERSION_CODE){
+					isEBLibNotLoaded = true;
+				}
+			}
+		}catch(Error e){
+			isEBLibNotLoaded = true;
+		}
+		if(isEBLibNotLoaded){
+			throw new IllegalStateException("EBLib is outdated or not found!\nMake sure that EBLib "+EBLIB_MIN_VERSION_STRING+" or higher is installed.");
+		}
 
 		//Config
 		cfg = new ConfigList();
