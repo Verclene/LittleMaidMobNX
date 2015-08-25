@@ -15,7 +15,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -44,11 +43,10 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2 Build 34";
+	public static final String VERSION = "NX2 Build 35";
 	public static final int VERSION_CODE = 4;
 
 	/*
->>>>>>> develop
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
 		"spawnLimit = Maximum spawn count in the World.",

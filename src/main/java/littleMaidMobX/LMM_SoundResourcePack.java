@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableSet;
  * サウンドパック用
  */
 public class LMM_SoundResourcePack implements IResourcePack {
-
+	
 	public LMM_SoundResourcePack() {
 	}
 

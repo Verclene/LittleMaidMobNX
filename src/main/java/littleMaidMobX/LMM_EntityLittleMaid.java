@@ -239,12 +239,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public String textureModelName;
 	public String textureArmorName;
 	
-	private int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
-	
+	protected int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
+
 	public int playingTick = 0;
 	public int coolingTick = 0;
-	private int damageSoundTick = 0;
-	
+	protected int damageSoundTick = 0;
+
 	public boolean isWildSaved = false;
 
 	public LMM_EntityLittleMaid(World par1World) {
@@ -1827,14 +1827,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return false;
 	}
 	
-	private static final int[] ZBOUND_BLOCKOFFS = new int[]{ -1, -1,  0,  1,  1,  1,  0, -1};
-	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0,  1,  1,  1,  0, -1, -1, -1};
+	private static final int[] ZBOUND_BLOCKOFFS = new int[]{  1,  1,  0, -1, -1, -1,  0,  1};
+	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
 
 	public int DEBUGCOUNT = 0;
 
 	@Override
 	public void onLivingUpdate() {
 		if(soundTick>0) soundTick--;
+
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {

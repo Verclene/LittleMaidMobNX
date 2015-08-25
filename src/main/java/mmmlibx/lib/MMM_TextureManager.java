@@ -679,7 +679,7 @@ public class MMM_TextureManager {
 									String cname = tn.substring(rin.length()+1);
 									String pr="assets/minecraft/";
 									if(cname.startsWith(pr)) cname=cname.substring(pr.length());
-									LMMNX_OldZipTexturesLoader.keysf.put(cname, nfile);
+									if(FMLCommonHandler.instance().getSide()==Side.CLIENT) LMMNX_OldZipTexturesLoader.keysf.put(cname, nfile);
 								}
 							}
 //							addTextureName(s.substring(i).replace('\\', '/'));

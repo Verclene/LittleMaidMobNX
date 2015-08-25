@@ -11,5 +11,6 @@ public enum LMMNX_DevMode {
 	 * 開発環境外であるか、eclipseを使用して開発環境を構築しているかの設定です。LMMNX_DevModeの値を指定してください。
 	 */
 	public static final LMMNX_DevMode DEVMODE = NOT_IN_DEV;
+
 	public static final String[] INCLUDEPROJECT = new String[]{};
 }
