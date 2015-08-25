@@ -2,6 +2,7 @@ package littleMaidMobX;
 
 import java.util.List;
 
+import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.item.EntityItem;
@@ -49,7 +50,7 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 								ei.posZ - MathHelper.cos(ep.rotationYaw * 0.01745329252F) * 2.0D) > 7.5D))
 				{
 					ItemStack lstack = ei.getEntityItem();
-					if ((lstack.getItem() != Items.sugar)) {
+					if (!LMMNX_API_Item.isSugar(lstack.getItem())) {
 						if ((theMaid.maidActiveModeClass == null)) {
 							return false;
 						}
@@ -85,7 +86,7 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 	public void resetTask() {
 		targetItem = null;
 		theMaid.getNavigator().clearPathEntity();
-		//theMaid.getNavigator().setAvoidsWater(lastAvoidWater);
+//		theMaid.getNavigator().setAvoidsWater(lastAvoidWater);
 	}
 
 	@Override
@@ -104,7 +105,8 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 
 	public boolean canEntityItemBeSeen(Entity entity) {
 		// アイテムの可視判定
-		return theMaid.worldObj.rayTraceBlocks(new Vec3(theMaid.posX, theMaid.posY + (double)theMaid.getEyeHeight(), theMaid.posZ), new Vec3(entity.posX, entity.posY + ((entity.getEntityBoundingBox().minY - entity.getEntityBoundingBox().minY) / 2), entity.posZ)) == null;
+//		return theMaid.worldObj.rayTraceBlocks(new Vec3(theMaid.posX, theMaid.posY + (double)theMaid.getEyeHeight(), theMaid.posZ), new Vec3(entity.posX, entity.posY + ((entity.getEntityBoundingBox().minY - entity.getEntityBoundingBox().minY) / 2), entity.posZ)) == null;
+		return theMaid.maidActiveModeClass.canMoveThrough(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY), MathHelper.floor_double(entity.posZ), false, true, false);
 	}
 
 }

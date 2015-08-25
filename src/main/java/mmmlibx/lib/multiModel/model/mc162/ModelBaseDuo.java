@@ -77,7 +77,6 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 						Client.setTexture(textureInner[renderParts]);
 						modelInner.render(entityCaps, par2, par3, par4, par5, par6, par7, isRendering);
 					}catch(Exception e){
-						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
 					}
 				}
 			} else {
@@ -90,7 +89,6 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 					try{
 						Client.setTexture(textureInnerLight[renderParts]);
 					}catch(Exception e){
-						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
 					}
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
@@ -126,7 +124,6 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 						Client.setTexture(textureOuter[renderParts]);
 						modelOuter.render(entityCaps, par2, par3, par4, par5, par6, par7, isRendering);
 					}catch(Exception e){
-						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
 					}
 				}
 			} else {
@@ -139,7 +136,6 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 					try{
 						Client.setTexture(textureOuterLight[renderParts]);
 					}catch(Exception e){
-						LMM_LittleMaidMobNX.Debug("DEBUG INFO %s", e.getMessage());
 					}
 					float var4 = 1.0F;
 					GL11.glEnable(GL11.GL_BLEND);

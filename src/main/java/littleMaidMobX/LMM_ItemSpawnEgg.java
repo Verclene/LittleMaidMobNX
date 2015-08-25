@@ -70,65 +70,6 @@ public class LMM_ItemSpawnEgg extends Item
 		}
 	}
 
-	/*
-	@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-	{
-		if (par2World.isRemote)
-		{
-			return par1ItemStack;
-		}
-		else
-		{
-			MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
-
-			if (movingobjectposition == null)
-			{
-				return par1ItemStack;
-			}
-			else
-			{
-				if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
-				{
-					int i = movingobjectposition.func_178782_a().getX();
-					int j = movingobjectposition.func_178782_a().getY();
-					int k = movingobjectposition.func_178782_a().getZ();
-
-					if (!par2World.canMineBlockBody(par3EntityPlayer, new BlockPos(i, j, k)))
-					{
-						return par1ItemStack;
-					}
-
-					if (!par3EntityPlayer.func_175151_a(new BlockPos(i, j, k), movingobjectposition.field_178784_b, par1ItemStack))
-					{
-						return par1ItemStack;
-					}
-
-					if (par2World.getBlockState(new BlockPos(i, j, k)).getBlock() instanceof BlockLiquid)
-					{
-						Entity entity = spawnMaid(par2World, par1ItemStack.getItemDamage(), (double)i, (double)j, (double)k);
-
-						if (entity != null)
-						{
-							if (entity instanceof EntityLivingBase && par1ItemStack.hasDisplayName())
-							{
-								((EntityLiving)entity).setCustomNameTag(par1ItemStack.getDisplayName());
-							}
-
-							if (!par3EntityPlayer.capabilities.isCreativeMode)
-							{
-								--par1ItemStack.stackSize;
-							}
-						}
-					}
-				}
-
-				return par1ItemStack;
-			}
-		}
-	}
-	*/
-
 	public static Entity spawnMaid(World par0World, int par1, double par2, double par4, double par6)
 	{
 		EntityLiving entityliving = null;
@@ -137,11 +78,8 @@ public class LMM_ItemSpawnEgg extends Item
 
 			entityliving.setLocationAndAngles(par2, par4, par6, MathHelper.wrapAngleTo180_float(par0World.rand.nextFloat() * 360.0F), 0.0F);
 			((LMM_EntityLittleMaid)entityliving).setTextureNames();
-			//entityliving.rotationYawHead = entityliving.rotationYaw;
-			//entityliving.renderYawOffset = entityliving.rotationYaw;
 			((LMM_EntityLittleMaid) entityliving).onSpawnWithEgg();
 			par0World.spawnEntityInWorld(entityliving);
-			//entityliving.playLivingSound();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

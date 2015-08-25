@@ -7,10 +7,13 @@ import java.util.Random;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.ConfigList;
+import net.blacklab.lib.EBLib;
+import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,10 +22,11 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -40,9 +44,11 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX1B53-1.8-F1450";
-	public static final int VERSION_CODE = 3;
-	
+	public static final String VERSION = "NX2 Build 34";
+	public static final int VERSION_CODE = 4;
+
+	/*
+>>>>>>> develop
 	public static String[] cfg_comment = {
 		"spawnWeight = Relative spawn weight. The lower the less common. 10=pigs. 0=off",
 		"spawnLimit = Maximum spawn count in the World.",
@@ -59,9 +65,10 @@ public class LMM_LittleMaidMobNX {
 		"Dominant = Spawn Anywhere.",
 		"Aggressive = true: Will be hostile, false: Is a pacifist",
 		"IgnoreItemList = aaa, bbb, ccc: Items little maid to ignore",
-//		"AchievementID = used Achievement index.(0 = Disable)",
-//		"UniqueEntityId = UniqueEntityId(0 is AutoAssigned. max 255)"
+		"AchievementID = used Achievement index.(0 = Disable)",
+		"UniqueEntityId = UniqueEntityId(0 is AutoAssigned. max 255)"
 	};
+	*/
 
 	public static ConfigList cfg;
 //	@MLProp(info="Relative spawn weight. The lower the less common. 10=pigs. 0=off")
@@ -95,21 +102,37 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_Dominant = false;
 	//アルファブレンド
 	public static boolean cfg_isModelAlphaBlend = false;
+	//野生テクスチャ
+	public static boolean cfg_isFixedWildMaid = false;
 
 //	@MLProp(info="true: AlphaBlend(request power), false: AlphaTest(more fast)")
 //	public static boolean AlphaBlend = true;
 //	@MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
-	public static String cfg_IgnoreItemList = "arsmagica2";
 	//サウンド試験調整
 	public static boolean cfg_ignoreForceSound = false;
 	public static int cfg_soundPlayChance = 2;
 	
 	public static boolean cfg_forceLivingSound = false;
 	public static int cfg_coolTimePlaySound = 20;
-
-	//1.8後回し
+	
+	// 実績関係
 	public static Achievement ac_Contract;
+	public static Achievement ac_Fencer;
+	public static Achievement ac_Bloodsucker;
+	public static Achievement ac_Archer;
+	public static Achievement ac_BlazingStar;
+	public static Achievement ac_Cooking;
+	public static Achievement ac_Farmer;
+	public static Achievement ac_Healer;
+	public static Achievement ac_Pharmacist;
+	public static Achievement ac_Ripper;
+	public static Achievement ac_Torcher;
+	
+	// EBLib更新関係
+	public static boolean isEBLibNotLoaded = false;
+	public static final String EBLIB_MIN_VERSION_STRING="EL1 Build 4";
+	public static final int EBLIB_MIN_VERSION_CODE = 1;
 
 	@SidedProxy(
 			clientSide = "littleMaidMobX.LMM_ProxyClient",
@@ -143,6 +166,7 @@ public class LMM_LittleMaidMobNX {
 	
 	public static Random randomSoundChance;
 
+	@SuppressWarnings("unused")
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent evt)
 	{
@@ -154,6 +178,19 @@ public class LMM_LittleMaidMobNX {
 		//MMM_Config.checkConfig(this.getClass());
 		
 		randomSoundChance = new Random();
+		
+		try{
+			if(Loader.isModLoaded("net.blacklab.lib")){
+				if(EBLib.VERSION_CODE<EBLIB_MIN_VERSION_CODE){
+					isEBLibNotLoaded = true;
+				}
+			}
+		}catch(Error e){
+			isEBLibNotLoaded = true;
+		}
+		if(isEBLibNotLoaded){
+			throw new IllegalStateException("EBLib is outdated or not found!\nMake sure that EBLib "+EBLIB_MIN_VERSION_STRING+" or higher is installed.");
+		}
 
 		//Config
 		cfg = new ConfigList();
@@ -167,21 +204,32 @@ public class LMM_LittleMaidMobNX {
 		cfg_canDespawn = cfg.getBoolean("canDespawn", false);
 		cfg_checkOwnerName = cfg.getBoolean("checkOwnerName", true);
 		cfg_DeathMessage = cfg.getBoolean("DeathMessage", true);
-		cfg_defaultTexture = cfg.getString("defaultTexture", "default_Origin");
+		cfg_defaultTexture = "";
 		cfg_Dominant = cfg.getBoolean("Dominant", false);
 		cfg_enableSpawnEgg = cfg.getBoolean("enableSpawnEgg", true);
-		cfg_IgnoreItemList = cfg.getString("IgnoreItemList", "");
 		cfg_maxGroupSize = cfg.getInt("maxGroupSize", 3);
 		cfg_minGroupSize = cfg.getInt("minGroupSize", 1);
 		cfg_PrintDebugMessage = cfg.getBoolean("PrintDebugMessage", false);
 		cfg_spawnLimit = cfg.getInt("spawnLimit", 20);
 		cfg_spawnWeight = cfg.getInt("spawnWeight", 5);
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
+		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
 		
 		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
 		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
 		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
 		cfg_coolTimePlaySound = Math.max(cfg.getInt("coolTimePlaySound", 5),20);
+		
+		//配列
+		String seedItemsOrgStr = cfg.getString("seedItems", "wheat_seeds, carrot, potato");
+		for(String s:seedItemsOrgStr.split(" *, *")){
+			LMMNX_API_Farmer.addItemsForSeed(s);
+		}
+		
+		String cropItemsOrgStr = cfg.getString("cropItems", "wheat, carrot, potato");
+		for(String s:cropItemsOrgStr.split(" *, *")){
+			LMMNX_API_Farmer.addItemsForCrop(s);
+		}
 		
 		try {
 			cfg.saveConfig(getName(), evt);
@@ -195,19 +243,12 @@ public class LMM_LittleMaidMobNX {
 
 		MMM_TextureManager.instance.init();
 
-		EntityRegistry.registerModEntity(LMM_EntityLittleMaid.class, "LittleMaidX", 0, instance, 80, 3, true);
+		EntityRegistry.registerModEntity(LMM_EntityLittleMaid.class, "LittleMaidX", 0, instance, 20, 3, true);
 
-		/* langファイルに移動
-		ModLoader.addLocalization("entity.LittleMaidX.name", "LittleMaidX");
-		ModLoader.addLocalization("entity.LittleMaidX.name", "ja_JP", "リトルメイド");
-		*/
-		// アイテム自体は登録しておき、レシピを隠して無効化
 		spawnEgg = new LMM_ItemSpawnEgg();
 		spawnEgg.setUnlocalizedName(DOMAIN + ":spawn_lmmx_egg");
-		//spawnEgg.setTextureName(DOMAIN + ":spawn_lmmx_egg");
 		GameRegistry.registerItem(spawnEgg, "spawn_lmmx_egg");
 		if (cfg_enableSpawnEgg) {
-			// 招喚用レシピを追加
 			GameRegistry.addRecipe(new ItemStack(spawnEgg, 1), new Object[] {
 				"scs",
 				"sbs",
@@ -219,8 +260,30 @@ public class LMM_LittleMaidMobNX {
 			});
 		}
 
-		ac_Contract = (Achievement) new Achievement("achievement.contract", "contract", 0, 0, Items.cake, null).initIndependentStat().registerStat();
-		Achievement[] achievements = new Achievement[] { ac_Contract };
+		ac_Contract		= (Achievement) new Achievement("achievement.contract"		, "contract"	, 0, 0, Items.cake				, null			).initIndependentStat().registerStat();
+		ac_Fencer		= (Achievement) new Achievement("achievement.fencer"		, "fencer"		, 4, 0, Items.diamond_sword		, ac_Contract	).initIndependentStat().registerStat();
+		ac_Bloodsucker	= (Achievement) new Achievement("achievement.bloodsucker"	, "bloodsucker"	, 6, 0, Items.diamond_axe		, ac_Fencer		).initIndependentStat().registerStat();
+		ac_Archer		= (Achievement) new Achievement("achievement.archer"		, "archer"		, 2,-2, Items.bow				, ac_Contract	).initIndependentStat().registerStat();
+		ac_BlazingStar	= (Achievement) new Achievement("achievement.blazingstar"	, "blazingstar"	, 4,-2, Items.flint_and_steel	, ac_Archer		).initIndependentStat().registerStat();
+		ac_Cooking		= (Achievement) new Achievement("achievement.cooking"		, "cooking"		, 0,-4, Items.coal				, ac_Contract	).initIndependentStat().registerStat();
+		ac_Farmer		= (Achievement) new Achievement("achievement.farmer"		, "farmer"		,-2,-2, Items.diamond_hoe		, ac_Contract	).initIndependentStat().registerStat();
+		ac_Healer		= (Achievement) new Achievement("achievement.healer"		, "healer"		,-4, 0, Items.bread				, ac_Contract	).initIndependentStat().registerStat();
+		ac_Pharmacist	= (Achievement) new Achievement("achievement.pharmacist"	, "pharmacist"	,-2, 2, Items.nether_wart		, ac_Contract	).initIndependentStat().registerStat();
+		ac_Ripper		= (Achievement) new Achievement("achievement.ripper"		, "ripper"		, 0, 4, Items.shears			, ac_Contract	).initIndependentStat().registerStat();
+		ac_Torcher		= (Achievement) new Achievement("achievement.torcher"		, "torcher"		, 2, 2, Blocks.torch			, ac_Contract	).initIndependentStat().registerStat();
+		Achievement[] achievements = new Achievement[] {
+				ac_Contract,
+				ac_Fencer,
+				ac_Bloodsucker,
+				ac_Archer,
+				ac_BlazingStar,
+				ac_Cooking,
+				ac_Farmer,
+				ac_Healer,
+				ac_Pharmacist,
+				ac_Ripper,
+				ac_Torcher
+				};
 		AchievementPage.registerAchievementPage(new AchievementPage("LittleMaidNX", achievements));
 
 		// AIリストの追加
@@ -232,22 +295,12 @@ public class LMM_LittleMaidMobNX {
 		//Model
 		if(evt.getSide()==Side.CLIENT) ModelLoader.setCustomModelResourceLocation(LMM_LittleMaidMobNX.spawnEgg, 0, new ModelResourceLocation("lmmx:spawn_lmmx_egg","inventory"));
 
-//		Debug("GUID-sneak: %s", LMM_EntityLittleMaid.maidUUIDSneak.toString());
 		proxy.loadSounds();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event){
 		if (MMM_Helper.isClient) {
-			// 名称変換テーブル
-			/* langファイルに移動
-			ModLoader.addLocalization("littleMaidMob.text.Health", "Health");
-			ModLoader.addLocalization("littleMaidMob.text.Health", "ja_JP", "メイド強度");
-			ModLoader.addLocalization("littleMaidMob.text.AP", "AP");
-			ModLoader.addLocalization("littleMaidMob.text.AP", "ja_JP", "メイド装甲");
-			ModLoader.addLocalization("littleMaidMob.text.STATUS", "Status");
-			ModLoader.addLocalization("littleMaidMob.text.STATUS", "ja_JP", "メイド状態");
-			*/
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
 			defaultResourcePacks.add(new LMM_SoundResourcePack());
 			defaultResourcePacks.add(new LMMNX_OldZipTexturesLoader());
@@ -263,12 +316,11 @@ public class LMM_LittleMaidMobNX {
 	{
 		// カンマ区切りのアイテム名のリストを配列にして設定
 		// "aaa, bbb,ccc  " -> "aaa" "bbb" "ccc"
-		ignoreItemList = cfg_IgnoreItemList.trim().split("\\s*,\\s*");
-
 		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
+		MinecraftForge.EVENT_BUS.register(new LMM_EventHook());
 
 		// デフォルトモデルの設定
-		MMM_TextureManager.instance.setDefaultTexture(LMM_EntityLittleMaid.class, MMM_TextureManager.instance.getTextureBox("default_Orign"));
+//		MMM_TextureManager.instance.setDefaultTexture(LMM_EntityLittleMaid.class, MMM_TextureManager.instance.getTextureBox("default_Orign"));
 
 		// Dominant
 		BiomeGenBase[] biomeList = null;
@@ -279,7 +331,6 @@ public class LMM_LittleMaidMobNX {
 			}
 			else
 			{
-				// 通常スポーン設定バイオームは適当
 				biomeList = new BiomeGenBase[]{
 						BiomeGenBase.desert,
 						BiomeGenBase.plains,
@@ -317,31 +368,4 @@ public class LMM_LittleMaidMobNX {
 		}
 	}
 
-
-	// TODO ここから下はとりあえずいらんと思う
-	
-	private static String ignoreItemList[] = new String[]{};
-
-	public static boolean isMaidIgnoreItem(ItemStack item)
-	{
-		return item!=null && item.getItem()!=null && isMaidIgnoreItem(item.getItem());
-	}
-	public static boolean isMaidIgnoreItem(Item item)
-	{
-		/*
-		if(item!=null)
-		{
-			String name = (String) Item.itemRegistry.getNameForObject(item);
-			for(String ignoreItemName : ignoreItemList)
-			{
-				if(name.indexOf(ignoreItemName) != -1)
-				{
-					return true;
-				}
-			}
-		}
-		*/
-		return false;
-
-	}
 }

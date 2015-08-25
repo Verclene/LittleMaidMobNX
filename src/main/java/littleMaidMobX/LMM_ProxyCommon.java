@@ -8,6 +8,7 @@ import network.W_Message;
 
 public class LMM_ProxyCommon
 {
+	public int OFFSET_COUNT = 0;
 	public void init() {}
 	public void onItemPickup(EntityPlayer lmm_EntityLittleMaidAvatar,Entity entity, int i) {}
 	public void onCriticalHit(EntityPlayer pAvatar, Entity par1Entity) {}

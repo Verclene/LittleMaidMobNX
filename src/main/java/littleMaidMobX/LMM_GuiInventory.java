@@ -122,6 +122,7 @@ public class LMM_GuiInventory extends GuiContainer {
 //	      GL11.glRotatef(-(float) Math.atan(f9 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
 		GlStateManager.rotate(135F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
+
 		GlStateManager.rotate(-135F, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(-(float) Math.atan(f9 / 40F) * 20F, 1.0F, 0.0F, 0.0F);
 		entitylittlemaid.renderYawOffset = (float) Math.atan(f8 / 40F) * 20F;
@@ -142,7 +143,8 @@ public class LMM_GuiInventory extends GuiContainer {
 //	      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F / 1.0F, 240F / 1.0F);
 //	      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.popMatrix();
-		RenderHelper.disableStandardItemLighting();
+//		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableColorMaterial();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
 		GlStateManager.disableTexture2D();
@@ -362,12 +364,11 @@ public class LMM_GuiInventory extends GuiContainer {
 			txbutton[3].visible = true;
 			selectbutton.visible = true;
 			
-			
 			// テクスチャ名称の表示
 			GL11.glPushMatrix();
 			GL11.glTranslatef(i - ii, j - jj, 0.0F);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			//RenderHelper.disableStandardItemLighting();
+//			RenderHelper.disableStandardItemLighting();
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			
@@ -387,8 +388,8 @@ public class LMM_GuiInventory extends GuiContainer {
 				drawGradientRect(lbx - 3, lby + 8, lbx + ltwmax + 3, lby + 16 + 4, lcolor, lcolor);
 				drawString(this.mc.fontRendererObj, ls2, 52 - ltw2 / 2, lby + 10, -1);
 			}
-			
 			GL11.glPopMatrix();
+//			RenderHelper.enableStandardItemLighting();
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		} else {
@@ -412,7 +413,6 @@ public class LMM_GuiInventory extends GuiContainer {
 		try {
 			super.mouseClicked(i, j, k);
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 /*
 		// 26,8-77,59

@@ -82,8 +82,14 @@ public class LMM_EntityMode_Archer extends LMM_EntityModeBase {
 			if (litemstack.getItem() instanceof ItemBow || LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Bow", litemstack)) {
 				if (owner.maidInventory.getInventorySlotContainItem(ItemFlintAndSteel.class) > -1) {
 					owner.setMaidMode("Blazingstar");
+					if (LMM_LittleMaidMobNX.ac_BlazingStar != null) {
+						pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_BlazingStar);
+					}
 				} else {
 					owner.setMaidMode("Archer");
+					if (LMM_LittleMaidMobNX.ac_Archer != null) {
+						pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Archer);
+					}
 				}
 				return true;
 			}

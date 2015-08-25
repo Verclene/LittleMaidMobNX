@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,14 +20,12 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import littleMaidMobX.LMMNX_OldZipTexturesLoader;
-import mmmlibx.lib.multiModel.model.mc162.*;
+import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
+import net.blacklab.lib.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
-import net.blacklab.lmmnx.util.NXCommonUtil;
-import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -119,6 +119,8 @@ public class MMM_TextureManager {
 	protected Map<ITextureEntity, Object[]> stackSetTexturePack = new HashMap<ITextureEntity, Object[]>();
 	
 	protected List<String[]> searchPrefix = new ArrayList<String[]>();
+	
+	public static final String[] searchFileNamePrefix = new String[]{"littleMaidMob","mmmlibx","ModelMulti"};
 
 	public void init() {
 		// 検索対象ファイル名を登録します。
@@ -320,9 +322,11 @@ public class MMM_TextureManager {
 		}
 		MMMLib.Debug("Rebuild Texture Lists.(%d)", textures.size());
 		for (MMM_TextureBox lbox : textures) {
+			if(lbox.getWildColorBits()>0){
+				setDefaultTexture(EntityLivingBase.class, lbox);
+			}
 			MMMLib.Debug("texture: %s(%s) - hasModel:%b", lbox.textureName, lbox.fileName, lbox.models != null);
 		}
-		
 		
 		setDefaultTexture(EntityLivingBase.class, getTextureBox("default_" + defaultModelName));
 		
@@ -462,16 +466,24 @@ public class MMM_TextureManager {
 			String pn = cn.substring(pSearch[2].length() + lfindprefix);
 			
 			if (modelMap.containsKey(pn)) return;
-			
-			ClassLoader lclassloader = MMMLib.class.getClassLoader();
-			Package lpackage = MMMLib.class.getPackage();
-			Class lclass;
 			try {
+				ClassLoader lclassLoader = null;
+				if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE){
+					URL[] u = new URL[LMMNX_DevMode.INCLUDEPROJECT.length];
+					int ix=0;
+					for(File f:FileManager.dirDevIncludeClasses){
+						u[ix++] = f.toURI().toURL();
+					}
+					lclassLoader = new URLClassLoader(u,MMMLib.class.getClassLoader());
+				}
+				else lclassLoader = MMMLib.class.getClassLoader();
+				Package lpackage = MMMLib.class.getPackage();
+				Class lclass;
 				if (lpackage != null) {
 //					cn = (new StringBuilder("")).append(".").append(cn).toString();
 					cn = cn.replace("/", ".");
 					System.out.println("MMM_TextureManager.addModelClass : "+cn);
-					lclass = lclassloader.loadClass(cn);
+					lclass = lclassLoader.loadClass(cn);
 				} else {
 					lclass = Class.forName(cn);
 				}
@@ -559,7 +571,7 @@ public class MMM_TextureManager {
 				if (!zipentry.isDirectory()) {
 					if (zipentry.getName().endsWith(".class")) {
 						addModelClass(zipentry.getName(), pSearch);
-					} else {
+					} else if(zipentry.getName().endsWith(".png")){
 						String lt1 = "mob/littleMaid";
 						String lt2 = "mob/ModelMulti";
 						addTextureName(zipentry.getName(), pSearch);
@@ -634,26 +646,42 @@ public class MMM_TextureManager {
 		}
 		
 		try {
-			for (File t : file.listFiles()) {
-				if(t.isDirectory()) {
-					addTexturesDir(t, pSearch);
+			for (File nfile : file.listFiles()) {
+				if(nfile.isDirectory()) {
+					addTexturesDir(nfile, pSearch);
 				} else {
-					ADDMODEL: if (t.getName().endsWith(".class")) {
-						String tn = NXCommonUtil.getLinuxAntiDotName(t.getAbsolutePath());
-						String rmn = NXCommonUtil.getLinuxAntiDotName(FileManager.dirMods.getAbsolutePath());
+					String tn = FileClassUtil.getLinuxAntiDotName(nfile.getAbsolutePath());
+					String rmn = FileClassUtil.getLinuxAntiDotName(FileManager.dirMods.getAbsolutePath());
+					ADDMODEL: if (nfile.getName().endsWith(".class")) {
 						if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
-							String rdn = NXCommonUtil.getLinuxAntiDotName(FileManager.dirDevClasses.getAbsolutePath());
+							String rdn = FileClassUtil.getLinuxAntiDotName(FileManager.dirDevClasses.getAbsolutePath());
 							if(tn.startsWith(rdn)){
-								addModelClass(NXCommonUtil.getClassName(tn, rdn),pSearch);
+								addModelClass(FileClassUtil.getClassName(tn, rdn),pSearch);
 								break ADDMODEL;
 							}
-						}else if(tn.startsWith(rmn)) addModelClass(NXCommonUtil.getClassName(tn, rmn), pSearch);
-					} else {
-						String s = t.getPath().replace('\\', '/');
+							for(File f:FileManager.dirDevIncludeClasses){
+								String rin = FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath());
+								if(tn.startsWith(rin)){
+									addModelClass(FileClassUtil.getClassName(tn, rin),pSearch);
+									break ADDMODEL;
+								}
+							}
+						}else if(tn.startsWith(rmn)) addModelClass(FileClassUtil.getClassName(tn, rmn), pSearch);
+					} else if(nfile.getName().endsWith(".png")) {
+						String s = nfile.getPath().replace('\\', '/');
 						int i = s.indexOf(pSearch[1]);
 						if (i > -1) {
 							// 対象はテクスチャディレクトリ
 							addTextureName(s.substring(i), pSearch);
+							if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE) for(File f:FileManager.dirDevIncludeClasses){
+								String rin = FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath());
+								if(tn.startsWith(rin)){
+									String cname = tn.substring(rin.length()+1);
+									String pr="assets/minecraft/";
+									if(cname.startsWith(pr)) cname=cname.substring(pr.length());
+									LMMNX_OldZipTexturesLoader.keysf.put(cname, nfile);
+								}
+							}
 //							addTextureName(s.substring(i).replace('\\', '/'));
 						}
 					}

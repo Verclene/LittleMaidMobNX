@@ -38,11 +38,10 @@ public class LMM_SoundResourcePack implements IResourcePack {
 	}
 
 	private InputStream getResourceStream(ResourceLocation resource) {
-		String path = resource.getResourcePath();
 		InputStream lis = null;
 		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
 		{
-			lis = LMM_SoundManager.getResourceStream(resource);
+			lis = LMM_SoundManager.instance.getResourceStream(resource);
 			LMM_LittleMaidMobNX.Debug("getResource:%s : %s", resource, lis);
 		}
 		return lis;
@@ -50,10 +49,12 @@ public class LMM_SoundResourcePack implements IResourcePack {
 
 	@Override
 	public boolean resourceExists(ResourceLocation resource) {
-		return LMM_SoundManager.getResourceExists(resource);
+		return LMM_SoundManager.instance.getResourceExists(resource);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static final Set lmmxResourceDomains = ImmutableSet.of(LMM_LittleMaidMobNX.DOMAIN);
+
 	@Override
 	@SuppressWarnings("rawtypes")
 	public Set getResourceDomains() {

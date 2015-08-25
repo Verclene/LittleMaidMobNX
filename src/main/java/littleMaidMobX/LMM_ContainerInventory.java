@@ -109,32 +109,25 @@ public class LMM_ContainerInventory extends ContainerPlayer {
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			
-			if(LMM_LittleMaidMobNX.isMaidIgnoreItem(itemstack1))
-			{
-				// コンフィグで無視に指定されたアイテムは移動しない
+			litemstack = itemstack1.copy();
+			int lline = numRows * 9;
+			if (pIndex < lline) {
+				if (!this.mergeItemStack(itemstack1, lline, lline + 36, true)) {
+					return null;
+				}
+			} else if (pIndex >= lline && pIndex < lline + 36) {
+				if (!this.mergeItemStack(itemstack1, 0, lline, false)) {
+					return null;
+				}
+			} else {
+				if (!this.mergeItemStack(itemstack1, 0, lline + 36, false)) {
+					return null;
+				}
 			}
-			else
-			{
-				litemstack = itemstack1.copy();
-				int lline = numRows * 9;
-				if (pIndex < lline) {
-					if (!this.mergeItemStack(itemstack1, lline, lline + 36, true)) {
-						return null;
-					}
-				} else if (pIndex >= lline && pIndex < lline + 36) {
-					if (!this.mergeItemStack(itemstack1, 0, lline, false)) {
-						return null;
-					}
-				} else {
-					if (!this.mergeItemStack(itemstack1, 0, lline + 36, false)) {
-						return null;
-					}
-				}
-				if (itemstack1.stackSize == 0) {
-					slot.putStack(null);
-				} else {
-					slot.onSlotChanged();
-				}
+			if (itemstack1.stackSize == 0) {
+				slot.putStack(null);
+			} else {
+				slot.onSlotChanged();
 			}
 		}
 		return litemstack;

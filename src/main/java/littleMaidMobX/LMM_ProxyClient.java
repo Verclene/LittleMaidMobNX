@@ -22,8 +22,6 @@ import network.W_Message;
  */
 public class LMM_ProxyClient extends LMM_ProxyCommon
 {
-	public static int OFFSET_COUNT = 0;
-
 	public static class SoundTickCountingThread extends Thread{
 		private boolean running = true;
 		
@@ -38,18 +36,11 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			// TODO 自動生成されたメソッド・スタブ
 			while(running){
 				try {
-					Thread.sleep(10);
+					Thread.sleep(50);
 				} catch (InterruptedException e) {
-					// TODO 自動生成された catch ブロック
 				}
-				if(OFFSET_COUNT>0){
-					try {
-						Thread.sleep(50);
-					} catch (InterruptedException e) {
-						// TODO 自動生成された catch ブロック
-						e.printStackTrace();
-					}
-					OFFSET_COUNT--;
+				if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT>0){
+					LMM_LittleMaidMobNX.proxy.OFFSET_COUNT--;
 				}
 			}
 		}
@@ -161,10 +152,9 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	public void loadSounds()
 	{
 		// 音声の解析
-		LMM_SoundManager.init();
+		LMM_SoundManager.instance.init();
 		// サウンドパック
-		LMM_SoundManager.loadDefaultSoundPack();
-		LMM_SoundManager.loadSoundPack();
+		LMM_SoundManager.instance.loadDefaultSoundPack();
 	}
 
 	public boolean isSinglePlayer()
@@ -179,11 +169,10 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	@Override
 	public void playLittleMaidSound(World par1World, double x, double y, double z, String s, float v, float p, boolean b) {
 		// TODO 自動生成されたメソッド・スタブ
-		if(OFFSET_COUNT==0){
-			LMM_LittleMaidMobNX.Debug("SOUND START");
-			OFFSET_COUNT=1;
+		if(!par1World.isRemote) return;
+		if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT==0){
+			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=4;
 			par1World.playSound(x, y, z, s, v, p, b);
-			LMM_LittleMaidMobNX.Debug("SOUND END");
 		}
 	}
 }

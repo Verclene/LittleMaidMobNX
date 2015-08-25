@@ -172,6 +172,9 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() instanceof ItemShears) {
 				owner.setMaidMode("Ripper");
+				if (LMM_LittleMaidMobNX.ac_Ripper != null) {
+					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Ripper);
+				}
 				return true;
 			}
 			if (owner.maidInventory.isItemExplord(0)) {

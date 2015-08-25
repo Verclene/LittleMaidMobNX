@@ -310,6 +310,35 @@ public abstract class LMM_EntityModeBase {
 		}
 		return false;
 	}
+	
+	/**
+	 * 基本的にcanBlockBeSeenに同じ。違いは足元基準で「通れるか」を判断するもの
+	 * @return
+	 */
+	protected boolean canMoveThrough(int pX, int pY, int pZ, boolean toTop, boolean do1, boolean do2){
+		World worldObj = owner.worldObj;
+		Block lblock = worldObj.getBlockState(new BlockPos(pX, pY, pZ)).getBlock();
+		if (lblock == null) {
+			LMM_LittleMaidMobNX.Debug("block-null: %d, %d, %d", pX, pY, pZ);
+			return false;
+		}
+		lblock.setBlockBoundsBasedOnState(worldObj, new BlockPos(pX, pY, pZ));
+		
+		Vec3 vec3do = new Vec3(owner.posX, owner.posY+0.9D/* + owner.getEyeHeight()*/, owner.posZ);
+		Vec3 vec3dt = new Vec3((double)pX + 0.5D, (double)pY + (toTop?1.9D:0.9D), (double)pZ + 0.5D);
+		MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3do, vec3dt, do1, do2, false);
+		
+		if (movingobjectposition != null && movingobjectposition.typeOfHit == MovingObjectType.BLOCK) {
+			if (movingobjectposition.getBlockPos().getX() == pX && 
+					movingobjectposition.getBlockPos().getY() == pY &&
+					movingobjectposition.getBlockPos().getZ() == pZ) {
+				return true;
+			}else{
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * 主との距離感。
