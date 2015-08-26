@@ -1,7 +1,6 @@
-Little Maid Mob NX 1.8 - Verclene(elise_blacklab)
+Little Maid Mob NX for Minecraft 1.8 - Verclene(elise_blacklab)
 
 EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したものです。このテキストにもEMB4氏のパッケージに同梱されていたReadmeの内容を含みます。
-現在Openbeta版であるため未実装の機能が多くあります。ご注意ください。
 
 基本的な仕様は本家様記事をご覧ください。
 
@@ -18,15 +17,15 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
     Zabutonは1.8移植にあたり削除しました。必要であれば竹MODの座布団等で代用してくださいませ。
 
 前提MOD
-    Forge 1.8-Recommended 11.14.1.1334 以上
-    EBLib ver.0.1.1 以上
+    Forge 1.8-Recommended 11.14.1.1334 またはそれ以降のバージョン
+    EBLib EL1 Build 4 またはそれ以降のバージョン
     ※このMODは、Forge 11.14.3.1450でビルドされています。
     
 コンフィグ
     configディレクトリにある「littleMaidMobNX.cfg」で設定できます。
     
 使用方法
-    Forgeを導入し、このMODのjarをmodsに放り込む。
+    Forgeを導入し、EBLibと一緒にjarをmodsフォルダに入れる。
 
 利用条件
     ・readme_LMM1.6.2.txt に従って下さい。
@@ -55,11 +54,20 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
     本トリガー
 
 更新履歴
-    20150713    NX1B53-1.8-F1450
+    20150826    NX2 Build 36
+        新モード「農家」
+        新API"LMMNX_IItemSpecialSugar"
+        新API"LMMNX_ItemPutChestEvent"
+        実績追加
+        段差登りを修正
+        マルチでのバグをいくつか修正
+        サウンド再生関係調整
+        開発環境に対する変更
+    20150713    NX1 Build 53
         挙動調整
         サウンド再生関係調整
         開発環境に対する変更
-    20150706    NX1B20-1.8-F1450
+    20150706    NX1 Build 20
         雪合戦実装
         Mode実装変更＆AI調整
         サウンド調整
