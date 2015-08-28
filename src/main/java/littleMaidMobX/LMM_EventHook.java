@@ -8,10 +8,12 @@ import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -50,22 +52,22 @@ public class LMM_EventHook
 		}
 	}
 	@SubscribeEvent
-	public void onEntitySpawn(LivingSpawnEvent.CheckSpawn event){
+	public void onEntitySpawn(LivingSpawnEvent event){
 		if(event.entityLiving instanceof LMM_EntityLittleMaid){
 			LMM_EntityLittleMaid maid = (LMM_EntityLittleMaid) event.entityLiving;
 			if(maid.isContract()||maid.isWildSaved) return;
-//			NBTTagCompound t = new NBTTagCompound();
-//			maid.writeEntityToNBT(t);
-//			maid.readEntityFromNBT(t);
 			maid.onSpawnWithEgg();
-			int c = maid.getTextureBox()[0].getWildColorBits();
-			if(c<=0) maid.setColor(12); else for(int i=15;i>=0;i--){
-				int x = (int) Math.pow(2, i);
-				if((c&x)==x) maid.setColor(i);
-			}
+//			int c = maid.getTextureBox()[0].getWildColorBits();
+//			if(c<=0) maid.setColor(12); else for(int i=15;i>=0;i--){
+//				int x = (int) Math.pow(2, i);
+//				if((c&x)==x) maid.setColor(i);
+//			}
 			maid.setTextureNames();
 			maid.isWildSaved = true;
 //			event.setResult(Result.ALLOW);
+			NBTTagCompound t = new NBTTagCompound();
+			maid.writeEntityToNBT(t);
+			maid.readEntityFromNBT(t);
 		}
 	}
 	

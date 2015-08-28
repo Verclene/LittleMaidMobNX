@@ -43,7 +43,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2 Build 36";
+	public static final String VERSION = "NX2 Build 37";
 	public static final int VERSION_CODE = 4;
 
 	/*
@@ -314,8 +314,8 @@ public class LMM_LittleMaidMobNX {
 	{
 		// カンマ区切りのアイテム名のリストを配列にして設定
 		// "aaa, bbb,ccc  " -> "aaa" "bbb" "ccc"
-		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
 		MinecraftForge.EVENT_BUS.register(new LMM_EventHook());
+		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
 
 		// デフォルトモデルの設定
 //		MMM_TextureManager.instance.setDefaultTexture(LMM_EntityLittleMaid.class, MMM_TextureManager.instance.getTextureBox("default_Orign"));
