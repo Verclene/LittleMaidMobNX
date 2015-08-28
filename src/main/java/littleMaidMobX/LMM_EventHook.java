@@ -62,12 +62,12 @@ public class LMM_EventHook
 //				int x = (int) Math.pow(2, i);
 //				if((c&x)==x) maid.setColor(i);
 //			}
-			maid.setTextureNames();
 			maid.isWildSaved = true;
 //			event.setResult(Result.ALLOW);
 			NBTTagCompound t = new NBTTagCompound();
 			maid.writeEntityToNBT(t);
 			maid.readEntityFromNBT(t);
+			if(event.world.isRemote) maid.setTextureNames();
 		}
 	}
 	

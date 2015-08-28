@@ -211,7 +211,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private int firstload = 1;
 	public String statusMessage = "";
 
-
 	// AI
 	public EntityAITempt aiTempt;
 	public LMM_EntityAIBeg aiBeg;
@@ -1153,7 +1152,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			setMaidWait(par1nbtTagCompound.getBoolean("Wait"));
 			setFreedom(par1nbtTagCompound.getBoolean("Freedom"));
 			setTracer(par1nbtTagCompound.getBoolean("Tracer"));
-			isWildSaved = par1nbtTagCompound.getBoolean("isWildSaved");
 			textureData.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texName"));
 			textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texArmor"));
 			textureData.textureBox[0] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[0]);
@@ -1294,6 +1292,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 		onInventoryChanged();
+		isWildSaved = par1nbtTagCompound.getBoolean("isWildSaved");
 
 		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
@@ -1618,7 +1617,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				par2 = par2 / 2 + 1;
 			}
 			if(worldObj.getDifficulty() == EnumDifficulty.HARD) {
-				par2 = (par2 * 3) / 2;
+				par2 = MathHelper.floor_float(par2 * 1.5f);
 			}
 		}
 
