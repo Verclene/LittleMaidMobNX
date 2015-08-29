@@ -40,6 +40,9 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		addLayer(new MMMLayerArmor(this));
 	}
 
+	/**
+	 * 防具描画レイヤー
+	 */
 	public class MMMLayerArmor extends LayerArmorBase{
 
 		//レイヤーと化した防具描画
@@ -222,6 +225,9 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		}
 	}
 
+	/**
+	 * 手持ちアイテムレイヤー
+	 */
 	public class MMMLayerHeldItem extends LayerHeldItem{
 
 		//レイヤーと化したアイテム描画
@@ -246,7 +252,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 					GlStateManager.pushMatrix();
 
 					modelMain.model.Arms[lmm.maidDominantArm].postRender(0.0625F);
-
+					
 					Item item = itemstack.getItem();
 					Minecraft minecraft = Minecraft.getMinecraft();
 
@@ -257,6 +263,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 						GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
 						float f8 = 0.375F;
 						GlStateManager.scale(-f8, -f8, f8);
+					}else{
+						GlStateManager.translate(0.0F, 0.0F, 0.15F);
 					}
 
 					minecraft.getItemRenderer().renderItem(lmm, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON);

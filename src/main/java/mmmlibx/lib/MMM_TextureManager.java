@@ -130,32 +130,12 @@ public class MMM_TextureManager {
 		FileManager.getModFile("mmmlibx", "littleMaidMob");
 		FileManager.getModFile("mmmlibx", "mmmlibx");
 		FileManager.getModFile("mmmlibx", "ModelMulti");
-//		FileManager.getModFile("assets", "assets");
-		
-//		FileManager.debugPrintAllFileList();
 		
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/ModelMulti/", "ModelMulti_");
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/littleMaid/", "ModelMulti_");
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/littleMaid/", "ModelLittleMaid_");
 		addSearch("mmmlibx", "/mob/ModelMulti/", "ModelMulti_");
 		addSearch("mmmlibx", "/mob/littleMaid/", "ModelLittleMaid_");
-//		addSearch("assets",  "/assets/minecraft/textures/entity/ModelMulti/", "ModelMulti_");
-//		addSearch("assets",  "/assets/minecraft/textures/entity/littleMaid/", "ModelMulti_");
-//		addSearch("assets",  "/assets/minecraft/textures/entity/littleMaid/", "ModelLittleMaid_");
-/*
-		// mods\MMMLib\フォルダと検索パスに追加
-		MMM_FileManager.getModFile("MMMLib", "MMMLib");
-		MMM_FileManager.getModFile("MMMLib", "ModelMulti");
-		addSearch("MMMLib", "/mob/ModelMulti/", "ModelMulti_");
-		addSearch("MMMLib", "/mob/littleMaid/", "ModelLittleMaid_");
-		addSearch("MMMLib", "/assets/minecraft/textures/entity/ModelMulti/", "ModelMulti_");
-		addSearch("MMMLib", "/assets/minecraft/textures/entity/littleMaid/", "ModelLittleMaid_");
-
-		// mods\MMMLib\フォルダと検索パスに追加
-		MMM_FileManager.getModFile("littleMaidMob", "littleMaidMob");
-		addSearch("littleMaidMob", "/mob/littleMaid/", "ModelLittleMaid_");
-		addSearch("littleMaidMob", "/assets/minecraft/textures/entity/littleMaid/", "ModelLittleMaid_");
-*/
 	}
 
 	protected String[] getSearch(String pName) {
@@ -225,17 +205,6 @@ public class MMM_TextureManager {
 	protected void getArmorPrefix() {
 		//1.8検討
 		armorFilenamePrefix = new String[]{"leather","chainmail","iron","diamond","gold"};
-/*
-		// アーマーファイルのプリフィックスを獲得
-		try {
-			armorFilenamePrefix = (String[])ModLoader.getPrivateValue(RenderBiped.class, null, 5);
-			return;
-		} catch (Exception e) {
-		} catch (Error e) {
-			e.printStackTrace();
-		}
-		armorFilenamePrefix = null;
-*/
 	}
 
 
