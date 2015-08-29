@@ -264,7 +264,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 						float f8 = 0.375F;
 						GlStateManager.scale(-f8, -f8, f8);
 					}else{
-						GlStateManager.translate(0.0F, 0.0F, 0.15F);
+						GlStateManager.translate(0.0F, -0.0375F, 0.15F);
 					}
 
 					minecraft.getItemRenderer().renderItem(lmm, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON);

@@ -54,6 +54,9 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
     本トリガー
 
 更新履歴
+    20150829    NX2 Build 42
+        描画処理の調整
+        野生メイドが透過する問題を修正
     20150826    NX2 Build 36
         新モード「農家」
         新API"LMMNX_IItemSpecialSugar"
