@@ -211,7 +211,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private int firstload = 1;
 	public String statusMessage = "";
 
-
 	// AI
 	public EntityAITempt aiTempt;
 	public LMM_EntityAIBeg aiBeg;
@@ -1294,6 +1293,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 		onInventoryChanged();
+		isWildSaved = par1nbtTagCompound.getBoolean("isWildSaved");
 
 		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
@@ -1618,7 +1618,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				par2 = par2 / 2 + 1;
 			}
 			if(worldObj.getDifficulty() == EnumDifficulty.HARD) {
-				par2 = (par2 * 3) / 2;
+				par2 = MathHelper.floor_float(par2 * 1.5f);
 			}
 		}
 
@@ -1903,7 +1903,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			float movespeed = getAIMoveSpeed();
 
 			BlockPos targetPos = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py, pz+ZBOUND_BLOCKOFFS[pitchindex]);
-			BlockPos targetPosAir = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+1, pz+ZBOUND_BLOCKOFFS[pitchindex]);
+			BlockPos targetPosAir = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+2, pz+ZBOUND_BLOCKOFFS[pitchindex]);
 			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && onGround &&
 					(World.doesBlockHaveSolidTopSurface(worldObj, targetPos)||
 							worldObj.getBlockState(targetPos).getBlock() instanceof BlockFarmland) &&

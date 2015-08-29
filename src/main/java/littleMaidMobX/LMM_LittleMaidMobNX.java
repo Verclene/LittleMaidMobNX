@@ -6,8 +6,6 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
-import net.blacklab.lib.ConfigList;
-import net.blacklab.lib.EBLib;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
@@ -43,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2 Build 36";
-	public static final int VERSION_CODE = 4;
+	public static final String VERSION = "NX2 Build 42";
+	public static final int VERSION_CODE = 5;
 
 	/*
 	public static String[] cfg_comment = {
@@ -68,7 +66,6 @@ public class LMM_LittleMaidMobNX {
 	};
 	*/
 
-	public static ConfigList cfg;
 //	@MLProp(info="Relative spawn weight. The lower the less common. 10=pigs. 0=off")
 	public static int cfg_spawnWeight = 5;
 //	@MLProp(info="Maximum spawn count in the World.")
@@ -129,6 +126,7 @@ public class LMM_LittleMaidMobNX {
 	
 	// EBLib更新関係
 	public static boolean isEBLibNotLoaded = false;
+
 	public static final String EBLIB_MIN_VERSION_STRING="EL1 Build 4";
 	public static final int EBLIB_MIN_VERSION_CODE = 1;
 
@@ -179,7 +177,7 @@ public class LMM_LittleMaidMobNX {
 		
 		try{
 			if(Loader.isModLoaded("net.blacklab.lib")){
-				if(EBLib.VERSION_CODE<EBLIB_MIN_VERSION_CODE){
+				if(net.blacklab.lib.EBLib.VERSION_CODE<EBLIB_MIN_VERSION_CODE){
 					isEBLibNotLoaded = true;
 				}
 			}
@@ -191,7 +189,8 @@ public class LMM_LittleMaidMobNX {
 		}
 
 		//Config
-		cfg = new ConfigList();
+		// エラーチェックのため試験的にimportしない形にしてみる
+		net.blacklab.lib.ConfigList cfg = new net.blacklab.lib.ConfigList();
 		try {
 			cfg.loadConfig(getName(), evt);
 		} catch (IOException e) {
@@ -314,8 +313,8 @@ public class LMM_LittleMaidMobNX {
 	{
 		// カンマ区切りのアイテム名のリストを配列にして設定
 		// "aaa, bbb,ccc  " -> "aaa" "bbb" "ccc"
-		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
 		MinecraftForge.EVENT_BUS.register(new LMM_EventHook());
+		FMLCommonHandler.instance().bus().register(new LMM_EventHook());
 
 		// デフォルトモデルの設定
 //		MMM_TextureManager.instance.setDefaultTexture(LMM_EntityLittleMaid.class, MMM_TextureManager.instance.getTextureBox("default_Orign"));
