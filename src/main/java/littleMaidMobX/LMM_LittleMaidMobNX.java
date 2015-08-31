@@ -41,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX2 Build 42";
-	public static final int VERSION_CODE = 5;
+	public static final String VERSION = "NX3 Build 13";
+	public static final int VERSION_CODE = 6;
 
 	/*
 	public static String[] cfg_comment = {
@@ -107,10 +107,10 @@ public class LMM_LittleMaidMobNX {
 	//サウンド試験調整
 	public static boolean cfg_ignoreForceSound = false;
 	public static int cfg_soundPlayChance = 2;
-	
+
 	public static boolean cfg_forceLivingSound = false;
 	public static int cfg_coolTimePlaySound = 20;
-	
+
 	// 実績関係
 	public static Achievement ac_Contract;
 	public static Achievement ac_Fencer;
@@ -123,7 +123,7 @@ public class LMM_LittleMaidMobNX {
 	public static Achievement ac_Pharmacist;
 	public static Achievement ac_Ripper;
 	public static Achievement ac_Torcher;
-	
+
 	// EBLib更新関係
 	public static boolean isEBLibNotLoaded = false;
 
@@ -146,7 +146,7 @@ public class LMM_LittleMaidMobNX {
 			System.out.println(String.format("littleMaidMob-" + pText, pVals));
 		}
 	}
-	
+
 	public String getName() {
 		return "littleMaidMobNX";
 	}
@@ -159,7 +159,7 @@ public class LMM_LittleMaidMobNX {
 	public String getVersion() {
 		return "1.8";
 	}
-	
+
 	public static Random randomSoundChance;
 
 	@SuppressWarnings("unused")
@@ -172,9 +172,9 @@ public class LMM_LittleMaidMobNX {
 		// MMMLibのRevisionチェック
 //		MMM_Helper.checkRevision("6");
 		//MMM_Config.checkConfig(this.getClass());
-		
+
 		randomSoundChance = new Random();
-		
+
 		try{
 			if(Loader.isModLoaded("net.blacklab.lib")){
 				if(net.blacklab.lib.EBLib.VERSION_CODE<EBLIB_MIN_VERSION_CODE){
@@ -211,23 +211,23 @@ public class LMM_LittleMaidMobNX {
 		cfg_spawnWeight = cfg.getInt("spawnWeight", 5);
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
 		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
-		
+
 		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
 		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
 		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
 		cfg_coolTimePlaySound = Math.max(cfg.getInt("coolTimePlaySound", 5),20);
-		
+
 		//配列
 		String seedItemsOrgStr = cfg.getString("seedItems", "wheat_seeds, carrot, potato");
 		for(String s:seedItemsOrgStr.split(" *, *")){
 			LMMNX_API_Farmer.addItemsForSeed(s);
 		}
-		
+
 		String cropItemsOrgStr = cfg.getString("cropItems", "wheat, carrot, potato");
 		for(String s:cropItemsOrgStr.split(" *, *")){
 			LMMNX_API_Farmer.addItemsForCrop(s);
 		}
-		
+
 		try {
 			cfg.saveConfig(getName(), evt);
 		} catch (IOException e) {
@@ -358,7 +358,7 @@ public class LMM_LittleMaidMobNX {
 
 		// IFFのロード
 		LMM_IFF.loadIFFs();
-		
+
 		if(evt.getSide()==Side.CLIENT){
 			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread = new LMM_ProxyClient.SoundTickCountingThread();
 			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread.start();
