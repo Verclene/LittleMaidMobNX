@@ -55,6 +55,8 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySilverfish;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntitySquid;
@@ -98,6 +100,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
+import net.minecraft.world.pathfinder.WalkNodeProcessor;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import wrapper.W_Common;
 
@@ -1907,7 +1910,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//八方位に分割して割り出す
 		if(!worldObj.isRemote){
 //			float rot = getRotationYawHead();
-			int pitchindex = Math.round(rotationYaw/45F);
+			int pitchindex = Math.round(rotationYawHead/45F);
 //			if(pitchindex>=8||pitchindex<0) pitchindex = 0;
 			while(pitchindex<0)  pitchindex+=8;
 			while(pitchindex>=8) pitchindex-=8;
@@ -1918,26 +1921,26 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			float movespeed = getAIMoveSpeed();
 
 			BlockPos targetPos = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py, pz+ZBOUND_BLOCKOFFS[pitchindex]);
-			BlockPos targetPosAir = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+2, pz+ZBOUND_BLOCKOFFS[pitchindex]);
+			BlockPos targetPosAir = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+1, pz+ZBOUND_BLOCKOFFS[pitchindex]);
 			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && (onGround&&!isInWater()) &&
-					(worldObj.getBlockState(targetPos).getBlock().isNormalCube()||
-							worldObj.getBlockState(targetPos).getBlock() instanceof BlockFarmland) &&
-					!(worldObj.getBlockState(targetPos).getBlock() instanceof BlockDoor||worldObj.getBlockState(targetPos).getBlock() instanceof BlockFenceGate)/* &&
-					(!worldObj.getBlockState(targetPosAir).getBlock().getMaterial().isOpaque() ||
-							worldObj.getBlockState(targetPosAir).getBlock().getMaterial()==Material.air)*/){
+					0 == WalkNodeProcessor.func_176170_a(worldObj, this, targetPos.getX(), targetPos.getY()  , targetPos.getZ(), MathHelper.floor_float(width+1.0F), MathHelper.floor_float(height+1.0F), MathHelper.floor_float(width+1.0F), false, false, true) &&
+					1 == WalkNodeProcessor.func_176170_a(worldObj, this, targetPos.getX(), targetPos.getY()+1, targetPos.getZ(), MathHelper.floor_float(width+1.0F), MathHelper.floor_float(height+1.0F), MathHelper.floor_float(width+1.0F), false, false, true)){
 				//ジャンプとかさせるとめんどくさいから、Yだけ先に変える
-				setLocationAndAnglesWithResetPath(posX+0.05*XBOUND_BLOCKOFFS[pitchindex], posY+1D, posZ+0.05*ZBOUND_BLOCKOFFS[pitchindex], rotationYaw, rotationPitch);
+				setLocationAndAngles(posX+0.05*XBOUND_BLOCKOFFS[pitchindex], posY+1D, posZ+0.05*ZBOUND_BLOCKOFFS[pitchindex], rotationYaw, rotationPitch);
 				//弧度法に変換。MathHelper.sinの実装が怪しいのでMath.sinを使う
-				double archDegPitch = rotationPitch / 180D * Math.PI;
+//				double archDegPitch = rotationPitch / 180D * Math.PI;
 				//ナニユエ100分の1がちょうどいいのかは知らん
 //				motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
 //				motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
 			}
 
-			BlockPos tpos = new BlockPos(px,py+1,pz);
-			if(worldObj.getBlockState(tpos).getBlock().getMaterial().isOpaque() &&
-					worldObj.getBlockState(tpos).getBlock().getMaterial()!=Material.air){
-				jump();
+			if(isEntityInsideOpaqueBlock()){
+				for(int i=2;i<10;i++){
+					if(!worldObj.getBlockState(new BlockPos(posX, py+i, posZ)).getBlock().isVisuallyOpaque()&&!worldObj.getBlockState(new BlockPos(posX, py+i+1, posZ)).getBlock().isVisuallyOpaque()){
+						setLocationAndAngles(posX, py+i, posZ, rotationYaw, rotationPitch);
+						break;
+					}
+				}
 			}
 		}
 
