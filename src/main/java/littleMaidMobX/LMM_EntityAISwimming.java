@@ -25,7 +25,7 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 	@Override
 	public boolean shouldExecute() {
 		if(theEntity instanceof LMM_EntityLittleMaid){
-			if(((LMM_EntityLittleMaid)theEntity).isSwimming&&theEntity.isInWater()) return true;
+			if(theEntity.handleWaterMovement()) return true;
 		}
 		return ((theEntity.getNavigator().noPath() ?
 				(theEntity.isInsideOfMaterial(Material.water)) : theEntity.isInWater())
@@ -38,8 +38,13 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 		super.updateTask();
 		double totalmotionY = 0d;
 		if(theEntity instanceof LMM_EntityLittleMaid){
+			if(theEntity.handleLavaMovement()){
+//				theEntity.motionY+=1.0D;
+				theEntity.getJumpHelper().setJumping();
+				return;
+			}
 			LMM_EntityLittleMaid theMaid = (LMM_EntityLittleMaid) theEntity;
-			if(theMaid.isSwimming&&theMaid.isInWater()){
+			if(theMaid.handleWaterMovement()){
 				int x = MathHelper.floor_double(theEntity.posX);
 				int z = MathHelper.floor_double(theEntity.posZ);
 				int y = MathHelper.floor_double(theEntity.getEntityBoundingBox().minY);
@@ -49,7 +54,7 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 //					totalmotionY += 0.05D;
 //				}
 				
-				PathEntity pathEntity = theEntity.getNavigator().getPath();
+				PathEntity pathEntity = theMaid.prevPathEntity;
 				if(pathEntity!=null){
 					PathPoint pathPoint = pathEntity.getFinalPathPoint();
 					theEntity.motionX = ((pathPoint.xCoord>x)?1:(pathPoint.xCoord<x)?-1:0) * theEntity.getAIMoveSpeed()/3d;
@@ -57,9 +62,13 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 					totalmotionY +=		((pathPoint.yCoord>y)?1:(pathPoint.yCoord<y)?-1:0) * theEntity.getAIMoveSpeed()/3d;
 					LMM_LittleMaidMobNX.Debug("UPDATE TASK SWIM %s", pathPoint.yCoord);
 				}else{
-					LMM_LittleMaidMobNX.Debug("PATH NULL");
+					LMM_LittleMaidMobNX.Debug("SWIM PATH NULL");
 				}
-				theEntity.motionY = totalmotionY;
+				if(theMaid.isSwimming&&theEntity.handleWaterMovement()){
+					theEntity.motionY = totalmotionY;
+				}else{
+					theEntity.motionY = 0.04D;
+				}
 			}
 		}
 	}

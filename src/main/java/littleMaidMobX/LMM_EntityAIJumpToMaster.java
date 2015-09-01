@@ -113,7 +113,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 //							theMaid.setRevengeTarget(null);
 //							theMaid.setAttackTarget(null);
 //							theMaid.getNavigator().clearPathEntity();
-							theMaid.setLocationAndAngles(
+							theMaid.setLocationAndAnglesWithResetPath(
 									(float) (i + l) + 0.5F, k, (float) (j + i1) + 0.5F,
 									theMaid.rotationYaw, theMaid.rotationPitch);
 							return;
@@ -194,7 +194,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 //			theMaid.setTarget(null);
 //			theMaid.setAttackTarget(null);
 //			theMaid.getNavigator().clearPathEntity();
-			theMaid.setLocationAndAngles((double) lx + 05D, (double) ly, (double) lz + 0.5D,
+			theMaid.setLocationAndAnglesWithResetPath((double) lx + 05D, (double) ly, (double) lz + 0.5D,
 					theMaid.rotationYaw, theMaid.rotationPitch);
 			
 		}

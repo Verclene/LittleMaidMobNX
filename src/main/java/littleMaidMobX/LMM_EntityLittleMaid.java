@@ -29,6 +29,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockFarmland;
+import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockStainedGlass;
@@ -79,6 +80,7 @@ import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
+import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.profiler.Profiler;
@@ -1729,7 +1731,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //		}
 	}
 
-	private PathEntity prevPathEntity = null;
+	protected PathEntity prevPathEntity = null;
 
 	/**
 	 * バージョンアップで水浮き専用に
@@ -1740,11 +1742,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if(getNavigator().getPath()!=null)
 			prevPathEntity = getNavigator().getPath();
 		boolean flag = !isSwimming;
-		if(isInLava()) flag = true;
-		if(isSwimming&&handleWaterMovement()&&prevPathEntity!=null){
-			try{
-				LMM_LittleMaidMobNX.Debug("TARGET PATH %s/%s", getNavigator().getClass().getSimpleName(), prevPathEntity.getPathPointFromIndex(prevPathEntity.getCurrentPathIndex()).yCoord);
-			}catch(Exception e){}
+		if(isInLava()){
+			jump();
+			flag = true;
+		}
+		if(!isSwimming) flag = true;
+		if(isSwimming&&isInWater()&&prevPathEntity!=null){
+			PathPoint pathPoint = prevPathEntity.getFinalPathPoint();
+			if(worldObj.getBlockState(new BlockPos(pathPoint.xCoord,pathPoint.yCoord+2,pathPoint.zCoord)).getBlock().getMaterial()!=Material.water)
+				flag = true;
 			if(getAir()<=0) flag = true;
 		}
 		if(flag) super.updateAITick();
@@ -1840,15 +1846,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
 
 	public int DEBUGCOUNT = 0;
-
+	
 	@Override
 	public void onLivingUpdate() {
-		if(handleWaterMovement()&&isSwimming&&!(navigator instanceof PathNavigateSwimmer)){
-			navigator = new PathNavigateSwimmer(this, worldObj);
-		}else if(!handleWaterMovement()&&!(navigator instanceof PathNavigateGround)){
-			navigator = new PathNavigateGround(this, worldObj);
-		}
-		
 		if(soundTick>0) soundTick--;
 
 		// 回復判定
@@ -1919,19 +1919,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 			BlockPos targetPos = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py, pz+ZBOUND_BLOCKOFFS[pitchindex]);
 			BlockPos targetPosAir = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+2, pz+ZBOUND_BLOCKOFFS[pitchindex]);
-			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && onGround &&
-					(World.doesBlockHaveSolidTopSurface(worldObj, targetPos)||
+			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && (onGround&&!isInWater()) &&
+					(worldObj.getBlockState(targetPos).getBlock().isNormalCube()||
 							worldObj.getBlockState(targetPos).getBlock() instanceof BlockFarmland) &&
-					!(worldObj.getBlockState(targetPos).getBlock() instanceof BlockDoor) &&
+					!(worldObj.getBlockState(targetPos).getBlock() instanceof BlockDoor||worldObj.getBlockState(targetPos).getBlock() instanceof BlockFenceGate)/* &&
 					(!worldObj.getBlockState(targetPosAir).getBlock().getMaterial().isOpaque() ||
-							worldObj.getBlockState(targetPosAir).getBlock().getMaterial()==Material.air)){
+							worldObj.getBlockState(targetPosAir).getBlock().getMaterial()==Material.air)*/){
 				//ジャンプとかさせるとめんどくさいから、Yだけ先に変える
-				setLocationAndAngles(posX, posY+1D, posZ, rotationYaw, rotationPitch);
+				setLocationAndAnglesWithResetPath(posX+0.05*XBOUND_BLOCKOFFS[pitchindex], posY+1D, posZ+0.05*ZBOUND_BLOCKOFFS[pitchindex], rotationYaw, rotationPitch);
 				//弧度法に変換。MathHelper.sinの実装が怪しいのでMath.sinを使う
 				double archDegPitch = rotationPitch / 180D * Math.PI;
 				//ナニユエ100分の1がちょうどいいのかは知らん
-				motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
-				motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
+//				motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
+//				motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
 			}
 
 			BlockPos tpos = new BlockPos(px,py+1,pz);
@@ -2065,6 +2065,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 	}
 
+	public void setLocationAndAnglesWithResetPath(double x, double y, double z, float yaw, float pitch){
+		setLocationAndAngles(x, y, z, yaw, pitch);
+		navigator.clearPathEntity();
+		resetNavigator();
+	}
+
 	private void superLivingUpdate() {
 		/*
 		if (this.jumpTicks > 0)
@@ -2155,10 +2161,22 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		this.worldObj.theProfiler.endSection();
 	}
-
+	
+	protected void resetNavigator(){
+		if(handleWaterMovement()&&isSwimming&&!(navigator instanceof PathNavigateSwimmer)){
+			navigator.clearPathEntity();
+			navigator = new PathNavigateSwimmer(this, worldObj);
+		}
+		if((!handleWaterMovement()||!isSwimming)&&!(navigator instanceof PathNavigateGround)){
+			navigator.clearPathEntity();
+			navigator = new PathNavigateGround(this, worldObj);
+		}
+	}
+	
 	@Override
 	public void onUpdate() {
 		int litemuse = 0;
+		resetNavigator();
 
 		// Entity初回生成時のインベントリ更新用
 		// サーバーの方が先に起動するのでクライアント側が更新を受け取れない

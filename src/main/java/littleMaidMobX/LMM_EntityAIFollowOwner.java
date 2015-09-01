@@ -1,10 +1,13 @@
 package littleMaidMobX;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
 
 public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntityAI {
 
@@ -49,7 +52,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		}
 
 		toDistance = theMaid.getDistanceSqToEntity(entityliving);
-		if (toDistance < minDist && !theMaid.handleWaterMovement()) {
+		if (toDistance < minDist && !theMaid.isInWater()) {
 			return false;
 		} else {
 			theOwner = entityliving;
@@ -104,7 +107,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 			return;
 		}
 		// 指定距離以上ならダッシュ
-		if(!theMaid.handleWaterMovement()){
+		if(!theMaid.isInWater()){
 			theMaid.setSprinting(toDistance > sprintDist);
 			if (--field_48310_h > 0) {
 				return;
@@ -116,6 +119,20 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		PathEntity entity = theMaid.getNavigator().getPathToEntityLiving(theOwner);
 		if(entity==null){
 			LMM_LittleMaidMobNX.Debug("PATH NULL");
+			if(theMaid.handleWaterMovement()&&theMaid.isSwimming){
+				int x = MathHelper.floor_double(theOwner.posX);
+				int z = MathHelper.floor_double(theOwner.posZ);
+				int y = MathHelper.floor_double(theOwner.posY);
+				LMM_LittleMaidMobNX.Debug("TARGET POS %d,%d,%d", x,y,z);
+				if(theMaid.worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().getMaterial()!=Material.water){
+					if(theMaid.worldObj.getBlockState(new BlockPos(x, y-1, z)).getBlock().getMaterial()==Material.water)
+						entity = theMaid.getNavigator().getPathToXYZ(theOwner.posX, theOwner.posY-1, theOwner.posZ);
+					else {
+						theMaid.setLocationAndAnglesWithResetPath(x, y+1, z, theMaid.rotationYaw, theMaid.rotationPitch);
+						updateTask();
+					}
+				}
+			}
 			return;
 		}
 		theMaid.getNavigator().setPath(entity, moveSpeed);
