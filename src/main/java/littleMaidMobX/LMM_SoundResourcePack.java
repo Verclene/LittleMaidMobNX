@@ -42,14 +42,14 @@ public class LMM_SoundResourcePack implements IResourcePack {
 		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
 		{
 			lis = LMM_SoundManager.instance.getResourceStream(resource);
-			LMM_LittleMaidMobNX.Debug("getResource:%s : %s", resource, lis);
+//			LMM_LittleMaidMobNX.Debug("getResource:%s : %s", resource, lis);
 		}
 		return lis;
 	}
 
 	@Override
 	public boolean resourceExists(ResourceLocation resource) {
-		return LMM_SoundManager.instance.getResourceExists(resource);
+		return LMM_SoundManager.instance.existsResource(resource);
 	}
 
 	@SuppressWarnings("rawtypes")

@@ -175,10 +175,10 @@ public class MMM_EntityCaps implements IModelCaps {
 					MathHelper.floor_double(owner.posY + (Double)pArg[1]),
 					MathHelper.floor_double(owner.posZ + (Double)pArg[2])));
 		case caps_PosBlockAir:
-			return owner.worldObj.getBlockState(new BlockPos(
+			return !owner.worldObj.getBlockState(new BlockPos(
 					MathHelper.floor_double(owner.posX + (Double)pArg[0]),
 					MathHelper.floor_double(owner.posY + (Double)pArg[1]),
-					MathHelper.floor_double(owner.posZ + (Double)pArg[2]))).getBlock()==Blocks.air;
+					MathHelper.floor_double(owner.posZ + (Double)pArg[2]))).getBlock().isVisuallyOpaque();
 		case caps_PosBlockLight:
 			return owner.worldObj.getBlockLightOpacity(new BlockPos(
 					MathHelper.floor_double(owner.posX + (Double)pArg[0]),

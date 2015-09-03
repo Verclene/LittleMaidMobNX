@@ -55,7 +55,7 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 //				}
 				
 				PathEntity pathEntity = theMaid.prevPathEntity;
-				if(pathEntity!=null){
+				if(pathEntity!=null&&theMaid.isSwimming){
 					PathPoint pathPoint = pathEntity.getFinalPathPoint();
 					theEntity.motionX = ((pathPoint.xCoord>x)?1:(pathPoint.xCoord<x)?-1:0) * theEntity.getAIMoveSpeed()/3d;
 					theEntity.motionZ = ((pathPoint.zCoord>z)?1:(pathPoint.zCoord<z)?-1:0) * theEntity.getAIMoveSpeed()/3d;

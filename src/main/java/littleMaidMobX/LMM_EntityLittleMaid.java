@@ -1,6 +1,27 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.*;
+import static littleMaidMobX.LMM_Statics.dataWatch_Absoption;
+import static littleMaidMobX.LMM_Statics.dataWatch_Color;
+import static littleMaidMobX.LMM_Statics.dataWatch_DominamtArm;
+import static littleMaidMobX.LMM_Statics.dataWatch_ExpValue;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Aimebow;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterest;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterestAXIS;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_remainsContract;
+import static littleMaidMobX.LMM_Statics.dataWatch_Free;
+import static littleMaidMobX.LMM_Statics.dataWatch_Gotcha;
+import static littleMaidMobX.LMM_Statics.dataWatch_ItemUse;
+import static littleMaidMobX.LMM_Statics.dataWatch_Mode;
+import static littleMaidMobX.LMM_Statics.dataWatch_Parts;
+import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -26,10 +47,7 @@ import net.blacklab.lib.ItemUtil;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoublePlant;
-import net.minecraft.block.BlockFarmland;
-import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockStainedGlass;
@@ -42,7 +60,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIOpenDoor;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -55,8 +72,6 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySilverfish;
-import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntitySquid;
@@ -101,7 +116,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -178,6 +192,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private boolean looksWithInterestAXIS;
 	private float rotateAngleHead;			// Angle
 	private float prevRotateAngleHead;		// prevAngle
+	
+	public float defaultWidth;
+	public float defaultHeight;
 
 	/**
 	 * 個体ごとに値をバラつかせるのに使う。
@@ -202,8 +219,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public EntityAITempt aiTempt;
 	public LMM_EntityAIBeg aiBeg;
 	public LMM_EntityAIBegMove aiBegMove;
-	public EntityAIOpenDoor aiOpenDoor;
-	public EntityAIRestrictOpenDoor aiCloseDoor;
+	public LMMNX_EntityAIOpenDoor aiOpenDoor;
+	public LMMNX_EntityAIRestrictOpenDoor aiCloseDoor;
 	public LMM_EntityAIAvoidPlayer aiAvoidPlayer;
 	public LMM_EntityAIFollowOwner aiFollow;
 	public LMM_EntityAIAttackOnCollide aiAttack;
@@ -390,14 +407,17 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// TODO:test
 		// 31:自由変数、EntityMode等で使用可能な変数。
 		dataWatcher.addObject(dataWatch_Free, new Integer(0));
+		
+		defaultWidth = width;
+		defaultHeight = height;
 	}
 
 	public void initModeList() {
 		// AI
 		aiBeg = new LMM_EntityAIBeg(this, 8F);
 		aiBegMove = new LMM_EntityAIBegMove(this, 1.0F);
-		aiOpenDoor = new EntityAIOpenDoor(this, true);
-		aiCloseDoor = new EntityAIRestrictOpenDoor(this);
+		aiOpenDoor = new LMMNX_EntityAIOpenDoor(this, true);
+		aiCloseDoor = new LMMNX_EntityAIRestrictOpenDoor(this);
 		aiAvoidPlayer = new LMM_EntityAIAvoidPlayer(this, 1.0F, 3);
 		aiFollow = new LMM_EntityAIFollowOwner(this, 1.0F, 36D, 25D, 81D);
 		aiAttack = new LMM_EntityAIAttackOnCollide(this, 1.0F, true);
@@ -599,31 +619,23 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				ltasksDoDEST.clear();
 				ltasksDoDEST.addAll(ltasksDoSRC);
 				// TODO: 未実装の機能、モードチェンジ時の初期化を行う。
-				for (EntityAITaskEntry ltask : ltasksDoSRC) {
-					if (ltask instanceof LMM_IEntityAI)
-					{
+//				for (EntityAITaskEntry ltask : ltasksDoSRC) {
+//					if (ltask instanceof LMM_IEntityAI)
+//					{
 //						((LMM_IEntityAI)ltask).setDefaultEnable();
-					}
-				}
+//					}
+//				}
 			}
 		} catch (Exception s) {
 		}
 	}
 	public static ArrayList<EntityAITaskEntry> getEntityAITasks_taskEntries(EntityAITasks task)
 	{
-		try{
-			return (ArrayList<EntityAITaskEntry>)ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, task, "field_75782_a", "taskEntries");
-		}catch(Exception e){
-			return null;
-		}
+		return (ArrayList<EntityAITaskEntry>) task.taskEntries;
 	}
 	public static ArrayList<EntityAITaskEntry> getEntityAITasks_executingTaskEntries(EntityAITasks task)
 	{
-		try{
-			return (ArrayList<EntityAITaskEntry>)ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, task, "field_75780_b", "executingTaskEntries");
-		}catch(Exception e){
-			return null;
-		}
+		return (ArrayList<EntityAITaskEntry>) task.taskEntries;
 	}
 
 	/**
@@ -1849,6 +1861,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
 
 	public int DEBUGCOUNT = 0;
+	private boolean isInsideOpaque = false;
 	
 	@Override
 	public void onLivingUpdate() {
@@ -1933,14 +1946,22 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //				motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
 //				motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
 			}
+			
+			if(isInWater()&&worldObj.getBlockState(new BlockPos(posX,posY+2D,posZ)).getBlock().getMaterial()==Material.water&&isSneaking()){
+				LMM_LittleMaidMobNX.Debug("DISABLE SNEAK");
+				setSneaking(false);
+			}
 
-			if(isEntityInsideOpaqueBlock()){
-				for(int i=2;i<10;i++){
+			CUT: if(isEntityInsideOpaqueBlock()){
+				if(!isInsideOpaque) for(int i=2;i<10;i++){
 					if(!worldObj.getBlockState(new BlockPos(posX, py+i, posZ)).getBlock().isVisuallyOpaque()&&!worldObj.getBlockState(new BlockPos(posX, py+i+1, posZ)).getBlock().isVisuallyOpaque()){
 						setLocationAndAngles(posX, py+i, posZ, rotationYaw, rotationPitch);
-						break;
+						break CUT;
 					}
 				}
+				isInsideOpaque = true;
+			}else{
+				isInsideOpaque = false;
 			}
 		}
 
@@ -2128,9 +2149,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		else if (this.isServerWorld())
 		{
 			this.worldObj.theProfiler.startSection("newAi");
-			try{
-				this.updateEntityActionState();
-			}catch(Exception e){}
+			this.updateEntityActionState();
 			this.worldObj.theProfiler.endSection();
 		}
 

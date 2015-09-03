@@ -118,7 +118,7 @@ public class LMM_SoundManager {
 		return null;
 	}
 	
-	public boolean getResourceExists(ResourceLocation resource)
+	public boolean existsResource(ResourceLocation resource)
 	{
 		String path = resource.getResourcePath().toLowerCase();
 		if(path.endsWith(".mcmeta"))
