@@ -28,14 +28,7 @@ public class GuiButtonSwimToggle extends GuiButtonArmorToggle {
 		}else{
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
 		}
-//		int k = this.getHoverState(this.hovered);
-//		GlStateManager.enableBlend();
-//		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-//		GlStateManager.blendFunc(770, 771);
-//		this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 46 + k * 20, this.width / 2, this.height);
-//		this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + k * 20, this.width / 2, this.height);
-//		this.mouseDragged(mc, mouseX, mouseY);
-		drawTexturedModalRect(xPosition, yPosition, 48, toggle?16:0, 16, 16);
+		drawTexturedModalRect(xPosition, yPosition, 48, toggle?0:16, 16, 16);
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		GlStateManager.enableAlpha();

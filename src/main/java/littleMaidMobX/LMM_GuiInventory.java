@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import mmmlibx.lib.Client;
+import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.gui.GuiButtonNextPage;
 import net.blacklab.lmmnx.client.GuiButtonArmorToggle;
 import net.blacklab.lmmnx.client.GuiButtonSwimToggle;
@@ -362,6 +363,7 @@ public class LMM_GuiInventory extends GuiContainer {
 		visarmorbutton[2].visible = true;
 		visarmorbutton[3].visible = true;
 		swimbutton.visible = true;
+		swimbutton.toggle = entitylittlemaid.isSwimming;
 		if (ii > 25 && ii < 78 && jj > 7 && jj < 60) {
 			// ボタンの表示
 			txbutton[0].visible = true;
@@ -442,23 +444,23 @@ public class LMM_GuiInventory extends GuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		switch (par1GuiButton.id) {
-		case 100:
+		case 100 :
 			entitylittlemaid.setNextTexturePackege(0);
 			entitylittlemaid.setTextureNames();
 			break;
-		case 101:
+		case 101 :
 			entitylittlemaid.setPrevTexturePackege(0);
 			entitylittlemaid.setTextureNames();
 			break;
-		case 110:
+		case 110 :
 			entitylittlemaid.setNextTexturePackege(1);
 			entitylittlemaid.setTextureNames();
 			break;
-		case 111:
+		case 111 :
 			entitylittlemaid.setPrevTexturePackege(1);
 			entitylittlemaid.setTextureNames();
 			break;
-		case 200:
+		case 200 :
 			int ldye = 0;
 			if (mc.thePlayer.capabilities.isCreativeMode) {
 				ldye = 0xffff;
@@ -471,9 +473,33 @@ public class LMM_GuiInventory extends GuiContainer {
 			}
 			isChangeTexture = false;
 			mc.displayGuiScreen(new LMM_GuiTextureSelect(this, entitylittlemaid, ldye, true));
-		case 300:
+		case 300 :
 			visarmorbutton[0].toggle=!visarmorbutton[0].toggle;
+			break;
+		case 301 :
+			visarmorbutton[1].toggle=!visarmorbutton[1].toggle;
+			break;
+		case 302 :
+			visarmorbutton[2].toggle=!visarmorbutton[2].toggle;
+			break;
+		case 303 :
+			visarmorbutton[3].toggle=!visarmorbutton[3].toggle;
+			break;
+		case 310 :
+			swimbutton.toggle=!swimbutton.toggle;
+			entitylittlemaid.setSwimming(swimbutton.toggle);
+			sendSwimToggleToServer(swimbutton.toggle);
+			break;
 		}
+	}
+	
+	protected void sendSwimToggleToServer(boolean f) {
+		byte[] b = new byte[]{
+				LMM_Statics.LMN_Sync_SetSwimming,
+				0, 0, 0, 0,
+				(byte)(f?1:0)
+		};
+		LMM_Net.sendToEServer(entitylittlemaid, b);
 	}
 
 	@Override

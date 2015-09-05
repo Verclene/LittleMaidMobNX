@@ -98,14 +98,14 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 // Network
 
 	@SuppressWarnings("null")
-	public void clientCustomPayload(W_Message var2) {
+	public void clientCustomPayload(W_Message pPayload) {
 		// クライアント側の特殊パケット受信動作
-		byte lmode = var2.data[0];
+		byte lmode = pPayload.data[0];
 		int leid = 0;
 		LMM_EntityLittleMaid lemaid = null;
 		if ((lmode & 0x80) != 0) {
-			leid = MMM_Helper.getInt(var2.data, 1);
-			lemaid =LMM_Net.getLittleMaid(var2.data, 1, MMM_Helper.mc.theWorld);
+			leid = MMM_Helper.getInt(pPayload.data, 1);
+			lemaid =LMM_Net.getLittleMaid(pPayload.data, 1, MMM_Helper.mc.theWorld);
 			if (lemaid == null) return;
 		}
 		LMM_LittleMaidMobNX.Debug(String.format("LMM|Upd Clt Call[%2x:%d].", lmode, leid));
@@ -113,16 +113,16 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		switch (lmode) {
 		case LMN_Client_SwingArm : 
 			// 腕振り
-			byte larm = var2.data[5];
-			LMM_EnumSound lsound = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(var2.data, 6));
-			lemaid.setSwinging(larm, lsound, MMM_Helper.getInt(var2.data, 10)==1);
+			byte larm = pPayload.data[5];
+			LMM_EnumSound lsound = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(pPayload.data, 6));
+			lemaid.setSwinging(larm, lsound, MMM_Helper.getInt(pPayload.data, 10)==1);
 //			mod_LMM_littleMaidMob.Debug(String.format("SwingSound:%s", lsound.name()));
 			break;
 			
-		case LMN_Client_SetIFFValue:
+		case LMN_Client_SetIFFValue :
 			// IFFの設定値を受信
-			int lval = var2.data[1];
-			int lindex = MMM_Helper.getInt(var2.data, 2);
+			int lval = pPayload.data[1];
+			int lindex = MMM_Helper.getInt(pPayload.data, 2);
 			String lname = (String)LMM_IFF.DefaultIFF.keySet().toArray()[lindex];
 			LMM_LittleMaidMobNX.Debug("setIFF-CL %s(%d)=%d", lname, lindex, lval);
 			LMM_IFF.setIFFValue(null, lname, lval);
@@ -130,11 +130,14 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			
 		case LMN_Client_PlaySound : 
 			// 音声再生
-			LMM_EnumSound lsound9 = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(var2.data, 5));
-			lemaid.playSound(lsound9, MMM_Helper.getInt(var2.data, 9)==1);
+			LMM_EnumSound lsound9 = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(pPayload.data, 5));
+			lemaid.playSound(lsound9, MMM_Helper.getInt(pPayload.data, 9)==1);
 			LMM_LittleMaidMobNX.Debug(String.format("playSound:%s", lsound9.name()));
 			break;
-			
+		case LMM_Statics.LMN_Sync_SetSwimming :
+			//isSwimming
+			LMM_LittleMaidMobNX.Debug("CLIENT: SWIM %s", pPayload.data[5]==1);
+			lemaid.setSwimming(pPayload.data[5]==1);
 		}
 	}
 

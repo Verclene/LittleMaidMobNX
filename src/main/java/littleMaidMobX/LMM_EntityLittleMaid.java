@@ -873,7 +873,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void setDead() {
-		if (mstatgotcha != null) {
+		if (mstatgotcha != null&&maidAvatar != null) {
 			// 首紐をドロップ
 			EntityItem entityitem = new EntityItem(worldObj, mstatgotcha.posX, mstatgotcha.posY, mstatgotcha.posZ, new ItemStack(Items.string));
 			worldObj.spawnEntityInWorld(entityitem);
@@ -1134,6 +1134,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void readEntityFromNBT(NBTTagCompound par1nbtTagCompound) {
 		// データロード
+		if(maidAvatar==null) return;
 		super.readEntityFromNBT(par1nbtTagCompound);
 
 		if (par1nbtTagCompound.hasKey("ModeColor")) {
@@ -2977,7 +2978,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								} else {
 									worldObj.setEntityState(this, (byte)12);
 								}
-
 								return true;
 							}else if(itemstack1.getItem() == Items.stick){
 								if(maidDominantArm==0){
@@ -2987,8 +2987,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								}
 								return true;
 							}else if(itemstack1.getItem() == Items.fish){
+								setSwimming(!isSwimming);
 								if(!worldObj.isRemote){
-									setSwimming(!isSwimming);
 									par1EntityPlayer.addChatComponentMessage(new ChatComponentText("Swimming mode was set to "+isSwimming));
 								}
 								return true;
@@ -3017,6 +3017,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));
 					getNavigator().clearPathEntity();
 					isJumping = false;
+					if(!worldObj.isRemote){
+						byte[] bss = new byte[]{
+								LMM_Statics.LMN_Sync_SetSwimming,
+								0, 0, 0, 0,
+								(byte)(isSwimming?1:0)
+						};
+						LMM_Net.sendToAllEClient(this, bss);
+					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;
 				}
@@ -3265,7 +3273,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (!worldObj.isRemote) {
 			byte[] lba = new byte[] {
 				LMM_Statics.LMN_Client_SwingArm,
-				(byte) (force ? 1: 0), 0, 0, 0,
+				0, 0, 0, 0,
 				(byte)pArm,
 				0, 0, 0, 0,
 				0, 0, 0, 0

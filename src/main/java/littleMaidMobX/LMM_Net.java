@@ -115,7 +115,7 @@ public class LMM_Net {
 			}
 			break;
 			
-		case LMN_Server_DecDyePowder:
+		case LMN_Server_DecDyePowder :
 			// カラー番号をクライアントから受け取る
 			// インベントリから染料を減らす。
 			int lcolor2 = pPayload.data[1];
@@ -131,7 +131,7 @@ public class LMM_Net {
 			}
 			break;
 			
-		case LMN_Server_SetIFFValue:
+		case LMN_Server_SetIFFValue :
 			// IFFの設定値を受信
 			lval = pPayload.data[1];
 			lindex = MMM_Helper.getInt(pPayload.data, 2);
@@ -140,7 +140,7 @@ public class LMM_Net {
 			LMM_IFF.setIFFValue(MMM_Helper.getPlayerName(playerEntity), lname, lval);
 			sendIFFValue(playerEntity, lval, lindex);
 			break;
-		case LMN_Server_GetIFFValue:
+		case LMN_Server_GetIFFValue :
 			// IFFGUI open
 			lindex = MMM_Helper.getInt(pPayload.data, 1);
 			lname = MMM_Helper.getStr(pPayload.data, 5);
@@ -148,14 +148,16 @@ public class LMM_Net {
 			LMM_LittleMaidMobNX.Debug("getIFF-SV user:%s %s(%d)=%d", MMM_Helper.getPlayerName(playerEntity), lname, lindex, lval);
 			sendIFFValue(playerEntity, lval, lindex);
 			break;
-		case LMN_Server_SaveIFF:
+		case LMN_Server_SaveIFF :
 			// IFFファイルの保存
 			LMM_IFF.saveIFF(MMM_Helper.getPlayerName(playerEntity));
 			if (!playerEntity.worldObj.isRemote) {
 				LMM_IFF.saveIFF("");
 			}
 			break;
-			
+		case LMM_Statics.LMN_Sync_SetSwimming :
+			lemaid.setSwimming(pPayload.data[5]==1);
+			break;
 		}
 	}
 

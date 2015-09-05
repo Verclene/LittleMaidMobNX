@@ -55,7 +55,6 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 					totalmotionY +=		((pathPoint.yCoord>y)?1:(pathPoint.yCoord<y)?-1:0) * theEntity.getAIMoveSpeed()/3d;
 					LMM_LittleMaidMobNX.Debug("UPDATE TASK SWIM %s", pathPoint.yCoord);
 				}else{
-					LMM_LittleMaidMobNX.Debug("SWIM PATH NULL");
 				}
 				if(theMaid.isSwimming&&theEntity.handleWaterMovement()){
 					theEntity.motionY = totalmotionY;
