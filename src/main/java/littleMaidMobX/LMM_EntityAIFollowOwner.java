@@ -54,10 +54,9 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		toDistance = theMaid.getDistanceSqToEntity(entityliving);
 		if (toDistance < minDist && !theMaid.isInWater()) {
 			return false;
-		} else {
-			theOwner = entityliving;
-			return true;
 		}
+		theOwner = entityliving;
+		return true;
 	}
 
 	/**
@@ -68,7 +67,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		toDistance = theMaid.getDistanceSqToEntity(theOwner);
 		if(theMaid.handleWaterMovement())
 			return !theMaid.isMaidWait()&&!theMaid.isSitting();
-		else return !theMaid.getNavigator().noPath()
+		return !theMaid.getNavigator().noPath()
 				&&(toDistance > maxDist)
 				&& !theMaid.isSitting();
 	}

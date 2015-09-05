@@ -43,7 +43,7 @@ public class GuiRangedSlider extends GuiButton {
 		if (dragging) {
 			sliderValue = (float) (i - (xPosition + 4)) / (float) (width - 8);
 			if (sliderStep > 0F) {
-				sliderValue = (float)((int)(sliderValue / sliderStep)) * sliderStep;
+				sliderValue = ((int)(sliderValue / sliderStep)) * sliderStep;
 			}
 			if (sliderValue < 0.0F) {
 				sliderValue = 0.0F;
@@ -54,9 +54,9 @@ public class GuiRangedSlider extends GuiButton {
 			setDisplayString();
 		}
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		drawTexturedModalRect(xPosition + (int) (sliderValue * (float) (width - 8)),
+		drawTexturedModalRect(xPosition + (int) (sliderValue * (width - 8)),
 				yPosition, 0, 66, 4, 20);
-		drawTexturedModalRect(xPosition + (int) (sliderValue * (float) (width - 8)) + 4,
+		drawTexturedModalRect(xPosition + (int) (sliderValue * (width - 8)) + 4,
 				yPosition, 196, 66, 4, 20);
 	}
 
@@ -73,9 +73,8 @@ public class GuiRangedSlider extends GuiButton {
 //			setDisplayString();
 			dragging = true;
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	@Override

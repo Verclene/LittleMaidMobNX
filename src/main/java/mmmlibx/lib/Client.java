@@ -8,8 +8,6 @@ import mmmlibx.lib.multiModel.model.mc162.ModelRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -109,12 +107,12 @@ public class Client {
 	 * @param par2
 	 */
 	public static void renderArrowsStuckInEntity(EntityLivingBase par1EntityLiving, float par2,
-			Render pRender, ModelBase pModel) {
+			ModelBase pModel) {
 		int lacount = par1EntityLiving.getArrowCountInEntity();
 		
 		if (lacount > 0) {
 			EntityArrow larrow = new EntityArrow(par1EntityLiving.worldObj, par1EntityLiving.posX, par1EntityLiving.posY, par1EntityLiving.posZ);
-			Random lrand = new Random((long)par1EntityLiving.getEntityId());
+			Random lrand = new Random(par1EntityLiving.getEntityId());
 			RenderHelper.disableStandardItemLighting();
 			
 			for (int var6 = 0; var6 < lacount; ++var6) {
@@ -137,8 +135,8 @@ public class Client {
 				var10 *= -1.0F;
 				var11 *= -1.0F;
 				float var15 = MathHelper.sqrt_float(var9 * var9 + var11 * var11);
-				larrow.prevRotationYaw = larrow.rotationYaw = (float)(Math.atan2((double)var9, (double)var11) * 180.0D / Math.PI);
-				larrow.prevRotationPitch = larrow.rotationPitch = (float)(Math.atan2((double)var10, (double)var15) * 180.0D / Math.PI);
+				larrow.prevRotationYaw = larrow.rotationYaw = (float)(Math.atan2(var9, var11) * 180.0D / Math.PI);
+				larrow.prevRotationPitch = larrow.rotationPitch = (float)(Math.atan2(var10, var15) * 180.0D / Math.PI);
 				double var16 = 0.0D;
 				double var18 = 0.0D;
 				double var20 = 0.0D;
@@ -165,7 +163,7 @@ public class Client {
 		int ls = pValue & 0xffff;
 		int lt = pValue >>> 16;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,
-				(float) ls / 1.0F, (float) lt / 1.0F);
+				ls / 1.0F, lt / 1.0F);
 	}
 
 	public static void setTexture(ResourceLocation pRLocation) {

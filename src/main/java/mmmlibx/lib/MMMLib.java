@@ -56,8 +56,8 @@ public class MMMLib {
 		isModelAlphaBlend	= LMM_LittleMaidMobNX.cfg_isModelAlphaBlend;
 		cfg_isModelAlphaBlend = isModelAlphaBlend;
 		
-		String ls;
 /*
+		String ls;
 		ls = "DestroyAll";
 		lconf.addCustomCategoryComment(ls, "Package destruction of the fixed range is carried out.");
 		DestroyAllManager.isDebugMessage = lconf.get(ls, "isDebugMessage", false).getBoolean(false);

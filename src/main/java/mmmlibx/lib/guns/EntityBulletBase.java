@@ -21,6 +21,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -78,15 +79,15 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 		gun = pGun;
 		bullet = pBullet;
 		setSize(0.25F, 0.25F);
-		setLocationAndAngles(pEntity.posX, pEntity.posY + (double)pEntity.getEyeHeight(), pEntity.posZ, pEntity.rotationYaw, pEntity.rotationPitch);
-		posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		setLocationAndAngles(pEntity.posX, pEntity.posY + pEntity.getEyeHeight(), pEntity.posZ, pEntity.rotationYaw, pEntity.rotationPitch);
+		posX -= MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 		posY -= 0.10000000149011612D;
-		posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F;
 		setPosition(this.posX, this.posY, this.posZ);
 		float f = 0.4F;
-		motionX = (double)(-MathHelper.sin(rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float)Math.PI) * f);
-		motionZ = (double)(MathHelper.cos(rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float)Math.PI) * f);
-		motionY = (double)(-MathHelper.sin((rotationPitch + appendAngle()) / 180.0F * (float)Math.PI) * f);
+		motionX = -MathHelper.sin(rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float)Math.PI) * f;
+		motionZ = MathHelper.cos(rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(rotationPitch / 180.0F * (float)Math.PI) * f;
+		motionY = -MathHelper.sin((rotationPitch + appendAngle()) / 180.0F * (float)Math.PI) * f;
 		setThrowableHeading(motionX, motionY, motionZ, pSpeed, pf);
 	}
 
@@ -111,21 +112,21 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 	public void setThrowableHeading(double pMotionX, double pMotionY, double pMotionZ,
 			float pSpeed, float pReaction) {
 		float lf = MathHelper.sqrt_double(pMotionX * pMotionX + pMotionY * pMotionY + pMotionZ * pMotionZ);
-		pMotionX /= (double) lf;
-		pMotionY /= (double) lf;
-		pMotionZ /= (double) lf;
-		pMotionX += rand.nextGaussian() * 0.007499999832361937D * (double) pReaction;
-		pMotionY += rand.nextGaussian() * 0.007499999832361937D * (double) pReaction;
-		pMotionZ += rand.nextGaussian() * 0.007499999832361937D * (double) pReaction;
-		pMotionX *= (double) pSpeed;
-		pMotionY *= (double) pSpeed;
-		pMotionZ *= (double) pSpeed;
+		pMotionX /= lf;
+		pMotionY /= lf;
+		pMotionZ /= lf;
+		pMotionX += rand.nextGaussian() * 0.007499999832361937D * pReaction;
+		pMotionY += rand.nextGaussian() * 0.007499999832361937D * pReaction;
+		pMotionZ += rand.nextGaussian() * 0.007499999832361937D * pReaction;
+		pMotionX *= pSpeed;
+		pMotionY *= pSpeed;
+		pMotionZ *= pSpeed;
 		motionX = pMotionX;
 		motionY = pMotionY;
 		motionZ = pMotionZ;
 		float f3 = MathHelper.sqrt_double(pMotionX * pMotionX + pMotionZ * pMotionZ);
 		prevRotationYaw = rotationYaw = (float)(Math.atan2(pMotionX, pMotionZ) * 180.0D / Math.PI);
-		prevRotationPitch = rotationPitch = (float)(Math.atan2(pMotionY, (double) f3) * 180.0D / Math.PI);
+		prevRotationPitch = rotationPitch = (float)(Math.atan2(pMotionY, f3) * 180.0D / Math.PI);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -233,10 +234,9 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 				setDead();
 			}
 			return;
-		} else {
-			// 滞空時間カウンタ
-			++ticksInAir;
 		}
+		// 滞空時間カウンタ
+		++ticksInAir;
 		
 		// 接触判定
 		MovingObjectPosition movingobjectposition;
@@ -278,7 +278,7 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 							&& (entity1 != entitylivingbase || this.ticksInAir >= 5)) {
 						float f = 0.3F;
 						AxisAlignedBB axisalignedbb =
-								entity1.getEntityBoundingBox().expand((double) f, (double) f, (double) f);
+								entity1.getEntityBoundingBox().expand(f, f, f);
 						MovingObjectPosition movingobjectposition1 =
 								axisalignedbb.calculateIntercept(lvo, lvt);
 						
@@ -307,11 +307,10 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 					// ポータルに突入
 					setInPortal();
 					break;
-				} else {
-					if (onImpact(movingobjectposition)) {
-						GunsBase.Debug("hit %f, %f, %f", posX, posY, posZ);
-						return;
-					}
+				}
+				if (onImpact(movingobjectposition)) {
+					GunsBase.Debug("hit %f, %f, %f", posX, posY, posZ);
+					return;
 				}
 			} else {
 				// 接触対象なし
@@ -329,7 +328,7 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 		float f1 = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
 		rotationYaw = (float) (Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
 		
-		for (rotationPitch = (float) (Math.atan2(motionY, (double) f1) * 180.0D / Math.PI);
+		for (rotationPitch = (float) (Math.atan2(motionY, f1) * 180.0D / Math.PI);
 				rotationPitch - prevRotationPitch < -180.0F;
 				prevRotationPitch -= 360.0F) {
 			;
@@ -354,23 +353,20 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 		if (isInWater()) {
 			for (int i = 0; i < 4; ++i) {
 				float f4 = 0.25F;
-				//1.8後回し
-				/*
-				worldObj.spawnParticle("bubble",
-						posX - motionX * (double) f4,
-						posY - motionY * (double) f4,
-						posZ - motionZ * (double) f4,
+				worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE,
+						posX - motionX * f4,
+						posY - motionY * f4,
+						posZ - motionZ * f4,
 						motionX, motionY, motionZ);
-					*/
 			}
 			
 			f2 = 0.8F;
 		}
 		
-		motionX *= (double) f2;
-		motionY *= (double) f2;
-		motionZ *= (double) f2;
-		motionY -= (double) f3;
+		motionX *= f2;
+		motionY *= f2;
+		motionZ *= f2;
+		motionY -= f3;
 		setPosition(posX, posY, posZ);
 	}
 
@@ -384,45 +380,43 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 		if (var1.entityHit != null) {
 			if (bullet != null) {
 				return ((ItemBulletBase)bullet.getItem()).onHitEntity(var1, this, var1.entityHit);
-			} else {
-				var1.entityHit.attackEntityFrom(
-						DamageSource.causeThrownDamage(this, getThrower()), 1.0F);
-				if (!worldObj.isRemote) {
-					setDead();
-				}
-				return true;
 			}
-		} else {
-			Block lblock = worldObj.getBlockState(new BlockPos(var1.hitVec.xCoord, var1.hitVec.yCoord, var1.hitVec.zCoord)).getBlock();
-			//int lmeta = worldObj.getBlockMetadata(var1.blockX, var1.blockY, var1.blockZ);
-			//if (checkDestroyBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta)) {
-			//	return onBreakBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta);
-			//} else {
-				// 貫通できなかった
-				posX = var1.hitVec.xCoord;
-				posY = var1.hitVec.yCoord;
-				posZ = var1.hitVec.zCoord;
-				motionX = 0;
-				motionY = 0;
-				motionZ = 0;
-				inGround = true;
-				inBlock = lblock;
-				inX = (int) var1.hitVec.xCoord;
-				inY = (int) var1.hitVec.yCoord;
-				inZ = (int) var1.hitVec.zCoord;
-				setPosition(posX, posY, posZ);
-				// 着弾パーティクル
-				for (int i = 0; i < 8; ++i) {
-//					worldObj.spawnParticle("snowballpoof", this.posX, this.posY,
-					/*
-					worldObj.spawnParticle("smoke",
-							var1.hitVec.xCoord, var1.hitVec.yCoord, var1.hitVec.zCoord,
-							0.0D, 0.0D, 0.0D);
-							*/
-				}
-				return true;
-			//}
+			var1.entityHit.attackEntityFrom(
+					DamageSource.causeThrownDamage(this, getThrower()), 1.0F);
+			if (!worldObj.isRemote) {
+				setDead();
+			}
+			return true;
 		}
+		Block lblock = worldObj.getBlockState(new BlockPos(var1.hitVec.xCoord, var1.hitVec.yCoord, var1.hitVec.zCoord)).getBlock();
+		//int lmeta = worldObj.getBlockMetadata(var1.blockX, var1.blockY, var1.blockZ);
+		//if (checkDestroyBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta)) {
+		//	return onBreakBlock(var1, var1.blockX, var1.blockY, var1.blockZ, lblock, lmeta);
+		//} else {
+			// 貫通できなかった
+			posX = var1.hitVec.xCoord;
+			posY = var1.hitVec.yCoord;
+			posZ = var1.hitVec.zCoord;
+			motionX = 0;
+			motionY = 0;
+			motionZ = 0;
+			inGround = true;
+			inBlock = lblock;
+			inX = (int) var1.hitVec.xCoord;
+			inY = (int) var1.hitVec.yCoord;
+			inZ = (int) var1.hitVec.zCoord;
+			setPosition(posX, posY, posZ);
+			// 着弾パーティクル
+			for (int i = 0; i < 8; ++i) {
+//					worldObj.spawnParticle("snowballpoof", this.posX, this.posY,
+				/*
+				worldObj.spawnParticle("smoke",
+						var1.hitVec.xCoord, var1.hitVec.yCoord, var1.hitVec.zCoord,
+						0.0D, 0.0D, 0.0D);
+						*/
+			}
+			return true;
+		//}
 	}
 
 	/**
@@ -460,11 +454,10 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 			removeBlock(pX, pY, pZ, pBlock, pMetadata);
 			pBlock.onBlockDestroyedByExplosion(worldObj, new BlockPos(pX, pY, pZ), new Explosion(worldObj, getThrower(), pX, pY, pZ, 0.0F, false, false));
 			return true;
-		} else {
-			removeBlock(pX, pY, pZ, pBlock, pMetadata);
-			pBlock.onBlockDestroyedByPlayer(worldObj, new BlockPos(pX, pY, pZ), worldObj.getBlockState(new BlockPos(pX, pY, pZ)));
-			return false;
 		}
+		removeBlock(pX, pY, pZ, pBlock, pMetadata);
+		pBlock.onBlockDestroyedByPlayer(worldObj, new BlockPos(pX, pY, pZ), worldObj.getBlockState(new BlockPos(pX, pY, pZ)));
+		return false;
 	}
 
 	/**
@@ -518,9 +511,9 @@ public class EntityBulletBase extends Entity implements IProjectile, IEntityAddi
 			inZ = lpbuf.readInt();
 			inBlock = Block.getBlockById(lpbuf.readInt());
 		} else {
-			motionX = (double)Float.intBitsToFloat(lpbuf.readInt());
-			motionY = (double)Float.intBitsToFloat(lpbuf.readInt());
-			motionZ = (double)Float.intBitsToFloat(lpbuf.readInt());
+			motionX = Float.intBitsToFloat(lpbuf.readInt());
+			motionY = Float.intBitsToFloat(lpbuf.readInt());
+			motionZ = Float.intBitsToFloat(lpbuf.readInt());
 			setVelocity(motionX, motionY, motionZ);
 		}
 		try {

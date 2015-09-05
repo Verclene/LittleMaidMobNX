@@ -71,7 +71,7 @@ public class GunsBase {
 			lequipments[0] = pGun.copy();
 			lfield.set(pPlayer, lequipments);
 //			ReflectionHelper.setPrivateValue(lclass, pPlayer, lequipments, "previousEquipment");
-			if (pPlayer instanceof EntityPlayer) {
+			if (pPlayer != null) {
 				Container lctr = pPlayer.openContainer;
 				for (int li = 0; li < lctr.inventorySlots.size(); li++) {
 					ItemStack lis = lctr.getSlot(li).getStack(); 

@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemWritableBook;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 
 public class LMM_EntityMode_BookDecorder extends LMM_EntityModeBase {
 
@@ -27,8 +26,7 @@ public class LMM_EntityMode_BookDecorder extends LMM_EntityModeBase {
 	@Override
 	public boolean interact(EntityPlayer pentityplayer, ItemStack pitemstack) {
 		if (pitemstack.getItem() instanceof ItemWritableBook) {
-			ItemWritableBook lwb = (ItemWritableBook)pitemstack.getItem();
-			if (lwb.isNBTValid(pitemstack.getTagCompound())) {
+			if (ItemWritableBook.isNBTValid(pitemstack.getTagCompound())) {
 				NBTTagList llist = pitemstack.getTagCompound().getTagList("pages", 8);
 				String ls = "";
 				for (int li = 0; li < llist.tagCount(); li++) {

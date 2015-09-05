@@ -14,7 +14,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	
@@ -88,7 +87,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		// モードに応じた識別判定、速度優先
 		switch (pMode) {
 		case mmode_Torcher : 
-			for (li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+			for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				litemstack = owner.maidInventory.getStackInSlot(li);
 				if (litemstack == null) continue;
 				
@@ -230,8 +229,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 			int lxx = MathHelper.floor_double(owner.posX);
 			int lyy = MathHelper.floor_double(owner.posY);
 			int lzz = MathHelper.floor_double(owner.posZ);
-			int lym = MathHelper.floor_float(owner.height) + 1;
-//			mod_LMM_littleMaidMob.Debug("torch-s: %d, %d, %d", lxx, lyy, lzz);
+			//			mod_LMM_littleMaidMob.Debug("torch-s: %d, %d, %d", lxx, lyy, lzz);
 			int ll = 8;
 			int ltx = lxx, lty = lyy, ltz = lzz;
 			int lil[] = {lyy, lyy - 1, lyy + 1};

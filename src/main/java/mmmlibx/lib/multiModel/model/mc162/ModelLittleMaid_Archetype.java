@@ -163,6 +163,8 @@ public class ModelLittleMaid_Archetype extends ModelLittleMaidBase {
 		GL11.glTranslatef(-0.05F, -0.075F, 0.1F);
 	}
 
+	@SuppressWarnings("deprecation")
+	@Deprecated
 	public boolean isItemHolder() {
 		// アイテムを持っているときに手を前に出すかどうか。
 		return false;
@@ -206,11 +208,11 @@ public class ModelLittleMaid_Archetype extends ModelLittleMaidBase {
 		// アイテム持ってるときの腕振りを抑える
 		if (heldItem[1] != 0) {
 			bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F
-					- 0.3141593F * (float) heldItem[1];
+					- 0.3141593F * heldItem[1];
 		}
 		if (heldItem[0] != 0) {
 			bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F
-					- 0.3141593F * (float) heldItem[0];
+					- 0.3141593F * heldItem[0];
 		}
 		
 		bipedRightArm.rotateAngleY = 0.0F;
@@ -235,7 +237,7 @@ public class ModelLittleMaid_Archetype extends ModelLittleMaidBase {
 			float f7 = mh_sin(f6 * 3.141593F);
 			float f8 = mh_sin(lonGround * 3.141593F)
 					* -(bipedHead.rotateAngleX - 0.7F) * 0.75F;
-			bipedRightArm.rotateAngleX -= (double) f7 * 1.2D + (double) f8;
+			bipedRightArm.rotateAngleX -= f7 * 1.2D + f8;
 			bipedRightArm.rotateAngleY += bipedBody.rotateAngleY * 2.0F;
 			bipedRightArm.rotateAngleZ = mh_sin(lonGround * 3.141593F) * -0.4F;
 		}

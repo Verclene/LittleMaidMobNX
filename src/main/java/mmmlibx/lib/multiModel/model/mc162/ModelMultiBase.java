@@ -159,9 +159,7 @@ public abstract class ModelMultiBase extends ModelBase implements IModelCaps {
 	/**
 	 * 表示すべきすべての部品
 	 */
-	@Deprecated
-	public void showAllParts() {
-	}
+	public void showAllParts(){};
 	/**
 	 * 表示すべきすべての部品
 	 */

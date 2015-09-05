@@ -1,5 +1,6 @@
-package littleMaidMobX;
+package net.blacklab.lmmnx;
 
+import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIOpenDoor;
 
@@ -20,7 +21,8 @@ public class LMMNX_EntityAIOpenDoor extends EntityAIOpenDoor {
 		if(theMaid==null) return false;
 		if(!theMaid.isSwimming||!theMaid.isInWater()) {
 			return super.shouldExecute();
-		}else return false;
+		}
+		return false;
 	}
 	
 }

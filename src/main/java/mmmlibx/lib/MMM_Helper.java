@@ -9,9 +9,6 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.jcraft.jorbis.Block;
-
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -24,16 +21,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.network.play.client.C16PacketClientStatus.EnumState;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
@@ -108,7 +102,7 @@ public class MMM_Helper {
 			EntityPlayerMP lep = (EntityPlayerMP)pEntity;
 			Container lctr = lep.openContainer;
 			for (int li = 0; li < lctr.inventorySlots.size(); li++) {
-				ItemStack lis = ((Slot)lctr.getSlot(li)).getStack(); 
+				ItemStack lis = lctr.getSlot(li).getStack(); 
 				if (lis == pItemstack) {
 					lctr.inventoryItemStacks.set(li, pItemstack.copy());
 					break;
@@ -209,7 +203,7 @@ public class MMM_Helper {
 	public static boolean canBlockBeSeen(Entity pEntity, int x, int y, int z, boolean toTop, boolean do1, boolean do2) {
 		// ブロックの可視判定
 		Vec3 vec3d = new Vec3(pEntity.posX, pEntity.posY + pEntity.getEyeHeight(), pEntity.posZ);
-		Vec3 vec3d1 = new Vec3((double)x + 0.5D, (double)y + (toTop ? 0.9D : 0.5D), (double)z + 0.5D);
+		Vec3 vec3d1 = new Vec3(x + 0.5D, y + (toTop ? 0.9D : 0.5D), z + 0.5D);
 		
 		MovingObjectPosition movingobjectposition = pEntity.worldObj.rayTraceBlocks(vec3d, vec3d1, do1, do2, false);
 		if (movingobjectposition == null) {
@@ -229,10 +223,10 @@ public class MMM_Helper {
 		// Tileまでのパスを作る
 		PathNavigate lpn = pEntity.getNavigator();
 		float lspeed = 1.0F;
-		// 向きに合わせて距離を調整
-		int i = (pTarget.getPos().getY() == MathHelper.floor_double(pEntity.posY) && flag) ? 2 : 1;
 		// TODO 1.8後回し いらん気もする
 		/*
+		// 向きに合わせて距離を調整
+		int i = (pTarget.getPos().getY() == MathHelper.floor_double(pEntity.posY) && flag) ? 2 : 1;
 		switch (pEntity.worldObj.getBlockState(new BlockPos(pTarget.getPos().getX(), pTarget.getPos().getY(), pTarget.getPos().getZ())).getValue()) {
 		case 3:
 			return lpn.tryMoveToXYZ(pTarget.getPos().getX(), pTarget.getPos().getY(), pTarget.getPos().getZ() + i, lspeed);
@@ -273,80 +267,6 @@ public class MMM_Helper {
 		return -1;
 	}
 	*/
-
-	/**
-	 * Entityを登録する。
-	 * RML、Forge両対応。
-	 * @param entityclass
-	 * @param entityName
-	 * @param defaultId
-	 * 0 : オートアサイン
-	 * @param mod
-	 * @param uniqueModeName
-	 * @param trackingRange
-	 * @param updateFrequency
-	 * @param sendVelocityUpdate
-	 */
-	/*
-	public static int registerEntity(
-			Class<? extends Entity> entityclass, String entityName, int defaultId,
-			BaseMod mod, int trackingRange, int updateFrequency, boolean sendVelocityUpdate,
-			int pEggColor1, int pEggColor2) {
-		int lid = 0;
-		lid = getModEntityID(mod.getName());
-		if (isForge) {
-			try {
-				Method lmethod;
-				// EntityIDの獲得
-				lmethod = entityRegistry.getMethod("findGlobalUniqueEntityId");
-				defaultId = (Integer)lmethod.invoke(null);
-				
-				if (pEggColor1 == 0 && pEggColor2 == 0) {
-					lmethod = entityRegistry.getMethod("registerGlobalEntityID",
-							Class.class, String.class, int.class);
-					lmethod.invoke(null, entityclass, entityName, defaultId);
-				} else {
-					lmethod = entityRegistry.getMethod("registerGlobalEntityID",
-							Class.class, String.class, int.class, int.class, int.class);
-					lmethod.invoke(null, entityclass, entityName, defaultId, pEggColor1, pEggColor2);
-				}
-				// EntityListへの登録は適当な数字でよい。
-				registerModEntity.invoke(
-						null, entityclass, entityName, lid,
-						mod, trackingRange, updateFrequency, sendVelocityUpdate);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			// EntityListへの登録は
-			if (defaultId == 0) {
-				defaultId = getNextEntityID(entityclass.isAssignableFrom(EntityLivingBase.class));
-			}
-			if (pEggColor1 == 0 && pEggColor2 == 0) {
-				ModLoader.registerEntityID(entityclass, entityName, defaultId);
-			} else {
-				ModLoader.registerEntityID(entityclass, entityName, defaultId, pEggColor1, pEggColor2);
-			}
-			ModLoader.addEntityTracker(mod, entityclass, defaultId, trackingRange, updateFrequency, sendVelocityUpdate);
-		}
-		MMMLib.Debug("RegisterEntity ID:%d / %s-%d : %s", defaultId, mod.getName(), lid, entityName);
-		return defaultId;
-	}
-	public static int registerEntity(
-			Class<? extends Entity> entityclass, String entityName, int defaultId,
-			BaseMod mod, int trackingRange, int updateFrequency, boolean sendVelocityUpdate) {
-		return registerEntity(entityclass, entityName, defaultId, mod, trackingRange, updateFrequency, sendVelocityUpdate, 0, 0);
-	}
-	*/
-
-	private static int getModEntityID(String uniqueModeName) {
-		int li = 0;
-		if (entityIDList.containsKey(uniqueModeName)) {
-			li = entityIDList.get(uniqueModeName);
-		}
-		entityIDList.put(uniqueModeName, li + 1);
-		return li;
-	}
 
 	/**
 	 * Entityを返す。
@@ -420,9 +340,8 @@ public class MMM_Helper {
 			if(itemstack1.stackSize <= 0) {
 				par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, new ItemStack(Items.glass_bottle, par3DecCount));
 				return null;
-			} else {
-				par1EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle, par3DecCount));
 			}
+			par1EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Items.glass_bottle, par3DecCount));
 		} else {
 			if (itemstack1.stackSize <= 0) {
 				par1EntityPlayer.inventory.setInventorySlotContents(par2Index, null);
@@ -440,7 +359,7 @@ public class MMM_Helper {
 		if (lm.find()) {
 			lf = Integer.valueOf(lm.group(1));
 			if (!lm.group(2).isEmpty()) {
-				lf += (float)(lm.group(2).charAt(0) - 96) * 0.01;
+				lf += (lm.group(2).charAt(0) - 96) * 0.01;
 			}
 		}
 		return lf;
@@ -529,7 +448,6 @@ public class MMM_Helper {
 		BiomeGenBase[] biomeList = BiomeGenBase.getBiomeGenArray();
 		for (int i = 0; i < biomeList.length; i++) {
 			if (biomeList[i] == null) continue;
-			List<SpawnListEntry> mobs;
 			MMMLib.Debug("ReplaceBaiomeSpawn:%s", biomeList[i].biomeName);
 			MMMLib.Debug("[Creature]");
 			replaceCreatureList(biomeList[i].getSpawnableList(EnumCreatureType.CREATURE));//.spawnableCreatureList);
@@ -561,7 +479,7 @@ public class MMM_Helper {
 		Vec3 lvlook = pEntity.getLook(pDelta);
 		Vec3 lvview = lvpos.addVector(lvlook.xCoord * pRange, lvlook.yCoord * pRange, lvlook.zCoord * pRange);
 		Entity ltarget = null;
-		List llist = pEntity.worldObj.getEntitiesWithinAABBExcludingEntity(pEntity, pEntity.getEntityBoundingBox().addCoord(lvlook.xCoord * pRange, lvlook.yCoord * pRange, lvlook.zCoord * pRange).expand((double)pExpand, (double)pExpand, (double)pExpand));
+		List llist = pEntity.worldObj.getEntitiesWithinAABBExcludingEntity(pEntity, pEntity.getEntityBoundingBox().addCoord(lvlook.xCoord * pRange, lvlook.yCoord * pRange, lvlook.zCoord * pRange).expand(pExpand, pExpand, pExpand));
 		double ltdistance = pRange * pRange;
 		
 		for (int var13 = 0; var13 < llist.size(); ++var13) {
@@ -569,7 +487,7 @@ public class MMM_Helper {
 			
 			if (lentity.canBeCollidedWith()) {
 				float lexpand = lentity.getCollisionBorderSize() + 0.3F;
-				AxisAlignedBB laabb = lentity.getEntityBoundingBox().expand((double)lexpand, (double)lexpand, (double)lexpand);
+				AxisAlignedBB laabb = lentity.getEntityBoundingBox().expand(lexpand, lexpand, lexpand);
 				MovingObjectPosition lmop = laabb.calculateIntercept(lvpos, lvview);
 				
 				if (laabb.isVecInside(lvpos)) {

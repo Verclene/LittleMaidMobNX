@@ -24,7 +24,7 @@ public class EquippedStabilizer {
 		for (int li = 0; li < pmodel.boxList.size(); li++) {
 			ModelRenderer lmr = pmodel.boxList.get(li);
 			if (lmr.boxName != null && lmr.boxName.equalsIgnoreCase(equipPointName)) {
-				equipPoint = (ModelRenderer)lmr;
+				equipPoint = lmr;
 				return true;
 			}
 		}

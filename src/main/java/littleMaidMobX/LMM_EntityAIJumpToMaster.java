@@ -105,16 +105,16 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 							&& !theWorld.getBlockState(new BlockPos(i + l, k + 1, j + i1)).getBlock().isNormalCube()) {
 						// 主の前に跳ばない
 						double dd = theOwner.getDistanceSq(
-								(double) (i + l) + 0.5D + MathHelper.sin(theOwner.rotationYaw * 0.01745329252F) * 2.0D,
-								(double) k,
-								(double) (j + i1) - MathHelper.cos(theOwner.rotationYaw * 0.01745329252F) * 2.0D);
+								i + l + 0.5D + MathHelper.sin(theOwner.rotationYaw * 0.01745329252F) * 2.0D,
+								k,
+								j + i1 - MathHelper.cos(theOwner.rotationYaw * 0.01745329252F) * 2.0D);
 						if (dd > 8D) {
 //							theMaid.setTarget(null);
 //							theMaid.setRevengeTarget(null);
 //							theMaid.setAttackTarget(null);
 //							theMaid.getNavigator().clearPathEntity();
 							theMaid.setLocationAndAnglesWithResetPath(
-									(float) (i + l) + 0.5F, k, (float) (j + i1) + 0.5F,
+									i + l + 0.5F, k, j + i1 + 0.5F,
 									theMaid.rotationYaw, theMaid.rotationPitch);
 							return;
 						}
@@ -194,7 +194,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 //			theMaid.setTarget(null);
 //			theMaid.setAttackTarget(null);
 //			theMaid.getNavigator().clearPathEntity();
-			theMaid.setLocationAndAnglesWithResetPath((double) lx + 05D, (double) ly, (double) lz + 0.5D,
+			theMaid.setLocationAndAnglesWithResetPath(lx + 05D, ly, lz + 0.5D,
 					theMaid.rotationYaw, theMaid.rotationPitch);
 			
 		}

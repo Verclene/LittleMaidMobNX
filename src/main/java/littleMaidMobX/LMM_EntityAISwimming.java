@@ -1,16 +1,10 @@
 package littleMaidMobX;
 
-import java.util.function.IntBinaryOperator;
-
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 
 public class LMM_EntityAISwimming extends EntityAISwimming {
@@ -48,8 +42,7 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 				int x = MathHelper.floor_double(theEntity.posX);
 				int z = MathHelper.floor_double(theEntity.posZ);
 				int y = MathHelper.floor_double(theEntity.getEntityBoundingBox().minY);
-				double h = theEntity.getEntityBoundingBox().maxY-theEntity.getEntityBoundingBox().minY;
-				totalmotionY+= 0.03D*MathHelper.sin((float)theEntity.ticksExisted/8f);
+				totalmotionY+= 0.03D*MathHelper.sin(theEntity.ticksExisted/8f);
 //				if(theEntity.worldObj.isAnyLiquid(new AxisAlignedBB(x, y, z, x, y+h+1, z))){
 //					totalmotionY += 0.05D;
 //				}

@@ -1,16 +1,12 @@
 package littleMaidMobX;
 
 import mmmlibx.lib.MMM_Helper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 /**
  * 独自基準としてモード定数は0x0080は平常、0x00c0は血まみれモードと区別。
@@ -127,7 +123,7 @@ public class LMM_EntityMode_Fencer extends LMM_EntityModeBase {
 		// モードに応じた識別判定、速度優先
 		switch (pMode) {
 		case mmode_Fencer : 
-			for (li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+			for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				litemstack = owner.maidInventory.getStackInSlot(li);
 				if (litemstack == null) continue;
 				
@@ -150,7 +146,7 @@ public class LMM_EntityMode_Fencer extends LMM_EntityModeBase {
 			}
 			break;
 		case mmode_Bloodsucker :
-			for (li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+			for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				litemstack = owner.maidInventory.getStackInSlot(li);
 				if (litemstack == null) continue;
 				

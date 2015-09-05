@@ -4,21 +4,13 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class MMM_RenderItem extends RenderItem {
-
-	private Random random;
-
 
 	public MMM_RenderItem() {
 		//1.8検討
 		super(Minecraft.getMinecraft().getTextureManager(), null);
-		random = new Random();
+		new Random();
 	}
 
 	/*

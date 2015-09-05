@@ -4,8 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 
 import org.lwjgl.opengl.GL11;
@@ -59,8 +57,9 @@ public class MMM_GuiSlotMobSelect extends GuiSlot {
 		// 基本スロットの描画、細かい所はオーナー側で
 		// Entityの確保
 		String s = ownerGui.entityMap.keySet().toArray()[var1].toString();
-		boolean lf = ownerGui.exclusionList.contains(s);
+		boolean lf = MMM_GuiMobSelect.exclusionList.contains(s);
 		EntityLivingBase entityliving = lf ? null : (EntityLivingBase) ownerGui.entityMap.get(s);
+		if(entityliving==null) return;
 		
 		// 独自描画
 		ownerGui.drawSlot(var1, var2, var3, var4, s, entityliving);
@@ -81,7 +80,7 @@ public class MMM_GuiSlotMobSelect extends GuiSlot {
 		if (entityliving.height > 2F) {
 			f1 = f1 * 3F / entityliving.height;
 		}
-		float lxp = ((var1 & 1) == 0) ? (float) var2 + 30F : (float) (ownerGui.width - var2) - 30F;
+		float lxp = ((var1 & 1) == 0) ? var2 + 30F : ownerGui.width - var2 - 30F;
 		GL11.glTranslatef(lxp, var3 + 30F, 50F + f1);
 		GL11.glScalef(-f1, f1, f1);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
@@ -102,7 +101,7 @@ public class MMM_GuiSlotMobSelect extends GuiSlot {
 			Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entityliving,
 					0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		} catch (Exception e) {
-			ownerGui.exclusionList.add(s);
+			MMM_GuiMobSelect.exclusionList.add(s);
 		}
 		// 影だかバイオームだかの処理?
 		GL11.glPopMatrix();

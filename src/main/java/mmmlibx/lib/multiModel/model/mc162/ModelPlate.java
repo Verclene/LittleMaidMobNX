@@ -61,8 +61,8 @@ public class ModelPlate extends ModelBoxBase {
 			posX1 = pX;
 			posY1 = pY;
 			posZ1 = pZ;
-			posX2 = lx = pX + (float) pWidth;
-			posY2 = ly = pY + (float) pHeight;
+			posX2 = lx = pX + pWidth;
+			posY2 = ly = pY + pHeight;
 			posZ2 = lz = pZ;
 			pX -= pZoom;
 			pY -= pZoom;
@@ -82,8 +82,8 @@ public class ModelPlate extends ModelBoxBase {
 			posY1 = pY;
 			posZ1 = pZ;
 			posX2 = lx = pX;
-			posY2 = ly = pY + (float) pHeight;
-			posZ2 = lz = pZ + (float) pWidth;
+			posY2 = ly = pY + pHeight;
+			posZ2 = lz = pZ + pWidth;
 			pY -= pZoom;
 			pZ -= pZoom;
 			ly += pZoom;
@@ -102,9 +102,9 @@ public class ModelPlate extends ModelBoxBase {
 			posX1 = pX;
 			posY1 = pY;
 			posZ1 = pZ;
-			posX2 = lx = pX + (float) pWidth;
+			posX2 = lx = pX + pWidth;
 			posY2 = ly = pY;
-			posZ2 = lz = pZ + (float) pHeight;
+			posZ2 = lz = pZ + pHeight;
 			pX -= pZoom;
 			pZ -= pZoom;
 			lx += pZoom;
@@ -232,12 +232,12 @@ public class ModelPlate extends ModelBoxBase {
 	}
 
 	public float getU(ModelRenderer pRender, int pU) {
-		float lf = (float)pU / pRender.textureWidth;
+		float lf = pU / pRender.textureWidth;
 		return lf;
 	}
 
 	public float getV(ModelRenderer pRender, int pV) {
-		float lf = (float)pV / pRender.textureHeight;
+		float lf = pV / pRender.textureHeight;
 		return lf;
 	}
 

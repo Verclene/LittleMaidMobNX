@@ -124,7 +124,7 @@ public class LMM_EntityMode_Archer extends LMM_EntityModeBase {
 		switch (pMode) {
 		case mmode_Archer :
 		case mmode_Blazingstar :
-			for (li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+			for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				litemstack = owner.maidInventory.getStackInSlot(li);
 				if (litemstack == null) continue;
 
@@ -179,7 +179,7 @@ public class LMM_EntityMode_Archer extends LMM_EntityModeBase {
 					int ly = (int)owner.posY;
 					int lz = (int)owner.posZ;
 					if (lworld.isAirBlock(new BlockPos(lx, ly, lz)) || lworld.getBlockState(new BlockPos(lx, ly, lz)).getBlock().getMaterial().getCanBurn()) {
-						lworld.playSoundEffect((double)lx + 0.5D, (double)ly + 0.5D, (double)lz + 0.5D, "fire.ignite", 1.0F, owner.getRNG().nextFloat() * 0.4F + 0.8F);
+						lworld.playSoundEffect(lx + 0.5D, ly + 0.5D, lz + 0.5D, "fire.ignite", 1.0F, owner.getRNG().nextFloat() * 0.4F + 0.8F);
 						lworld.setBlockState(new BlockPos(lx, ly, lz), Blocks.fire.getDefaultState());
 					}
 				}

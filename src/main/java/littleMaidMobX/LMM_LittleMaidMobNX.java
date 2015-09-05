@@ -6,7 +6,9 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
+import net.blacklab.lmmnx.LMM_SoundResourcePack;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
+import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -41,7 +43,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 39";
+	public static final String VERSION = "NX3 Build 42";
 	public static final int VERSION_CODE = 6;
 
 	/*
@@ -162,7 +164,6 @@ public class LMM_LittleMaidMobNX {
 
 	public static Random randomSoundChance;
 
-	@SuppressWarnings("unused")
 	@EventHandler
 	public void PreInit(FMLPreInitializationEvent evt)
 	{

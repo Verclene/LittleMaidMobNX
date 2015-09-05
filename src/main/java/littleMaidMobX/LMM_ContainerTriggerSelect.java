@@ -96,7 +96,7 @@ public class LMM_ContainerTriggerSelect extends ContainerCreative {
 	public void scrollTo(float f) {
 		// スクロールポジション
 		int i = (itemList.size() / 8 - 5) + 1;
-		int j = (int) ((double) (f * (float) i) + 0.5D);
+		int j = (int) (f * i + 0.5D);
 		if (j < 0) {
 			j = 0;
 		}
@@ -192,7 +192,7 @@ public class LMM_ContainerTriggerSelect extends ContainerCreative {
 	public void setWeaponlist(float f) {
 		// スクロールポジション
 		int i = (weaponSelect.size() / 8 - 4) + 1;
-		weaponOffset = (int) ((double) (f * (float) i) + 0.5D);
+		weaponOffset = (int) (f * i + 0.5D);
 		if (weaponOffset < 0) {
 			weaponOffset = 0;
 		}

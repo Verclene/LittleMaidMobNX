@@ -125,9 +125,8 @@ public class LMM_EntityAIFindBlock extends EntityAIBase implements LMM_IEntityAI
 				flagdammy = true;
 			}
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.blacklab.lib.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;

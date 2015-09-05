@@ -14,7 +14,6 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemAppleGold;
 import net.minecraft.item.ItemBucketMilk;
@@ -24,7 +23,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 
@@ -35,7 +33,6 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 	private IInventory myInventory;
 	private IInventory myChest;
 	private List<IInventory> fusedTiles;
-	private boolean isWorking;
 	private double lastdistance;
 	private int maidSearchCount;
 	
@@ -201,7 +198,6 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 	public boolean overlooksBlock(int pMode) {
 		// チェストカートの検索
 		List<TileEntity> list = owner.worldObj.loadedTileEntityList;
-		double cartl = 256D;
 		for (TileEntity lentity : list) {
 			if(!(lentity instanceof TileEntityChest)) continue;
 			if (!fusedTiles.contains(lentity)) {
@@ -224,12 +220,10 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 		if (myInventory instanceof TileEntity) {
 			owner.setTilePos((TileEntity)myInventory);
 			return myInventory != null;
-		} else {
-			//1.8検討
-			//owner.setTarget((Entity)myInventory);
-			return false;
 		}
-//		return myInventory != null;
+		//1.8検討
+		//owner.setTarget((Entity)myInventory);
+		return false;
 	}
 
 	@Override
@@ -278,10 +272,9 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 				//	// 見失った
 				//	clearMy();
 				//}
-			} else {
-				// Tileの消失
-				clearMy();
 			}
+			// Tileの消失
+			clearMy();
 		} else {
 			// 想定外のインベントリ
 			if (myInventory != null) {
@@ -466,10 +459,9 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 				clearMy();
 			}
 			return true;
-		} else {
-			// ターゲットが変わってる？
-			clearMy();
 		}
+		// ターゲットが変わってる？
+		clearMy();
 		return true;
 	}
 

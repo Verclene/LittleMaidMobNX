@@ -1,5 +1,6 @@
-package littleMaidMobX;
+package net.blacklab.lmmnx;
 
+import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
 

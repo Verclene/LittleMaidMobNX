@@ -5,6 +5,7 @@ import mmmlibx.lib.multiModel.model.mc162.*;
 import org.lwjgl.opengl.GL11;
 
 
+@SuppressWarnings("deprecation")
 public class MMM_ModelMulti_Steve extends ModelMultiBase {
 
 	public ModelRenderer bipedHead;

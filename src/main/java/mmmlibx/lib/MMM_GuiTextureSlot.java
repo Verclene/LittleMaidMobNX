@@ -1,17 +1,14 @@
 package mmmlibx.lib;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -124,11 +121,11 @@ public class MMM_GuiTextureSlot extends GuiSlot {
 					selectColor = -1;
 				}
 				if (color == li) {
-					owner.drawRect(lx, var3, lx + 11, var3 + 36, 0x88882222);
+					Gui.drawRect(lx, var3, lx + 11, var3 + 36, 0x88882222);
 				} else if (owner.selectColor == li) {
-					owner.drawRect(lx, var3, lx + 11, var3 + 36, 0x88226622);
+					Gui.drawRect(lx, var3, lx + 11, var3 + 36, 0x88226622);
 				} else if ((owner.canSelectColor & (1 << li)) > 0) {
-					owner.drawRect(lx, var3, lx + 11, var3 + 36, 0x88222288);
+					Gui.drawRect(lx, var3, lx + 11, var3 + 36, 0x88222288);
 				}
 			}
 		}
@@ -154,8 +151,6 @@ public class MMM_GuiTextureSlot extends GuiSlot {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 		entity.modeArmor = mode;
 		if (mode) {
-			// アーマー
-			ResourceLocation ltxname[];
 			GL11.glTranslatef(1F, 0, 0);
 			Map<Integer, ResourceLocation> lmap = lbox.armors.get("default");
 			if (lmap != null) {

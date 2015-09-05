@@ -159,6 +159,7 @@ public class LMM_InventoryLittleMaid extends InventoryPlayer {
 		}
 	}
 */
+	@SuppressWarnings("null")
 	public void dropAllItems(boolean detonator) {
 		// インベントリをブチマケロ！
 		Explosion lexp = null;
@@ -216,9 +217,8 @@ public class LMM_InventoryLittleMaid extends InventoryPlayer {
 	public ItemStack getCurrentItem() {
 		if (currentItem >= 0 && currentItem < mainInventory.length) {
 			return mainInventory[currentItem];
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	@Override

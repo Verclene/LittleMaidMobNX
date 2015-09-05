@@ -1,7 +1,7 @@
 package mmmlibx.lib;
 
-import mmmlibx.lib.multiModel.model.mc162.*;
-import net.minecraft.entity.Entity;
+import mmmlibx.lib.multiModel.model.mc162.ModelRenderer;
+import mmmlibx.lib.multiModel.model.mc162.ModelStabilizerBase;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -36,7 +36,7 @@ public class MMM_ModelStabilizer_WitchHat extends ModelStabilizerBase {
 	}
 	
 //	@Override
-	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+	public void render(float f5) {
 		GL11.glTranslatef(0F, -0.1F, 0F);
 		WitchHat.render(f5);
 	}

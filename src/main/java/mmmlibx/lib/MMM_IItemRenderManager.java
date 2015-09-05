@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
  * アイテム用の特殊レンダーに継承させるインターフェース。
  * 現状、継承させていなくてもメソッドがItemに記述されていれば動作する。
  */
+@SuppressWarnings("deprecation")
 public interface MMM_IItemRenderManager {
 
 	public static final int VM_FIRST_PERSON		= 0;

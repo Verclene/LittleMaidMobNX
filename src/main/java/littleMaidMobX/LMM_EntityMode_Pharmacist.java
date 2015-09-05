@@ -87,7 +87,7 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 		case mmode_Pharmacist :
 			litemstack = owner.getCurrentEquippedItem();
 			if (!(inventryPos > 0 && litemstack != null && !litemstack.getItem().isPotionIngredient(litemstack))) {
-				for (li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+				for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 					litemstack = owner.maidInventory.getStackInSlot(li);
 					if (litemstack != null) {
 						// 対象は水ポーション

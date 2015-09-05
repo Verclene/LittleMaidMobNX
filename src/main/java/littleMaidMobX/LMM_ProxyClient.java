@@ -7,6 +7,7 @@ import mmmlibx.lib.MMM_EntityDummy;
 import mmmlibx.lib.MMM_EntitySelect;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_RenderDummy;
+import net.blacklab.lmmnx.client.LMMNX_RenderEntitySelect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityPickupFX;
 import net.minecraft.entity.Entity;
@@ -96,6 +97,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	
 // Network
 
+	@SuppressWarnings("null")
 	public void clientCustomPayload(W_Message var2) {
 		// クライアント側の特殊パケット受信動作
 		byte lmode = var2.data[0];
@@ -112,7 +114,6 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		case LMN_Client_SwingArm : 
 			// 腕振り
 			byte larm = var2.data[5];
-			boolean force = var2.data[1]==1 ? true : false;
 			LMM_EnumSound lsound = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(var2.data, 6));
 			lemaid.setSwinging(larm, lsound, MMM_Helper.getInt(var2.data, 10)==1);
 //			mod_LMM_littleMaidMob.Debug(String.format("SwingSound:%s", lsound.name()));

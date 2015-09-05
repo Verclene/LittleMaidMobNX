@@ -1,6 +1,5 @@
 package mmmlibx.lib;
 
-import javax.print.attribute.standard.PDLOverrideSupported;
 
 /**
  * カウンタ用。

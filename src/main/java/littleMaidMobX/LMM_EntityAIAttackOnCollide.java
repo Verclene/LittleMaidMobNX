@@ -2,10 +2,8 @@ package littleMaidMobX;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
@@ -60,12 +58,11 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 		
 		if ((pathToTarget != null) || (theMaid.getDistanceSq(entityTarget.posX, entityTarget.getEntityBoundingBox().minY, entityTarget.posZ) <= attackRange)) {
 			return true;
-		} else {
-			theMaid.setAttackTarget(null);
-			theMaid.setRevengeTarget(null);
-			theMaid.getNavigator().clearPathEntity();
-			return false;
 		}
+		theMaid.setAttackTarget(null);
+		theMaid.setRevengeTarget(null);
+		theMaid.getNavigator().clearPathEntity();
+		return false;
 		
 	}
 	
@@ -177,29 +174,28 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 		
 		if (!theMaid.getSwingStatusDominant().canAttack()) {
 			return;
-		} else {
-			// 正面から110度方向が攻撃範囲
-			double tdx = entityTarget.posX - theMaid.posX;
-			double tdz = entityTarget.posZ - theMaid.posZ;
-			double vdx = -Math.sin(theMaid.renderYawOffset * 3.1415926535897932384626433832795F / 180F);
-			double vdz = Math.cos(theMaid.renderYawOffset * 3.1415926535897932384626433832795F / 180F);
-			double ld = (tdx * vdx + tdz * vdz) / (Math.sqrt(tdx * tdx + tdz * tdz) * Math.sqrt(vdx * vdx + vdz * vdz));
+		}
+		// 正面から110度方向が攻撃範囲
+		double tdx = entityTarget.posX - theMaid.posX;
+		double tdz = entityTarget.posZ - theMaid.posZ;
+		double vdx = -Math.sin(theMaid.renderYawOffset * 3.1415926535897932384626433832795F / 180F);
+		double vdz = Math.cos(theMaid.renderYawOffset * 3.1415926535897932384626433832795F / 180F);
+		double ld = (tdx * vdx + tdz * vdz) / (Math.sqrt(tdx * tdx + tdz * tdz) * Math.sqrt(vdx * vdx + vdz * vdz));
 //	        System.out.println(theMaid.renderYawOffset + ", " + ld);
-			if (ld < -0.35D) {
-				return;
-			}
-			
-			// 攻撃
-			theMaid.attackEntityAsMob(entityTarget);
-			//theMaid.moveback();
-			if (theMaid.getActiveModeClass().isChangeTartget(entityTarget)) {
-				// 対象を再設定させる
-				theMaid.setAttackTarget(null);
-				theMaid.setRevengeTarget(null);
-				theMaid.getNavigator().clearPathEntity();
-			}
+		if (ld < -0.35D) {
 			return;
 		}
+		
+		// 攻撃
+		theMaid.attackEntityAsMob(entityTarget);
+		//theMaid.moveback();
+		if (theMaid.getActiveModeClass().isChangeTartget(entityTarget)) {
+			// 対象を再設定させる
+			theMaid.setAttackTarget(null);
+			theMaid.setRevengeTarget(null);
+			theMaid.getNavigator().clearPathEntity();
+		}
+		return;
 	}
 
 	@Override

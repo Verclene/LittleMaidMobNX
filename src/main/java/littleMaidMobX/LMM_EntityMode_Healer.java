@@ -117,7 +117,7 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 				// 主の回復
 				if (owner.isContractEX() && owner.mstatMasterDistanceSq < 16D
 						&& owner.mstatMasterEntity != null && owner.mstatMasterEntity.isEntityAlive()
-						&& owner.mstatMasterEntity instanceof EntityPlayer
+						&& owner.mstatMasterEntity != null
 						&& owner.canEntityBeSeen(owner.mstatMasterEntity)) {
 					EntityPlayer lmaster = owner.getMaidMasterEntity(); 
 					int h = lmaster.getFoodStats().getFoodLevel();
@@ -176,12 +176,11 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 											lswing = false;
 										}
 										break;
-									} else {
-										if (Potion.potionTypes[potioneffect.getPotionID()].isBadEffect()
-												|| lmaster.isPotionActive(potioneffect.getPotionID())) {
-											lswing = false;
-											break;
-										}
+									}
+									if (Potion.potionTypes[potioneffect.getPotionID()].isBadEffect()
+											|| lmaster.isPotionActive(potioneffect.getPotionID())) {
+										lswing = false;
+										break;
 									}
 								}
 							}

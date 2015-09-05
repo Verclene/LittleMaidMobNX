@@ -20,14 +20,12 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import littleMaidMobX.LMMNX_OldZipTexturesLoader;
-import mmmlibx.lib.multiModel.model.mc162.*;
+import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
 import net.blacklab.lib.FileClassUtil;
+import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
-import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -372,9 +370,7 @@ public class MMM_TextureManager {
 				MMMLib.Debug("%04d=%s:%04x:%04x", li, lbox.textureName, lbox.contractColor, lbox.wildColor);
 			}
 			return true;
-		} else {
 		}
-		
 		return false;
 	}
 
@@ -497,14 +493,11 @@ public class MMM_TextureManager {
 				String fn = fname.substring(i);
 				int lindex = getIndex(fn);
 				if (lindex > -1) {
-					String an = null;
 					if (lindex == tx_oldarmor1) {
 						lindex = tx_armor1;
-						an = "default";
 					}
 					if (lindex == tx_oldarmor2) {
 						lindex = tx_armor2;
-						an = "default";
 					}
 					if (lindex == tx_oldwild) {
 						lindex = tx_wild + 12;
@@ -768,16 +761,15 @@ public class MMM_TextureManager {
 	public MMM_TextureBoxServer getRandomTexture(Random pRand) {
 		if (textureServer.isEmpty()) {
 			return null;
-		} else {
-			// 野生色があるものをリストアップ
-			List<MMM_TextureBoxServer> llist = new ArrayList<MMM_TextureBoxServer>();
-			for (MMM_TextureBoxServer lbox : textureServer) {
-				if (lbox.getWildColorBits() > 0) {
-					llist.add(lbox);
-				}
-			}
-			return llist.get(pRand.nextInt(llist.size()));
 		}
+		// 野生色があるものをリストアップ
+		List<MMM_TextureBoxServer> llist = new ArrayList<MMM_TextureBoxServer>();
+		for (MMM_TextureBoxServer lbox : textureServer) {
+			if (lbox.getWildColorBits() > 0) {
+				llist.add(lbox);
+			}
+		}
+		return llist.get(pRand.nextInt(llist.size()));
 	}
 
 	/**
@@ -837,17 +829,16 @@ public class MMM_TextureManager {
 	public MMM_TextureBox getDefaultTexture(Class pEntityClass) {
 		if (defaultTextures.containsKey(pEntityClass)) {
 			return defaultTextures.get(pEntityClass);
-		} else {
-			Class lsuper = pEntityClass.getSuperclass();
-			if (lsuper != null) {
-				MMM_TextureBox lbox = getDefaultTexture(lsuper);
-				if (lbox != null) {
-					setDefaultTexture(pEntityClass, lbox);
-				}
-				return lbox;
-			}
-			return null;
 		}
+		Class lsuper = pEntityClass.getSuperclass();
+		if (lsuper != null) {
+			MMM_TextureBox lbox = getDefaultTexture(lsuper);
+			if (lbox != null) {
+				setDefaultTexture(pEntityClass, lbox);
+			}
+			return lbox;
+		}
+		return null;
 	}
 
 
@@ -966,15 +957,13 @@ public class MMM_TextureManager {
 		// Client
 		if (textureServerIndex.containsKey(pBox)) {
 			return textureServerIndex.get(pBox);
-		} else {
-			int ll = getRequestStringIndex(pBox.textureName);
-			if (ll > -1) {
-				sendToServerGetTextureIndex(ll, pBox);
-				return -1;
-			} else {
-				return ll;
-			}
 		}
+		int ll = getRequestStringIndex(pBox.textureName);
+		if (ll > -1) {
+			sendToServerGetTextureIndex(ll, pBox);
+			return -1;
+		}
+		return ll;
 	}
 
 	protected void sendToServerSetTexturePackIndex(ITextureEntity pEntity, int pColor, int[] pIndex) {

@@ -3,19 +3,16 @@ package littleMaidMobX;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,42 +32,39 @@ public class LMM_ItemSpawnEgg extends Item
 		{
 			return true;
 		}
-		else
+		Block block = par3World.getBlockState(par46X).getBlock();
+		int par4 = par46X.getX(); int par5 = par46X.getY() + 1; int par6 = par46X.getZ();
+		/*
+		par4 += Facing.offsetsXForSide[par7];
+		par5 += Facing.offsetsYForSide[par7];
+		par6 += Facing.offsetsZForSide[par7];
+		*/
+		double d0 = 0.0D;
+
+		if (par7 == EnumFacing.UP && block.getRenderType() == 11)
 		{
-			Block block = par3World.getBlockState(par46X).getBlock();
-			int par4 = par46X.getX(); int par5 = par46X.getY() + 1; int par6 = par46X.getZ();
-			/*
-			par4 += Facing.offsetsXForSide[par7];
-			par5 += Facing.offsetsYForSide[par7];
-			par6 += Facing.offsetsZForSide[par7];
-			*/
-			double d0 = 0.0D;
-
-			if (par7 == EnumFacing.UP && block.getRenderType() == 11)
-			{
-				d0 = 0.5D;
-			}
-
-			Entity entity = spawnMaid(par3World, par1ItemStack.getItemDamage(), (double)par4 + 0.5D, (double)par5 + d0, (double)par6 + 0.5D);
-
-			if (entity != null)
-			{
-				if (entity instanceof EntityLivingBase && par1ItemStack.hasDisplayName())
-				{
-					((EntityLiving)entity).setCustomNameTag(par1ItemStack.getDisplayName());
-				}
-
-				if (!par2EntityPlayer.capabilities.isCreativeMode)
-				{
-					--par1ItemStack.stackSize;
-				}
-			}
-
-			return true;
+			d0 = 0.5D;
 		}
+
+		Entity entity = spawnMaid(par3World, par4 + 0.5D, par5 + d0, par6 + 0.5D);
+
+		if (entity != null)
+		{
+			if (entity instanceof EntityLivingBase && par1ItemStack.hasDisplayName())
+			{
+				((EntityLiving)entity).setCustomNameTag(par1ItemStack.getDisplayName());
+			}
+
+			if (!par2EntityPlayer.capabilities.isCreativeMode)
+			{
+				--par1ItemStack.stackSize;
+			}
+		}
+
+		return true;
 	}
 
-	public static Entity spawnMaid(World par0World, int par1, double par2, double par4, double par6)
+	public static Entity spawnMaid(World par0World, double par2, double par4, double par6)
 	{
 		EntityLiving entityliving = null;
 		try {

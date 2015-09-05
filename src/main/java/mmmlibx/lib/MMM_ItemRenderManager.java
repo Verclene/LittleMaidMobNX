@@ -24,6 +24,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
 
+@SuppressWarnings("deprecation")
 public class MMM_ItemRenderManager {
 
 	protected static Map<Object, MMM_ItemRenderManager> classList = new HashMap<Object, MMM_ItemRenderManager>();
@@ -84,40 +85,39 @@ public class MMM_ItemRenderManager {
 	public static boolean isEXRender(Item pItem) {
 		if (checkList.contains(pItem)) {
 			return classList.containsKey(pItem);
-		} else {
-			checkList.add(pItem);
-			Method lrenderItem = null;
-			Method lrenderItemInFirstPerson = null;
-			Method lgetRenderTexture = null;
-			Method lrenderItemWorld = null;
-			Class lc = pItem.getClass();
-			
-			try {
-				lrenderItem = lc.getMethod("renderItem", EntityLivingBase.class, ItemStack.class, int.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				lrenderItemInFirstPerson = lc.getMethod("renderItemInFirstPerson", float.class);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				lgetRenderTexture = lc.getMethod("getRenderTexture");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				lrenderItemWorld = lc.getMethod("isRenderItemWorld");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (lrenderItem != null || lrenderItemInFirstPerson != null || lgetRenderTexture != null) {
-				classList.put(pItem, new MMM_ItemRenderManager(pItem,
-						lrenderItem, lrenderItemInFirstPerson,
-						lgetRenderTexture, lrenderItemWorld));
-				return true;
-			}
+		}
+		checkList.add(pItem);
+		Method lrenderItem = null;
+		Method lrenderItemInFirstPerson = null;
+		Method lgetRenderTexture = null;
+		Method lrenderItemWorld = null;
+		Class lc = pItem.getClass();
+		
+		try {
+			lrenderItem = lc.getMethod("renderItem", EntityLivingBase.class, ItemStack.class, int.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			lrenderItemInFirstPerson = lc.getMethod("renderItemInFirstPerson", float.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			lgetRenderTexture = lc.getMethod("getRenderTexture");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			lrenderItemWorld = lc.getMethod("isRenderItemWorld");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (lrenderItem != null || lrenderItemInFirstPerson != null || lgetRenderTexture != null) {
+			classList.put(pItem, new MMM_ItemRenderManager(pItem,
+					lrenderItem, lrenderItemInFirstPerson,
+					lgetRenderTexture, lrenderItemWorld));
+			return true;
 		}
 		return false;
 	}
@@ -128,7 +128,6 @@ public class MMM_ItemRenderManager {
 
 
 	public void renderItemLocal(EntityLivingBase entityliving, ItemStack itemstack, ItemCameraTransforms.TransformType par3) {
-		Item litem = itemstack.getItem();
 		// 特殊レンダラ
 		Client.setTexture(getRenderTexture(itemstack));
 		GL11.glPushMatrix();
@@ -149,7 +148,7 @@ public class MMM_ItemRenderManager {
 				GL11.glMatrixMode(GL11.GL_TEXTURE);
 				GL11.glLoadIdentity();
 				GL11.glScalef(var15, var15, var15);
-				float var16 = (float)(Minecraft.getSystemTime() % 3000L) / 3000.0F * 8.0F;
+				float var16 = Minecraft.getSystemTime() % 3000L / 3000.0F * 8.0F;
 				GL11.glTranslatef(var16, 0.0F, 0.0F);
 				GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -161,7 +160,7 @@ public class MMM_ItemRenderManager {
 				GL11.glMatrixMode(GL11.GL_TEXTURE);
 				GL11.glLoadIdentity();
 				GL11.glScalef(var15, var15, var15);
-				var16 = (float)(Minecraft.getSystemTime() % 4873L) / 4873.0F * 8.0F;
+				var16 = Minecraft.getSystemTime() % 4873L / 4873.0F * 8.0F;
 				GL11.glTranslatef(-var16, 0.0F, 0.0F);
 				GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -219,8 +218,8 @@ public class MMM_ItemRenderManager {
 		random.setSeed(187L);
 		GL11.glPushMatrix();
 		//1.8検討
-		float f2 = MathHelper.sin(((float)entityitem.lifespan + f1) / 10F + entityitem.hoverStart) * 0.1F + 0.1F;
-		float f3 = (((float)entityitem.lifespan + f1) / 20F + entityitem.hoverStart) * 57.29578F;
+		float f2 = MathHelper.sin((entityitem.lifespan + f1) / 10F + entityitem.hoverStart) * 0.1F + 0.1F;
+		float f3 = ((entityitem.lifespan + f1) / 20F + entityitem.hoverStart) * 57.29578F;
 		byte byte0 = 1;
 		if (lis.stackSize > 1) {
 			byte0 = 2;

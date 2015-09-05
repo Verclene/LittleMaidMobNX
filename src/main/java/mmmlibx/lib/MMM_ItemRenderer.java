@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import org.lwjgl.opengl.GL11;
 
+@SuppressWarnings("deprecation")
 public class MMM_ItemRenderer extends ItemRenderer {
 
 	// プライベート変数を使えるように
@@ -75,7 +76,7 @@ public class MMM_ItemRenderer extends ItemRenderer {
 					GL11.glMatrixMode(GL11.GL_TEXTURE);
 					GL11.glLoadIdentity();
 					GL11.glScalef(var15, var15, var15);
-					float var16 = (float)(Minecraft.getSystemTime() % 3000L) / 3000.0F * 8.0F;
+					float var16 = Minecraft.getSystemTime() % 3000L / 3000.0F * 8.0F;
 					GL11.glTranslatef(var16, 0.0F, 0.0F);
 					GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
 					GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -87,7 +88,7 @@ public class MMM_ItemRenderer extends ItemRenderer {
 					GL11.glMatrixMode(GL11.GL_TEXTURE);
 					GL11.glLoadIdentity();
 					GL11.glScalef(var15, var15, var15);
-					var16 = (float)(Minecraft.getSystemTime() % 4873L) / 4873.0F * 8.0F;
+					var16 = Minecraft.getSystemTime() % 4873L / 4873.0F * 8.0F;
 					GL11.glTranslatef(-var16, 0.0F, 0.0F);
 					GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
 					GL11.glMatrixMode(GL11.GL_MODELVIEW);

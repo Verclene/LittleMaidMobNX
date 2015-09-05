@@ -93,9 +93,8 @@ public class MMM_TextureData  {
 		
 		if (owner.worldObj.isRemote) {
 			return setTextureNamesClient();
-		} else {
-			return setTextureNamesServer();
 		}
+		return setTextureNamesServer();
 	}
 
 	/**

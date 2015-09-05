@@ -36,9 +36,8 @@ public abstract class MMM_TextureBoxBase {
 		
 		if (llist.size() > 0) {
 			return llist.get(pRand.nextInt(llist.size()));
-		} else {
-			return -1;
 		}
+		return -1;
 	}
 
 	/**

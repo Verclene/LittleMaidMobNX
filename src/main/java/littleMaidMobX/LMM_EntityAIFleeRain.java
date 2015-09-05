@@ -48,12 +48,11 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 
 		if (vec3d == null) {
 			return false;
-		} else {
-			shelterX = vec3d.xCoord;
-			shelterY = vec3d.yCoord;
-			shelterZ = vec3d.zCoord;
-			return true;
 		}
+		shelterX = vec3d.xCoord;
+		shelterY = vec3d.yCoord;
+		shelterZ = vec3d.zCoord;
+		return true;
 	}
 
 	@Override
@@ -71,11 +70,11 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 		
 		for (int i = 0; i < 10; i++) {
 			int j = MathHelper.floor_double((theCreature.posX +
-					(double) random.nextInt(20)) - 10D);
+					random.nextInt(20)) - 10D);
 			int k = MathHelper.floor_double((theCreature.getEntityBoundingBox().minY +
-					(double) random.nextInt(6)) - 3D);
+					random.nextInt(6)) - 3D);
 			int l = MathHelper.floor_double((theCreature.posZ +
-					(double) random.nextInt(20)) - 10D);
+					random.nextInt(20)) - 10D);
 			
 			if (!theWorld.canBlockSeeSky(new BlockPos(j, k, l))/*
 					&& theCreature.getBlockPathWeight(j, k, l) > -0.5F*/) {

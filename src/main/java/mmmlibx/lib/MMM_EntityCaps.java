@@ -8,7 +8,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
@@ -107,9 +106,8 @@ public class MMM_EntityCaps implements IModelCaps {
 		case caps_pos:
 			if (pArg == null) {
 				return new Double[] {owner.posX, owner.posY, owner.posZ};
-			} else {
-				return (Integer)pArg[0] == 0 ? owner.posX : (Integer)pArg[0] == 1 ? owner.posY : owner.posZ;
 			}
+			return (Integer)pArg[0] == 0 ? owner.posX : (Integer)pArg[0] == 1 ? owner.posY : owner.posZ;
 		case caps_motionX:
 			return owner.motionX;
 		case caps_motionY:
@@ -119,9 +117,8 @@ public class MMM_EntityCaps implements IModelCaps {
 		case caps_motion:
 			if (pArg == null) {
 				return new Double[] {owner.motionX, owner.motionY, owner.motionZ};
-			} else {
-				return (Integer)pArg[0] == 0 ? owner.motionX : (Integer)pArg[0] == 1 ? owner.motionY : owner.motionZ;
 			}
+			return (Integer)pArg[0] == 0 ? owner.motionX : (Integer)pArg[0] == 1 ? owner.motionY : owner.motionZ;
 			
 		case caps_rotationYaw:
 			return owner.rotationYaw;
@@ -192,21 +189,20 @@ public class MMM_EntityCaps implements IModelCaps {
 		case caps_boundingBox:
 			if (pArg == null) {
 				return owner.getEntityBoundingBox();
-			} else {
-				switch ((Integer)pArg[0]) {
-				case 0:
-					return owner.getEntityBoundingBox().maxX;
-				case 1:
-					return owner.getEntityBoundingBox().maxY;
-				case 2:
-					return owner.getEntityBoundingBox().maxZ;
-				case 3:
-					return owner.getEntityBoundingBox().minX;
-				case 4:
-					return owner.getEntityBoundingBox().minY;
-				case 5:
-					return owner.getEntityBoundingBox().minZ;
-				}
+			}
+			switch ((Integer)pArg[0]) {
+			case 0:
+				return owner.getEntityBoundingBox().maxX;
+			case 1:
+				return owner.getEntityBoundingBox().maxY;
+			case 2:
+				return owner.getEntityBoundingBox().maxZ;
+			case 3:
+				return owner.getEntityBoundingBox().minX;
+			case 4:
+				return owner.getEntityBoundingBox().minY;
+			case 5:
+				return owner.getEntityBoundingBox().minZ;
 			}
 		case caps_isLeeding:
 			return (owner instanceof EntityLiving) && ((EntityLiving)owner).getLeashed();

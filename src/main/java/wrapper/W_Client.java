@@ -1,7 +1,6 @@
 package wrapper;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
-import net.minecraftforge.fml.common.Loader;
 
 // バージョン差分吸収をおこなう。
 public class W_Client

@@ -83,14 +83,12 @@ public class LMM_Net {
 		{
 			return (LMM_EntityLittleMaid)lentity;
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	// 受信パケットの処理
 	
+	@SuppressWarnings("null")
 	public static void serverCustomPayload(EntityPlayer playerEntity, W_Message pPayload)
 	{
 		// サーバ側の動作
@@ -103,7 +101,6 @@ public class LMM_Net {
 			if (lemaid == null) return;
 		}
 		LMM_LittleMaidMobNX.Debug(String.format("LMM|Upd Srv Call[%2x:%d].", lmode, leid));
-		byte[] ldata;
 		int lindex;
 		int lval;
 		String lname;
