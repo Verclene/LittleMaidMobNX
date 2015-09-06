@@ -248,9 +248,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public int coolingTick = 0;
 	protected int damageSoundTick = 0;
 
-	public boolean isWildSaved = false;
+	protected boolean isWildSaved = false;
 
 	public boolean isSwimming = false;
+	
+	protected int maidArmorVisible = 15;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -544,7 +546,48 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void setSwimming(boolean flag){
 		isSwimming = flag;
 	}
-
+	
+	public void setMaidArmorVisible(int i){
+		if(i<0) i=0;
+		if(i>15)i=15;
+		maidArmorVisible = i;
+	}
+	
+	public void setMaidArmorVisible(boolean a, boolean b, boolean c, boolean d){
+		setMaidArmorVisible((a?1:0)<<3 | (b?1:0)<<2 | (c?1:0)<<1 | (d?1:0));
+	}
+	
+	public boolean isArmorVisible(int index){
+		if(index<0||index>3) return true;
+		return ((maidArmorVisible>>(3-index)) & 0x1) != 0;
+	}
+	
+	protected void syncSwimming(){
+		byte[] b = new byte[]{
+				LMM_Statics.LMN_Sync_SetSwimming,
+				0, 0, 0, 0,
+				(byte)(isSwimming?1:0)
+		};
+		syncNet(b);
+	}
+	
+	protected void syncMaidArmorVisible() {
+		byte[] b = new byte[]{
+				LMM_Statics.LMN_Sync_SetArmorVisible,
+				0, 0, 0, 0,
+				0, 0, 0, (byte)maidArmorVisible
+		};
+		syncNet(b);
+	}
+	
+	protected void syncNet(byte[] b) {
+		if(worldObj.isRemote){
+			LMM_Net.sendToEServer(this, b);
+		}else{
+			LMM_Net.sendToAllEClient(this, b);
+		}
+	}
+	
 	public boolean setMaidMode(int pindex, boolean pplaying) {
 		// モードに応じてAIを切り替える
 		velocityChanged = true;
@@ -1105,6 +1148,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setString("texName", textureData.getTextureName(0));
 		par1nbtTagCompound.setString("texArmor", textureData.getTextureName(1));
 		par1nbtTagCompound.setBoolean("isSwimming", isSwimming);
+		par1nbtTagCompound.setInteger("maidArmorVisible", maidArmorVisible);
 		if(textureModelName==null) textureModelName = "default_Origin";
 		par1nbtTagCompound.setString("textureModelName", textureModelName);
 		if(textureArmorName==null) textureArmorName = "default_Origin";
@@ -1300,7 +1344,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		onInventoryChanged();
 		isWildSaved = par1nbtTagCompound.getBoolean("isWildSaved");
-		isSwimming = par1nbtTagCompound.getBoolean("isSwimming");
+		setSwimming(par1nbtTagCompound.getBoolean("isSwimming"));
+		syncSwimming();
+		setMaidArmorVisible(par1nbtTagCompound.hasKey("maidArmorVisible")?par1nbtTagCompound.getInteger("maidArmorVisible"):15);
 
 		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
@@ -2987,8 +3033,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								}
 								return true;
 							}else if(itemstack1.getItem() == Items.fish){
-								setSwimming(!isSwimming);
 								if(!worldObj.isRemote){
+									setSwimming(!isSwimming);
+									syncSwimming();
 									par1EntityPlayer.addChatComponentMessage(new ChatComponentText("Swimming mode was set to "+isSwimming));
 								}
 								return true;
@@ -3018,12 +3065,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					getNavigator().clearPathEntity();
 					isJumping = false;
 					if(!worldObj.isRemote){
-						byte[] bss = new byte[]{
-								LMM_Statics.LMN_Sync_SetSwimming,
-								0, 0, 0, 0,
-								(byte)(isSwimming?1:0)
-						};
-						LMM_Net.sendToAllEClient(this, bss);
+						syncSwimming();
+						syncMaidArmorVisible();
 					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;

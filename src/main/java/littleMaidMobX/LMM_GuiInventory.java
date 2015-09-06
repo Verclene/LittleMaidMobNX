@@ -150,6 +150,13 @@ public class LMM_GuiInventory extends GuiContainer {
 //	      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F / 1.0F, 240F / 1.0F);
 //	      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.popMatrix();
+
+		Iterator iterator = buttonList.iterator();
+		while(iterator.hasNext()){
+			GuiButton gButton = (GuiButton) iterator.next();
+			gButton.drawButtonForegroundLayer(par1-guiLeft, par2-guiTop);
+		}
+
 //		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableColorMaterial();
 		GlStateManager.disableRescaleNormal();
@@ -358,10 +365,10 @@ public class LMM_GuiInventory extends GuiContainer {
 		super.drawScreen(i, j, f);
 		int ii = i - guiLeft;
 		int jj = j - guiTop;
-		visarmorbutton[0].visible = true;
-		visarmorbutton[1].visible = true;
-		visarmorbutton[2].visible = true;
-		visarmorbutton[3].visible = true;
+		for(int cnt=0;cnt<4;cnt++){
+			visarmorbutton[cnt].visible = true;
+			visarmorbutton[cnt].toggle = entitylittlemaid.isArmorVisible(cnt);
+		}
 		swimbutton.visible = true;
 		swimbutton.toggle = entitylittlemaid.isSwimming;
 		if (ii > 25 && ii < 78 && jj > 7 && jj < 60) {
@@ -473,35 +480,36 @@ public class LMM_GuiInventory extends GuiContainer {
 			}
 			isChangeTexture = false;
 			mc.displayGuiScreen(new LMM_GuiTextureSelect(this, entitylittlemaid, ldye, true));
+			break;
 		case 300 :
 			visarmorbutton[0].toggle=!visarmorbutton[0].toggle;
+			setArmorVisible();
 			break;
 		case 301 :
 			visarmorbutton[1].toggle=!visarmorbutton[1].toggle;
+			setArmorVisible();
 			break;
 		case 302 :
 			visarmorbutton[2].toggle=!visarmorbutton[2].toggle;
+			setArmorVisible();
 			break;
 		case 303 :
 			visarmorbutton[3].toggle=!visarmorbutton[3].toggle;
+			setArmorVisible();
 			break;
 		case 310 :
 			swimbutton.toggle=!swimbutton.toggle;
 			entitylittlemaid.setSwimming(swimbutton.toggle);
-			sendSwimToggleToServer(swimbutton.toggle);
+			entitylittlemaid.syncSwimming();
 			break;
 		}
 	}
 	
-	protected void sendSwimToggleToServer(boolean f) {
-		byte[] b = new byte[]{
-				LMM_Statics.LMN_Sync_SetSwimming,
-				0, 0, 0, 0,
-				(byte)(f?1:0)
-		};
-		LMM_Net.sendToEServer(entitylittlemaid, b);
+	protected void setArmorVisible() {
+		entitylittlemaid.setMaidArmorVisible(visarmorbutton[0].toggle, visarmorbutton[1].toggle, visarmorbutton[2].toggle, visarmorbutton[3].toggle);
+		entitylittlemaid.syncMaidArmorVisible();
 	}
-
+	
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();

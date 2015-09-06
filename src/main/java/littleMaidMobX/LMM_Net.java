@@ -158,6 +158,9 @@ public class LMM_Net {
 		case LMM_Statics.LMN_Sync_SetSwimming :
 			lemaid.setSwimming(pPayload.data[5]==1);
 			break;
+		case LMM_Statics.LMN_Sync_SetArmorVisible :
+			lemaid.setMaidArmorVisible(MMM_Helper.getInt(pPayload.data, 5));
+			break;
 		}
 	}
 

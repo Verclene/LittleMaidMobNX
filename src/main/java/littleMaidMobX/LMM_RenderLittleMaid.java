@@ -28,6 +28,8 @@ import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 
+import scala.tools.ant.sabbus.Break;
+
 @SuppressWarnings("deprecation")
 public class LMM_RenderLittleMaid extends RenderModelMulti {
 
@@ -116,113 +118,117 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			mmodel.setRender(LMM_RenderLittleMaid.this);
 			mmodel.showAllParts();
 			mmodel.isAlphablend = true;
+			mmodel.renderCount = 0;
+			mmodel.lighting = par1EntityLiving.getBrightnessForRender(renderScale);
 		}
 
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
 			//初回のみ指定値設定
 			if(renderCount==0) this.setModelValues(lmm, lmm.maidCaps);
 
+			boolean lri = (renderCount & 0x0f) == 0;
 			//総合
 			mmodel.showArmorParts(renderParts);
 
 			//Inner
 			INNER:{
-				if(mmodel.modelInner==null) break INNER;
-				ResourceLocation texInner = mmodel.textureInner[renderParts];
-				if(texInner!=null) try{
-					Client.setTexture(texInner);
-				}catch(Exception e){}
-
-				mmodel.modelInner.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
-				mmodel.modelInner.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, renderScale, lmm.maidCaps);
-				mmodel.modelInner.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, renderScale, true);
-				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
-			}
-
-			// 発光Inner
-			INNERLIGHT: if (renderCount == 0 && mmodel.modelInner!=null) {
-				ResourceLocation texInnerLight = mmodel.textureInnerLight[renderParts];
-				if (texInnerLight != null) {
-					try{
-						Client.setTexture(texInnerLight);
-					}catch(Exception e){ break INNERLIGHT; }
-					GL11.glEnable(GL11.GL_BLEND);
-					GL11.glEnable(GL11.GL_ALPHA_TEST);
-					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
-					GL11.glDepthFunc(GL11.GL_LEQUAL);
-
-					Client.setLightmapTextureCoords(0x00f000f0);//61680
-					if (mmodel.textureLightColor == null) {
-						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-					} else {
-						//発光色を調整
-						GL11.glColor4f(
-								mmodel.textureLightColor[0],
-								mmodel.textureLightColor[1],
-								mmodel.textureLightColor[2],
-								mmodel.textureLightColor[3]);
-					}
-					mmodel.modelInner.render(lmm.maidCaps, par2, par3, par4, par5, par6, renderScale, true);
-					Client.setLightmapTextureCoords(mmodel.lighting);
-					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-					GL11.glDisable(GL11.GL_BLEND);
-					GL11.glDisable(GL11.GL_ALPHA_TEST);
-//					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				if(mmodel.textureInner!=null){
+					ResourceLocation texInner = mmodel.textureInner[renderParts];
+					if(texInner!=null&&lmm.isArmorVisible(0)) try{
+						Client.setTexture(texInner);
+						mmodel.modelInner.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
+						mmodel.modelInner.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, renderScale, lmm.maidCaps);
+						mmodel.modelInner.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, renderScale, true);
+					}catch(Exception e){ break INNER; }
+				} else {
+//					mmodel.modelInner.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, renderScale, true);
 				}
 			}
 
+			// 発光Inner
+			INNERLIGHT: if (mmodel.modelInner!=null) {
+				ResourceLocation texInnerLight = mmodel.textureInnerLight[renderParts];
+				if (texInnerLight != null&&lmm.isArmorVisible(1)) {
+					try{
+						Client.setTexture(texInnerLight);
+						GL11.glEnable(GL11.GL_BLEND);
+						GL11.glEnable(GL11.GL_ALPHA_TEST);
+						GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+						GL11.glDepthFunc(GL11.GL_LEQUAL);
+
+						Client.setLightmapTextureCoords(0x00f000f0);//61680
+						if (mmodel.textureLightColor == null) {
+							GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+						} else {
+							//発光色を調整
+							GL11.glColor4f(
+									mmodel.textureLightColor[0],
+									mmodel.textureLightColor[1],
+									mmodel.textureLightColor[2],
+									mmodel.textureLightColor[3]);
+						}
+						mmodel.modelInner.render(lmm.maidCaps, par2, par3, par4, par5, par6, renderScale, true);
+						Client.setLightmapTextureCoords(mmodel.lighting);
+						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+						GL11.glDisable(GL11.GL_BLEND);
+						GL11.glDisable(GL11.GL_ALPHA_TEST);
+					}catch(Exception e){ break INNERLIGHT; }
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				}
+			}
+
+//			Minecraft.getMinecraft().getTextureManager().deleteTexture(lmm.getTextures(0)[renderParts]);
 			//Outer
 			if(LMM_LittleMaidMobNX.cfg_isModelAlphaBlend) GL11.glEnable(GL11.GL_BLEND);
 			OUTER:{
-				if(mmodel.modelOuter==null) break OUTER;
-				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				ResourceLocation texOuter = mmodel.textureOuter[renderParts];
-				if(texOuter!=null) try{
-					Client.setTexture(texOuter);
-				}catch(Exception e){}
-
-				mmodel.modelOuter.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
-				mmodel.modelOuter.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, renderScale/1.05F, lmm.maidCaps);
-				mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, renderScale/1.05F, true);
-				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				if(mmodel.textureOuter!=null){
+					ResourceLocation texOuter = mmodel.textureOuter[renderParts];
+					if(texOuter!=null&&lmm.isArmorVisible(2)) try{
+						Client.setTexture(texOuter);
+						mmodel.modelOuter.setLivingAnimations(lmm.maidCaps, par2, par3, lmm.ticksExisted);
+						mmodel.modelOuter.setRotationAngles(par2, par3, lmm.ticksExisted, par5, par6, renderScale, lmm.maidCaps);
+						mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, renderScale, true);
+					}catch(Exception e){break OUTER;}
+				}else{
+//					mmodel.modelOuter.render(lmm.maidCaps, par2, par3, lmm.ticksExisted, par5, par6, renderScale, true);
+				}
 			}
 
 			// 発光Outer
-			OUTERLIGHT: if (renderCount == 0 && mmodel.modelOuter!=null) {
+			OUTERLIGHT: if (mmodel.modelOuter!=null) {
 				ResourceLocation texOuterLight = mmodel.textureOuterLight[renderParts];
-				if (texOuterLight != null) {
+				if (texOuterLight != null&&lmm.isArmorVisible(3)) {
 					try{
 						Client.setTexture(texOuterLight);
-					}catch(Exception e){ break OUTERLIGHT; }
-					GL11.glEnable(GL11.GL_BLEND);
-					GL11.glEnable(GL11.GL_ALPHA_TEST);
-					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
-					GL11.glDepthFunc(GL11.GL_LEQUAL);
+						GL11.glEnable(GL11.GL_BLEND);
+						GL11.glEnable(GL11.GL_ALPHA_TEST);
+						GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+						GL11.glDepthFunc(GL11.GL_LEQUAL);
 
-					Client.setLightmapTextureCoords(0x00f000f0);//61680
-					if (mmodel.textureLightColor == null) {
+						Client.setLightmapTextureCoords(0x00f000f0);//61680
+						if (mmodel.textureLightColor == null) {
+							GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+						} else {
+							//発光色を調整
+							GL11.glColor4f(
+									mmodel.textureLightColor[0],
+									mmodel.textureLightColor[1],
+									mmodel.textureLightColor[2],
+									mmodel.textureLightColor[3]);
+						}
+						if(lmm.isArmorVisible(1)) mmodel.modelOuter.render(lmm.maidCaps, par2, par3, par4, par5, par6, renderScale, true);
+						Client.setLightmapTextureCoords(mmodel.lighting);
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-					} else {
-						//発光色を調整
-						GL11.glColor4f(
-								mmodel.textureLightColor[0],
-								mmodel.textureLightColor[1],
-								mmodel.textureLightColor[2],
-								mmodel.textureLightColor[3]);
-					}
-					mmodel.modelOuter.render(lmm.maidCaps, par2, par3, par4, par5, par6, renderScale/1.05F, true);
-					Client.setLightmapTextureCoords(mmodel.lighting);
-					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-//					GL11.glDisable(GL11.GL_BLEND);
-//					GL11.glDisable(GL11.GL_ALPHA_TEST);
+						GL11.glDisable(GL11.GL_BLEND);
+						GL11.glDisable(GL11.GL_ALPHA_TEST);
+					}catch(Exception e){ break OUTERLIGHT; }
 				}
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			}
 
 			//カウントインクリメント
 			renderCount++;
-			if(renderCount>=300) renderCount=30;
 		}
 	}
 
