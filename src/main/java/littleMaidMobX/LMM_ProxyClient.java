@@ -7,6 +7,7 @@ import mmmlibx.lib.MMM_EntityDummy;
 import mmmlibx.lib.MMM_EntitySelect;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_RenderDummy;
+import net.blacklab.lmmnx.LMMNX_NetSync;
 import net.blacklab.lmmnx.client.LMMNX_RenderEntitySelect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityPickupFX;
@@ -134,12 +135,8 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			lemaid.playSound(lsound9, MMM_Helper.getInt(pPayload.data, 9)==1);
 			LMM_LittleMaidMobNX.Debug(String.format("playSound:%s", lsound9.name()));
 			break;
-		case LMM_Statics.LMN_Sync_SetSwimming :
-			//isSwimming
-			lemaid.setSwimming(pPayload.data[5]==1);
-			break;
-		case LMM_Statics.LMN_Sync_SetArmorVisible :
-			lemaid.setMaidArmorVisible(MMM_Helper.getInt(pPayload.data, 5));
+		case LMMNX_NetSync.LMMNX_Sync_Under_Byte:
+			LMMNX_NetSync.onPayLoad(lemaid, pPayload.data);
 			break;
 		}
 	}

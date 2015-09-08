@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.Random;
 
 import mmmlibx.lib.Client;
-import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.gui.GuiButtonNextPage;
 import net.blacklab.lmmnx.client.GuiButtonArmorToggle;
+import net.blacklab.lmmnx.client.GuiButtonFreedomToggle;
 import net.blacklab.lmmnx.client.GuiButtonSwimToggle;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -44,6 +44,7 @@ public class LMM_GuiInventory extends GuiContainer {
 	public GuiButton selectbutton;
 	public GuiButtonArmorToggle visarmorbutton[] = new GuiButtonArmorToggle[4];
 	public GuiButtonSwimToggle swimbutton;
+	public GuiButtonFreedomToggle frdmbutton;
 	public boolean isChangeTexture;
 
 	protected static final ResourceLocation fguiTex =
@@ -76,11 +77,12 @@ public class LMM_GuiInventory extends GuiContainer {
 		buttonList.add(txbutton[2] = new GuiButtonNextPage(110, guiLeft + 25, guiTop + 47, false));
 		buttonList.add(txbutton[3] = new GuiButtonNextPage(111, guiLeft + 55, guiTop + 47, true));
 		buttonList.add(selectbutton = new GuiButton(200, guiLeft + 25, guiTop + 25, 53, 17, "select"));
-		buttonList.add(visarmorbutton[0] = new GuiButtonArmorToggle(300, guiLeft     , guiTop - 14, "Toggle Armor Inner"      , true).setNode(0).setLight(0));
-		buttonList.add(visarmorbutton[1] = new GuiButtonArmorToggle(301, guiLeft + 16, guiTop - 14, "Toggle Armor Inner Light", true).setNode(0).setLight(1));
-		buttonList.add(visarmorbutton[2] = new GuiButtonArmorToggle(302, guiLeft + 32, guiTop - 14, "Toggle Armor Outer"      , true).setNode(1).setLight(0));
-		buttonList.add(visarmorbutton[3] = new GuiButtonArmorToggle(303, guiLeft + 48, guiTop - 14, "Toggle Armor Outer Light", true).setNode(1).setLight(1));
-		buttonList.add(swimbutton        = new GuiButtonSwimToggle (310, guiLeft + 64, guiTop - 16, "Toggle Swim"             , entitylittlemaid.isSwimming));
+		buttonList.add(visarmorbutton[0] = new GuiButtonArmorToggle  (300, guiLeft     , guiTop - 14, "littleMaidMob.gui.toggle.inner"     , true).setNode(0).setLight(0));
+		buttonList.add(visarmorbutton[1] = new GuiButtonArmorToggle  (301, guiLeft + 16, guiTop - 14, "littleMaidMob.gui.toggle.innerlight", true).setNode(0).setLight(1));
+		buttonList.add(visarmorbutton[2] = new GuiButtonArmorToggle  (302, guiLeft + 32, guiTop - 14, "littleMaidMob.gui.toggle.outer"     , true).setNode(1).setLight(0));
+		buttonList.add(visarmorbutton[3] = new GuiButtonArmorToggle  (303, guiLeft + 48, guiTop - 14, "littleMaidMob.gui.toggle.outerlight", true).setNode(1).setLight(1));
+		buttonList.add(frdmbutton        = new GuiButtonFreedomToggle(311, guiLeft + 64, guiTop - 16, "littleMaidMob.gui.toggle.freedom"   , entitylittlemaid.isSwimming, entitylittlemaid));
+		buttonList.add(swimbutton        = new GuiButtonSwimToggle   (310, guiLeft + 80, guiTop - 16, "littleMaidMob.gui.toggle.swim"      , entitylittlemaid.isSwimming));
 	}
 
 	@Override
@@ -371,6 +373,8 @@ public class LMM_GuiInventory extends GuiContainer {
 		}
 		swimbutton.visible = true;
 		swimbutton.toggle = entitylittlemaid.isSwimming;
+		frdmbutton.visible = true;
+		frdmbutton.toggle = entitylittlemaid.isFreedom();
 		if (ii > 25 && ii < 78 && jj > 7 && jj < 60) {
 			// ボタンの表示
 			txbutton[0].visible = true;
@@ -502,14 +506,20 @@ public class LMM_GuiInventory extends GuiContainer {
 			entitylittlemaid.setSwimming(swimbutton.toggle);
 			entitylittlemaid.syncSwimming();
 			break;
+		case 311 :
+			frdmbutton.toggle=!frdmbutton.toggle;
+			entitylittlemaid.setFreedom(frdmbutton.toggle);
+			entitylittlemaid.syncFreedom();
+			entitylittlemaid.handleHealthUpdate((byte) (frdmbutton.toggle?12:13));
+			break;
 		}
 	}
-	
+
 	protected void setArmorVisible() {
 		entitylittlemaid.setMaidArmorVisible(visarmorbutton[0].toggle, visarmorbutton[1].toggle, visarmorbutton[2].toggle, visarmorbutton[3].toggle);
 		entitylittlemaid.syncMaidArmorVisible();
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();

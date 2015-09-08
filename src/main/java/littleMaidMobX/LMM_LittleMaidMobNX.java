@@ -43,7 +43,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 57";
+	public static final String VERSION = "NX3 Build 68";
 	public static final int VERSION_CODE = 6;
 
 	/*

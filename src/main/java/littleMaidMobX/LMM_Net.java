@@ -7,6 +7,7 @@ import static littleMaidMobX.LMM_Statics.LMN_Server_SaveIFF;
 import static littleMaidMobX.LMM_Statics.LMN_Server_SetIFFValue;
 import static littleMaidMobX.LMM_Statics.LMN_Server_UpdateSlots;
 import mmmlibx.lib.MMM_Helper;
+import net.blacklab.lmmnx.LMMNX_NetSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -155,11 +156,8 @@ public class LMM_Net {
 				LMM_IFF.saveIFF("");
 			}
 			break;
-		case LMM_Statics.LMN_Sync_SetSwimming :
-			lemaid.setSwimming(pPayload.data[5]==1);
-			break;
-		case LMM_Statics.LMN_Sync_SetArmorVisible :
-			lemaid.setMaidArmorVisible(MMM_Helper.getInt(pPayload.data, 5));
+		case LMMNX_NetSync.LMMNX_Sync_Under_Byte:
+			LMMNX_NetSync.onPayLoad(lemaid, pPayload.data);
 			break;
 		}
 	}

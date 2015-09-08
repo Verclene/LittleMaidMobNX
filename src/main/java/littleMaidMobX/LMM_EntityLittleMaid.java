@@ -45,6 +45,7 @@ import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import net.blacklab.lib.ItemUtil;
 import net.blacklab.lmmnx.LMMNX_EntityAIOpenDoor;
 import net.blacklab.lmmnx.LMMNX_EntityAIRestrictOpenDoor;
+import net.blacklab.lmmnx.LMMNX_NetSync;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
 import net.minecraft.block.Block;
@@ -116,6 +117,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -252,7 +255,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public boolean isSwimming = false;
 	
-	protected int maidArmorVisible = 15;
+	public int maidArmorVisible = 15;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -564,18 +567,28 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	protected void syncSwimming(){
 		byte[] b = new byte[]{
-				LMM_Statics.LMN_Sync_SetSwimming,
+				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
 				0, 0, 0, 0,
-				(byte)(isSwimming?1:0)
+				LMMNX_NetSync.LMMNX_Sync_UB_Swim, (byte)(isSwimming?1:0)
 		};
 		syncNet(b);
 	}
 	
-	protected void syncMaidArmorVisible() {
+	public void syncMaidArmorVisible() {
 		byte[] b = new byte[]{
-				LMM_Statics.LMN_Sync_SetArmorVisible,
+				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
 				0, 0, 0, 0,
-				0, 0, 0, (byte)maidArmorVisible
+				LMMNX_NetSync.LMMNX_Sync_UB_Armor, (byte)maidArmorVisible
+		};
+		syncNet(b);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	protected void requestArmorVisibleRecall(){
+		byte[] b = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_UB_RequestArmorVisibleRecall, 0
 		};
 		syncNet(b);
 	}
@@ -1347,6 +1360,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setSwimming(par1nbtTagCompound.getBoolean("isSwimming"));
 		syncSwimming();
 		setMaidArmorVisible(par1nbtTagCompound.hasKey("maidArmorVisible")?par1nbtTagCompound.getInteger("maidArmorVisible"):15);
+		syncMaidArmorVisible();
+		syncFreedom();
 
 		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
@@ -2952,9 +2967,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							}
 							else if (itemstack1.getItem() == Items.feather) {
 								// 自由行動
-								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-								setFreedom(!isFreedom());
-								worldObj.setEntityState(this, isFreedom() ? (byte)12 : (byte)13);
+//								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
+								if(!worldObj.isRemote){
+									setFreedom(!isFreedom());
+									syncFreedom();
+									worldObj.setEntityState(this, isFreedom() ? (byte)12 : (byte)13);
+								}
 								return true;
 							}
 							else if (itemstack1.getItem() == Items.saddle) {
@@ -3067,6 +3085,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					if(!worldObj.isRemote){
 						syncSwimming();
 						syncMaidArmorVisible();
+						syncFreedom();
 					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;
@@ -3539,6 +3558,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public boolean isFreedom() {
 		return maidFreedom;
+	}
+
+	protected void syncFreedom() {
+		byte[] b = new byte[]{
+			LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+			0, 0, 0, 0,
+			LMMNX_NetSync.LMMNX_Sync_UB_Freedom, (byte)(isFreedom()?1:0)
+		};
+		syncNet(b);
 	}
 
 	public boolean isHeadMount(){

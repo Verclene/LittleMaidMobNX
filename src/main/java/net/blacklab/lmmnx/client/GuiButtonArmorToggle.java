@@ -5,6 +5,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,6 +27,8 @@ public class GuiButtonArmorToggle extends GuiButton {
 	private int toggleLight;
 
 	public boolean toggle = true;
+
+	public static final ResourceLocation GUI_TOPBUTTON_RESOURCE = new ResourceLocation("lmmx:textures/gui/container/buttons/topbuttons.png");
 
 	public GuiButtonArmorToggle(int buttonId, int x, int y, String buttonText, boolean ison) {
 		super(buttonId, x, y, 16, 16, "");
@@ -55,7 +58,7 @@ public class GuiButtonArmorToggle extends GuiButton {
 		toggleLight = i;
 		return this;
 	}
-	
+
 	public int toggleInt(){
 		return toggle?1:0;
 	}
@@ -64,13 +67,13 @@ public class GuiButtonArmorToggle extends GuiButton {
 	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		// TODO 自動生成されたメソッド・スタブ
 		if(!visible) return;
-		hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
+		handleHovered(mouseX, mouseY);
 		GlStateManager.pushMatrix();
 		GlStateManager.disableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
-		mc.getTextureManager().bindTexture(new ResourceLocation("lmmx:textures/gui/container/buttons/topbuttons.png"));
+		mc.getTextureManager().bindTexture(GUI_TOPBUTTON_RESOURCE);
 		if(hovered){
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		}else{
@@ -83,7 +86,12 @@ public class GuiButtonArmorToggle extends GuiButton {
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 	}
-	
+
+	protected void handleHovered(int mouseX, int mouseY) {
+		// TODO 自動生成されたメソッド・スタブ
+		hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
+	}
+
 	@Override
 	public void drawButtonForegroundLayer(int mouseX, int mouseY) {
 		// TODO 自動生成されたメソッド・スタブ
@@ -96,13 +104,18 @@ public class GuiButtonArmorToggle extends GuiButton {
 			GlStateManager.disableLighting();
 			GlStateManager.disableDepth();
 			FontRenderer fRenderer = mcMinecraft.getRenderManager().getFontRenderer();
-			int fx = fRenderer.getStringWidth(showText);
 			int lcolor = 0xc0000000;
+			String viewString = StatCollector.translateToLocal(showText+getTaleString());
+			int fx = fRenderer.getStringWidth(viewString);
 			drawGradientRect(mx+4, my+4, mx+4+fx+4, my+4+8+4, lcolor, lcolor);
-			drawCenteredString(fRenderer, showText, mx+fx/2+6, my+6, 0xffffffff);
+			drawCenteredString(fRenderer, viewString, mx+fx/2+6, my+6, 0xffffffff);
 			GlStateManager.enableLighting();
 			GlStateManager.enableDepth();
 		}
+	}
+
+	protected String getTaleString() {
+		return toggle?".hide":".show";
 	}
 
 }

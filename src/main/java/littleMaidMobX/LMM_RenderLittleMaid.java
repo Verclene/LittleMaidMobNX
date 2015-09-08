@@ -5,6 +5,7 @@ import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
 import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
+import net.blacklab.lmmnx.LMMNX_NetSync;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -124,9 +125,13 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
 			//初回のみ指定値設定
-			if(renderCount==0) this.setModelValues(lmm, lmm.maidCaps);
+			if(renderCount==0){
+				this.setModelValues(lmm, lmm.maidCaps);
+				lmm.requestArmorVisibleRecall();
+			}
+			
 
-			boolean lri = (renderCount & 0x0f) == 0;
+//			boolean lri = (renderCount & 0x0f) == 0;
 			//総合
 			mmodel.showArmorParts(renderParts);
 
