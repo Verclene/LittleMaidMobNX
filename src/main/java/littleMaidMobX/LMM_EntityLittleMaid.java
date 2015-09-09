@@ -1995,16 +1995,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 			BlockPos targetPos = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py, pz+ZBOUND_BLOCKOFFS[pitchindex]);
 			new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+1, pz+ZBOUND_BLOCKOFFS[pitchindex]);
+			// この辺プレイヤーと同じ判定方法
 			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && (onGround&&!isInWater()) &&
 					0 == WalkNodeProcessor.func_176170_a(worldObj, this, targetPos.getX(), targetPos.getY()  , targetPos.getZ(), MathHelper.floor_float(width+1.0F), MathHelper.floor_float(height+1.0F), MathHelper.floor_float(width+1.0F), false, false, true) &&
 					1 == WalkNodeProcessor.func_176170_a(worldObj, this, targetPos.getX(), targetPos.getY()+1, targetPos.getZ(), MathHelper.floor_float(width+1.0F), MathHelper.floor_float(height+1.0F), MathHelper.floor_float(width+1.0F), false, false, true)){
-				//ジャンプとかさせるとめんどくさいから、Yだけ先に変える
+				//段差にギリ載せ
 				setLocationAndAngles(posX+0.05*XBOUND_BLOCKOFFS[pitchindex], posY+1D, posZ+0.05*ZBOUND_BLOCKOFFS[pitchindex], rotationYaw, rotationPitch);
-				//弧度法に変換。MathHelper.sinの実装が怪しいのでMath.sinを使う
-//				double archDegPitch = rotationPitch / 180D * Math.PI;
-				//ナニユエ100分の1がちょうどいいのかは知らん
-//				motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
-//				motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
 			}
 			
 			if(isInWater()&&worldObj.getBlockState(new BlockPos(posX,posY+2D,posZ)).getBlock().getMaterial()==Material.water&&isSneaking()){
@@ -2012,11 +2008,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				setSneaking(false);
 			}
 
-			CUT: if(isEntityInsideOpaqueBlock()){
+			// 埋まった
+			OPAQUE: if(isEntityInsideOpaqueBlock()){
 				if(!isInsideOpaque) for(int i=2;i<10;i++){
 					if(!worldObj.getBlockState(new BlockPos(posX, py+i, posZ)).getBlock().isVisuallyOpaque()&&!worldObj.getBlockState(new BlockPos(posX, py+i+1, posZ)).getBlock().isVisuallyOpaque()){
 						setLocationAndAngles(posX, py+i, posZ, rotationYaw, rotationPitch);
-						break CUT;
+						break OPAQUE;
 					}
 				}
 				isInsideOpaque = true;
@@ -2025,24 +2022,28 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 
-		 ItemStack itemstack = this.getInventory()[0];
+		ItemStack itemstack = this.getInventory()[0];
 
-		 if (itemstack != null)
-		 {
-			 if (itemstack.isItemStackDamageable())
-			 {
-				 itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+		if (itemstack != null)
+		{
+			if (itemstack.isItemStackDamageable())
+			{
+				itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
 
-				 if (itemstack.getItemDamage() >= itemstack.getMaxDamage())
-				 {
-					 this.renderBrokenItemStack(itemstack);
+				if (itemstack.getItemDamage() >= itemstack.getMaxDamage())
+				{
+					this.renderBrokenItemStack(itemstack);
 					// this.setCurrentItemOrArmor(4, (ItemStack)null);
-				 }
-			 }
+				}
+			}
 
-			 //flag = false;
-		 }
+			//flag = false;
+		}
 
+		//Waitなのに移動しようとした
+		if(isMaidWait()&&!navigator.noPath()){
+			navigator.clearPathEntity();
+		}
 
 		if(lhealth > 0) {
 			// 近接監視の追加はここ

@@ -39,11 +39,12 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 
 		if (!theWorld.canBlockSeeSky(new BlockPos(
 				MathHelper.floor_double(theCreature.posX),
-				(int) theCreature.getEntityBoundingBox().minY,
+				(int) theCreature.getEntityBoundingBox().minY+1,
 				MathHelper.floor_double(theCreature.posZ)))) {
 			return false;
 		}
 
+		LMM_LittleMaidMobNX.Debug("FINDING SHELTER");
 		Vec3 vec3d = findPossibleShelter();
 
 		if (vec3d == null) {
@@ -52,16 +53,22 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 		shelterX = vec3d.xCoord;
 		shelterY = vec3d.yCoord;
 		shelterZ = vec3d.zCoord;
+		LMM_LittleMaidMobNX.Debug("SHELTER FOUND %04.2f,%04.2f,%04.2f", shelterX, shelterY, shelterZ);
 		return true;
 	}
 
 	@Override
 	public boolean continueExecuting() {
-		return !theCreature.getNavigator().noPath();
+		LMM_LittleMaidMobNX.Debug("CONTINUE?");
+		return theCreature.getNavigator().noPath()?false:theWorld.canBlockSeeSky(new BlockPos(
+				MathHelper.floor_double(theCreature.posX),
+				(int) theCreature.getEntityBoundingBox().minY+1,
+				MathHelper.floor_double(theCreature.posZ)));
 	}
 
 	@Override
 	public void startExecuting() {
+		LMM_LittleMaidMobNX.Debug("EXECUTE %04.2f,%04.2f,%04.2f", shelterX, shelterY, shelterZ);
 		theCreature.getNavigator().tryMoveToXYZ(shelterX, shelterY, shelterZ, movespeed);
 	}
 
@@ -69,12 +76,16 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 		Random random = theCreature.getRNG();
 		
 		for (int i = 0; i < 10; i++) {
-			int j = MathHelper.floor_double((theCreature.posX +
-					random.nextInt(20)) - 10D);
+			int j = MathHelper.floor_double((theCreature.posX + (i-5)));
 			int k = MathHelper.floor_double((theCreature.getEntityBoundingBox().minY +
-					random.nextInt(6)) - 3D);
-			int l = MathHelper.floor_double((theCreature.posZ +
-					random.nextInt(20)) - 10D);
+					random.nextInt(4)) - 2D);
+			int l = MathHelper.floor_double((theCreature.posZ + (i-5)));
+			
+			//離れすぎている
+			if(theCreature.func_180486_cf().distanceSq(j, k, l)>LMM_EntityMode_Torcher.limitDistance_Freedom &&
+					((LMM_EntityLittleMaid)theCreature).isFreedom()){
+				continue;
+			}
 			
 			if (!theWorld.canBlockSeeSky(new BlockPos(j, k, l))/*
 					&& theCreature.getBlockPathWeight(j, k, l) > -0.5F*/) {

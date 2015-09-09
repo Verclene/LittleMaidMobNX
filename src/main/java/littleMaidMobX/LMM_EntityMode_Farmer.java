@@ -276,6 +276,8 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	
 	@SuppressWarnings("rawtypes")
 	protected boolean isBlockWatered(int x, int y, int z){
+		// 雨天時は検索範囲を制限
+		boolean flag = owner.worldObj.isRaining();
 		BlockPos pos = new BlockPos(x,y,z);
 		Iterator iterator = BlockPos.getAllInBoxMutable(pos.add(-WATER_RADIUS, 0, -WATER_RADIUS),
 				pos.add(WATER_RADIUS, 1, WATER_RADIUS)).iterator();
@@ -295,42 +297,4 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		return true;
 	}
 
-	/*
-	public boolean canPlaceItemBlockOnSide(World par1World, int par2, int par3, int par4, EnumFacing par5,
-			EntityPlayer par6EntityPlayer, ItemStack par7ItemStack, ItemBlock pItemBlock) {
-		// TODO:マルチ対策用、ItemBlockから丸パクリバージョンアップ時は確認すること
-		Block var8 = par1World.getBlockState(new BlockPos(par2, par3, par4)).getBlock();
-		
-		if (Block.isEqualTo(var8, Blocks.snow)) {
-			par5 = EnumFacing.UP;
-		} else if (!Block.isEqualTo(var8, Blocks.vine) && !Block.isEqualTo(var8, Blocks.tallgrass) &&
-				!Block.isEqualTo(var8, Blocks.deadbush)) {
-			if (par5 == EnumFacing.DOWN) {
-				--par3;
-			}
-			if (par5 == EnumFacing.UP) {
-				++par3;
-			}
-			if (par5 == EnumFacing.NORTH) {
-				--par4;
-			}
-			if (par5 == EnumFacing.SOUTH) {
-				++par4;
-			}
-			if (par5 == EnumFacing.WEST) {
-				--par2;
-			}
-			if (par5 == EnumFacing.EAST) {
-				++par2;
-			}
-		}
-		
-		Material lmat = par1World.getBlockState(new BlockPos(par2, par3, par4)).getBlock().getMaterial();
-		if (lmat instanceof MaterialLiquid) {
-			return false;
-		}
-		
-		return par1World.canBlockBePlaced(Block.getBlockFromItem(pItemBlock), new BlockPos(par2, par3, par4), false, par5, (Entity)null, par7ItemStack);
-	}
-	*/
 }

@@ -144,13 +144,13 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 	
 	@Override
 	public boolean checkItemStack(ItemStack pItemStack) {
-		return true;
+		return !owner.isMaidWait();
 	}
 
 	@Override
 	public boolean isSearchBlock() {
 		if ((owner.getMaidModeInt() == mmode_Escorter||owner.getMaidModeInt()==mmode_FarmPorter)
-				&& owner.isFreedom() &&
+				&& owner.isFreedom() && !owner.isMaidWait() &&
 				owner.maidInventory.getFirstEmptyStack() == -1) {
 			// 対象をまだ見つけていないときは検索を行う。
 			fDistance = 100F;
