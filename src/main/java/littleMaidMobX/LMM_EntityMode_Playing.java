@@ -321,6 +321,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public boolean setMode(int pMode) {
 		switch (pMode) {
 		case mmode_Playing :
+			if(!owner.worldObj.isDaytime()) return false;
 			owner.aiAttack.setEnable(false);
 			owner.aiShooting.setEnable(true);
 			owner.setBloodsuck(false);
