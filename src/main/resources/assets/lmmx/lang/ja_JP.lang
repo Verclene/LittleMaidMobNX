@@ -61,3 +61,16 @@ littleMaidMob.mode.T-Pharmacist=赤石好きな薬屋さん
 littleMaidMob.text.AP=メイド装甲
 littleMaidMob.text.Health=メイド強度
 littleMaidMob.text.STATUS=メイド状態
+
+littleMaidMob.gui.toggle.inner.show=内側防具テクスチャを表示
+littleMaidMob.gui.toggle.inner.hide=内側防具テクスチャを非表示
+littleMaidMob.gui.toggle.innerlight.show=内側発光防具テクスチャを表示
+littleMaidMob.gui.toggle.innerlight.hide=内側発光防具テクスチャを表示
+littleMaidMob.gui.toggle.outer.show=外側防具テクスチャを表示
+littleMaidMob.gui.toggle.outer.hide=外側防具テクスチャを表示
+littleMaidMob.gui.toggle.outerlight.show=外側発光防具テクスチャを表示
+littleMaidMob.gui.toggle.outerlight.hide=外側発光防具テクスチャを表示
+littleMaidMob.gui.toggle.swim.enable=水泳モードを有効にする
+littleMaidMob.gui.toggle.swim.disable=水泳モードを無効にする
+littleMaidMob.gui.toggle.freedom.enable=自由行動に切り替え
+littleMaidMob.gui.toggle.freedom.disable=自由行動を解除

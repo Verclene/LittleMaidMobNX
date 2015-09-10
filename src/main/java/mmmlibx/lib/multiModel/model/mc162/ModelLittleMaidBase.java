@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * LMM用に最適化
  */
+@SuppressWarnings("deprecation")
 public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 
 	//fields
@@ -168,11 +169,11 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 		// アイテム持ってるときの腕振りを抑える+表示角オフセット
 		if (heldItem[1] != 0) {
 			bipedLeftArm.setRotateAngleX(bipedLeftArm.getRotateAngleX() * 0.5F);
-			bipedLeftArm.addRotateAngleDegX(-18F * (float)heldItem[1]);
+			bipedLeftArm.addRotateAngleDegX(-18F * heldItem[1]);
 		}
 		if (heldItem[0] != 0) {
 			bipedRightArm.setRotateAngleX(bipedRightArm.getRotateAngleX() * 0.5F);
-			bipedRightArm.addRotateAngleDegX(-18F * (float)heldItem[0]);
+			bipedRightArm.addRotateAngleDegX(-18F * heldItem[0]);
 		}
 
 //		bipedRightArm.setRotateAngleY(0.0F);
@@ -211,7 +212,7 @@ public abstract class ModelLittleMaidBase extends ModelMultiMMMBase {
 				f6 = 1.0F - f6;
 				f7 = mh_sin(f6 * (float)Math.PI);
 				f8 = mh_sin(onGrounds[1] * (float)Math.PI) * -(bipedHead.rotateAngleX - 0.7F) * 0.75F;
-				bipedLeftArm.rotateAngleX -= (double)f7 * 1.2D + (double)f8;
+				bipedLeftArm.rotateAngleX -= f7 * 1.2D + f8;
 				bipedLeftArm.rotateAngleY += bipedTorso.rotateAngleY * 2.0F;
 				bipedLeftArm.setRotateAngleZ(mh_sin(onGrounds[1] * 3.141593F) * 0.4F);
 			} else {

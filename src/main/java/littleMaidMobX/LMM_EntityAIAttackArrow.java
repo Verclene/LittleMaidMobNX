@@ -1,14 +1,9 @@
 package littleMaidMobX;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
 import mmmlibx.lib.MMM_Helper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -58,10 +53,9 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 			fTarget = null;
 			resetTask();
 			return false;
-		} else {
-			fTarget = entityliving;
-			return true;
 		}
+		fTarget = entityliving;
+		return true;
 	}
 
 	@Override

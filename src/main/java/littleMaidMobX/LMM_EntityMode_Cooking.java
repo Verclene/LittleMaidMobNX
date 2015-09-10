@@ -74,12 +74,10 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 	@Override
 	public int getNextEquipItem(int pMode) {
 		int li;
-		ItemStack litemstack;
-		
 		// モードに応じた識別判定、速度優先
 		switch (pMode) {
 		case mmode_Cooking :
-			for (li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+			for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				// 調理
 				if (owner.maidInventory.isItemBurned(li)) {
 					return li;
@@ -114,7 +112,7 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 	public boolean shouldBlock(int pMode) {
 		return owner.maidTileEntity instanceof TileEntityFurnace &&
 				(((TileEntityFurnace)owner.maidTileEntity).isBurning() ||
-				owner.maidInventory.isItemBurned(owner.getCurrentEquippedItem()));
+				LMM_InventoryLittleMaid.isItemBurned(owner.getCurrentEquippedItem()));
 	}
 
 	@Override
@@ -232,7 +230,7 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 					owner.playSound("random.pop");
 					owner.setSwing(5, LMM_EnumSound.Null, false);
 					owner.getNextEquipItem();
-					lflag = owner.maidInventory.isItemBurned(owner.getCurrentEquippedItem());
+					lflag = LMM_InventoryLittleMaid.isItemBurned(owner.getCurrentEquippedItem());
 				} else {
 					ltile.setInventorySlotContents(1, litemstack2);
 				}
@@ -269,9 +267,9 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 			if (var3 == 0.0F) {
 				pCount = 0;
 			} else if (var3 < 1.0F) {
-				var4 = MathHelper.floor_float((float)pCount * var3);
+				var4 = MathHelper.floor_float(pCount * var3);
 				
-				if (var4 < MathHelper.ceiling_float_int((float)pCount * var3) && (float)Math.random() < (float)pCount * var3 - (float)var4) {
+				if (var4 < MathHelper.ceiling_float_int(pCount * var3) && (float)Math.random() < pCount * var3 - var4) {
 					++var4;
 				}
 				

@@ -7,6 +7,7 @@ import static littleMaidMobX.LMM_Statics.LMN_Server_SaveIFF;
 import static littleMaidMobX.LMM_Statics.LMN_Server_SetIFFValue;
 import static littleMaidMobX.LMM_Statics.LMN_Server_UpdateSlots;
 import mmmlibx.lib.MMM_Helper;
+import net.blacklab.lmmnx.LMMNX_NetSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,14 +84,12 @@ public class LMM_Net {
 		{
 			return (LMM_EntityLittleMaid)lentity;
 		}
-		else
-		{
-			return null;
-		}
+		return null;
 	}
 
 	// 受信パケットの処理
 	
+	@SuppressWarnings("null")
 	public static void serverCustomPayload(EntityPlayer playerEntity, W_Message pPayload)
 	{
 		// サーバ側の動作
@@ -103,7 +102,6 @@ public class LMM_Net {
 			if (lemaid == null) return;
 		}
 		LMM_LittleMaidMobNX.Debug(String.format("LMM|Upd Srv Call[%2x:%d].", lmode, leid));
-		byte[] ldata;
 		int lindex;
 		int lval;
 		String lname;
@@ -118,7 +116,7 @@ public class LMM_Net {
 			}
 			break;
 			
-		case LMN_Server_DecDyePowder:
+		case LMN_Server_DecDyePowder :
 			// カラー番号をクライアントから受け取る
 			// インベントリから染料を減らす。
 			int lcolor2 = pPayload.data[1];
@@ -134,7 +132,7 @@ public class LMM_Net {
 			}
 			break;
 			
-		case LMN_Server_SetIFFValue:
+		case LMN_Server_SetIFFValue :
 			// IFFの設定値を受信
 			lval = pPayload.data[1];
 			lindex = MMM_Helper.getInt(pPayload.data, 2);
@@ -143,7 +141,7 @@ public class LMM_Net {
 			LMM_IFF.setIFFValue(MMM_Helper.getPlayerName(playerEntity), lname, lval);
 			sendIFFValue(playerEntity, lval, lindex);
 			break;
-		case LMN_Server_GetIFFValue:
+		case LMN_Server_GetIFFValue :
 			// IFFGUI open
 			lindex = MMM_Helper.getInt(pPayload.data, 1);
 			lname = MMM_Helper.getStr(pPayload.data, 5);
@@ -151,14 +149,16 @@ public class LMM_Net {
 			LMM_LittleMaidMobNX.Debug("getIFF-SV user:%s %s(%d)=%d", MMM_Helper.getPlayerName(playerEntity), lname, lindex, lval);
 			sendIFFValue(playerEntity, lval, lindex);
 			break;
-		case LMN_Server_SaveIFF:
+		case LMN_Server_SaveIFF :
 			// IFFファイルの保存
 			LMM_IFF.saveIFF(MMM_Helper.getPlayerName(playerEntity));
 			if (!playerEntity.worldObj.isRemote) {
 				LMM_IFF.saveIFF("");
 			}
 			break;
-			
+		case LMMNX_NetSync.LMMNX_Sync_Under_Byte:
+			LMMNX_NetSync.onPayLoad(lemaid, pPayload.data);
+			break;
 		}
 	}
 

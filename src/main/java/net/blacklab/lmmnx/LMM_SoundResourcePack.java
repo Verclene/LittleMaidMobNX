@@ -1,21 +1,19 @@
-package littleMaidMobX;
+package net.blacklab.lmmnx;
 
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import mmmlibx.lib.MMMLib;
+import littleMaidMobX.LMM_LittleMaidMobNX;
+import littleMaidMobX.LMM_SoundManager;
 import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.ModContainer;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -42,14 +40,14 @@ public class LMM_SoundResourcePack implements IResourcePack {
 		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
 		{
 			lis = LMM_SoundManager.instance.getResourceStream(resource);
-			LMM_LittleMaidMobNX.Debug("getResource:%s : %s", resource, lis);
+//			LMM_LittleMaidMobNX.Debug("getResource:%s : %s", resource, lis);
 		}
 		return lis;
 	}
 
 	@Override
 	public boolean resourceExists(ResourceLocation resource) {
-		return LMM_SoundManager.instance.getResourceExists(resource);
+		return LMM_SoundManager.instance.existsResource(resource);
 	}
 
 	@SuppressWarnings("rawtypes")

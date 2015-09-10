@@ -5,7 +5,6 @@ import java.util.Map;
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.Client;
 import net.minecraft.client.model.TextureOffset;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.Entity;

@@ -34,9 +34,8 @@ public class LMM_EntityAIBeg extends EntityAIBase {
 		
 		if (targetPlayer == null) {
 			return false;
-		} else {
-			return checkItem(targetPlayer);
 		}
+		return checkItem(targetPlayer);
 	}
 
 	@Override
@@ -54,9 +53,8 @@ public class LMM_EntityAIBeg extends EntityAIBase {
 		
 		if (targetRangeSq > effectiveRangeSq) {
 			return false;
-		} else {
-			return field_48347_e > 0 && checkItem(targetPlayer);
 		}
+		return field_48347_e > 0 && checkItem(targetPlayer);
 	}
 
 	@Override

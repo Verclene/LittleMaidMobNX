@@ -110,9 +110,8 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 			owner.getNavigator().setPath(pe, 1.0F);
 			LMM_LittleMaidMobNX.Debug("Find Snow Area-%d:%d, %d, %d.", owner.getEntityId(), x, y, z);
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 			
 	}
 
@@ -245,9 +244,8 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public void updateAITick(int pMode) {
 		if(owner.playingTick++<3||pMode!=mmode_Playing){
 			return;
-		}else{
-			owner.playingTick = 0;
 		}
+		owner.playingTick = 0;
 		if (owner.isFreedom()) {
 			// 自由行動中の固体は虎視眈々と隙をうかがう。
 			if (owner.worldObj.isDaytime()) {
@@ -323,6 +321,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public boolean setMode(int pMode) {
 		switch (pMode) {
 		case mmode_Playing :
+			if(!owner.worldObj.isDaytime()) return false;
 			owner.aiAttack.setEnable(false);
 			owner.aiShooting.setEnable(true);
 			owner.setBloodsuck(false);
@@ -336,7 +335,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 	public int getNextEquipItem(int pMode) {
 		ItemStack litemstack = null;
 		if (owner.getPlayingRole() != 0) {
-			for (int li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+			for (int li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				litemstack = owner.maidInventory.getStackInSlot(li);
 				if (litemstack == null) continue;
 				

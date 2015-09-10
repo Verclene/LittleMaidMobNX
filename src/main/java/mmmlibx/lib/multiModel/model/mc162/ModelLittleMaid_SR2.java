@@ -41,7 +41,7 @@ public class ModelLittleMaid_SR2 extends ModelLittleMaidBase {
 	public void setLivingAnimations(IModelCaps pEntityCaps, float par2, float par3, float pRenderPartialTicks) {
 		super.setLivingAnimations(pEntityCaps, par2, par3, pRenderPartialTicks);
 		
-		float f3 = (float)entityTicksExisted + pRenderPartialTicks + entityIdFactor;
+		float f3 = entityTicksExisted + pRenderPartialTicks + entityIdFactor;
 		// 目パチ
 		if( 0 > mh_sin(f3 * 0.05F) + mh_sin(f3 * 0.13F) + mh_sin(f3 * 0.7F) + 2.55F) { 
 			eyeR.setVisible(true);

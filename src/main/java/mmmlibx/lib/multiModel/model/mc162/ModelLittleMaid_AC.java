@@ -4,6 +4,7 @@ package mmmlibx.lib.multiModel.model.mc162;
 /**
  * スタビライザー搭載機
  */
+@SuppressWarnings("deprecation")
 public class ModelLittleMaid_AC extends ModelMultiMMMBase {
 
 	public ModelRenderer bipedHead;

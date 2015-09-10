@@ -23,7 +23,6 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 	protected float scrolleContainer;
 	private static InventoryBasic inventory1 = new InventoryBasic("tmpsel", false, 40);
 	private static InventoryBasic inventory2 = new InventoryBasic("tmpwep", false, 32);
-	private int lastX;
 	private int lastY;
 	private boolean ismousePress;
 	private int isScrolled;
@@ -102,7 +101,6 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 
 	@Override
 	protected void handleMouseClick(Slot slot, int i, int j, int flag) {
-		boolean var5 = flag == 1;
 		flag = i == -999 && flag == 0 ? 4 : flag;
 		if (slot != null) {
 			if (slot.inventory == inventory1 && flag == 0) {
@@ -124,9 +122,7 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 				}
 			} else {
 				inventorySlots.slotClick(slot.slotNumber, j, flag, mc.thePlayer);
-				ItemStack itemstack = inventorySlots.getSlot(slot.slotNumber).getStack();
-//				mc.playerController.sendSlotPacket(itemstack,
-//								(slot.slotNumber - inventorySlots.inventorySlots.size()) + 9 + 36);
+				inventorySlots.getSlot(slot.slotNumber).getStack();
 			}
 		} else {
 			// Slot以外のところは捨てる
@@ -192,7 +188,6 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 
 	@Override
 	public void drawScreen(int i, int j, float f) {
-		lastX = i;
 		lastY = j;
 		boolean flag = Mouse.isButtonDown(0);
 		int k = guiLeft;
@@ -208,7 +203,7 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 			isScrolled = 1;
 		}
 		if (isScrolled == 1) {
-			scrolleContainer = (float) (j - (j1 + 8)) / ((float) (l1 - j1) - 16F);
+			scrolleContainer = (j - (j1 + 8)) / (l1 - j1 - 16F);
 			if (scrolleContainer < 0.0F) {
 				scrolleContainer = 0.0F;
 			}
@@ -223,7 +218,7 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 			isScrolled = 2;
 		}
 		if (isScrolled == 2) {
-			scrolleWeaponset = (float) (j - (j1 + 8)) / ((float) (l1 - j1) - 16F);
+			scrolleWeaponset = (j - (j1 + 8)) / (l1 - j1 - 16F);
 			if (scrolleWeaponset < 0.0F) {
 				scrolleWeaponset = 0.0F;
 			}
@@ -246,16 +241,15 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 		int i1 = guiTop;
 		drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
 
-		int j1 = l + 155;
 		int k1 = i1 + 17;
 		int l1 = k1 + 88 + 2;
 		// scrolleWeaponset = 1.0F;
 		// scrolleContainer = 0.5F;
 		drawTexturedModalRect(l + 154,
-				i1 + 17 + (int) ((float) (l1 - k1 - 17) * scrolleContainer),
+				i1 + 17 + (int) ((l1 - k1 - 17) * scrolleContainer),
 				176, 0, 16, 16);
 		drawTexturedModalRect(l + 154,
-				i1 + 120 + (int) ((float) (l1 - k1 - 35) * scrolleWeaponset),
+				i1 + 120 + (int) ((l1 - k1 - 35) * scrolleWeaponset),
 				176, 0, 16, 16);
 	}
 

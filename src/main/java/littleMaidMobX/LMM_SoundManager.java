@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
@@ -31,9 +30,6 @@ public class LMM_SoundManager {
 	
 	/** mods\littleMaidMobX を保持する */
 	private File soundDir = null;
-	/** サウンドパックのフォルダまたはZipを保持する。nullの場合はサウンドをロードしない */
-	private File soundPackDir = null;
-
 	public static final String SoundConfigName = "littleMaidMob.cfg";
 
 	// soundindex, value
@@ -118,7 +114,7 @@ public class LMM_SoundManager {
 		return null;
 	}
 	
-	public boolean getResourceExists(ResourceLocation resource)
+	public boolean existsResource(ResourceLocation resource)
 	{
 		String path = resource.getResourcePath().toLowerCase();
 		if(path.endsWith(".mcmeta"))
@@ -158,7 +154,6 @@ public class LMM_SoundManager {
 	public void setSoundRate(int soundindex, String value, String target) {
 		// 文字列を解析して値を設定
 		String arg[] = value.split(",");
-		String tvalue;
 		Map<Integer, Float> mif;
 		if (target == null) {
 			target = "";
@@ -463,8 +458,6 @@ public class LMM_SoundManager {
 			if(loadCfg == false)
 			{
 				File soundCfg = new File(getSoundDir(), "default_" + SoundConfigName);
-				soundPackDir = null;
-	
 				LMM_LittleMaidMobNX.Debug(soundCfg.getName());
 
 				createDefaultSoundPack(soundCfg);
@@ -488,7 +481,6 @@ public class LMM_SoundManager {
 			{
 				if(searchSoundCfgDir(file))
 				{
-					soundPackDir = file;
 					tableSwitch = "dir";
 					putAllSoundStream(file);
 					createSoundJson(file);
@@ -500,7 +492,6 @@ public class LMM_SoundManager {
 				if(searchSoundCfgZip(file))
 				{
 					tableSwitch = "zip";
-					soundPackDir = file;
 					createSoundJson(file);
 					return true;
 				}
@@ -726,10 +717,7 @@ public class LMM_SoundManager {
 		{
 			return searchSoundAndWriteFileDir(string, dir, string2);
 		}
-		else
-		{
-			return searchSoundAndWriteFileZip(string, dir);
-		}
+		return searchSoundAndWriteFileZip(string, dir);
 	}
 
 	// 再帰的にフォルダを捜査し、音声ファイルをファイル出力する

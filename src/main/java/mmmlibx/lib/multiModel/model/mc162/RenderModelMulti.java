@@ -1,6 +1,5 @@
 package mmmlibx.lib.multiModel.model.mc162;
 
-import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.MMMLib;
 import net.minecraft.client.renderer.entity.RenderLiving;

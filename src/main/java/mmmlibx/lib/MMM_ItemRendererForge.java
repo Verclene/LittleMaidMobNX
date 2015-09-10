@@ -3,13 +3,13 @@ package mmmlibx.lib;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+@SuppressWarnings("deprecation")
 public class MMM_ItemRendererForge implements IItemRenderer {
 
 	@Override

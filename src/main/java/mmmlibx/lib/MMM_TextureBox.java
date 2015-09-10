@@ -3,13 +3,10 @@ package mmmlibx.lib;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.zip.ZipFile;
 
-import littleMaidMobX.LMMNX_OldZipTexturesLoader;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelCapsHelper;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 

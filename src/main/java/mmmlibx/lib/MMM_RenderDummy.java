@@ -41,9 +41,6 @@ public class MMM_RenderDummy extends Render {
 		GL11.glColor3f(1F, 1F, 1F);
 		if (entity instanceof MMM_EntityDummy) {
 			int cc = ((MMM_EntityDummy) entity).getColor();
-			int cr = (cc >> 16) & 0xff;
-			int cg = (cc >> 8) & 0xff;
-			int cb = (cc & 0xff);
 			int ca = MathHelper.floor_float(((MMM_EntityDummy) entity)
 					.getAlpha(1.0F) * 256);
 			//1.8検討

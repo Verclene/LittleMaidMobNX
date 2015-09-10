@@ -14,9 +14,7 @@ public class ContainerCreative extends Container
 {
 	private static InventoryBasic field_147060_v = new InventoryBasic("tmp", true, 45);
     /** the list of items in this container */
-    public List itemList = new ArrayList();
-    private static final String __OBFID = "CL_00000753";
-
+    public List<?> itemList = new ArrayList<Object>();
     public ContainerCreative(EntityPlayer par1EntityPlayer)
     {
         InventoryPlayer inventoryplayer = par1EntityPlayer.inventory;
@@ -49,7 +47,7 @@ public class ContainerCreative extends Container
     public void scrollTo(float p_148329_1_)
     {
         int i = this.itemList.size() / 9 - 5 + 1;
-        int j = (int)((double)(p_148329_1_ * (float)i) + 0.5D);
+        int j = (int)(p_148329_1_ * i + 0.5D);
 
         if (j < 0)
         {

@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import network.W_Message;
-
 public class LMM_ProxyCommon
 {
 	public int OFFSET_COUNT = 0;
@@ -16,7 +15,7 @@ public class LMM_ProxyCommon
 	public void clientCustomPayload(W_Message var2) {}
 	public EntityPlayer getClientPlayer(){ return null; }
 	public void loadSounds(){}
-	public void runCountThread(){}
+	public void runCountThread() {}
 	
 	public boolean isSinglePlayer()
 	{

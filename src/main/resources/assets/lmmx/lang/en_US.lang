@@ -98,3 +98,16 @@ littleMaidMob.mode.T-FarmPorter=Porter(Trace)
 littleMaidMob.text.Health=Health
 littleMaidMob.text.AP=AP
 littleMaidMob.text.STATUS=Status
+
+littleMaidMob.gui.toggle.inner.show=Show Armor Inner Texture
+littleMaidMob.gui.toggle.inner.hide=Hide Armor Inner Texture
+littleMaidMob.gui.toggle.innerlight.show=Show Armor Inner Light Texture
+littleMaidMob.gui.toggle.innerlight.hide=Hide Armor Inner Light Texture
+littleMaidMob.gui.toggle.outer.show=Show Armor Outer Texture
+littleMaidMob.gui.toggle.outer.hide=Hide Armor Outer Texture
+littleMaidMob.gui.toggle.outerlight.show=Show Armor Outer Light Texture
+littleMaidMob.gui.toggle.outerlight.hide=Hide Armor Outer Light Texture
+littleMaidMob.gui.toggle.swim.enable=Enable Swimming Mode
+littleMaidMob.gui.toggle.swim.disable=Disable Swimming Mode
+littleMaidMob.gui.toggle.freedom.enable=Switch to Freedom Mode
+littleMaidMob.gui.toggle.freedom.disable=Switch to Folllow Mode

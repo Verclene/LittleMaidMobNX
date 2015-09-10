@@ -4,8 +4,6 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.passive.EntityTameable;
-import net.minecraftforge.fml.common.Loader;
-
 import com.mojang.authlib.GameProfile;
 
 

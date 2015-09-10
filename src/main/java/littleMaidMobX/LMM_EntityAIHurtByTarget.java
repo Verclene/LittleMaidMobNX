@@ -49,7 +49,7 @@ public class LMM_EntityAIHurtByTarget extends EntityAIHurtByTarget {
 		super.updateTask();
 		String s1 = taskOwner.getAITarget() == null ? "Null" : taskOwner.getAITarget().getClass().toString();
 		String s2 = taskOwner.getAttackTarget() == null ? "Null" : taskOwner.getAttackTarget().getClass().toString();
-//		System.out.println(String.format("ID:%d, target:%s, attack:%s", taskOwner.entityId, s1, s2));
+		System.out.println(String.format("ID:%d, target:%s, attack:%s", taskOwner.getEntityId(), s1, s2));
 		
 		// 殴られた仕返し
 		EntityLivingBase leliving = taskOwner.getAITarget();
@@ -122,17 +122,15 @@ public class LMM_EntityAIHurtByTarget extends EntityAIHurtByTarget {
 		
 		if (var2 == null) {
 			return false;
-		} else {
-			PathPoint var3 = var2.getFinalPathPoint();
-			
-			if (var3 == null) {
-				return false;
-			} else {
-				int var4 = var3.xCoord - MathHelper.floor_double(par1EntityLiving.posX);
-				int var5 = var3.zCoord - MathHelper.floor_double(par1EntityLiving.posZ);
-				return (double)(var4 * var4 + var5 * var5) <= 2.25D;
-			}
 		}
+		PathPoint var3 = var2.getFinalPathPoint();
+		
+		if (var3 == null) {
+			return false;
+		}
+		int var4 = var3.xCoord - MathHelper.floor_double(par1EntityLiving.posX);
+		int var5 = var3.zCoord - MathHelper.floor_double(par1EntityLiving.posZ);
+		return var4 * var4 + var5 * var5 <= 2.25D;
 	}
 
 }

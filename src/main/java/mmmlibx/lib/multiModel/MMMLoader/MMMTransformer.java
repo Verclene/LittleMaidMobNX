@@ -5,16 +5,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Lists;
-
 import littleMaidMobX.LMM_LittleMaidMobNX;
-import mmmlibx.lib.MMMLib;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
+import org.objectweb.asm.tree.LocalVariableNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.MultiANewArrayInsnNode;
+import org.objectweb.asm.tree.TypeInsnNode;
+
+import com.google.common.collect.Lists;
 
 
 /**
@@ -24,7 +32,7 @@ import org.objectweb.asm.tree.*;
  */
 public class MMMTransformer implements IClassTransformer, Opcodes {
 
-	private static String packege = "mmmlibx/lib/multiModel/model/mc162/";
+	static String packageString = "mmmlibx/lib/multiModel/model/mc162/";
 	@SuppressWarnings("serial")
 	private static final Map<String, String> targets = new HashMap<String, String>() {
 		{
@@ -53,7 +61,7 @@ public class MMMTransformer implements IClassTransformer, Opcodes {
 		}
 		private void add(String pName) {
 			String replaceName = pName;
-			put("MMM_" + pName, packege + replaceName);
+			put("MMM_" + pName, packageString + replaceName);
 		}
 	};
 
@@ -166,9 +174,8 @@ public class MMMTransformer implements IClassTransformer, Opcodes {
 			byte[] lb = lcwriter.toByteArray();
 			Debug("Replace: %s", name);
 			return lb;
-		} else {
-			return basicClass;
 		}
+		return basicClass;
 	}
 
 	private String checkMMM(String pText) {

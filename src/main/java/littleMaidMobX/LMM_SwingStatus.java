@@ -5,10 +5,8 @@ import java.util.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.Vec3;
 
 public class LMM_SwingStatus {
 
@@ -103,9 +101,8 @@ public class LMM_SwingStatus {
 	public ItemStack getItemStack(LMM_EntityLittleMaid pEntity) {
 		if (index > -1) {
 			return pEntity.maidInventory.getStackInSlot(index);
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	public boolean canAttack() {
@@ -232,14 +229,15 @@ public class LMM_SwingStatus {
 				var5.rotateAroundY(-pEntity.rotationYaw * (float)Math.PI / 180.0F);
 				var5 = var5.addVector(pEntity.posX, pEntity.posY + (double)pEntity.getEyeHeight(), pEntity.posZ);
 				*/
-				pEntity.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, pEntity.posX, pEntity.posY, pEntity.posZ, ((double)rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+				pEntity.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, pEntity.posX, pEntity.posY, pEntity.posZ, (rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
 			}
 			
 			
-			pEntity.playSound("random.eat", 0.5F + 0.5F * (float)rand.nextInt(2), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+			pEntity.playSound("random.eat", 0.5F + 0.5F * rand.nextInt(2), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
 		}
 	}
 
+	@SuppressWarnings("null")
 	protected void onItemUseFinish(EntityPlayer pEntityPlayer) {
 		if (this.itemInUse != null) {
 			this.updateItemUse(pEntityPlayer, 16);

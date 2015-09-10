@@ -10,22 +10,17 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.TextureOffset;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemBow;
-import net.minecraft.item.ItemCloth;
 import net.minecraft.item.ItemSkull;
 import net.minecraft.item.ItemStack;
 
@@ -269,8 +264,8 @@ public class ModelRenderer {
 	}
 
 	public ModelRenderer setTextureSize(int pWidth, int pHeight) {
-		textureWidth = (float)pWidth;
-		textureHeight = (float)pHeight;
+		textureWidth = pWidth;
+		textureHeight = pHeight;
 		return this;
 	}
 
@@ -479,7 +474,7 @@ public class ModelRenderer {
 			int var4 = pEntityLiving.getBrightnessForRender(0.0F);
 			int var5 = var4 % 65536;
 			int var6 = var4 / 65536;
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)var5 / 1.0F, (float)var6 / 1.0F);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, var5 / 1.0F, var6 / 1.0F);
 
 			
 			GL11.glEnable(GL11.GL_CULL_FACE);
@@ -512,12 +507,12 @@ public class ModelRenderer {
 	// TODO これもいらん？
 	private void renderBlock(ItemStack par2ItemStack)
 	{
+		/*
 		GL11.glPushMatrix();
 		TextureManager texturemanager = Minecraft.getMinecraft().renderEngine;
 		Item item = par2ItemStack.getItem();
 		Block block = Block.getBlockFromItem(item);
 
-		/*
 		if (par2ItemStack.getItemSpriteNumber() == 0 && item instanceof ItemBlock)// && RenderBlocks.renderItemIn3d(block.getRenderType()))
 		{
 			texturemanager.bindTexture(texturemanager.getResourceLocation(0));
@@ -541,9 +536,9 @@ public class ModelRenderer {
 			}
 			GL11.glEnable(GL11.GL_LIGHTING);
 		}
-		*/
 
 		GL11.glPopMatrix();
+		*/
 	}
 
 	/**

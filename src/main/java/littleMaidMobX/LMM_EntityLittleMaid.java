@@ -38,18 +38,18 @@ import mmmlibx.lib.MMM_Counter;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureBox;
 import mmmlibx.lib.MMM_TextureBoxBase;
-import mmmlibx.lib.MMM_TextureBoxServer;
 import mmmlibx.lib.MMM_TextureData;
 import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import net.blacklab.lib.ItemUtil;
+import net.blacklab.lmmnx.LMMNX_EntityAIOpenDoor;
+import net.blacklab.lmmnx.LMMNX_EntityAIRestrictOpenDoor;
+import net.blacklab.lmmnx.LMMNX_NetSync;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockDoublePlant;
-import net.minecraft.block.BlockFarmland;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockStainedGlass;
@@ -62,9 +62,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIOpenDoor;
 import net.minecraft.entity.ai.EntityAIPanic;
-import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
@@ -97,6 +95,10 @@ import net.minecraft.network.play.server.S04PacketEntityEquipment;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1EPacketRemoveEntityEffect;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.pathfinding.PathNavigateSwimmer;
+import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.profiler.Profiler;
@@ -114,11 +116,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.world.pathfinder.WalkNodeProcessor;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
-	
+
 	// 定数はStaticsへ移動
 //	protected static final UUID maidUUID = UUID.nameUUIDFromBytes("lmm.littleMaidMob".getBytes());
 	protected static final UUID maidUUID = UUID.fromString("e2361272-644a-3028-8416-8536667f0efb");
@@ -191,6 +196,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private boolean looksWithInterestAXIS;
 	private float rotateAngleHead;			// Angle
 	private float prevRotateAngleHead;		// prevAngle
+	
+	public float defaultWidth;
+	public float defaultHeight;
 
 	/**
 	 * 個体ごとに値をバラつかせるのに使う。
@@ -215,8 +223,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public EntityAITempt aiTempt;
 	public LMM_EntityAIBeg aiBeg;
 	public LMM_EntityAIBegMove aiBegMove;
-	public EntityAIOpenDoor aiOpenDoor;
-	public EntityAIRestrictOpenDoor aiCloseDoor;
+	public LMMNX_EntityAIOpenDoor aiOpenDoor;
+	public LMMNX_EntityAIRestrictOpenDoor aiCloseDoor;
 	public LMM_EntityAIAvoidPlayer aiAvoidPlayer;
 	public LMM_EntityAIFollowOwner aiFollow;
 	public LMM_EntityAIAttackOnCollide aiAttack;
@@ -237,14 +245,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	//モデル
 	public String textureModelName;
 	public String textureArmorName;
-	
+
 	protected int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
 
 	public int playingTick = 0;
 	public int coolingTick = 0;
 	protected int damageSoundTick = 0;
 
-	public boolean isWildSaved = false;
+	protected boolean isWildSaved = false;
+
+	public boolean isSwimming = false;
+	
+	public int maidArmorVisible = 15;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -257,7 +269,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 			else
 			{
-				maidAvatar = new LMM_EntityLittleMaidAvatarMP(par1World, this);
+				try{
+					maidAvatar = new LMM_EntityLittleMaidAvatarMP(par1World, this);
+				}catch(Throwable throwable){
+					maidAvatar = null;
+					setDead();
+					return;
+				}
 			}
 		}
 		mstatOpenInventory = false;
@@ -276,7 +294,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		ltb[0] = ltb[1] = MMM_TextureManager.instance.getDefaultTexture(this);
 		setTexturePackName(ltb);
 
-		entityIdFactor = (float)(getEntityId() * 70);
+		entityIdFactor = getEntityId() * 70;
 		// 腕振り
 		mstatSwingStatus = new LMM_SwingStatus[] { new LMM_SwingStatus(), new LMM_SwingStatus()};
 		setDominantArm(rand.nextInt(mstatSwingStatus.length));
@@ -401,14 +419,17 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// TODO:test
 		// 31:自由変数、EntityMode等で使用可能な変数。
 		dataWatcher.addObject(dataWatch_Free, new Integer(0));
+		
+		defaultWidth = width;
+		defaultHeight = height;
 	}
 
 	public void initModeList() {
 		// AI
 		aiBeg = new LMM_EntityAIBeg(this, 8F);
 		aiBegMove = new LMM_EntityAIBegMove(this, 1.0F);
-		aiOpenDoor = new EntityAIOpenDoor(this, true);
-		aiCloseDoor = new EntityAIRestrictOpenDoor(this);
+		aiOpenDoor = new LMMNX_EntityAIOpenDoor(this, true);
+		aiCloseDoor = new LMMNX_EntityAIRestrictOpenDoor(this);
 		aiAvoidPlayer = new LMM_EntityAIAvoidPlayer(this, 1.0F, 3);
 		aiFollow = new LMM_EntityAIFollowOwner(this, 1.0F, 36D, 25D, 81D);
 		aiAttack = new LMM_EntityAIAttackOnCollide(this, 1.0F, true);
@@ -437,8 +458,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		ltasks[0].addTask(2, aiSit);
 		ltasks[0].addTask(3, aiJumpTo);
 		ltasks[0].addTask(4, aiFindBlock);
-		ltasks[0].addTask(6, aiAttack);
-		ltasks[0].addTask(7, aiShooting);
+		ltasks[0].addTask(5, aiAttack);
+		ltasks[0].addTask(6, aiShooting);
 		//ltasks[0].addTask(8, aiPanic);
 		ltasks[0].addTask(10, aiBeg);
 		ltasks[0].addTask(11, aiBegMove);
@@ -526,7 +547,61 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return setMaidMode(pindex, false);
 	}
 
-
+	public void setSwimming(boolean flag){
+		isSwimming = flag;
+	}
+	
+	public void setMaidArmorVisible(int i){
+		if(i<0) i=0;
+		if(i>15)i=15;
+		maidArmorVisible = i;
+	}
+	
+	public void setMaidArmorVisible(boolean a, boolean b, boolean c, boolean d){
+		setMaidArmorVisible((a?1:0)<<3 | (b?1:0)<<2 | (c?1:0)<<1 | (d?1:0));
+	}
+	
+	public boolean isArmorVisible(int index){
+		if(index<0||index>3) return true;
+		return ((maidArmorVisible>>(3-index)) & 0x1) != 0;
+	}
+	
+	protected void syncSwimming(){
+		byte[] b = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_UB_Swim, (byte)(isSwimming?1:0)
+		};
+		syncNet(b);
+	}
+	
+	public void syncMaidArmorVisible() {
+		byte[] b = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_UB_Armor, (byte)maidArmorVisible
+		};
+		syncNet(b);
+	}
+	
+	protected void requestArmorVisibleRecall(){
+		if(FMLCommonHandler.instance().getSide()!=Side.CLIENT) return;
+		byte[] b = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_UB_RequestArmorVisibleRecall, 0
+		};
+		syncNet(b);
+	}
+	
+	protected void syncNet(byte[] b) {
+		if(worldObj.isRemote){
+			LMM_Net.sendToEServer(this, b);
+		}else{
+			LMM_Net.sendToAllEClient(this, b);
+		}
+	}
+	
 	public boolean setMaidMode(int pindex, boolean pplaying) {
 		// モードに応じてAIを切り替える
 		velocityChanged = true;
@@ -594,7 +669,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				ltasksExeDEST.clear();
 			} else {
 				ArrayList<EntityAITaskEntry> ltasksDoSRC = getEntityAITasks_taskEntries(pTasksSRC);
-				ArrayList<EntityAITaskEntry> ltasksExeSRC = getEntityAITasks_executingTaskEntries(pTasksSRC);
+				getEntityAITasks_executingTaskEntries(pTasksSRC);
 
 				Iterator iterator;
 				iterator = ltasksExeDEST.iterator();
@@ -607,31 +682,23 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				ltasksDoDEST.clear();
 				ltasksDoDEST.addAll(ltasksDoSRC);
 				// TODO: 未実装の機能、モードチェンジ時の初期化を行う。
-				for (EntityAITaskEntry ltask : ltasksDoSRC) {
-					if (ltask instanceof LMM_IEntityAI)
-					{
+//				for (EntityAITaskEntry ltask : ltasksDoSRC) {
+//					if (ltask instanceof LMM_IEntityAI)
+//					{
 //						((LMM_IEntityAI)ltask).setDefaultEnable();
-					}
-				}
+//					}
+//				}
 			}
 		} catch (Exception s) {
 		}
 	}
 	public static ArrayList<EntityAITaskEntry> getEntityAITasks_taskEntries(EntityAITasks task)
 	{
-		try{
-			return (ArrayList<EntityAITaskEntry>)ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, task, "field_75782_a", "taskEntries");
-		}catch(Exception e){
-			return null;
-		}
+		return (ArrayList<EntityAITaskEntry>) task.taskEntries;
 	}
 	public static ArrayList<EntityAITaskEntry> getEntityAITasks_executingTaskEntries(EntityAITasks task)
 	{
-		try{
-			return (ArrayList<EntityAITaskEntry>)ObfuscationReflectionHelper.getPrivateValue(EntityAITasks.class, task, "field_75780_b", "executingTaskEntries");
-		}catch(Exception e){
-			return null;
-		}
+		return (ArrayList<EntityAITaskEntry>) task.taskEntries;
 	}
 
 	/**
@@ -837,9 +904,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			LMM_LittleMaidMobNX.Debug("Spawn Limit.");
 			return false;
 		}
-		int lx = MathHelper.floor_double(this.posX);
-		int ly = MathHelper.floor_double(this.getEntityBoundingBox().minY);
-		int lz = MathHelper.floor_double(this.posZ);
 		/*
 		// TODO:サーバー側で判定できないので意味なし?
 		MMM_TextureBox lbox = MMM_TextureManager.instance.getTextureBox(textureBox[0]);
@@ -855,9 +919,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					&& this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty()
 					&& !this.worldObj.isAnyLiquid(this.getEntityBoundingBox())
 					/*&& this.getBlockPathWeight(lx, ly, lz) >= 0.0F*/;
-		} else {
-			return super.getCanSpawnHere();
 		}
+		return super.getCanSpawnHere();
 	}
 
 	@Override
@@ -867,7 +930,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void setDead() {
-		if (mstatgotcha != null) {
+		if (mstatgotcha != null&&maidAvatar != null) {
 			// 首紐をドロップ
 			EntityItem entityitem = new EntityItem(worldObj, mstatgotcha.posX, mstatgotcha.posY, mstatgotcha.posZ, new ItemStack(Items.string));
 			worldObj.spawnEntityInWorld(entityitem);
@@ -910,7 +973,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			double d7 = rand.nextGaussian() * d1 + d4;
 			double d8 = rand.nextGaussian() * d2 + d5;
 
-			worldObj.spawnParticle(s, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d6, d7, d8);
+			worldObj.spawnParticle(s, (posX + rand.nextFloat() * width * 2.0F) - width, posY + 0.5D + rand.nextFloat() * height, (posZ + rand.nextFloat() * width * 2.0F) - width, d6, d7, d8);
 		}
 	}
 
@@ -1075,9 +1138,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// お好みは何？
 		if (isContractEX()) {
 			return LMMNX_API_Item.isSugar(par1ItemStack.getItem());
-		} else {
-			return par1ItemStack.getItem() == Items.cake;
 		}
+		return par1ItemStack.getItem() == Items.cake;
 	}
 
 
@@ -1099,6 +1161,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setInteger("Color", textureData.getColor());
 		par1nbtTagCompound.setString("texName", textureData.getTextureName(0));
 		par1nbtTagCompound.setString("texArmor", textureData.getTextureName(1));
+		par1nbtTagCompound.setBoolean("isSwimming", isSwimming);
+		par1nbtTagCompound.setInteger("maidArmorVisible", maidArmorVisible);
 		if(textureModelName==null) textureModelName = "default_Origin";
 		par1nbtTagCompound.setString("textureModelName", textureModelName);
 		if(textureArmorName==null) textureArmorName = "default_Origin";
@@ -1128,6 +1192,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void readEntityFromNBT(NBTTagCompound par1nbtTagCompound) {
 		// データロード
+		if(maidAvatar==null) return;
 		super.readEntityFromNBT(par1nbtTagCompound);
 
 		if (par1nbtTagCompound.hasKey("ModeColor")) {
@@ -1152,7 +1217,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			setMaidWait(par1nbtTagCompound.getBoolean("Wait"));
 			setFreedom(par1nbtTagCompound.getBoolean("Freedom"));
 			setTracer(par1nbtTagCompound.getBoolean("Tracer"));
-			isWildSaved = par1nbtTagCompound.getBoolean("isWildSaved");
 			textureData.textureIndex[0] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texName"));
 			textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texArmor"));
 			textureData.textureBox[0] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[0]);
@@ -1294,6 +1358,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		onInventoryChanged();
 		isWildSaved = par1nbtTagCompound.getBoolean("isWildSaved");
+		setSwimming(par1nbtTagCompound.getBoolean("isSwimming"));
+		syncSwimming();
+		setMaidArmorVisible(par1nbtTagCompound.hasKey("maidArmorVisible")?par1nbtTagCompound.getInteger("maidArmorVisible"):15);
+		syncMaidArmorVisible();
+		syncFreedom();
 
 		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
@@ -1340,20 +1409,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public boolean canBeCollidedWith() {
 		if (ridingEntity != null && ridingEntity == mstatMasterEntity) {
-			ItemStack litemstack = ((EntityPlayer)mstatMasterEntity).getCurrentEquippedItem();
+			ItemStack litemstack = mstatMasterEntity.getCurrentEquippedItem();
 			return (litemstack == null) || (litemstack.getItem() == Items.saddle);
-		} else {
-			return super.canBeCollidedWith();
 		}
+		return super.canBeCollidedWith();
 	}
 
 	@Override
 	public boolean canAttackWithItem() {
 		if (ridingEntity != null && ridingEntity == mstatMasterEntity) {
 			return false;
-		} else {
-			return super.canAttackWithItem();
 		}
+		return super.canAttackWithItem();
 	}
 
 	@Override
@@ -1445,19 +1512,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				EntityHorse horse = (EntityHorse)lep.ridingEntity;
 				if(this.worldObj.isRemote)
 				{
-					dx = Math.sin(((double)horse.renderYawOffset * Math.PI) / 180D) * 0.5;
-					dz = Math.cos(((double)horse.renderYawOffset * Math.PI) / 180D) * 0.5;
+					dx = Math.sin((horse.renderYawOffset * Math.PI) / 180D) * 0.5;
+					dz = Math.cos((horse.renderYawOffset * Math.PI) / 180D) * 0.5;
 				}
 				else
 				{
-					dx = Math.sin(((double)horse.renderYawOffset * Math.PI) / 180D) * 0.9;
-					dz = Math.cos(((double)horse.renderYawOffset * Math.PI) / 180D) * 0.9;
+					dx = Math.sin((horse.renderYawOffset * Math.PI) / 180D) * 0.9;
+					dz = Math.cos((horse.renderYawOffset * Math.PI) / 180D) * 0.9;
 				}
 			}
 			else
 			{
-				dx = Math.sin(((double)lep.renderYawOffset * Math.PI) / 180D) * 0.35;
-				dz = Math.cos(((double)lep.renderYawOffset * Math.PI) / 180D) * 0.35;
+				dx = Math.sin((lep.renderYawOffset * Math.PI) / 180D) * 0.35;
+				dz = Math.cos((lep.renderYawOffset * Math.PI) / 180D) * 0.35;
 			}
 			// --------------------------------------------
 
@@ -1657,9 +1724,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 			*/
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 
 
 //		return maidAvatar.attackEntityFrom(par1DamageSource, par2);
@@ -1729,7 +1795,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			aiAvoidPlayer.setActive();
 		}
 	}
-	
+
 	public void updateAITasks()
 	{
 		super.updateAITasks();
@@ -1741,10 +1807,35 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //		}
 	}
 
+	protected PathEntity prevPathEntity = null;
+
+	/**
+	 * バージョンアップで水浮き専用に
+	 */
 	@Override
 	protected void updateAITick() {
 		// TODO 自動生成されたメソッド・スタブ
-		super.updateAITick();
+		if(getNavigator().getPath()!=null)
+			prevPathEntity = getNavigator().getPath();
+		boolean flag = !isSwimming;
+		if(isInLava()){
+			jump();
+			flag = true;
+		}
+		if(!isSwimming) flag = true;
+		if(isSwimming&&isInWater()&&prevPathEntity!=null){
+			PathPoint pathPoint = prevPathEntity.getFinalPathPoint();
+			if(worldObj.getBlockState(new BlockPos(pathPoint.xCoord,pathPoint.yCoord+2,pathPoint.zCoord)).getBlock().getMaterial()!=Material.water)
+				flag = true;
+			if(getAir()<=0) flag = true;
+		}
+		if(flag) super.updateAITick();
+	}
+
+	@Override
+	protected PathNavigate func_175447_b(World worldIn) {
+		// TODO 自動生成されたメソッド・スタブ
+		return super.func_175447_b(worldIn);
 	}
 
 	@Override
@@ -1768,11 +1859,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		int var7 = MathHelper.floor_double(par1);
 		int var8 = MathHelper.floor_double(par3);
 		int var9 = MathHelper.floor_double(par5);
-		double var10 = par1 - (double)var7;
-		double var12 = par5 - (double)var9;
+		double var10 = par1 - var7;
+		double var12 = par5 - var9;
 
 		boolean lflag = false;
-		for (int li = 0; (float)li < height; li++) {
+		for (int li = 0; li < height; li++) {
 			lflag |= this.isBlockTranslucent(var7, var8 + li, var9);
 		}
 		if (lflag) {
@@ -1806,19 +1897,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			float var21 = 0.1F;
 
 			if (var18 == 0) {
-				this.motionX = (double)(-var21);
+				this.motionX = (-var21);
 			}
 
 			if (var18 == 1) {
-				this.motionX = (double)var21;
+				this.motionX = var21;
 			}
 
 			if (var18 == 4) {
-				this.motionZ = (double)(-var21);
+				this.motionZ = (-var21);
 			}
 
 			if (var18 == 5) {
-				this.motionZ = (double)var21;
+				this.motionZ = var21;
 			}
 
 			return !(var14 | var15 | var16 | var17);
@@ -1826,12 +1917,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		return false;
 	}
-	
+
 	private static final int[] ZBOUND_BLOCKOFFS = new int[]{  1,  1,  0, -1, -1, -1,  0,  1};
 	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
 
 	public int DEBUGCOUNT = 0;
-
+	private boolean isInsideOpaque = false;
+	
 	@Override
 	public void onLivingUpdate() {
 		if(soundTick>0) soundTick--;
@@ -1903,47 +1995,56 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			float movespeed = getAIMoveSpeed();
 
 			BlockPos targetPos = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py, pz+ZBOUND_BLOCKOFFS[pitchindex]);
-			BlockPos targetPosAir = new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+2, pz+ZBOUND_BLOCKOFFS[pitchindex]);
-			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && onGround &&
-					(World.doesBlockHaveSolidTopSurface(worldObj, targetPos)||
-							worldObj.getBlockState(targetPos).getBlock() instanceof BlockFarmland) &&
-					!(worldObj.getBlockState(targetPos).getBlock() instanceof BlockDoor) &&
-					(!worldObj.getBlockState(targetPosAir).getBlock().getMaterial().isOpaque() ||
-							worldObj.getBlockState(targetPosAir).getBlock().getMaterial()==Material.air)){
-				//ジャンプとかさせるとめんどくさいから、Yだけ先に変える
-				setLocationAndAngles(posX, posY+1D, posZ, rotationYaw, rotationPitch);
-				//弧度法に変換。MathHelper.sinの実装が怪しいのでMath.sinを使う
-				double archDegPitch = rotationPitch / 180D * Math.PI;
-				//ナニユエ100分の1がちょうどいいのかは知らん
-				motionX = Math.abs(movespeed/100F) * Math.sin(archDegPitch);
-				motionZ = Math.abs(movespeed/100F) * Math.cos(archDegPitch);
+			new BlockPos(px+XBOUND_BLOCKOFFS[pitchindex], py+1, pz+ZBOUND_BLOCKOFFS[pitchindex]);
+			// この辺プレイヤーと同じ判定方法
+			if(movespeed!=0 && !isMaidWait() && isCollidedHorizontally && (onGround&&!isInWater()) &&
+					0 == WalkNodeProcessor.func_176170_a(worldObj, this, targetPos.getX(), targetPos.getY()  , targetPos.getZ(), MathHelper.floor_float(width+1.0F), MathHelper.floor_float(height+1.0F), MathHelper.floor_float(width+1.0F), false, false, true) &&
+					1 == WalkNodeProcessor.func_176170_a(worldObj, this, targetPos.getX(), targetPos.getY()+1, targetPos.getZ(), MathHelper.floor_float(width+1.0F), MathHelper.floor_float(height+1.0F), MathHelper.floor_float(width+1.0F), false, false, true)){
+				//段差にギリ載せ
+				setLocationAndAngles(posX+0.05*XBOUND_BLOCKOFFS[pitchindex], posY+1D, posZ+0.05*ZBOUND_BLOCKOFFS[pitchindex], rotationYaw, rotationPitch);
 			}
 			
-			BlockPos tpos = new BlockPos(px,py+1,pz);
-			if(worldObj.getBlockState(tpos).getBlock().getMaterial().isOpaque() &&
-					worldObj.getBlockState(tpos).getBlock().getMaterial()!=Material.air){
-				jump();
+			if(isInWater()&&worldObj.getBlockState(new BlockPos(posX,posY+2D,posZ)).getBlock().getMaterial()==Material.water&&isSneaking()){
+				LMM_LittleMaidMobNX.Debug("DISABLE SNEAK");
+				setSneaking(false);
+			}
+
+			// 埋まった
+			OPAQUE: if(isEntityInsideOpaqueBlock()){
+				if(!isInsideOpaque) for(int i=2;i<10;i++){
+					if(!worldObj.getBlockState(new BlockPos(posX, py+i, posZ)).getBlock().isVisuallyOpaque()&&!worldObj.getBlockState(new BlockPos(posX, py+i+1, posZ)).getBlock().isVisuallyOpaque()){
+						setLocationAndAngles(posX, py+i, posZ, rotationYaw, rotationPitch);
+						break OPAQUE;
+					}
+				}
+				isInsideOpaque = true;
+			}else{
+				isInsideOpaque = false;
 			}
 		}
 
-		 ItemStack itemstack = this.getInventory()[0];
+		ItemStack itemstack = this.getInventory()[0];
 
-		 if (itemstack != null)
-		 {
-			 if (itemstack.isItemStackDamageable())
-			 {
-				 itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+		if (itemstack != null)
+		{
+			if (itemstack.isItemStackDamageable())
+			{
+				itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
 
-				 if (itemstack.getItemDamage() >= itemstack.getMaxDamage())
-				 {
-					 this.renderBrokenItemStack(itemstack);
+				if (itemstack.getItemDamage() >= itemstack.getMaxDamage())
+				{
+					this.renderBrokenItemStack(itemstack);
 					// this.setCurrentItemOrArmor(4, (ItemStack)null);
-				 }
-			 }
+				}
+			}
 
-			 //flag = false;
-		 }
+			//flag = false;
+		}
 
+		//Waitなのに移動しようとした
+		if(isMaidWait()&&!navigator.noPath()){
+			navigator.clearPathEntity();
+		}
 
 		if(lhealth > 0) {
 			// 近接監視の追加はここ
@@ -2006,7 +2107,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					mstatSwingStatus[li].attackTime--;
 				}
 				if (maidOverDriveTime.isEnable()) {
-					worldObj.spawnParticle(EnumParticleTypes.REDSTONE, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, 1.2D, 0.4D, 0.4D);
+					worldObj.spawnParticle(EnumParticleTypes.REDSTONE, (posX + rand.nextFloat() * width * 2.0F) - width, posY + 0.5D + rand.nextFloat() * height, (posZ + rand.nextFloat() * width * 2.0F) - width, 1.2D, 0.4D, 0.4D);
 				}
 				if (!worldObj.isRemote) {
 					Entity lattackentity = getAttackTarget();
@@ -2049,6 +2150,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 	}
+	
+	@Override
+	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch){
+		if(worldObj.isRemote) requestArmorVisibleRecall();
+		super.setLocationAndAngles(x, y, z, yaw, pitch);
+	}
+
+	public void setLocationAndAnglesWithResetPath(double x, double y, double z, float yaw, float pitch){
+		setLocationAndAngles(x, y, z, yaw, pitch);
+		navigator.clearPathEntity();
+		resetNavigator();
+	}
 
 	private void superLivingUpdate() {
 		/*
@@ -2060,12 +2173,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		if (this.newPosRotationIncrements > 0)
 		{
-			double d0 = this.posX + (this.newPosX - this.posX) / (double)this.newPosRotationIncrements;
-			double d1 = this.posY + (this.newPosY - this.posY) / (double)this.newPosRotationIncrements;
-			double d2 = this.posZ + (this.newPosZ - this.posZ) / (double)this.newPosRotationIncrements;
-			double d3 = MathHelper.wrapAngleTo180_double(this.newRotationYaw - (double)this.rotationYaw);
-			this.rotationYaw = (float)((double)this.rotationYaw + d3 / (double)this.newPosRotationIncrements);
-			this.rotationPitch = (float)((double)this.rotationPitch + (this.newRotationPitch - (double)this.rotationPitch) / (double)this.newPosRotationIncrements);
+			double d0 = this.posX + (this.newPosX - this.posX) / this.newPosRotationIncrements;
+			double d1 = this.posY + (this.newPosY - this.posY) / this.newPosRotationIncrements;
+			double d2 = this.posZ + (this.newPosZ - this.posZ) / this.newPosRotationIncrements;
+			double d3 = MathHelper.wrapAngleTo180_double(this.newRotationYaw - this.rotationYaw);
+			this.rotationYaw = (float)(this.rotationYaw + d3 / this.newPosRotationIncrements);
+			this.rotationPitch = (float)(this.rotationPitch + (this.newRotationPitch - this.rotationPitch) / this.newPosRotationIncrements);
 			--this.newPosRotationIncrements;
 			this.setPosition(d0, d1, d2);
 			this.setRotation(this.rotationYaw, this.rotationPitch);
@@ -2138,10 +2251,22 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		this.worldObj.theProfiler.endSection();
 	}
-
+	
+	protected void resetNavigator(){
+		if(handleWaterMovement()&&isSwimming&&!(navigator instanceof PathNavigateSwimmer)){
+			navigator.clearPathEntity();
+			navigator = new PathNavigateSwimmer(this, worldObj);
+		}
+		if((!handleWaterMovement()||!isSwimming)&&!(navigator instanceof PathNavigateGround)){
+			navigator.clearPathEntity();
+			navigator = new PathNavigateGround(this, worldObj);
+		}
+	}
+	
 	@Override
 	public void onUpdate() {
 		int litemuse = 0;
+		resetNavigator();
 
 		// Entity初回生成時のインベントリ更新用
 		// サーバーの方が先に起動するのでクライアント側が更新を受け取れない
@@ -2318,7 +2443,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					// インベントリの中身が変わった
 					if (lchange || maidInventory.isChanged(li)) {
 						ItemStack st = maidInventory.getStackInSlot(li);
-						ItemStack bt = maidInventory.prevItems[li];
 						((WorldServer)worldObj).getEntityTracker().func_151248_b(this, new S04PacketEntityEquipment(this.getEntityId(), (li | lselect << 8) + 5, st));
 						maidInventory.resetChanged(li);
 						LMM_LittleMaidMobNX.Debug(String.format("ID:%d-%s - Slot(%x:%d-%d,%d) Update.", getEntityId(), worldObj.isRemote ? "Client" : "Server", lselect, li, mstatSwingStatus[0].index, mstatSwingStatus[1].index));
@@ -2627,7 +2751,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				setEquipItem(lequip, lslotindex);
 //				mstatSwingStatus[lequip].index = lslotindex;
 			}
-			if (lslotindex >= maidInventory.maxInventorySize) {
+			if (lslotindex >= LMM_InventoryLittleMaid.maxInventorySize) {
 				setTextureNames();
 			}
 			String s = par2ItemStack == null ? null : par2ItemStack.getDisplayName();
@@ -2729,9 +2853,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		if (isPotionActive(Potion.digSlowdown)) {
 			return 6 + (1 + getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2;
-		} else {
-			return 6;
 		}
+		return 6;
 	}
 
 	/**
@@ -2780,8 +2903,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			par1EntityPlayer.riddenByEntity.mountEntity(this);
 			return true;
 		}
-
-
 
 		if (mstatgotcha == null && par1EntityPlayer.fishEntity == null) {
 			if(itemstack1 != null && itemstack1.getItem() == Items.string) {
@@ -2854,9 +2975,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							}
 							else if (itemstack1.getItem() == Items.feather) {
 								// 自由行動
-								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-								setFreedom(!isFreedom());
-								worldObj.setEntityState(this, isFreedom() ? (byte)12 : (byte)13);
+//								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
+								if(!worldObj.isRemote){
+									setFreedom(!isFreedom());
+									syncFreedom();
+									worldObj.setEntityState(this, isFreedom() ? (byte)12 : (byte)13);
+								}
 								return true;
 							}
 							else if (itemstack1.getItem() == Items.saddle) {
@@ -2926,13 +3050,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								} else {
 									worldObj.setEntityState(this, (byte)12);
 								}
-
 								return true;
 							}else if(itemstack1.getItem() == Items.stick){
 								if(maidDominantArm==0){
 									setDominantArm(1);
 								}else{
 									setDominantArm(0);
+								}
+								return true;
+							}else if(itemstack1.getItem() == Items.fish){
+								if(!worldObj.isRemote){
+									setSwimming(!isSwimming);
+									syncSwimming();
+									par1EntityPlayer.addChatComponentMessage(new ChatComponentText("Swimming mode was set to "+isSwimming));
 								}
 								return true;
 							}
@@ -2960,6 +3090,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));
 					getNavigator().clearPathEntity();
 					isJumping = false;
+					if(!worldObj.isRemote){
+						syncSwimming();
+						syncMaidArmorVisible();
+						syncFreedom();
+					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;
 				}
@@ -2994,9 +3129,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 						}
 						return true;
-					} else {
-//						worldObj.setEntityState(this, (byte)6);
 					}
+//					worldObj.setEntityState(this, (byte)6);
 				}
 			}
 		} else if (lhealth > 0F && mstatgotcha != null) {
@@ -3061,7 +3195,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	public float getContractLimitDays() {
-		return maidContractLimit > 0 ? ((float)maidContractLimit / 24000F) : -1F;
+		return maidContractLimit > 0 ? (maidContractLimit / 24000F) : -1F;
 	}
 
 	public boolean updateMaidContract() {
@@ -3111,9 +3245,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 			}
 			return entityplayer;
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	public boolean isMaidContractOwner(String pname) {
@@ -3210,7 +3343,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (!worldObj.isRemote) {
 			byte[] lba = new byte[] {
 				LMM_Statics.LMN_Client_SwingArm,
-				(byte) (force ? 1: 0), 0, 0, 0,
+				0, 0, 0, 0,
 				(byte)pArm,
 				0, 0, 0, 0,
 				0, 0, 0, 0
@@ -3434,7 +3567,16 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean isFreedom() {
 		return maidFreedom;
 	}
-	
+
+	protected void syncFreedom() {
+		byte[] b = new byte[]{
+			LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+			0, 0, 0, 0,
+			LMMNX_NetSync.LMMNX_Sync_UB_Freedom, (byte)(isFreedom()?1:0)
+		};
+		syncNet(b);
+	}
+
 	public boolean isHeadMount(){
 		return ItemUtil.isHelm(maidInventory.mainInventory[17]);
 	}
@@ -3454,8 +3596,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// テクスチャパックが更新されていないかをチェック
 		// クライアント側の
 		boolean lflag = false;
-		MMM_TextureBoxServer lbox;
-
 		int ltexture = dataWatcher.getWatchableObjectInt(dataWatch_Texture);
 		int larmor = (ltexture >>> 16) & 0xffff;
 		ltexture &= 0xffff;
@@ -3783,50 +3923,50 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public double getDistanceTilePos() {
 		return getDistance(
-				(double)maidTile[0] + 0.5D,
-				(double)maidTile[1] + 0.5D,
-				(double)maidTile[2] + 0.5D);
+				maidTile[0] + 0.5D,
+				maidTile[1] + 0.5D,
+				maidTile[2] + 0.5D);
 	}
 	public double getDistanceTilePosSq() {
 		return getDistanceSq(
-				(double)maidTile[0] + 0.5D,
-				(double)maidTile[1] + 0.5D,
-				(double)maidTile[2] + 0.5D);
+				maidTile[0] + 0.5D,
+				maidTile[1] + 0.5D,
+				maidTile[2] + 0.5D);
 	}
 
 	public double getDistanceTilePos(int pIndex) {
 		if (maidTiles.length > pIndex && maidTiles[pIndex] != null) {
 			return getDistance(
-					(double)maidTiles[pIndex][0] + 0.5D,
-					(double)maidTiles[pIndex][1] + 0.5D,
-					(double)maidTiles[pIndex][2] + 0.5D);
+					maidTiles[pIndex][0] + 0.5D,
+					maidTiles[pIndex][1] + 0.5D,
+					maidTiles[pIndex][2] + 0.5D);
 		}
 		return -1D;
 	}
 	public double getDistanceTilePosSq(int pIndex) {
 		if (maidTiles.length > pIndex && maidTiles[pIndex] != null) {
 			return getDistanceSq(
-					(double)maidTiles[pIndex][0] + 0.5D,
-					(double)maidTiles[pIndex][1] + 0.5D,
-					(double)maidTiles[pIndex][2] + 0.5D);
+					maidTiles[pIndex][0] + 0.5D,
+					maidTiles[pIndex][1] + 0.5D,
+					maidTiles[pIndex][2] + 0.5D);
 		}
 		return -1D;
 	}
 	public double getDistanceTilePos(TileEntity pTile) {
 		if (pTile != null) {
 			return getDistance(
-					(double)pTile.getPos().getX() + 0.5D,
-					(double)pTile.getPos().getY() + 0.5D,
-					(double)pTile.getPos().getZ() + 0.5D);
+					pTile.getPos().getX() + 0.5D,
+					pTile.getPos().getY() + 0.5D,
+					pTile.getPos().getZ() + 0.5D);
 		}
 		return -1D;
 	}
 	public double getDistanceTilePosSq(TileEntity pTile) {
 		if (pTile != null) {
 			return getDistanceSq(
-					(double)pTile.getPos().getX() + 0.5D,
-					(double)pTile.getPos().getY() + 0.5D,
-					(double)pTile.getPos().getZ() + 0.5D);
+					pTile.getPos().getX() + 0.5D,
+					pTile.getPos().getY() + 0.5D,
+					pTile.getPos().getZ() + 0.5D);
 		}
 		return -1D;
 	}

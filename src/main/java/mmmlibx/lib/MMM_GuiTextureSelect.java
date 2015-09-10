@@ -2,15 +2,11 @@ package mmmlibx.lib;
 
 import java.io.IOException;
 
-import littleMaidMobX.LMM_LittleMaidMobNX;
-import mmmlibx.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.EXTRescaleNormal;
@@ -89,15 +85,14 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 		GL11.glScalef(60F, -60F, 60F);
 		selectPanel.entity.renderYawOffset = -25F;
 		selectPanel.entity.rotationYawHead = -10F;
-		ResourceLocation ltex[];
 		selectPanel.entity.modeArmor = selectPanel.mode;
 		if (selectPanel.mode) {
-			selectPanel.entity.textureData.textureBox[0] = selectPanel.blankBox;
+			selectPanel.entity.textureData.textureBox[0] = MMM_GuiTextureSlot.blankBox;
 			selectPanel.entity.textureData.textureBox[1] = lbox;
 			selectPanel.entity.setTextureNames("default");
 		} else {
 			selectPanel.entity.textureData.textureBox[0] = lbox;
-			selectPanel.entity.textureData.textureBox[1] = selectPanel.blankBox;
+			selectPanel.entity.textureData.textureBox[1] = MMM_GuiTextureSlot.blankBox;
 			selectPanel.entity.setColor(selectColor);
 			selectPanel.entity.setTextureNames();
 		}
@@ -145,7 +140,6 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 			selectPanel.setMode(true);
 			break;
 		case 200:
-			boolean lflag = false;
 			target.setColor(selectColor);
 			if (selectPanel.texsel[0] > -1) {
 				target.getTextureBox()[0] = selectPanel.getSelectedBox(false);

@@ -55,10 +55,9 @@ public class MMM_EntityDummy extends Entity {
 
 	public float getAlpha(float max) {
 		if (livecount >= 0) {
-			return max * (float)livecount / (float)maxlivecount;
-		} else {
-			return 0F;
+			return max * livecount / maxlivecount;
 		}
+		return 0F;
 	}
 
 	public int getColor() {

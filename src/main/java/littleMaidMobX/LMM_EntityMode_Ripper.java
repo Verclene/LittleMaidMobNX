@@ -214,7 +214,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 		switch (pMode) {
 		case mmode_Ripper :
 		case mmode_TNTD :
-			for (li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+			for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				litemstack = owner.maidInventory.getStackInSlot(li);
 				if (litemstack == null) continue;
 				
@@ -225,7 +225,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 			}
 			break;
 		case mmode_Detonator :
-			for (li = 0; li < owner.maidInventory.maxInventorySize; li++) {
+			for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				// 爆発物
 				if (owner.maidInventory.isItemExplord(li)) {
 					return li;
@@ -315,10 +315,9 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	protected float setLittleMaidFlashTime(float f) {
 		// 爆発カウントダウン発光時間
 		if (timeSinceIgnited > -1) {
-			return ((float)this.lastTimeSinceIgnited + (float)(this.timeSinceIgnited - this.lastTimeSinceIgnited) * f) / 28.0F;
-		} else { 
-			return 0F;
+			return (this.lastTimeSinceIgnited + (this.timeSinceIgnited - this.lastTimeSinceIgnited) * f) / 28.0F;
 		}
+		return 0F;
 	}
 	
 	@Override
@@ -347,7 +346,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	@Override
 	public boolean damageEntity(int pMode, DamageSource par1DamageSource, float par2) {
 		// 起爆
-		if (pMode == mmode_Detonator && owner.maidInventory.isItemExplord(owner.getCurrentEquippedItem())) {
+		if (pMode == mmode_Detonator && LMM_InventoryLittleMaid.isItemExplord(owner.getCurrentEquippedItem())) {
 			if (timeSinceIgnited == -1) {
 				owner.playSound("random.fuse", 1.0F, 0.5F);
 				owner.getDataWatcher().updateObject(LMM_Statics.dataWatch_Free, Integer.valueOf(1));

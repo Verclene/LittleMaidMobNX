@@ -2,7 +2,6 @@ package mmmlibx.lib.multiModel.model.mc162;
 
 import java.util.Map;
 
-import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.Client;
 import net.minecraft.client.model.TextureOffset;
 import net.minecraft.client.renderer.entity.Render;
@@ -137,7 +136,6 @@ public class ModelBaseDuo extends ModelBaseNihil implements IModelBaseMMM {
 						Client.setTexture(textureOuterLight[renderParts]);
 					}catch(Exception e){
 					}
-					float var4 = 1.0F;
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
 					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);

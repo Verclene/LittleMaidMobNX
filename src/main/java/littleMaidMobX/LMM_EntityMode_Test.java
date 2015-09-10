@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import mmmlibx.lib.MMM_TextureBox;
 import mmmlibx.lib.MMM_TextureBoxServer;
 import mmmlibx.lib.MMM_TextureManager;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandTime;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -71,7 +70,7 @@ public class LMM_EntityMode_Test extends LMM_EntityModeBase implements ICommand 
 				owner.textureData.getTextureName(1), owner.textureData.textureIndex[1], (li >>> 16)
 				));
 		
-		ld = (double)llist.size() * 0.25D - 0.5D;
+		ld = llist.size() * 0.25D - 0.5D;
 		for (String ls : llist) {
 			prenderlittlemaid.renderLivingLabel(owner, ls, px, py + ld, pz, 64);
 			ld -= 0.25D;

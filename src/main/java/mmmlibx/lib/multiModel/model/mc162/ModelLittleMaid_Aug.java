@@ -102,13 +102,13 @@ public class ModelLittleMaid_Aug extends ModelLittleMaid_SR2 {
 	public void setLivingAnimations(IModelCaps pEntityCaps, float par2, float par3, float pRenderPartialTicks) {
 		super.setLivingAnimations(pEntityCaps, par2, par3, pRenderPartialTicks);
 		
-		float f3 = (float)entityTicksExisted + pRenderPartialTicks + entityIdFactor;
+		float f3 = entityTicksExisted + pRenderPartialTicks + entityIdFactor;
 		float f4;
 		if (ModelCapsHelper.getCapsValueBoolean(pEntityCaps, caps_isLookSuger)) {
 			f3 *= 8.0F;
 			f4 = -0.2F;
 		} else {
-			f4 = (1F - (float)ModelCapsHelper.getCapsValueInt(pEntityCaps, caps_health) / 20F) * 0.5F;
+			f4 = (1F - ModelCapsHelper.getCapsValueInt(pEntityCaps, caps_health) / 20F) * 0.5F;
 		}
 		float f5 = mh_sin(f3 * 0.067F) * 0.05F - f4;
 		float f6 = 40.0F / 57.29578F;

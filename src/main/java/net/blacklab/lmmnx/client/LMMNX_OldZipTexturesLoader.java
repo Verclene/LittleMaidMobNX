@@ -1,4 +1,4 @@
-package littleMaidMobX;
+package net.blacklab.lmmnx.client;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,19 +10,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipFile;
 
-import com.google.common.collect.ImmutableSet;
-
-import mmmlibx.lib.MMMLib;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.util.ResourceLocation;
+
+import com.google.common.collect.ImmutableSet;
 
 public class LMMNX_OldZipTexturesLoader implements IResourcePack {
 	
 	public static Map<String, String> keys = new HashMap<String, String>();
 	public static Map<String, File> keysf = new HashMap<String, File>();
 
+	@SuppressWarnings("resource")
 	@Override
 	public InputStream getInputStream(ResourceLocation arg0) throws IOException {
 		if(resourceExists(arg0)){

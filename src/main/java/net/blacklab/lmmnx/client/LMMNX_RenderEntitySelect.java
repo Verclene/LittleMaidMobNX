@@ -1,7 +1,11 @@
-package littleMaidMobX;
+package net.blacklab.lmmnx.client;
 
-import org.lwjgl.opengl.GL11;
-
+import littleMaidMobX.LMM_LittleMaidMobNX;
+import mmmlibx.lib.Client;
+import mmmlibx.lib.ITextureEntity;
+import mmmlibx.lib.MMM_EntitySelect;
+import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
+import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -9,14 +13,9 @@ import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.util.ResourceLocation;
-import mmmlibx.lib.Client;
-import mmmlibx.lib.ITextureEntity;
-import mmmlibx.lib.MMM_EntitySelect;
-import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
-import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
-import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
+
+import org.lwjgl.opengl.GL11;
 
 public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 	

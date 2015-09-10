@@ -3,7 +3,6 @@ package mmmlibx.lib.multiModel.MMMLoader;
 import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 //@TransformerExclusions({"mmmlibx.lib.multiModel.MMMLoader"})
 public class MMMCoremod implements IFMLLoadingPlugin{

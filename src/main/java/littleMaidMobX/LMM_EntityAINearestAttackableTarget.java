@@ -46,28 +46,27 @@ public class LMM_EntityAINearestAttackableTarget extends EntityAINearestAttackab
 			return false;
 //		} else if (theMaid.getAttackTarget() != null) {
 //			return true;
-		} else {
-			double lfollowRange = this.getTargetDistance();
-			List llist = this.taskOwner.worldObj.getEntitiesWithinAABB(targetClass, taskOwner.getEntityBoundingBox().expand(lfollowRange, 8.0D, lfollowRange));
-			if (theMaid.mstatMasterEntity != null && !theMaid.isBloodsuck()) {
-				// ソーターを主中心へ
-				theNearestAttackableTargetSorter.setEntity(theMaid.mstatMasterEntity);
-			} else {
-				// 自分中心にソート
-				theNearestAttackableTargetSorter.setEntity(theMaid);
-			}
-			Collections.sort(llist, theNearestAttackableTargetSorter);
-			Iterator var2 = llist.iterator();
-			while (var2.hasNext()) {
-				Entity var3 = (Entity)var2.next();
-				if (var3.isEntityAlive() && this.isSuitableTargetLM(var3, false)) {
-					this.targetEntity = var3;
-					return true;
-				}
-			}
-			
-			return false;
 		}
+		double lfollowRange = this.getTargetDistance();
+		List llist = this.taskOwner.worldObj.getEntitiesWithinAABB(targetClass, taskOwner.getEntityBoundingBox().expand(lfollowRange, 8.0D, lfollowRange));
+		if (theMaid.mstatMasterEntity != null && !theMaid.isBloodsuck()) {
+			// ソーターを主中心へ
+			theNearestAttackableTargetSorter.setEntity(theMaid.mstatMasterEntity);
+		} else {
+			// 自分中心にソート
+			theNearestAttackableTargetSorter.setEntity(theMaid);
+		}
+		Collections.sort(llist, theNearestAttackableTargetSorter);
+		Iterator var2 = llist.iterator();
+		while (var2.hasNext()) {
+			Entity var3 = (Entity)var2.next();
+			if (var3.isEntityAlive() && this.isSuitableTargetLM(var3, false)) {
+				this.targetEntity = var3;
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	@Override
@@ -156,17 +155,15 @@ public class LMM_EntityAINearestAttackableTarget extends EntityAINearestAttackab
 		
 		if (var2 == null) {
 			return false;
-		} else {
-			PathPoint var3 = var2.getFinalPathPoint();
-			
-			if (var3 == null) {
-				return false;
-			} else {
-				int var4 = var3.xCoord - MathHelper.floor_double(par1EntityLiving.posX);
-				int var5 = var3.zCoord - MathHelper.floor_double(par1EntityLiving.posZ);
-				return (double)(var4 * var4 + var5 * var5) <= 2.25D;
-			}
 		}
+		PathPoint var3 = var2.getFinalPathPoint();
+		
+		if (var3 == null) {
+			return false;
+		}
+		int var4 = var3.xCoord - MathHelper.floor_double(par1EntityLiving.posX);
+		int var5 = var3.zCoord - MathHelper.floor_double(par1EntityLiving.posZ);
+		return var4 * var4 + var5 * var5 <= 2.25D;
 	}
 
 
