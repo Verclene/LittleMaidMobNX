@@ -56,7 +56,7 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
 	本トリガー
 
 更新履歴
-	20150910	NX3 Build 71
+	20150910	NX3 Build 72
 		CODE: [MEET WITH OCEAN]
 		水中対応
 		GUIからの防具表示・自由行動・水中行動のモード切替を追加

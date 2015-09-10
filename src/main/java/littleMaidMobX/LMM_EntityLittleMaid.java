@@ -117,6 +117,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import wrapper.W_Common;
@@ -583,8 +584,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncNet(b);
 	}
 	
-	@SideOnly(Side.CLIENT)
 	protected void requestArmorVisibleRecall(){
+		if(FMLCommonHandler.instance().getSide()!=Side.CLIENT) return;
 		byte[] b = new byte[]{
 				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
 				0, 0, 0, 0,
@@ -1983,7 +1984,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//八方位に分割して割り出す
 		if(!worldObj.isRemote){
 //			float rot = getRotationYawHead();
-			int pitchindex = Math.round(rotationYawHead/45F);
+			int pitchindex = Math.round(rotationYaw/45F);
 //			if(pitchindex>=8||pitchindex<0) pitchindex = 0;
 			while(pitchindex<0)  pitchindex+=8;
 			while(pitchindex>=8) pitchindex-=8;
@@ -2148,6 +2149,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch){
+		if(worldObj.isRemote) requestArmorVisibleRecall();
+		super.setLocationAndAngles(x, y, z, yaw, pitch);
 	}
 
 	public void setLocationAndAnglesWithResetPath(double x, double y, double z, float yaw, float pitch){

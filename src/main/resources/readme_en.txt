@@ -33,7 +33,7 @@ How to change LittleMaid's voice
 	Get any soundpack, and put it into mods folder.
 
 Changes
-	20150910	NX3 Build 71
+	20150910	NX3 Build 72
 		CODE: [MEET WITH OCEAN]
 		New Features:
 			Swimming
