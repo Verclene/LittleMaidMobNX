@@ -25,6 +25,7 @@ import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -243,8 +244,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public Profiler aiProfiler;
 
 	//モデル
-	public String textureModelName;
-	public String textureArmorName;
+	public String textureModelNameForClient;
+	public String textureArmorNameForClient;
 
 	protected int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
 
@@ -568,7 +569,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	protected void syncSwimming(){
 		byte[] b = new byte[]{
-				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+				LMMNX_NetSync.LMMNX_Sync,
 				0, 0, 0, 0,
 				LMMNX_NetSync.LMMNX_Sync_UB_Swim, (byte)(isSwimming?1:0)
 		};
@@ -577,19 +578,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	public void syncMaidArmorVisible() {
 		byte[] b = new byte[]{
-				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+				LMMNX_NetSync.LMMNX_Sync,
 				0, 0, 0, 0,
 				LMMNX_NetSync.LMMNX_Sync_UB_Armor, (byte)maidArmorVisible
 		};
 		syncNet(b);
 	}
 	
-	protected void requestArmorVisibleRecall(){
+	protected void requestRenderParamRecall(){
 		if(FMLCommonHandler.instance().getSide()!=Side.CLIENT) return;
 		byte[] b = new byte[]{
-				LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+				LMMNX_NetSync.LMMNX_Sync,
 				0, 0, 0, 0,
-				LMMNX_NetSync.LMMNX_Sync_UB_RequestArmorVisibleRecall, 0
+				LMMNX_NetSync.LMMNX_Sync_UB_RequestParamRecall, 0
 		};
 		syncNet(b);
 	}
@@ -1163,10 +1164,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setString("texArmor", textureData.getTextureName(1));
 		par1nbtTagCompound.setBoolean("isSwimming", isSwimming);
 		par1nbtTagCompound.setInteger("maidArmorVisible", maidArmorVisible);
-		if(textureModelName==null) textureModelName = "default_Origin";
-		par1nbtTagCompound.setString("textureModelName", textureModelName);
-		if(textureArmorName==null) textureArmorName = "default_Origin";
-		par1nbtTagCompound.setString("textureArmorName", textureArmorName);
+		if(textureModelNameForClient==null) textureModelNameForClient = "default_Orign";
+		par1nbtTagCompound.setString("textureModelNameForClient", textureModelNameForClient);
+		if(textureArmorNameForClient==null) textureArmorNameForClient = "default_Orign";
+		par1nbtTagCompound.setString("textureArmorNameForClient", textureArmorNameForClient);
 
 		NBTTagCompound prevtargettag = new NBTTagCompound();
 		par1nbtTagCompound.setTag("prevtarget", prevtargettag);
@@ -1221,13 +1222,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texArmor"));
 			textureData.textureBox[0] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[0]);
 			textureData.textureBox[1] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[1]);
-			textureModelName = par1nbtTagCompound.getString("textureModelName");
-			if(textureModelName.equals("")){
-				textureModelName = "default_Origin";
+			textureModelNameForClient = par1nbtTagCompound.getString("textureModelNameForClient");
+			if(textureModelNameForClient.equals("")){
+				textureModelNameForClient = "default_Orign";
 			}
-			textureArmorName = par1nbtTagCompound.getString("textureArmorName");
-			if(textureArmorName.equals("")){
-				textureArmorName = "default_Origin";
+			textureArmorNameForClient = par1nbtTagCompound.getString("textureArmorNameForClient");
+			if(textureArmorNameForClient.equals("")){
+				textureArmorNameForClient = "default_Orign";
 			}
 
 			byte b = par1nbtTagCompound.getByte("ModeColor");
@@ -1927,6 +1928,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void onLivingUpdate() {
 		if(soundTick>0) soundTick--;
+		
 
 		// 回復判定
 		float lhealth = getHealth();
@@ -2153,7 +2155,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	@Override
 	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch){
-		if(worldObj.isRemote) requestArmorVisibleRecall();
+		if(worldObj.isRemote) requestRenderParamRecall();
 		super.setLocationAndAngles(x, y, z, yaw, pitch);
 	}
 
@@ -3570,13 +3572,61 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	protected void syncFreedom() {
 		byte[] b = new byte[]{
-			LMMNX_NetSync.LMMNX_Sync_Under_Byte,
+			LMMNX_NetSync.LMMNX_Sync,
 			0, 0, 0, 0,
 			LMMNX_NetSync.LMMNX_Sync_UB_Freedom, (byte)(isFreedom()?1:0)
 		};
 		syncNet(b);
 	}
-
+	
+	protected void saveTextureNamesToServer() {
+		String tmp1 = textureData.textureBox[0].textureName;
+		if(tmp1==null) return;
+		byte b1[] = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_String_MT_SaveToServer
+		};
+		byte b1l[] = Arrays.copyOf(b1, b1.length+tmp1.length());
+		MMM_Helper.setStr(b1l, 6, tmp1);
+		syncNet(b1l);
+		
+		String tmp2 = textureData.textureBox[1].textureName;
+		if(tmp2==null) return;
+		byte b2[] = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_String_AT_SaveToServer
+		};
+		byte b2l[] = Arrays.copyOf(b2, b2.length+tmp2.length());
+		MMM_Helper.setStr(b2l, 6, tmp2);
+		syncNet(b2l);
+	}
+	
+	public void recallParamToClient() {
+		String tmp1 = textureModelNameForClient;
+		if(tmp1==null) return;
+		byte b1[] = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_String_MT_Return
+		};
+		byte b1l[] = Arrays.copyOf(b1, b1.length+tmp1.length());
+		MMM_Helper.setStr(b1l, 6, tmp1);
+		syncNet(b1l);
+		
+		String tmp2 = textureArmorNameForClient;
+		if(tmp2==null) return;
+		byte b2[] = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_String_AT_Return
+		};
+		byte b2l[] = Arrays.copyOf(b2, b2.length+tmp2.length());
+		MMM_Helper.setStr(b2l, 6, tmp2);
+		syncNet(b2l);
+	}
+	
 	public boolean isHeadMount(){
 		return ItemUtil.isHelm(maidInventory.mainInventory[17]);
 	}
@@ -3764,6 +3814,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public void setTextureNames() {
 		textureData.setTextureNames();
+		if(worldObj.isRemote) saveTextureNamesToServer();
 	}
 
 	public void setNextTexturePackege(int pTargetTexture) {

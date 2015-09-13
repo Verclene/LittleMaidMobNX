@@ -156,7 +156,7 @@ public class LMM_Net {
 				LMM_IFF.saveIFF("");
 			}
 			break;
-		case LMMNX_NetSync.LMMNX_Sync_Under_Byte:
+		case LMMNX_NetSync.LMMNX_Sync:
 			LMMNX_NetSync.onPayLoad(lemaid, pPayload.data);
 			break;
 		}

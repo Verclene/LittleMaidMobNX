@@ -130,19 +130,4 @@ public class LMM_Statics
 	 */
 	public static final byte LMN_Client_PlaySound		= (byte)0x89;
 	
-	/**
-	 * GUI用。防具の表示状況を通知する。
-	 * [0]		: 0x07;
-	 * [1..4]	: EntityID(int);
-	 * [5]		: バイト列(ILOL);
-	 */
-	public static final byte LMN_Sync_SetArmorVisible	= (byte)0x83;
-	
-	/**
-	 * GUI用。isSwimmingの値を制御する。
-	 * [0]		: 0x08;
-	 * [1..4]	: EntityID(int);
-	 * [5]		: true=1,false=0;
-	 */
-	public static final byte LMN_Sync_SetSwimming		= (byte)0x82;
 }

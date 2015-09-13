@@ -13,4 +13,6 @@ public enum LMMNX_DevMode {
 	public static final LMMNX_DevMode DEVMODE = NOT_IN_DEV;
 
 	public static final String[] INCLUDEPROJECT = new String[]{};
+	
+	public static final boolean DEBUG_PRINT_SWITCH = true;
 }

@@ -42,6 +42,12 @@ public class FileManager {
 			String pathd = path;
 			String patha;
 			String tail = "/eclipse/mods";
+			String tail2 = "/eclipse/server/mods";
+			boolean serverFlag = false;
+			if(path.endsWith(tail2)){
+				path = path.substring(0, path.indexOf(tail2))+tail;
+				serverFlag = true;
+			}
 			if(path.endsWith(tail)){
 				if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
 					pathd = path.substring(0, path.indexOf(tail))+"/bin";
@@ -54,7 +60,7 @@ public class FileManager {
 				if(!dirDevClasses.exists()||!dirDevClasses.isDirectory())
 					throw new IllegalStateException("Could not get dev class path: Maybe your source codes are out of src/main/java?");
 				
-				for(int i=0;i<LMMNX_DevMode.INCLUDEPROJECT.length;i++){
+				for(int i=0;i<LMMNX_DevMode.INCLUDEPROJECT.length&&!serverFlag;i++){
 					if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
 						String c = FileClassUtil.getParentDir(path.substring(0, path.indexOf(tail)))+"/"+LMMNX_DevMode.INCLUDEPROJECT[i]+"/bin";
 						dirDevIncludeClasses.add(new File(c));

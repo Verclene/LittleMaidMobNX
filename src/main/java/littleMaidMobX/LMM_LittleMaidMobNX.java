@@ -7,8 +7,10 @@ import java.util.Random;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lmmnx.LMM_SoundResourcePack;
+import net.blacklab.lmmnx.api.LMMNX_API;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
+import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -43,8 +45,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 72";
-	public static final int VERSION_CODE = 6;
+	public static final String VERSION = "NX3 Build 76";
+	public static final int VERSION_CODE = 7;
 
 	/*
 	public static String[] cfg_comment = {
@@ -144,7 +146,7 @@ public class LMM_LittleMaidMobNX {
 
 	public static void Debug(String pText, Object... pVals) {
 		// デバッグメッセージ
-		if (cfg_PrintDebugMessage) {
+		if (cfg_PrintDebugMessage||LMMNX_DevMode.DEBUG_PRINT_SWITCH) {
 			System.out.println(String.format("littleMaidMob-" + pText, pVals));
 		}
 	}

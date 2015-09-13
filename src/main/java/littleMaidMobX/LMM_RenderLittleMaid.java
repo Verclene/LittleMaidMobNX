@@ -127,7 +127,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			//初回のみ指定値設定
 			if(renderCount==0){
 				this.setModelValues(lmm, lmm.maidCaps);
-				lmm.requestArmorVisibleRecall();
+				lmm.requestRenderParamRecall();
 			}
 			
 

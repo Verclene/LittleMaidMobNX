@@ -6,6 +6,7 @@ import java.util.List;
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.guns.GunsBase;
 import mmmlibx.lib.multiModel.MMMLoader.MMMTransformer;
+import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
@@ -35,15 +36,13 @@ public class MMMLib {
 
 	public static void Debug(String pText, Object... pData) {
 		// デバッグメッセージ
-		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage) {
+		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage||LMMNX_DevMode.DEBUG_PRINT_SWITCH) {
 			System.out.println(String.format("MMMLib-" + pText, pData));
 		}
 	}
 	public static void Debug(boolean isRemote, String pText, Object... pData) {
 		// デバッグメッセージ
-		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage) {
-			System.out.println(String.format("["+(isRemote? "Client":"Server")+"]MMMLib-" + pText, pData));
-		}
+		Debug("[Side="+(isRemote? "Client":"Server")+"]" + pText, pData);
 	}
 
 	@Mod.EventHandler

@@ -135,7 +135,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			lemaid.playSound(lsound9, MMM_Helper.getInt(pPayload.data, 9)==1);
 			LMM_LittleMaidMobNX.Debug(String.format("playSound:%s", lsound9.name()));
 			break;
-		case LMMNX_NetSync.LMMNX_Sync_Under_Byte:
+		case LMMNX_NetSync.LMMNX_Sync:
 			LMMNX_NetSync.onPayLoad(lemaid, pPayload.data);
 			break;
 		}
