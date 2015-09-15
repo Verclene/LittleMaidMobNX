@@ -20,12 +20,12 @@ public class LMMNX_NetSync {
 	//クライアントのみ
 	public static final byte LMMNX_Sync_UB_RequestParamRecall = (byte) 0x03;
 	
-	// サーバがテクスチャ設定を受信
-	public static final byte LMMNX_Sync_String_MT_SaveToServer   = (byte) 0x10;
-	public static final byte LMMNX_Sync_String_AT_SaveToServer   = (byte) 0x11;
-	// サーバから保存されたテクスチャ情報を返す
-	public static final byte LMMNX_Sync_String_MT_Return = (byte) 0x12;
-	public static final byte LMMNX_Sync_String_AT_Return = (byte) 0x13;
+	// サーバがテクスチャ設定を受信(C->S)
+	public static final byte LMMNX_Sync_String_MT_RequestChangeRender   = (byte) 0x10;
+	public static final byte LMMNX_Sync_String_AT_RequestChangeRender   = (byte) 0x11;
+	// サーバから保存されたテクスチャ情報を返す(S->C)
+	public static final byte LMMNX_Sync_String_MT_RecallParam = (byte) 0x12;
+	public static final byte LMMNX_Sync_String_AT_RecallParam = (byte) 0x13;
 	
 	public static void onPayLoad(LMM_EntityLittleMaid pMaid, byte[] pData){
 		if(pData==null) return;
@@ -54,54 +54,26 @@ public class LMMNX_NetSync {
 			break;
 		case LMMNX_Sync_UB_RequestParamRecall :
 			pMaid.syncMaidArmorVisible();
-			pMaid.recallParamToClient();
+			pMaid.recallRenderParamTextureName(pMaid.textureModelNameForClient, pMaid.textureArmorNameForClient);
 			break;
 		}
 	}
 	
 	public static void onPayLoad(LMM_EntityLittleMaid pMaid, byte pMode, String pString){
-		switch(pMode){
-		case LMMNX_Sync_String_MT_SaveToServer:
-			pMaid.textureModelNameForClient = pString;
+		switch (pMode) {
+		case LMMNX_Sync_String_MT_RequestChangeRender:
+			pMaid.recallRenderParamTextureName(pString, pMaid.textureArmorNameForClient);
 			break;
-		case LMMNX_Sync_String_AT_SaveToServer:
-			pMaid.textureArmorNameForClient = pString;
+		case LMMNX_Sync_String_AT_RequestChangeRender:
+			pMaid.recallRenderParamTextureName(pMaid.textureModelNameForClient, pString);
 			break;
-		case LMMNX_Sync_String_MT_Return:
-			LMM_LittleMaidMobNX.Debug("SET %s", pString);
-			pMaid.setTextureIndex(new int[]{referTextureIndex(pString),pMaid.textureData.textureIndex[1]});
-			pMaid.setTextureNames();
+		case LMMNX_Sync_String_MT_RecallParam:
+			pMaid.returnedRecallParam(pString, pMaid.textureArmorNameForClient);
 			break;
-		case LMMNX_Sync_String_AT_Return:
-			LMM_LittleMaidMobNX.Debug("SET %s", pString);
-			pMaid.setTextureIndex(new int[]{pMaid.textureData.textureIndex[0],referTextureArmorIndex(pString)});
-			pMaid.setTextureNames();
+		case LMMNX_Sync_String_AT_RecallParam:
+			pMaid.returnedRecallParam(pMaid.textureModelNameForClient, pString);
 			break;
 		}
-	}
-
-	public static int referTextureIndex(String string) {
-		int i=0;
-		for (Iterator iterator = MMM_TextureManager.getTextureList().iterator(); iterator.hasNext();) {
-			MMM_TextureBox lBox = (MMM_TextureBox) iterator.next();
-			if(lBox.textureName.equals(string)){
-				return i;
-			}
-			i++;
-		}
-		return 0;
-	}
-	
-	public static int referTextureArmorIndex(String string){
-		int i=0;
-		for (Iterator iterator = MMM_TextureManager.getTextureList().iterator(); iterator.hasNext();) {
-			MMM_TextureBox lBox = (MMM_TextureBox) iterator.next();
-			if(lBox.hasArmor()&&lBox.textureName.equals(string)){
-				return i;
-			}
-			i++;
-		}
-		return 0;
 	}
 
 }

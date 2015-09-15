@@ -458,18 +458,22 @@ public class LMM_GuiInventory extends GuiContainer {
 		case 100 :
 			entitylittlemaid.setNextTexturePackege(0);
 			entitylittlemaid.setTextureNames();
+			entitylittlemaid.requestChangeRenderParamTextureName();
 			break;
 		case 101 :
 			entitylittlemaid.setPrevTexturePackege(0);
 			entitylittlemaid.setTextureNames();
+			entitylittlemaid.requestChangeRenderParamTextureName();
 			break;
 		case 110 :
 			entitylittlemaid.setNextTexturePackege(1);
 			entitylittlemaid.setTextureNames();
+			entitylittlemaid.requestChangeRenderParamTextureName();
 			break;
 		case 111 :
 			entitylittlemaid.setPrevTexturePackege(1);
 			entitylittlemaid.setTextureNames();
+			entitylittlemaid.requestChangeRenderParamTextureName();
 			break;
 		case 200 :
 			int ldye = 0;

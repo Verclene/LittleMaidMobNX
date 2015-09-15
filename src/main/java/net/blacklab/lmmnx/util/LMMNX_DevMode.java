@@ -14,5 +14,8 @@ public enum LMMNX_DevMode {
 
 	public static final String[] INCLUDEPROJECT = new String[]{};
 	
-	public static final boolean DEBUG_PRINT_SWITCH = true;
+	/**
+	 * 開発環境からデバッグメッセージを出力するか否か。
+	 */
+	public static final boolean DEBUG_PRINT_SWITCH = false;
 }

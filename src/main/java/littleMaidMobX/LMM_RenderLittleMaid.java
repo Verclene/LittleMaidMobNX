@@ -90,6 +90,12 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				float par5, float par6, float par7,
 				float par8) {
 			lmm = (LMM_EntityLittleMaid) par1EntityLiving;
+			//初回のみ指定値設定
+			if(renderCount==0){
+				this.setModelValues(lmm, lmm.maidCaps);
+				lmm.requestRenderParamRecall();
+			}
+
 			//LMM管理の装備スロットとEntityLiving標準の装備スロットがずれているので注意
 			if(lmm.maidInventory.mainInventory[17]!=null){
 				if(lmm.maidInventory.mainInventory[17].getItem() instanceof ItemArmor){
@@ -101,6 +107,9 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			if(lmm.getInventory()[3]!=null) render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 2);
 			if(lmm.getInventory()[2]!=null) render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 1);
 			if(lmm.getInventory()[1]!=null) render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 0);
+
+			//カウントインクリメント
+			renderCount++;
 		}
 
 		public void setModelValues(EntityLivingBase par1EntityLiving, IModelCaps pEntityCaps) {
@@ -124,13 +133,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		}
 
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
-			//初回のみ指定値設定
-			if(renderCount==0){
-				this.setModelValues(lmm, lmm.maidCaps);
-				lmm.requestRenderParamRecall();
-			}
-			
-
 //			boolean lri = (renderCount & 0x0f) == 0;
 			//総合
 			mmodel.showArmorParts(renderParts);
@@ -232,8 +234,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			}
 
-			//カウントインクリメント
-			renderCount++;
 		}
 	}
 

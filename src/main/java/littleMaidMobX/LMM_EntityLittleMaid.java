@@ -120,7 +120,6 @@ import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -585,6 +584,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncNet(b);
 	}
 	
+	/**
+	 * Client用。
+	 * ログイン時や描画更新時にパラメータの更新をリクエスト
+	 */
 	protected void requestRenderParamRecall(){
 		if(FMLCommonHandler.instance().getSide()!=Side.CLIENT) return;
 		byte[] b = new byte[]{
@@ -594,6 +597,97 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		};
 		syncNet(b);
 	}
+	
+	/**
+	 * Server用。
+	 * ログイン時・変更時のリクエストに応答
+	 */
+	public void recallRenderParamTextureName(String model, String armor){
+		// Model側
+		LMM_LittleMaidMobNX.Debug("RECALL %s %s", model, armor);
+//		if(model==null||armor==null) return;
+		textureModelNameForClient = model;
+		textureArmorNameForClient = armor;
+		syncMAString(model, armor, false);
+	}
+	
+	/**
+	 * Client用。
+	 * Serverからの通知を受け取りパラメータを再設定
+	 */
+	public void returnedRecallParam(String model, String armor){
+		textureModelNameForClient = model;
+		textureArmorNameForClient = armor;
+		
+		MMM_TextureBox pBox[] = new MMM_TextureBox[]{referTextureBox(model),referTextureArmorBox(armor)};
+		for(int i=0;i<2;i++) pBox[i]=(MMM_TextureBox) (pBox[i]==null ? textureData.textureBox[i] : pBox[i]);
+		setTextureBox(pBox);
+		setTextureNames();
+	}
+	
+	/**
+	 * Client用。
+	 * モデルパラメータの変更時にパラメータの更新をリクエスト
+	 */
+	public void requestChangeRenderParamTextureName(){
+		String p1 = textureData.textureBox[0].textureName;
+		String p2 = textureData.textureBox[1].textureName;
+		
+		syncMAString(p1, p2, true);
+	}
+	
+	protected void syncMAString(String model, String armor, boolean isServerSave) {
+		// Model側
+		if(model==null){
+			LMM_LittleMaidMobNX.Debug("NULL M");
+			return;
+		}
+		byte b1[] = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				isServerSave?LMMNX_NetSync.LMMNX_Sync_String_MT_RequestChangeRender:LMMNX_NetSync.LMMNX_Sync_String_MT_RecallParam
+		};
+		byte b1b[] = Arrays.copyOf(b1, b1.length+model.length());
+		MMM_Helper.setStr(b1b, 6, model);
+		syncNet(b1b);
+				
+		// Armor側
+		if(armor==null){
+			LMM_LittleMaidMobNX.Debug("NULL A");
+			return;
+		}
+		byte b2[] = new byte[]{
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				isServerSave?LMMNX_NetSync.LMMNX_Sync_String_AT_RequestChangeRender:LMMNX_NetSync.LMMNX_Sync_String_AT_RecallParam
+		};
+		byte b2b[] = Arrays.copyOf(b2, b2.length+armor.length());
+		MMM_Helper.setStr(b2b, 6, armor);
+		syncNet(b2b);
+	}
+	
+	/**
+	 * Client専用。
+	 */
+	public static MMM_TextureBox referTextureBox(String string) {
+		for (Iterator iterator = MMM_TextureManager.getTextureList().iterator(); iterator.hasNext();) {
+			MMM_TextureBox lBox = (MMM_TextureBox) iterator.next();
+			if(lBox.textureName.equals(string)) return lBox;
+		}
+		return null;
+	}
+	
+	/**
+	 * Client専用。
+	 */
+	public static MMM_TextureBox referTextureArmorBox(String string){
+		for (Iterator iterator = MMM_TextureManager.getTextureList().iterator(); iterator.hasNext();) {
+			MMM_TextureBox lBox = (MMM_TextureBox) iterator.next();
+			if(lBox.hasArmor()&&lBox.textureName.equals(string)) return lBox;
+		}
+		return null;
+	}
+
 	
 	protected void syncNet(byte[] b) {
 		if(worldObj.isRemote){
@@ -1222,14 +1316,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			textureData.textureIndex[1] = MMM_TextureManager.instance.getIndexTextureBoxServer(this, par1nbtTagCompound.getString("texArmor"));
 			textureData.textureBox[0] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[0]);
 			textureData.textureBox[1] = MMM_TextureManager.instance.getTextureBoxServer(textureData.textureIndex[1]);
-			textureModelNameForClient = par1nbtTagCompound.getString("textureModelNameForClient");
-			if(textureModelNameForClient.equals("")){
-				textureModelNameForClient = "default_Orign";
-			}
-			textureArmorNameForClient = par1nbtTagCompound.getString("textureArmorNameForClient");
-			if(textureArmorNameForClient.equals("")){
-				textureArmorNameForClient = "default_Orign";
-			}
 
 			byte b = par1nbtTagCompound.getByte("ModeColor");
 			setColor(b & 0x0f);
@@ -1357,6 +1443,17 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				maidEntityModeList.get(li).readEntityFromNBT(par1nbtTagCompound);
 			}
 		}
+		textureModelNameForClient = par1nbtTagCompound.getString("textureModelNameForClient");
+		if(textureModelNameForClient.equals("")){
+			textureModelNameForClient = "default_Orign";
+		}
+		textureArmorNameForClient = par1nbtTagCompound.getString("textureArmorNameForClient");
+		if(textureArmorNameForClient.equals("")){
+			textureArmorNameForClient = "default_Orign";
+		}
+		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
+		if(!worldObj.isRemote) recallRenderParamTextureName(textureModelNameForClient, textureArmorNameForClient);
+
 		onInventoryChanged();
 		isWildSaved = par1nbtTagCompound.getBoolean("isWildSaved");
 		setSwimming(par1nbtTagCompound.getBoolean("isSwimming"));
@@ -2303,6 +2400,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //			lupd |= updateTexturePack();
 			updateTexturePack();
 			if (lupd) {
+				requestRenderParamRecall();
 				setTextureNames();
 			}
 			setMaidMode(dataWatcher.getWatchableObjectShort(dataWatch_Mode));
@@ -3579,54 +3677,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncNet(b);
 	}
 	
-	protected void saveTextureNamesToServer() {
-		String tmp1 = textureData.textureBox[0].textureName;
-		if(tmp1==null) return;
-		byte b1[] = new byte[]{
-				LMMNX_NetSync.LMMNX_Sync,
-				0, 0, 0, 0,
-				LMMNX_NetSync.LMMNX_Sync_String_MT_SaveToServer
-		};
-		byte b1l[] = Arrays.copyOf(b1, b1.length+tmp1.length());
-		MMM_Helper.setStr(b1l, 6, tmp1);
-		syncNet(b1l);
-		
-		String tmp2 = textureData.textureBox[1].textureName;
-		if(tmp2==null) return;
-		byte b2[] = new byte[]{
-				LMMNX_NetSync.LMMNX_Sync,
-				0, 0, 0, 0,
-				LMMNX_NetSync.LMMNX_Sync_String_AT_SaveToServer
-		};
-		byte b2l[] = Arrays.copyOf(b2, b2.length+tmp2.length());
-		MMM_Helper.setStr(b2l, 6, tmp2);
-		syncNet(b2l);
-	}
-	
-	public void recallParamToClient() {
-		String tmp1 = textureModelNameForClient;
-		if(tmp1==null) return;
-		byte b1[] = new byte[]{
-				LMMNX_NetSync.LMMNX_Sync,
-				0, 0, 0, 0,
-				LMMNX_NetSync.LMMNX_Sync_String_MT_Return
-		};
-		byte b1l[] = Arrays.copyOf(b1, b1.length+tmp1.length());
-		MMM_Helper.setStr(b1l, 6, tmp1);
-		syncNet(b1l);
-		
-		String tmp2 = textureArmorNameForClient;
-		if(tmp2==null) return;
-		byte b2[] = new byte[]{
-				LMMNX_NetSync.LMMNX_Sync,
-				0, 0, 0, 0,
-				LMMNX_NetSync.LMMNX_Sync_String_AT_Return
-		};
-		byte b2l[] = Arrays.copyOf(b2, b2.length+tmp2.length());
-		MMM_Helper.setStr(b2l, 6, tmp2);
-		syncNet(b2l);
-	}
-	
 	public boolean isHeadMount(){
 		return ItemUtil.isHelm(maidInventory.mainInventory[17]);
 	}
@@ -3641,10 +3691,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return true;
 	}
 
-
+	private boolean checkedTextureUpdate = false;
 	public boolean updateTexturePack() {
 		// テクスチャパックが更新されていないかをチェック
 		// クライアント側の
+		/*
 		boolean lflag = false;
 		int ltexture = dataWatcher.getWatchableObjectInt(dataWatch_Texture);
 		int larmor = (ltexture >>> 16) & 0xffff;
@@ -3661,6 +3712,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			MMM_TextureManager.instance.postGetTexturePack(this, textureData.getTextureIndex());
 		}
 		return lflag;
+		*/
+		// TODO 移行準備:テクスチャ設定
+		if(!checkedTextureUpdate){
+			checkedTextureUpdate = true;
+			requestRenderParamRecall();
+		}
+		return false;
 	}
 
 	@Override
@@ -3814,7 +3872,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public void setTextureNames() {
 		textureData.setTextureNames();
-		if(worldObj.isRemote) saveTextureNamesToServer();
 	}
 
 	public void setNextTexturePackege(int pTargetTexture) {
