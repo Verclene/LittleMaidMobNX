@@ -1,14 +1,8 @@
 package net.blacklab.lmmnx;
 
-import java.util.Iterator;
-
-import org.apache.commons.lang3.math.Fraction;
-
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.MMM_Helper;
-import mmmlibx.lib.MMM_TextureBox;
-import mmmlibx.lib.MMM_TextureManager;
 
 public class LMMNX_NetSync {
 	

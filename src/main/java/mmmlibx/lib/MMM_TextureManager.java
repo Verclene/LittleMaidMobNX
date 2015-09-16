@@ -328,9 +328,10 @@ public class MMM_TextureManager {
 		// 先ずは手持ちのテクスチャパックを追加する。
 		textureServer.clear();
 		for (MMM_TextureBox lbox : getTextureList()) {
-			textureServer.add(new MMM_TextureBoxServer(lbox));
+			if(lbox.getWildColorBits()>0) textureServer.add(new MMM_TextureBoxServer(lbox));
 		}
 		// ファイルからロード
+/*
 		File lfile = MinecraftServer.getServer().getFile(nameTextureIndex);
 		if (lfile.exists() && lfile.isFile()) {
 			try {
@@ -371,6 +372,7 @@ public class MMM_TextureManager {
 			}
 			return true;
 		}
+*/
 		return false;
 	}
 

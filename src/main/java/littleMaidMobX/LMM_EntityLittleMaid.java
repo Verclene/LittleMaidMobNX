@@ -256,6 +256,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public boolean isSwimming = false;
 	
+	// サーバ用テクスチャ処理移行フラグ
+	private boolean isMadeTextureNameFlag = false;
+	
 	public int maidArmorVisible = 15;
 
 	public LMM_EntityLittleMaid(World par1World) {
@@ -603,12 +606,20 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * ログイン時・変更時のリクエストに応答
 	 */
 	public void recallRenderParamTextureName(String model, String armor){
-		// Model側
 		LMM_LittleMaidMobNX.Debug("RECALL %s %s", model, armor);
 //		if(model==null||armor==null) return;
 		textureModelNameForClient = model;
 		textureArmorNameForClient = armor;
-		syncMAString(model, armor, false);
+		if(!isMadeTextureNameFlag){
+			LMM_LittleMaidMobNX.Debug("NOT SAVED!");
+			String p1 = textureData.textureBox[0].textureName;
+			String p2 = textureData.textureBox[1].textureName;
+			if(p1==null || p2==null) return;
+			textureModelNameForClient = p1;
+			textureArmorNameForClient = p2;
+			isMadeTextureNameFlag = true;
+		}
+		syncMAString(textureModelNameForClient, textureArmorNameForClient, false);
 	}
 	
 	/**
@@ -618,7 +629,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void returnedRecallParam(String model, String armor){
 		textureModelNameForClient = model;
 		textureArmorNameForClient = armor;
-		
+
 		MMM_TextureBox pBox[] = new MMM_TextureBox[]{referTextureBox(model),referTextureArmorBox(armor)};
 		for(int i=0;i<2;i++) pBox[i]=(MMM_TextureBox) (pBox[i]==null ? textureData.textureBox[i] : pBox[i]);
 		setTextureBox(pBox);
@@ -632,7 +643,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void requestChangeRenderParamTextureName(){
 		String p1 = textureData.textureBox[0].textureName;
 		String p2 = textureData.textureBox[1].textureName;
-		
+		if(!isMadeTextureNameFlag) isMadeTextureNameFlag = true;
 		syncMAString(p1, p2, true);
 	}
 	
@@ -1262,6 +1273,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setString("textureModelNameForClient", textureModelNameForClient);
 		if(textureArmorNameForClient==null) textureArmorNameForClient = "default_Orign";
 		par1nbtTagCompound.setString("textureArmorNameForClient", textureArmorNameForClient);
+		par1nbtTagCompound.setBoolean("isMadeTextureNameFlag", isMadeTextureNameFlag);
 
 		NBTTagCompound prevtargettag = new NBTTagCompound();
 		par1nbtTagCompound.setTag("prevtarget", prevtargettag);
@@ -1451,6 +1463,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if(textureArmorNameForClient.equals("")){
 			textureArmorNameForClient = "default_Orign";
 		}
+		
+		isMadeTextureNameFlag = par1nbtTagCompound.getBoolean("isMadeTextureNameFlag");
+
 		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
 		if(!worldObj.isRemote) recallRenderParamTextureName(textureModelNameForClient, textureArmorNameForClient);
 
