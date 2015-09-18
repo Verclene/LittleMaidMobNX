@@ -3,8 +3,6 @@ package mmmlibx.lib;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
@@ -123,16 +121,6 @@ public abstract class MMM_ManagerBase {
 		String lclassname = "";
 		// 対象ファイルをクラスとしてロード
 		try {
-			ClassLoader lclassLoader = null;
-			if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE){
-				URL[] u = new URL[LMMNX_DevMode.INCLUDEPROJECT.length];
-				int ix=0;
-				for(File f:FileManager.dirDevIncludeClasses){
-					u[ix++] = f.toURI().toURL();
-				}
-				lclassLoader = new URLClassLoader(u,MMMLib.class.getClassLoader());
-			}
-			else lclassLoader = MMMLib.class.getClassLoader();
 			Package lpackage = MMMLib.class.getPackage();
 			lclassname = pname.endsWith(".class") ? pname.substring(0, pname.lastIndexOf(".class")) : pname;
 			Class lclass;
@@ -140,7 +128,7 @@ public abstract class MMM_ManagerBase {
 	// TODO ★	lclassname = (new StringBuilder(String.valueOf(lpackage.getName()))).append(".").append(lclassname).toString();
 				lclassname = lclassname.replace("/", ".");
 // LMM_EntityModeManager でしか使ってないので暫定
-				lclass = lclassLoader.loadClass(lclassname);
+				lclass = FileManager.COMMON_CLASS_LOADER.loadClass(lclassname);
 			} else {
 				lclass = Class.forName(lclassname);
 			}

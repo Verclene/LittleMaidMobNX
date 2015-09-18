@@ -436,23 +436,13 @@ public class MMM_TextureManager {
 			
 			if (modelMap.containsKey(pn)) return;
 			try {
-				ClassLoader lclassLoader = null;
-				if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE){
-					URL[] u = new URL[LMMNX_DevMode.INCLUDEPROJECT.length];
-					int ix=0;
-					for(File f:FileManager.dirDevIncludeClasses){
-						u[ix++] = f.toURI().toURL();
-					}
-					lclassLoader = new URLClassLoader(u,MMMLib.class.getClassLoader());
-				}
-				else lclassLoader = MMMLib.class.getClassLoader();
 				Package lpackage = MMMLib.class.getPackage();
 				Class lclass;
 				if (lpackage != null) {
 //					cn = (new StringBuilder("")).append(".").append(cn).toString();
 					cn = cn.replace("/", ".");
 					System.out.println("MMM_TextureManager.addModelClass : "+cn);
-					lclass = lclassLoader.loadClass(cn);
+					lclass = FileManager.COMMON_CLASS_LOADER.loadClass(cn);
 				} else {
 					lclass = Class.forName(cn);
 				}
