@@ -120,6 +120,7 @@ import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -360,6 +361,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		textureData.setTextureInitServer(ls);
 		LMM_LittleMaidMobNX.Debug("init-ID:%d, %s:%d", getEntityId(), textureData.textureBox[0].textureName, textureData.getColor());
 		setTexturePackIndex(textureData.getColor(), textureData.textureIndex);
+		textureModelNameForClient = textureData.textureBox[0].textureName;
+		textureArmorNameForClient = textureData.textureBox[1].textureName;
+		recallRenderParamTextureName(textureModelNameForClient, textureArmorNameForClient);
 		if(!isContract()) setMaidMode("Wild");
 	}
 
@@ -630,8 +634,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		textureModelNameForClient = model;
 		textureArmorNameForClient = armor;
 
-		MMM_TextureBox pBox[] = new MMM_TextureBox[]{referTextureBox(model),referTextureArmorBox(armor)};
+		MMM_TextureBox p0 = referTextureBox(model);
+		MMM_TextureBox p1 = referTextureArmorBox(armor);
+		MMM_TextureBox pBox[] = new MMM_TextureBox[]{p0, p1};
 		for(int i=0;i<2;i++) pBox[i]=(MMM_TextureBox) (pBox[i]==null ? textureData.textureBox[i] : pBox[i]);
+		// 指定色がない場合
+		if(!isContract() && (pBox[0].getWildColorBits() & 1<<getColor()) == 0){
+			pBox[0] = referTextureBox("default_Orign");
+			textureData.setColor(12);
+		}
 		setTextureBox(pBox);
 		setTextureNames();
 	}
