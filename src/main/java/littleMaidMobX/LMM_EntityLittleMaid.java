@@ -120,7 +120,6 @@ import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.oredict.OreDictionary;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {

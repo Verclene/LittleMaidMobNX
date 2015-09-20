@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ import java.util.zip.ZipInputStream;
 
 import mmmlibx.lib.FileManager;
 import mmmlibx.lib.MMMLib;
+import net.blacklab.lib.FileClassUtil;
 import net.minecraft.util.ResourceLocation;
 
 public class LMM_SoundManager {
@@ -41,6 +44,7 @@ public class LMM_SoundManager {
 	
 	public ZipFile soundsZipFile;
 	public String tableSwitch = "dir";
+	public String soundsDirRootDirString = "";
 	public Map<String, File>	soundsStreamFile		= new HashMap<String, File>();
 	public Map<String, String>	soundsStreamEntryName	= new HashMap<String, String>();
 
@@ -98,16 +102,18 @@ public class LMM_SoundManager {
 		
 		if(/*(soundsStreamFile.size() > 0||soundsStreamEntryName.size() > 0) && */fileName.endsWith(".ogg"))
 		{
-			//1.8だとInputStreamをマップに入れておけない
-			if(tableSwitch.equals("zip")){
-				try {
-					return soundsZipFile.getInputStream(soundsZipFile.getEntry(soundsStreamEntryName.get(fileName)));
-				} catch (Exception e) {}
-			}else if(tableSwitch.equals("dir")){
+			// ClassLoaderにチェンジ
+			if(tableSwitch.equals("zip") || tableSwitch.equals("dir")){
+				String pString = soundsStreamEntryName.get(fileName);
+				if(pString.startsWith("/")) pString = pString.substring(1);
+				LMM_LittleMaidMobNX.Debug("REFER %s", pString);
+				return FileManager.COMMON_CLASS_LOADER.getResourceAsStream(pString);
+//				return soundsZipFile.getInputStream(soundsZipFile.getEntry(pString));
+			}/*else if(tableSwitch.equals("dir")){
 				try {
 					return new FileInputStream(soundsStreamFile.get(fileName));
 				} catch (Exception e) {}
-			}
+			}*/
 			//return soundStreamMap.get(fileName);
 		}
 
@@ -137,15 +143,15 @@ public class LMM_SoundManager {
 		if(fileName.endsWith(".ogg"))
 		{
 			//1.8だとInputStreamをマップに入れておけない
-			if(tableSwitch.equals("zip")){
+			if(tableSwitch.equals("zip") || tableSwitch.equals("dir")){
 				try{
 					return soundsStreamEntryName.containsKey(fileName);
 				}catch(Exception e){}
-			}else if(tableSwitch.equals("dir")){
+			}/*else if(tableSwitch.equals("dir")){
 				try{
 					return soundsStreamFile.containsKey(fileName);
 				}catch(Exception e){}
-			}
+			}*/
 		}
 
 		return false;
@@ -459,7 +465,7 @@ public class LMM_SoundManager {
 			{
 				File soundCfg = new File(getSoundDir(), "default_" + SoundConfigName);
 				LMM_LittleMaidMobNX.Debug(soundCfg.getName());
-
+				FileManager.COMMON_CLASS_LOADER.addURL(soundCfg.toURI().toURL());
 				createDefaultSoundPack(soundCfg);
 			}
 		}
@@ -482,8 +488,10 @@ public class LMM_SoundManager {
 				if(searchSoundCfgDir(file))
 				{
 					tableSwitch = "dir";
+					soundsDirRootDirString = FileClassUtil.getLinuxAntiDotName(file.getAbsolutePath());
 					putAllSoundStream(file);
 					createSoundJson(file);
+					FileManager.COMMON_CLASS_LOADER.addURL(file.toURI().toURL());
 					return true;
 				}
 			}
@@ -493,6 +501,7 @@ public class LMM_SoundManager {
 				{
 					tableSwitch = "zip";
 					createSoundJson(file);
+					FileManager.COMMON_CLASS_LOADER.addURL(file.toURI().toURL());
 					return true;
 				}
 			}
@@ -511,7 +520,11 @@ public class LMM_SoundManager {
 			}
 			else if(name.endsWith(".ogg"))
 			{
-				soundsStreamFile.put(name, file);
+				String pString = FileClassUtil.getLinuxAntiDotName(file.getAbsolutePath());
+				String rString = pString.substring(soundsDirRootDirString.length());
+				LMM_LittleMaidMobNX.Debug("PUT %s %s", name, rString);
+				soundsStreamEntryName.put(name, rString);
+//				soundsStreamFile.put(name, file);
 			}
 		}
 	}
@@ -592,9 +605,9 @@ public class LMM_SoundManager {
 			// .cfgを見つけたら、サウンドパックと判断し、oggを全て読み出す
 			if(foundCfg)
 			{
-				soundsZipFile = new ZipFile(file);
+				soundsZipFile = new ZipFile(file, 1, StandardCharsets.UTF_8);
 				fileinputstream = new FileInputStream(file);
-				zipinputstream = new ZipInputStream(fileinputstream);
+				zipinputstream = new ZipInputStream(fileinputstream, StandardCharsets.UTF_8);
 				do
 				{
 					zipentry = zipinputstream.getNextEntry();
@@ -613,6 +626,7 @@ public class LMM_SoundManager {
 						name = name.toLowerCase();
 						if (name.endsWith(".ogg"))
 						{
+							LMM_LittleMaidMobNX.Debug("PUT %s %s", name, zipentry.getName());
 							soundsStreamEntryName.put(name, zipentry.getName());
 						}
 					}

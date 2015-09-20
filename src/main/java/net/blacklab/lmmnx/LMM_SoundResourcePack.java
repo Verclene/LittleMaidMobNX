@@ -37,8 +37,14 @@ public class LMM_SoundResourcePack implements IResourcePack {
 
 	private InputStream getResourceStream(ResourceLocation resource) {
 		InputStream lis = null;
+		String iString = resource.getResourcePath();
+		if(iString.startsWith("/")) iString = iString.substring(1);
 		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
 		{
+			if(iString.endsWith(".ogg")){
+				LMM_LittleMaidMobNX.Debug("SOUND path %s", iString);
+//				return FileManager.COMMON_CLASS_LOADER.getResourceAsStream("/"+iString);
+			}
 			lis = LMM_SoundManager.instance.getResourceStream(resource);
 //			LMM_LittleMaidMobNX.Debug("getResource:%s : %s", resource, lis);
 		}

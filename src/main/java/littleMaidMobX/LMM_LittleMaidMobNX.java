@@ -7,7 +7,6 @@ import java.util.Random;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lmmnx.LMM_SoundResourcePack;
-import net.blacklab.lmmnx.api.LMMNX_API;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
@@ -45,7 +44,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 84";
+	public static final String VERSION = "NX3 Build 87";
 	public static final int VERSION_CODE = 7;
 
 	/*
@@ -295,11 +294,12 @@ public class LMM_LittleMaidMobNX {
 		//Model
 		if(evt.getSide()==Side.CLIENT) ModelLoader.setCustomModelResourceLocation(LMM_LittleMaidMobNX.spawnEgg, 0, new ModelResourceLocation("lmmx:spawn_lmmx_egg","inventory"));
 
-		proxy.loadSounds();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event){
+		proxy.loadSounds();
+
 		if (MMM_Helper.isClient) {
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
 			defaultResourcePacks.add(new LMM_SoundResourcePack());
