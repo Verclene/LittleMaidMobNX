@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.blacklab.lib.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
 
@@ -153,11 +154,11 @@ public abstract class MMM_ManagerBase {
 		}
 		catch (Exception exception) {
 			MMMLib.Debug("get%sClass-Exception.(%s)", getPreFix(), lclassname);
-			exception.printStackTrace();
+			if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
 		}
 		catch (Error error) {
 			MMMLib.Debug("get%sClass-Error: %s", getPreFix(), lclassname);
-			error.printStackTrace();
+			if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
 		}
 		
 	}

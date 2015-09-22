@@ -246,11 +246,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public String textureModelNameForClient;
 	public String textureArmorNameForClient;
 
-	protected int soundTick = LMM_LittleMaidMobNX.cfg_coolTimePlaySound;
-
 	public int playingTick = 0;
-	public int coolingTick = 0;
-	protected int damageSoundTick = 0;
 
 	protected boolean isWildSaved = false;
 
@@ -833,24 +829,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// 効果音の設定
 	@Override
 	protected String getHurtSound() {
-		damageSoundTick = 20;
 		if(getHealth()>0f) playLittleMaidSound(maidDamegeSound, true);
 		return null;
 	}
 
 	@Override
 	protected String getDeathSound() {
-		Thread thread = new Thread(){
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(30);
-				} catch (InterruptedException e) {
-				}
-				playLittleMaidSound(LMM_EnumSound.death, true);
-			}
-		};
-		thread.start();
+		playLittleMaidSound(LMM_EnumSound.death, true);
 		return null;
 	}
 
@@ -913,9 +898,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
 		if (enumsound == LMM_EnumSound.Null) return;
 		if (worldObj.isRemote) {
-			//Client
-			if(soundTick>0) return;
-
 			// NX1B47:サウンド乱数制限をクライアント依存に
 			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
 				if(LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0)
@@ -2057,9 +2039,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	@Override
 	public void onLivingUpdate() {
-		if(soundTick>0) soundTick--;
-		
-
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {
@@ -2074,8 +2053,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 			}
 		}
-		if(coolingTick>0)coolingTick--;
-		if(damageSoundTick>0)damageSoundTick--;
 
 		//雪合戦試験
 		if (maidFreedom && worldObj.isDaytime() && !isPlaying() && (maidMode==0||maidMode==1)){
@@ -2349,7 +2326,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		else if (this.isServerWorld())
 		{
 			this.worldObj.theProfiler.startSection("newAi");
-			this.updateEntityActionState();
+			try{
+				this.updateEntityActionState();
+			}catch(Exception e){}
 			this.worldObj.theProfiler.endSection();
 		}
 
@@ -3582,7 +3561,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	protected void eatSugar(boolean heal, boolean motion, boolean recontract) {
 		if (motion) {
-			setSwing(2, damageSoundTick==0?((getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar):LMM_EnumSound.Null, false);
+			setSwing(2, (getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar, false);
 		}
 		int h = hurtResistantTime;
 		if(heal) heal(1);
@@ -3649,7 +3628,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	// お遊びモード
 	public void setPlayingRole(int pValue) {
-		if(pValue!=0 && coolingTick>0) return;
 
 		if (mstatPlayingRole != pValue) {
 			mstatPlayingRole = pValue;

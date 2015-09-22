@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
 import net.blacklab.lib.FileClassUtil;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
@@ -458,11 +459,11 @@ public class MMM_TextureManager {
 			}
 			catch (Exception exception) {
 				MMMLib.Debug("getModelClass-Exception: %s", fname);
-				exception.printStackTrace();
+				if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
 			}
 			catch (Error error) {
 				MMMLib.Debug("getModelClass-Error: %s", fname);
-				error.printStackTrace();
+				if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
 			}
 		}
 	}
