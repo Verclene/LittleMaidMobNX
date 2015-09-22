@@ -146,7 +146,33 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		if(!par1World.isRemote) return;
 //		if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT==0){
 //			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=2;
+		if(soundCount<=1){
+			soundCount++;
 			par1World.playSound(x, y, z, s, v, p, b);
+		}
 //		}
+	}
+	
+	public int soundCount = 0;
+	
+	public static class CountThread extends Thread{
+
+		public boolean isRunning = true;
+
+		@Override
+		public void run() {
+			while(isRunning){
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
+				if(((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).soundCount>0)
+					((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).soundCount--;
+			}
+		}
+		
+		public void cancel(){
+			isRunning = false;
+		}
 	}
 }

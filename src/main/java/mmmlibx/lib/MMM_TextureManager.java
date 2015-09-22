@@ -549,53 +549,6 @@ public class MMM_TextureManager {
 		}
 	}
 
-	/*
-	protected void addTexturesJar(File file, String[] pSearch) {
-		// 
-		if (file.isFile()) {
-			MMMLib.Debug("addTextureJar-zip.");
-			if (addTexturesZip(file, pSearch)) {
-				MMMLib.Debug("getTexture-append-jar-done.");
-			} else {
-				MMMLib.Debug("getTexture-append-jar-fail.");
-			}
-		}
-		
-		// 意味なし？
-		if (file.isDirectory()) {
-			MMMLib.Debug("addTextureJar-file.");
-			boolean lflag = false;
-			
-			for (File t : file.listFiles()) {
-				if (t.isDirectory()) {
-					lflag |= addTexturesDir(t, pSearch);
-				}
-			}
-			if (lflag) {
-				MMMLib.Debug("getTexture-append-jar-done.");
-			} else {
-				MMMLib.Debug("getTexture-append-jar-fail.");
-			}
-			
-			Package package1 = (ModLoader.class).getPackage();
-			if(package1 != null)
-			{
-				String s = package1.getName().replace('.', File.separatorChar);
-				file = new File(file, s);
-				MMMLib.Debug("addTextureJar-file-Packege:%s", s);
-			} else {
-				MMMLib.Debug("addTextureJar-file-null.");
-			}
-			if (addTexturesDir(file, pSearch)) {
-				MMMLib.Debug("getTexture-append-jar-done.");
-			} else {
-				MMMLib.Debug("getTexture-append-jar-fail.");
-			}
-			
-		}
-	}
-	*/
-
 	protected boolean addTexturesDir(File file, String[] pSearch) {
 		// modsフォルダに突っ込んであるものも検索、再帰で。
 		if (file == null) {

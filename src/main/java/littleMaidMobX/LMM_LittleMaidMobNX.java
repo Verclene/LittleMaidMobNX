@@ -32,6 +32,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -44,7 +46,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 88";
+	public static final String VERSION = "NX3 Build 91";
 	public static final int VERSION_CODE = 7;
 
 	/*
@@ -310,6 +312,8 @@ public class LMM_LittleMaidMobNX {
 		}
 
 	}
+	
+	public static LMM_ProxyClient.CountThread countThread;
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
@@ -340,6 +344,7 @@ public class LMM_LittleMaidMobNX {
 						BiomeGenBase.birchForest,
 						BiomeGenBase.swampland,
 						BiomeGenBase.taiga,
+						BiomeGenBase.icePlains
 				};
 			}
 			for(BiomeGenBase biome : biomeList)
@@ -361,6 +366,21 @@ public class LMM_LittleMaidMobNX {
 
 		// IFFのロード
 		LMM_IFF.loadIFFs();
+	}
+	
+	@EventHandler
+	public void onServerStart(FMLServerStartingEvent evt){
+		if(evt.getSide()==Side.CLIENT){
+			countThread = new LMM_ProxyClient.CountThread();
+			countThread.start();
+		}
+	}
+	
+	@EventHandler
+	public void onServerStop(FMLServerStoppingEvent evt){
+		if(evt.getSide()==Side.CLIENT){
+			if(countThread.isRunning) countThread.cancel();
+		}
 	}
 
 }

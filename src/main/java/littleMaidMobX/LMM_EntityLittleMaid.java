@@ -660,7 +660,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected void syncMAString(String model, String armor, boolean isServerSave) {
 		// Model側
 		if(model==null){
-			LMM_LittleMaidMobNX.Debug("NULL M");
 			return;
 		}
 		byte b1[] = new byte[]{
@@ -674,7 +673,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				
 		// Armor側
 		if(armor==null){
-			LMM_LittleMaidMobNX.Debug("NULL A");
 			return;
 		}
 		byte b2[] = new byte[]{
@@ -835,14 +833,24 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// 効果音の設定
 	@Override
 	protected String getHurtSound() {
-		damageSoundTick  = 20;
-		playLittleMaidSound(maidDamegeSound, true);
+		damageSoundTick = 20;
+		if(getHealth()>0f) playLittleMaidSound(maidDamegeSound, true);
 		return null;
 	}
 
 	@Override
 	protected String getDeathSound() {
-		playLittleMaidSound(LMM_EnumSound.death, true);
+		Thread thread = new Thread(){
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(30);
+				} catch (InterruptedException e) {
+				}
+				playLittleMaidSound(LMM_EnumSound.death, true);
+			}
+		};
+		thread.start();
 		return null;
 	}
 

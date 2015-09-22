@@ -38,7 +38,6 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
-		LMM_LittleMaidMobNX.Debug("SHOULD TASK FOLLOW");
 		if (!isEnable)
 			return false;
 
@@ -63,7 +62,6 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 	 * Returns whether an in-progress EntityAIBase should continue executing
 	 */
 	public boolean continueExecuting() {
-		LMM_LittleMaidMobNX.Debug("CONTINUE TASK FOLLOW");
 		toDistance = theMaid.getDistanceSqToEntity(theOwner);
 		if(theMaid.handleWaterMovement())
 			return !theMaid.isMaidWait()&&!theMaid.isSitting();
@@ -86,7 +84,6 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 	 * Resets the task
 	 */
 	public void resetTask() {
-		LMM_LittleMaidMobNX.Debug("RESET TASK FOLLOW");
 		theMaid.setSprinting(false);
 		theOwner = null;
 		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).func_179690_a(true);
@@ -98,7 +95,6 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 	 * Updates the task
 	 */
 	public void updateTask() {
-		LMM_LittleMaidMobNX.Debug("UPDATE TASK FOLLOW");
 		theMaid.getLookHelper().setLookPositionWithEntity(theOwner, 10F,
 				theMaid.getVerticalFaceSpeed());
 
@@ -117,7 +113,6 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 
 		PathEntity entity = theMaid.getNavigator().getPathToEntityLiving(theOwner);
 		if(entity==null){
-			LMM_LittleMaidMobNX.Debug("PATH NULL");
 			if(theMaid.handleWaterMovement()&&theMaid.isSwimming){
 				int x = MathHelper.floor_double(theOwner.posX);
 				int z = MathHelper.floor_double(theOwner.posZ);
