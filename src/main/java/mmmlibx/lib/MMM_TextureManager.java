@@ -1,15 +1,12 @@
 package mmmlibx.lib;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -514,6 +511,10 @@ public class MMM_TextureManager {
 			return false;
 		}
 		try {
+			FileManager.COMMON_CLASS_LOADER.addURL(file.toURI().toURL());
+		} catch (MalformedURLException e) {
+		}
+		try {
 			FileInputStream fileinputstream = new FileInputStream(file);
 			ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
 			ZipEntry zipentry;
@@ -533,7 +534,7 @@ public class MMM_TextureManager {
 						addTextureName(zipentry.getName(), pSearch);
 						if(FMLCommonHandler.instance().getSide()==Side.CLIENT&&
 								(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
-							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file.getAbsolutePath());
+							LMMNX_OldZipTexturesLoader.keys.add(zipentry.getName());
 					}
 				}
 			} while(true);
@@ -602,6 +603,11 @@ public class MMM_TextureManager {
 		}
 		
 		try {
+			FileManager.COMMON_CLASS_LOADER.addURL(file.toURI().toURL());
+		} catch (MalformedURLException e1) {
+		}
+		
+		try {
 			for (File nfile : file.listFiles()) {
 				if(nfile.isDirectory()) {
 					addTexturesDir(nfile, pSearch);
@@ -635,7 +641,8 @@ public class MMM_TextureManager {
 									String cname = tn.substring(rin.length()+1);
 									String pr="assets/minecraft/";
 									if(cname.startsWith(pr)) cname=cname.substring(pr.length());
-									if(FMLCommonHandler.instance().getSide()==Side.CLIENT) LMMNX_OldZipTexturesLoader.keysf.put(cname, nfile);
+									if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
+										LMMNX_OldZipTexturesLoader.keys.add(cname);
 								}
 							}
 //							addTextureName(s.substring(i).replace('\\', '/'));

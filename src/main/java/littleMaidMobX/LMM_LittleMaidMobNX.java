@@ -6,9 +6,9 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
-import net.blacklab.lmmnx.LMM_SoundResourcePack;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
+import net.blacklab.lmmnx.client.LMM_SoundResourcePack;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
@@ -44,7 +44,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 87";
+	public static final String VERSION = "NX3 Build 88";
 	public static final int VERSION_CODE = 7;
 
 	/*
@@ -361,11 +361,6 @@ public class LMM_LittleMaidMobNX {
 
 		// IFFのロード
 		LMM_IFF.loadIFFs();
-
-		if(evt.getSide()==Side.CLIENT){
-			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread = new LMM_ProxyClient.SoundTickCountingThread();
-			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread.start();
-		}
 	}
 
 }

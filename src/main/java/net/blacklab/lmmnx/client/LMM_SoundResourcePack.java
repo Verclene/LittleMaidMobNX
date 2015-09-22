@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.client;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
