@@ -63,7 +63,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIOpenDoor;
 import net.minecraft.entity.ai.EntityAIPanic;
+import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
@@ -223,8 +225,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public EntityAITempt aiTempt;
 	public LMM_EntityAIBeg aiBeg;
 	public LMM_EntityAIBegMove aiBegMove;
-	public LMMNX_EntityAIOpenDoor aiOpenDoor;
-	public LMMNX_EntityAIRestrictOpenDoor aiCloseDoor;
+	public EntityAIOpenDoor aiOpenDoor;
+	public EntityAIRestrictOpenDoor aiCloseDoor;
 	public LMM_EntityAIAvoidPlayer aiAvoidPlayer;
 	public LMM_EntityAIFollowOwner aiFollow;
 	public LMM_EntityAIAttackOnCollide aiAttack;
@@ -1912,6 +1914,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void updateAITasks()
 	{
 		super.updateAITasks();
+		tasks.onUpdateTasks();
 //		if(++playingTick==2){
 			for (LMM_EntityModeBase ieml : maidEntityModeList) {
 				ieml.updateAITick(getMaidModeInt());
@@ -2039,6 +2042,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	@Override
 	public void onLivingUpdate() {
+		if(!isSwimming || !isInWater()){
+			((PathNavigateGround)getNavigator()).func_179688_b(true);
+			((PathNavigateGround)getNavigator()).func_179690_a(true);
+		}
+		
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {
@@ -2072,21 +2080,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}*/
 
 		superLivingUpdate();
+		if(getNavigator().getPath()==null) LMM_LittleMaidMobNX.Debug("NULL PATH");
 
 		maidInventory.decrementAnimations();
-
-		// 埋葬対策
-		/*
-		boolean grave = true;
-		grave &= pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ + (double)width * 0.34999999999999998D);
-		grave &= pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ - (double)width * 0.34999999999999998D);
-		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ - (double)width * 0.34999999999999998D);
-		grave &= pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, getEntityBoundingBox().minY+1, posZ + (double)width * 0.34999999999999998D);
-
-		if (grave) {
-			jump();
-		}
-		*/
 
 		//壁衝突判定
 		//pitchはデフォルト+-180度が北方向(Z負)
@@ -2113,11 +2109,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				setLocationAndAngles(posX+0.05*XBOUND_BLOCKOFFS[pitchindex], posY+1D, posZ+0.05*ZBOUND_BLOCKOFFS[pitchindex], rotationYaw, rotationPitch);
 			}
 			
-			if(isInWater()&&worldObj.getBlockState(new BlockPos(posX,posY+2D,posZ)).getBlock().getMaterial()==Material.water&&isSneaking()){
-				LMM_LittleMaidMobNX.Debug("DISABLE SNEAK");
-				setSneaking(false);
-			}
-
 			// 埋まった
 			OPAQUE: if(isEntityInsideOpaqueBlock()){
 				if(!isInsideOpaque) for(int i=2;i<10;i++){
@@ -2328,7 +2319,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			this.worldObj.theProfiler.startSection("newAi");
 			try{
 				this.updateEntityActionState();
-			}catch(Exception e){}
+			}catch(Exception e){
+			}
 			this.worldObj.theProfiler.endSection();
 		}
 
@@ -2365,11 +2357,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	protected void resetNavigator(){
 		if(handleWaterMovement()&&isSwimming&&!(navigator instanceof PathNavigateSwimmer)){
-			navigator.clearPathEntity();
+//			navigator.clearPathEntity();
 			navigator = new PathNavigateSwimmer(this, worldObj);
 		}
 		if((!handleWaterMovement()||!isSwimming)&&!(navigator instanceof PathNavigateGround)){
-			navigator.clearPathEntity();
+//			navigator.clearPathEntity();
 			navigator = new PathNavigateGround(this, worldObj);
 		}
 	}
@@ -2377,7 +2369,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void onUpdate() {
 		int litemuse = 0;
-		resetNavigator();
+//		resetNavigator();
 
 		// Entity初回生成時のインベントリ更新用
 		// サーバーの方が先に起動するのでクライアント側が更新を受け取れない

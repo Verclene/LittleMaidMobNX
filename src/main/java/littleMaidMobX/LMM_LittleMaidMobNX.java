@@ -46,7 +46,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 92";
+	public static final String VERSION = "NX3 Build 96";
 	public static final int VERSION_CODE = 7;
 
 	/*
@@ -111,10 +111,9 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_Aggressive = true;
 	//サウンド試験調整
 	public static boolean cfg_ignoreForceSound = false;
-	public static int cfg_soundPlayChance = 2;
+	public static int cfg_soundPlayChance = 1;
 
-	public static boolean cfg_forceLivingSound = false;
-	public static int cfg_coolTimePlaySound = 20;
+	public static boolean cfg_forceLivingSound = true;
 
 	// 実績関係
 	public static Achievement ac_Contract;
@@ -216,10 +215,9 @@ public class LMM_LittleMaidMobNX {
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
 		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
 
-		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
-		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
-		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
-		cfg_coolTimePlaySound = Math.max(cfg.getInt("coolTimePlaySound", 5),20);
+//		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
+//		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
+//		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
 
 		//配列
 		String seedItemsOrgStr = cfg.getString("seedItems", "wheat_seeds, carrot, potato");

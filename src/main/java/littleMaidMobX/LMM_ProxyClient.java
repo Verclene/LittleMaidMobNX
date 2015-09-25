@@ -15,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.MCPDummyContainer;
 import network.W_Message;
 
 /**
@@ -102,8 +103,8 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		case LMN_Client_PlaySound : 
 			// 音声再生
 			LMM_EnumSound lsound9 = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(pPayload.data, 5));
-			lemaid.playSound(lsound9, MMM_Helper.getInt(pPayload.data, 9)==1);
 			LMM_LittleMaidMobNX.Debug(String.format("playSound:%s", lsound9.name()));
+			lemaid.playSound(lsound9, MMM_Helper.getInt(pPayload.data, 9)==1);
 			break;
 		case LMMNX_NetSync.LMMNX_Sync:
 			LMMNX_NetSync.onPayLoad(lemaid, pPayload.data);
@@ -148,6 +149,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 //			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=2;
 		if(soundCount<=1){
 			soundCount++;
+			Minecraft.getMinecraft().getSoundHandler().update();
 			par1World.playSound(x, y, z, s, v, p, b);
 		}
 //		}
@@ -166,8 +168,13 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 					Thread.sleep(50);
 				} catch (InterruptedException e) {
 				}
-				if(((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).soundCount>0)
+				if(((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).soundCount>0){
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+					}
 					((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).soundCount--;
+				}
 			}
 		}
 		

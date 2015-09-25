@@ -77,7 +77,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		field_48310_h = 0;
 		//lastAvoidWater = petPathfinder.getAvoidsWater();
 		//petPathfinder.setAvoidsWater(false);
-		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).func_179690_a(false);
+//		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).func_179690_a(false);
 	}
 
 	/**
