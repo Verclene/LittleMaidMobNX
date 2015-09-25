@@ -46,7 +46,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 96";
+	public static final String VERSION = "NX3 Build 100";
 	public static final int VERSION_CODE = 7;
 
 	/*
@@ -127,12 +127,12 @@ public class LMM_LittleMaidMobNX {
 	public static Achievement ac_Pharmacist;
 	public static Achievement ac_Ripper;
 	public static Achievement ac_Torcher;
-
+	
 	// EBLib更新関係
 	public static boolean isEBLibNotLoaded = false;
 
-	public static final String EBLIB_MIN_VERSION_STRING="EL1 Build 4";
-	public static final int EBLIB_MIN_VERSION_CODE = 1;
+	public static final String EBLIB_MIN_VERSION_STRING="EL1 Build 5";
+	public static final int EBLIB_MIN_VERSION_CODE = 2;
 
 	@SidedProxy(
 			clientSide = "littleMaidMobX.LMM_ProxyClient",
@@ -215,9 +215,9 @@ public class LMM_LittleMaidMobNX {
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
 		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
 
-//		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
-//		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
-//		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
+		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
+		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 1));
+		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
 
 		//配列
 		String seedItemsOrgStr = cfg.getString("seedItems", "wheat_seeds, carrot, potato");
@@ -270,6 +270,7 @@ public class LMM_LittleMaidMobNX {
 		ac_Pharmacist	= (Achievement) new Achievement("achievement.pharmacist"	, "pharmacist"	,-2, 2, Items.nether_wart		, ac_Contract	).initIndependentStat().registerStat();
 		ac_Ripper		= (Achievement) new Achievement("achievement.ripper"		, "ripper"		, 0, 4, Items.shears			, ac_Contract	).initIndependentStat().registerStat();
 		ac_Torcher		= (Achievement) new Achievement("achievement.torcher"		, "torcher"		, 2, 2, Blocks.torch			, ac_Contract	).initIndependentStat().registerStat();
+		
 		Achievement[] achievements = new Achievement[] {
 				ac_Contract,
 				ac_Fencer,

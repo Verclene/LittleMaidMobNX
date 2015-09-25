@@ -216,6 +216,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected LMM_EnumSound maidDamegeSound;
 	protected int maidSoundInterval;
 	protected float maidSoundRate;
+	
+	// クライアント専用音声再生フラグ
+	private boolean isPlayedSound = true;
+	private String playingSound = "";
 
 	// 実験用
 	private int firstload = 1;
@@ -901,12 +905,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (enumsound == LMM_EnumSound.Null) return;
 		if (worldObj.isRemote) {
 			// NX1B47:サウンド乱数制限をクライアント依存に
-			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
-				if(LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0)
-					return;
-			}
-
 			String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
+			if(!force||!LMM_LittleMaidMobNX.cfg_ignoreForceSound){
+				if(LMM_LittleMaidMobNX.cfg_soundPlayChance!=1 &&
+						LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
+			}
 			//まさかな…
 			if(s==null) return;
 			if(!s.isEmpty() && !s.startsWith("minecraft:"))
@@ -1956,6 +1959,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onEntityUpdate() {
+		LMM_LittleMaidMobNX.Debug("ENTITYUPDATE");
+		//音声再生
+		if(worldObj.isRemote&&!isPlayedSound){
+			isPlayedSound = true;
+			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
+			worldObj.playSound(posX, posY, posZ, playingSound, getSoundVolume(), lpitch, false);
+//			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, playingSound, getSoundVolume(), lpitch, false);
+		}
 		super.onEntityUpdate();
 	}
 
@@ -2042,11 +2053,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	@Override
 	public void onLivingUpdate() {
-		if(!isSwimming || !isInWater()){
-			((PathNavigateGround)getNavigator()).func_179688_b(true);
-			((PathNavigateGround)getNavigator()).func_179690_a(true);
-		}
-		
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {
@@ -2080,7 +2086,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}*/
 
 		superLivingUpdate();
-		if(getNavigator().getPath()==null) LMM_LittleMaidMobNX.Debug("NULL PATH");
 
 		maidInventory.decrementAnimations();
 

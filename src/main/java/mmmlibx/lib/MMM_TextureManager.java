@@ -326,7 +326,7 @@ public class MMM_TextureManager {
 		// 先ずは手持ちのテクスチャパックを追加する。
 		textureServer.clear();
 		for (MMM_TextureBox lbox : getTextureList()) {
-			if(lbox.getWildColorBits()>0) textureServer.add(new MMM_TextureBoxServer(lbox));
+			textureServer.add(new MMM_TextureBoxServer(lbox));
 		}
 		// ファイルからロード
 /*
