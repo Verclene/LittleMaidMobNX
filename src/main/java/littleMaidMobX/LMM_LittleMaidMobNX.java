@@ -46,7 +46,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 100";
+	public static final String VERSION = "NX3 Build 102";
 	public static final int VERSION_CODE = 7;
 
 	/*
@@ -312,7 +312,7 @@ public class LMM_LittleMaidMobNX {
 
 	}
 	
-	public static LMM_ProxyClient.CountThread countThread;
+//	public static LMM_ProxyClient.CountThread countThread;
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
@@ -369,17 +369,20 @@ public class LMM_LittleMaidMobNX {
 	
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent evt){
+/*
 		if(evt.getSide()==Side.CLIENT){
 			countThread = new LMM_ProxyClient.CountThread();
 			countThread.start();
 		}
-	}
+*/
+		}
 	
 	@EventHandler
 	public void onServerStop(FMLServerStoppingEvent evt){
+/*
 		if(evt.getSide()==Side.CLIENT){
 			if(countThread.isRunning) countThread.cancel();
 		}
+*/
 	}
-
 }

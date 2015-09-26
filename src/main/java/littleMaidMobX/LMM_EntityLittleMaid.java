@@ -218,8 +218,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected float maidSoundRate;
 	
 	// クライアント専用音声再生フラグ
-	private boolean isPlayedSound = true;
-	private String playingSound = "";
+	private ArrayList<String> playingSound = new ArrayList<String>();
 
 	// 実験用
 	private int firstload = 1;
@@ -918,8 +917,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
 
-			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, s, getSoundVolume(), lpitch, false);
+			if(force)
+				playingSound.add(0, s);
+			else
+				playingSound.add(s);
+//			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
+//			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, s, getSoundVolume(), lpitch, false);
 		}
 	}
 
@@ -1961,10 +1964,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void onEntityUpdate() {
 		LMM_LittleMaidMobNX.Debug("ENTITYUPDATE");
 		//音声再生
-		if(worldObj.isRemote&&!isPlayedSound){
-			isPlayedSound = true;
+		if(worldObj.isRemote&&!playingSound.isEmpty()){
 			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-			worldObj.playSound(posX, posY, posZ, playingSound, getSoundVolume(), lpitch, false);
+			worldObj.playSound(posX, posY, posZ, playingSound.get(0), getSoundVolume(), lpitch, false);
+			playingSound.remove(0);
 //			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, playingSound, getSoundVolume(), lpitch, false);
 		}
 		super.onEntityUpdate();

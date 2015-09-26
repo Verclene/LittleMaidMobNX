@@ -143,19 +143,20 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	
 	@Override
 	public void playLittleMaidSound(World par1World, double x, double y, double z, String s, float v, float p, boolean b) {
-		// TODO 自動生成されたメソッド・スタブ
+/*
 		if(!par1World.isRemote) return;
 //		if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT==0){
 //			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=2;
-		if(soundCount<=1){
-			soundCount++;
-			try{
-				par1World.playSound(x, y, z, s, v, p, b);
-			}catch(Exception exception){
-				Minecraft.getMinecraft().getSoundHandler().update();
+			if(soundCount<=1){
+				soundCount++;
+				try{
+					par1World.playSound(x, y, z, s, v, p, b);
+				}catch(Exception exception){
+					Minecraft.getMinecraft().getSoundHandler().update();
+				}
 			}
-		}
 //		}
+*/
 	}
 	
 	public int soundCount = 0;
