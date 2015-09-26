@@ -118,7 +118,7 @@ public class MMM_TextureManager {
 	
 	protected List<String[]> searchPrefix = new ArrayList<String[]>();
 	
-	public static final String[] searchFileNamePrefix = new String[]{"littleMaidMob","mmmlibx","ModelMulti"};
+	public static final String[] searchFileNamePrefix = new String[]{"littleMaidMob","mmmlibx","ModelMulti","LittleMaidMob"};
 
 	public void init() {
 		// 検索対象ファイル名を登録します。
@@ -126,6 +126,7 @@ public class MMM_TextureManager {
 		FileManager.getModFile("mmmlibx", "littleMaidMob");
 		FileManager.getModFile("mmmlibx", "mmmlibx");
 		FileManager.getModFile("mmmlibx", "ModelMulti");
+		FileManager.getModFile("mmmlibx", "LittleMaidMob");
 		
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/ModelMulti/", "ModelMulti_");
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/littleMaid/", "ModelMulti_");
