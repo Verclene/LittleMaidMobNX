@@ -626,6 +626,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncMAString(textureModelNameForClient, textureArmorNameForClient, false);
 	}
 	
+	private boolean isNotColorExistsWild = false;
+	
 	/**
 	 * Client用。
 	 * Serverからの通知を受け取りパラメータを再設定
@@ -637,13 +639,16 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		MMM_TextureBox p0 = referTextureBox(model);
 		MMM_TextureBox p1 = referTextureArmorBox(armor);
 		MMM_TextureBox pBox[] = new MMM_TextureBox[]{p0, p1};
-		for(int i=0;i<2;i++) pBox[i]=(MMM_TextureBox) (pBox[i]==null ? textureData.textureBox[i] : pBox[i]);
+		for(int i=0;i<2;i++) pBox[i]= pBox[i]==null ? referTextureBox("default_Orign") : pBox[i];
 		// 指定色がない場合
 		if(!isContract() && (pBox[0].getWildColorBits() & 1<<getColor()) == 0){
-			pBox[0] = referTextureBox("default_Orign");
-			textureData.setColor(12);
+			isNotColorExistsWild = true;
 		}
-		setTextureBox(pBox);
+		setTexturePackName(pBox);
+		if(isNotColorExistsWild){
+			textureData.setColor(12);
+			isNotColorExistsWild = false;
+		}
 		setTextureNames();
 	}
 	
@@ -1962,7 +1967,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onEntityUpdate() {
-		LMM_LittleMaidMobNX.Debug("ENTITYUPDATE");
 		//音声再生
 		if(worldObj.isRemote&&!playingSound.isEmpty()){
 			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
@@ -2056,6 +2060,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	@Override
 	public void onLivingUpdate() {
+		if(worldObj.isRemote) LMM_LittleMaidMobNX.Debug("LU ID:%d, T=%s", getEntityId(), textureData.textureBox[0].textureName);
+
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {
@@ -2413,7 +2419,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			updateTexturePack();
 			if (lupd) {
 				requestRenderParamRecall();
-				setTextureNames();
+//				setTextureNames();
 			}
 			setMaidMode(dataWatcher.getWatchableObjectShort(dataWatch_Mode));
 			setDominantArm(dataWatcher.getWatchableObjectByte(dataWatch_DominamtArm));
@@ -3698,7 +3704,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	protected boolean sendTextureToServer() {
 		// 16bitあればテクスチャパックの数にたりんべ
-		MMM_TextureManager.instance.postSetTexturePack(this, textureData.getColor(), textureData.getTextureBox());
+//		MMM_TextureManager.instance.postSetTexturePack(this, textureData.getColor(), textureData.getTextureBox());
 		return true;
 	}
 
@@ -3853,6 +3859,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void setTexturePackIndex(int pColor, int[] pIndex) {
 		// Server
+		LMM_LittleMaidMobNX.Debug("STPI %s", worldObj.isRemote?"Client":"Server");
 		textureData.setTexturePackIndex(pColor, pIndex);
 		dataWatcher.updateObject(dataWatch_Texture, ((textureData.textureIndex[0] & 0xffff) | (textureData.textureIndex[1] & 0xffff) << 16));
 		LMM_LittleMaidMobNX.Debug("changeSize-ID:%d: %f, %f, %b", getEntityId(), width, height, worldObj.isRemote);
