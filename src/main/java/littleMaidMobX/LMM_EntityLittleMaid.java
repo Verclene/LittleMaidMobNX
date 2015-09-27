@@ -851,9 +851,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	protected String getLivingSound() {
+		playLivingSound();
+		return null;
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		//livingSoundTick--;
+/*
 		LMM_EnumSound so = LMM_EnumSound.Null;
 		if (getHealth() < 10)
 			so = LMM_EnumSound.living_whine;
@@ -892,7 +895,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//	livingSoundTick = 1;
 		//}
 		return null;
-	}
+*/
+		}
 
 
 	/**
@@ -910,7 +914,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (worldObj.isRemote) {
 			// NX1B47:サウンド乱数制限をクライアント依存に
 			String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
-			if(!force||!LMM_LittleMaidMobNX.cfg_ignoreForceSound){
+			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
 				if(LMM_LittleMaidMobNX.cfg_soundPlayChance!=1 &&
 						LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
 			}
@@ -922,10 +926,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
 
-			if(force)
+			if(force){
 				playingSound.add(0, s);
-			else
+			}else{
 				playingSound.add(s);
+			}
 //			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
 //			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, s, getSoundVolume(), lpitch, false);
 		}
@@ -995,7 +1000,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		//if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
-			playLittleMaidSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
+			if(!worldObj.isRemote)
+				playLittleMaidSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
+			else 
+				playSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
 		//	livingSoundTick = 1;
 		//}
 	}
