@@ -13,7 +13,7 @@ public enum LMMNX_DevMode {
 	public static final LMMNX_DevMode DEVMODE = NOT_IN_DEV;
 
 	public static final String[] INCLUDEPROJECT = new String[]{};
-	
+
 	/**
 	 * 開発環境からデバッグメッセージを出力するか否か。
 	 */

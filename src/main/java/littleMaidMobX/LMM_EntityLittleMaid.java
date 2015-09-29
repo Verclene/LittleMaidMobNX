@@ -1,27 +1,6 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.dataWatch_Absoption;
-import static littleMaidMobX.LMM_Statics.dataWatch_Color;
-import static littleMaidMobX.LMM_Statics.dataWatch_DominamtArm;
-import static littleMaidMobX.LMM_Statics.dataWatch_ExpValue;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Aimebow;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterest;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterestAXIS;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_remainsContract;
-import static littleMaidMobX.LMM_Statics.dataWatch_Free;
-import static littleMaidMobX.LMM_Statics.dataWatch_Gotcha;
-import static littleMaidMobX.LMM_Statics.dataWatch_ItemUse;
-import static littleMaidMobX.LMM_Statics.dataWatch_Mode;
-import static littleMaidMobX.LMM_Statics.dataWatch_Parts;
-import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
+import static littleMaidMobX.LMM_Statics.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -198,7 +177,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private boolean looksWithInterestAXIS;
 	private float rotateAngleHead;			// Angle
 	private float prevRotateAngleHead;		// prevAngle
-	
+
 	public float defaultWidth;
 	public float defaultHeight;
 
@@ -216,7 +195,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected LMM_EnumSound maidDamegeSound;
 	protected int maidSoundInterval;
 	protected float maidSoundRate;
-	
+
 	// クライアント専用音声再生フラグ
 	private ArrayList<String> playingSound = new ArrayList<String>();
 
@@ -256,10 +235,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected boolean isWildSaved = false;
 
 	public boolean isSwimming = false;
-	
+
 	// サーバ用テクスチャ処理移行フラグ
 	private boolean isMadeTextureNameFlag = false;
-	
+
 	public int maidArmorVisible = 15;
 
 	public LMM_EntityLittleMaid(World par1World) {
@@ -426,7 +405,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// TODO:test
 		// 31:自由変数、EntityMode等で使用可能な変数。
 		dataWatcher.addObject(dataWatch_Free, new Integer(0));
-		
+
 		defaultWidth = width;
 		defaultHeight = height;
 	}
@@ -557,22 +536,22 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void setSwimming(boolean flag){
 		isSwimming = flag;
 	}
-	
+
 	public void setMaidArmorVisible(int i){
 		if(i<0) i=0;
 		if(i>15)i=15;
 		maidArmorVisible = i;
 	}
-	
+
 	public void setMaidArmorVisible(boolean a, boolean b, boolean c, boolean d){
 		setMaidArmorVisible((a?1:0)<<3 | (b?1:0)<<2 | (c?1:0)<<1 | (d?1:0));
 	}
-	
+
 	public boolean isArmorVisible(int index){
 		if(index<0||index>3) return true;
 		return ((maidArmorVisible>>(3-index)) & 0x1) != 0;
 	}
-	
+
 	protected void syncSwimming(){
 		byte[] b = new byte[]{
 				LMMNX_NetSync.LMMNX_Sync,
@@ -581,7 +560,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		};
 		syncNet(b);
 	}
-	
+
 	public void syncMaidArmorVisible() {
 		byte[] b = new byte[]{
 				LMMNX_NetSync.LMMNX_Sync,
@@ -590,7 +569,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		};
 		syncNet(b);
 	}
-	
+
 	/**
 	 * Client用。
 	 * ログイン時や描画更新時にパラメータの更新をリクエスト
@@ -604,7 +583,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		};
 		syncNet(b);
 	}
-	
+
 	/**
 	 * Server用。
 	 * ログイン時・変更時のリクエストに応答
@@ -625,9 +604,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		syncMAString(textureModelNameForClient, textureArmorNameForClient, false);
 	}
-	
+
 	private boolean isNotColorExistsWild = false;
-	
+
 	/**
 	 * Client用。
 	 * Serverからの通知を受け取りパラメータを再設定
@@ -639,7 +618,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		MMM_TextureBox p0 = referTextureBox(model);
 		MMM_TextureBox p1 = referTextureArmorBox(armor);
 		MMM_TextureBox pBox[] = new MMM_TextureBox[]{p0, p1};
-		for(int i=0;i<2;i++) pBox[i]= pBox[i]==null ? referTextureBox("default_Orign") : pBox[i];
+		pBox[0]= pBox[0]==null ? referTextureBox("default_Orign") : pBox[0];
+		pBox[1]= pBox[1]==null ? referTextureArmorBox("default_Orign") : pBox[1];
+
 		// 指定色がない場合
 		if(!isContract() && (pBox[0].getWildColorBits() & 1<<getColor()) == 0){
 			isNotColorExistsWild = true;
@@ -647,11 +628,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setTexturePackName(pBox);
 		if(isNotColorExistsWild){
 			textureData.setColor(12);
-			isNotColorExistsWild = false;
 		}
 		setTextureNames();
 	}
-	
+
 	/**
 	 * Client用。
 	 * モデルパラメータの変更時にパラメータの更新をリクエスト
@@ -662,7 +642,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if(!isMadeTextureNameFlag) isMadeTextureNameFlag = true;
 		syncMAString(p1, p2, true);
 	}
-	
+
 	protected void syncMAString(String model, String armor, boolean isServerSave) {
 		// Model側
 		if(model==null){
@@ -676,7 +656,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		byte b1b[] = Arrays.copyOf(b1, b1.length+model.length());
 		MMM_Helper.setStr(b1b, 6, model);
 		syncNet(b1b);
-				
+
 		// Armor側
 		if(armor==null){
 			return;
@@ -690,7 +670,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		MMM_Helper.setStr(b2b, 6, armor);
 		syncNet(b2b);
 	}
-	
+
 	/**
 	 * Client専用。
 	 */
@@ -701,7 +681,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Client専用。
 	 */
@@ -713,7 +693,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return null;
 	}
 
-	
+
 	protected void syncNet(byte[] b) {
 		if(worldObj.isRemote){
 			LMM_Net.sendToEServer(this, b);
@@ -721,7 +701,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			LMM_Net.sendToAllEClient(this, b);
 		}
 	}
-	
+
 	public boolean setMaidMode(int pindex, boolean pplaying) {
 		// モードに応じてAIを切り替える
 		velocityChanged = true;
@@ -851,52 +831,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	protected String getLivingSound() {
-		playLivingSound();
-		return null;
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		//livingSoundTick--;
-/*
-		LMM_EnumSound so = LMM_EnumSound.Null;
-		if (getHealth() < 10)
-			so = LMM_EnumSound.living_whine;
-		else if (rand.nextFloat() < maidSoundRate) {
-			if (mstatTime > 23500 || mstatTime < 1500) {
-				so = LMM_EnumSound.living_morning;
-			} else if (mstatTime < 12500) {
-				if (isContract()) {
-					BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(new BlockPos(MathHelper.floor_double(posX + 0.5D), posY, MathHelper.floor_double(posZ + 0.5D)));
-					TempCategory ltemp = biomegenbase.getTempCategory();
-					if (ltemp == TempCategory.COLD) {
-						so = LMM_EnumSound.living_cold;
-					} else if (ltemp == TempCategory.WARM) {
-						so = LMM_EnumSound.living_hot;
-					} else {
-						so = LMM_EnumSound.living_daytime;
-					}
-					if (worldObj.isRaining()) {
-						if (biomegenbase.canSpawnLightningBolt()) {
-							so = LMM_EnumSound.living_rain;
-						} else if (biomegenbase.getEnableSnow()) {
-							so = LMM_EnumSound.living_snow;
-						}
-					}
-				} else {
-					so = LMM_EnumSound.living_daytime;
-				}
-			} else {
-				so = LMM_EnumSound.living_night;
-			}
-		}
-
-		//if(livingSoundTick<=0){
-			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
-			playLittleMaidSound(so, false);
-		//	livingSoundTick = 1;
-		//}
-		return null;
-*/
-		}
+		return "dummy.living";
+	}
 
 
 	/**
@@ -1002,7 +941,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
 			if(!worldObj.isRemote)
 				playLittleMaidSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
-			else 
+			else
 				playSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
 		//	livingSoundTick = 1;
 		//}
@@ -1484,7 +1423,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if(textureArmorNameForClient.equals("")){
 			textureArmorNameForClient = "default_Orign";
 		}
-		
+
 		isMadeTextureNameFlag = par1nbtTagCompound.getBoolean("isMadeTextureNameFlag");
 
 		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
@@ -2065,7 +2004,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public int DEBUGCOUNT = 0;
 	private boolean isInsideOpaque = false;
-	
+
 	@Override
 	public void onLivingUpdate() {
 		if(worldObj.isRemote) LMM_LittleMaidMobNX.Debug("LU ID:%d, T=%s", getEntityId(), textureData.textureBox[0].textureName);
@@ -2130,7 +2069,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				//段差にギリ載せ
 				setLocationAndAngles(posX+0.05*XBOUND_BLOCKOFFS[pitchindex], posY+1D, posZ+0.05*ZBOUND_BLOCKOFFS[pitchindex], rotationYaw, rotationPitch);
 			}
-			
+
 			// 埋まった
 			OPAQUE: if(isEntityInsideOpaqueBlock()){
 				if(!isInsideOpaque) for(int i=2;i<10;i++){
@@ -2272,7 +2211,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 	}
-	
+
 	@Override
 	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch){
 		if(worldObj.isRemote) requestRenderParamRecall();
@@ -2376,7 +2315,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		this.worldObj.theProfiler.endSection();
 	}
-	
+
 	protected void resetNavigator(){
 		if(handleWaterMovement()&&isSwimming&&!(navigator instanceof PathNavigateSwimmer)){
 //			navigator.clearPathEntity();
@@ -2387,7 +2326,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			navigator = new PathNavigateGround(this, worldObj);
 		}
 	}
-	
+
 	@Override
 	public void onUpdate() {
 		int litemuse = 0;
@@ -3293,8 +3232,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void setContract(boolean flag) {
 		super.setTamed(flag);
 		textureData.setContract(flag);
-		if (flag) {
-//			maidMode = mmode_Escorter;
+		if (worldObj.isRemote&&flag) {
+			isNotColorExistsWild = false;
 		} else {
 		}
 	}
@@ -3701,7 +3640,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		};
 		syncNet(b);
 	}
-	
+
 	public boolean isHeadMount(){
 		return ItemUtil.isHelm(maidInventory.mainInventory[17]);
 	}
@@ -3760,6 +3699,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public boolean updateMaidColor() {
 		// 同一性のチェック
+		if(!isContract()&&isNotColorExistsWild) return false;
+
 		int lc = getColor();
 		if (textureData.getColor() != lc) {
 			textureData.setColor(lc);
