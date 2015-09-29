@@ -13,6 +13,21 @@ import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 
 public class FileManager {
+	
+	public static class CommonClassLoaderWrapper extends URLClassLoader{
+
+		public CommonClassLoaderWrapper(URL[] urls, ClassLoader parent) {
+			super(urls, parent);
+			// TODO 自動生成されたコンストラクター・スタブ
+		}
+
+		@Override
+		public void addURL(URL url) {
+			// 可視化
+			super.addURL(url);
+		}
+		
+	}
 
 	public static File dirMinecraft;
 	public static File dirMods;
@@ -29,6 +44,7 @@ public class FileManager {
 	public static boolean isDevdir;
 	public static Map<String,List<File>>    fileList = new HashMap<String, List<File>>();
 
+	public static CommonClassLoaderWrapper COMMON_CLASS_LOADER;
 
 	static {
 		Object[] lo = FMLInjectionData.data();
@@ -42,6 +58,12 @@ public class FileManager {
 			String pathd = path;
 			String patha;
 			String tail = "/eclipse/mods";
+			String tail2 = "/eclipse/server/mods";
+			boolean serverFlag = false;
+			if(path.endsWith(tail2)){
+				path = path.substring(0, path.indexOf(tail2))+tail;
+				serverFlag = true;
+			}
 			if(path.endsWith(tail)){
 				if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
 					pathd = path.substring(0, path.indexOf(tail))+"/bin";
@@ -54,7 +76,7 @@ public class FileManager {
 				if(!dirDevClasses.exists()||!dirDevClasses.isDirectory())
 					throw new IllegalStateException("Could not get dev class path: Maybe your source codes are out of src/main/java?");
 				
-				for(int i=0;i<LMMNX_DevMode.INCLUDEPROJECT.length;i++){
+				for(int i=0;i<LMMNX_DevMode.INCLUDEPROJECT.length&&!serverFlag;i++){
 					if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
 						String c = FileClassUtil.getParentDir(path.substring(0, path.indexOf(tail)))+"/"+LMMNX_DevMode.INCLUDEPROJECT[i]+"/bin";
 						dirDevIncludeClasses.add(new File(c));

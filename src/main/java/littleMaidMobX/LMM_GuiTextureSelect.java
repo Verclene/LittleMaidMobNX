@@ -33,6 +33,9 @@ public class LMM_GuiTextureSelect extends MMM_GuiTextureSelect {
 					LMM_Net.sendToServer(ldata);
 				}
 			}
+			if(target instanceof LMM_EntityLittleMaid){
+				((LMM_EntityLittleMaid)target).requestChangeRenderParamTextureName();
+			}
 			break;
 		}
 	}

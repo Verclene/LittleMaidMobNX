@@ -44,7 +44,6 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 			return false;
 		}
 
-		LMM_LittleMaidMobNX.Debug("FINDING SHELTER");
 		Vec3 vec3d = findPossibleShelter();
 
 		if (vec3d == null) {
@@ -59,7 +58,6 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 
 	@Override
 	public boolean continueExecuting() {
-		LMM_LittleMaidMobNX.Debug("CONTINUE?");
 		return theCreature.getNavigator().noPath()?false:theWorld.canBlockSeeSky(new BlockPos(
 				MathHelper.floor_double(theCreature.posX),
 				(int) theCreature.getEntityBoundingBox().minY+1,

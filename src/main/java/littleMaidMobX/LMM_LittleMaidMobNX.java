@@ -6,9 +6,10 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
-import net.blacklab.lmmnx.LMM_SoundResourcePack;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
+import net.blacklab.lmmnx.client.LMM_SoundResourcePack;
+import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -31,6 +32,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -43,8 +46,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX3 Build 72";
-	public static final int VERSION_CODE = 6;
+	public static final String VERSION = "NX3 Build 106";
+	public static final int VERSION_CODE = 7;
 
 	/*
 	public static String[] cfg_comment = {
@@ -108,10 +111,9 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_Aggressive = true;
 	//サウンド試験調整
 	public static boolean cfg_ignoreForceSound = false;
-	public static int cfg_soundPlayChance = 2;
+	public static int cfg_soundPlayChance = 1;
 
-	public static boolean cfg_forceLivingSound = false;
-	public static int cfg_coolTimePlaySound = 20;
+	public static boolean cfg_forceLivingSound = true;
 
 	// 実績関係
 	public static Achievement ac_Contract;
@@ -129,8 +131,8 @@ public class LMM_LittleMaidMobNX {
 	// EBLib更新関係
 	public static boolean isEBLibNotLoaded = false;
 
-	public static final String EBLIB_MIN_VERSION_STRING="EL1 Build 4";
-	public static final int EBLIB_MIN_VERSION_CODE = 1;
+	public static final String EBLIB_MIN_VERSION_STRING="EL1 Build 5";
+	public static final int EBLIB_MIN_VERSION_CODE = 2;
 
 	@SidedProxy(
 			clientSide = "littleMaidMobX.LMM_ProxyClient",
@@ -144,7 +146,7 @@ public class LMM_LittleMaidMobNX {
 
 	public static void Debug(String pText, Object... pVals) {
 		// デバッグメッセージ
-		if (cfg_PrintDebugMessage) {
+		if (cfg_PrintDebugMessage||LMMNX_DevMode.DEBUG_PRINT_SWITCH) {
 			System.out.println(String.format("littleMaidMob-" + pText, pVals));
 		}
 	}
@@ -214,9 +216,8 @@ public class LMM_LittleMaidMobNX {
 		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
 
 		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
-		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 2));
+		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 1));
 		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
-		cfg_coolTimePlaySound = Math.max(cfg.getInt("coolTimePlaySound", 5),20);
 
 		//配列
 		String seedItemsOrgStr = cfg.getString("seedItems", "wheat_seeds, carrot, potato");
@@ -269,6 +270,7 @@ public class LMM_LittleMaidMobNX {
 		ac_Pharmacist	= (Achievement) new Achievement("achievement.pharmacist"	, "pharmacist"	,-2, 2, Items.nether_wart		, ac_Contract	).initIndependentStat().registerStat();
 		ac_Ripper		= (Achievement) new Achievement("achievement.ripper"		, "ripper"		, 0, 4, Items.shears			, ac_Contract	).initIndependentStat().registerStat();
 		ac_Torcher		= (Achievement) new Achievement("achievement.torcher"		, "torcher"		, 2, 2, Blocks.torch			, ac_Contract	).initIndependentStat().registerStat();
+
 		Achievement[] achievements = new Achievement[] {
 				ac_Contract,
 				ac_Fencer,
@@ -293,11 +295,12 @@ public class LMM_LittleMaidMobNX {
 		//Model
 		if(evt.getSide()==Side.CLIENT) ModelLoader.setCustomModelResourceLocation(LMM_LittleMaidMobNX.spawnEgg, 0, new ModelResourceLocation("lmmx:spawn_lmmx_egg","inventory"));
 
-		proxy.loadSounds();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event){
+		proxy.loadSounds();
+
 		if (MMM_Helper.isClient) {
 			List<IResourcePack> defaultResourcePacks = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "defaultResourcePacks", "field_110449_ao");
 			defaultResourcePacks.add(new LMM_SoundResourcePack());
@@ -308,6 +311,8 @@ public class LMM_LittleMaidMobNX {
 		}
 
 	}
+
+//	public static LMM_ProxyClient.CountThread countThread;
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent evt)
@@ -338,6 +343,7 @@ public class LMM_LittleMaidMobNX {
 						BiomeGenBase.birchForest,
 						BiomeGenBase.swampland,
 						BiomeGenBase.taiga,
+						BiomeGenBase.icePlains
 				};
 			}
 			for(BiomeGenBase biome : biomeList)
@@ -359,11 +365,24 @@ public class LMM_LittleMaidMobNX {
 
 		// IFFのロード
 		LMM_IFF.loadIFFs();
-
-		if(evt.getSide()==Side.CLIENT){
-			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread = new LMM_ProxyClient.SoundTickCountingThread();
-			((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).countingThread.start();
-		}
 	}
 
+	@EventHandler
+	public void onServerStart(FMLServerStartingEvent evt){
+/*
+		if(evt.getSide()==Side.CLIENT){
+			countThread = new LMM_ProxyClient.CountThread();
+			countThread.start();
+		}
+*/
+		}
+
+	@EventHandler
+	public void onServerStop(FMLServerStoppingEvent evt){
+/*
+		if(evt.getSide()==Side.CLIENT){
+			if(countThread.isRunning) countThread.cancel();
+		}
+*/
+	}
 }

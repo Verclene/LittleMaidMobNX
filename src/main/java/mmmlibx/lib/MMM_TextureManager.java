@@ -1,15 +1,12 @@
 package mmmlibx.lib;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +19,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
 import net.blacklab.lib.FileClassUtil;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
@@ -120,7 +118,7 @@ public class MMM_TextureManager {
 	
 	protected List<String[]> searchPrefix = new ArrayList<String[]>();
 	
-	public static final String[] searchFileNamePrefix = new String[]{"littleMaidMob","mmmlibx","ModelMulti"};
+	public static final String[] searchFileNamePrefix = new String[]{"littleMaidMob","mmmlibx","ModelMulti","LittleMaidMob"};
 
 	public void init() {
 		// 検索対象ファイル名を登録します。
@@ -128,6 +126,7 @@ public class MMM_TextureManager {
 		FileManager.getModFile("mmmlibx", "littleMaidMob");
 		FileManager.getModFile("mmmlibx", "mmmlibx");
 		FileManager.getModFile("mmmlibx", "ModelMulti");
+		FileManager.getModFile("mmmlibx", "LittleMaidMob");
 		
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/ModelMulti/", "ModelMulti_");
 		addSearch("mmmlibx", "/assets/minecraft/textures/entity/littleMaid/", "ModelMulti_");
@@ -331,6 +330,7 @@ public class MMM_TextureManager {
 			textureServer.add(new MMM_TextureBoxServer(lbox));
 		}
 		// ファイルからロード
+/*
 		File lfile = MinecraftServer.getServer().getFile(nameTextureIndex);
 		if (lfile.exists() && lfile.isFile()) {
 			try {
@@ -371,6 +371,7 @@ public class MMM_TextureManager {
 			}
 			return true;
 		}
+*/
 		return false;
 	}
 
@@ -434,23 +435,13 @@ public class MMM_TextureManager {
 			
 			if (modelMap.containsKey(pn)) return;
 			try {
-				ClassLoader lclassLoader = null;
-				if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE){
-					URL[] u = new URL[LMMNX_DevMode.INCLUDEPROJECT.length];
-					int ix=0;
-					for(File f:FileManager.dirDevIncludeClasses){
-						u[ix++] = f.toURI().toURL();
-					}
-					lclassLoader = new URLClassLoader(u,MMMLib.class.getClassLoader());
-				}
-				else lclassLoader = MMMLib.class.getClassLoader();
 				Package lpackage = MMMLib.class.getPackage();
 				Class lclass;
 				if (lpackage != null) {
 //					cn = (new StringBuilder("")).append(".").append(cn).toString();
 					cn = cn.replace("/", ".");
 					System.out.println("MMM_TextureManager.addModelClass : "+cn);
-					lclass = lclassLoader.loadClass(cn);
+					lclass = FileManager.COMMON_CLASS_LOADER.loadClass(cn);
 				} else {
 					lclass = Class.forName(cn);
 				}
@@ -469,11 +460,11 @@ public class MMM_TextureManager {
 			}
 			catch (Exception exception) {
 				MMMLib.Debug("getModelClass-Exception: %s", fname);
-				exception.printStackTrace();
+				if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
 			}
 			catch (Error error) {
 				MMMLib.Debug("getModelClass-Error: %s", fname);
-				error.printStackTrace();
+				if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
 			}
 		}
 	}
@@ -522,6 +513,10 @@ public class MMM_TextureManager {
 			return false;
 		}
 		try {
+			FileManager.COMMON_CLASS_LOADER.addURL(file.toURI().toURL());
+		} catch (MalformedURLException e) {
+		}
+		try {
 			FileInputStream fileinputstream = new FileInputStream(file);
 			ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
 			ZipEntry zipentry;
@@ -541,7 +536,7 @@ public class MMM_TextureManager {
 						addTextureName(zipentry.getName(), pSearch);
 						if(FMLCommonHandler.instance().getSide()==Side.CLIENT&&
 								(zipentry.getName().startsWith(lt1)||zipentry.getName().startsWith(lt2)))
-							LMMNX_OldZipTexturesLoader.keys.put(zipentry.getName(), file.getAbsolutePath());
+							LMMNX_OldZipTexturesLoader.keys.add(zipentry.getName());
 					}
 				}
 			} while(true);
@@ -556,57 +551,15 @@ public class MMM_TextureManager {
 		}
 	}
 
-	/*
-	protected void addTexturesJar(File file, String[] pSearch) {
-		// 
-		if (file.isFile()) {
-			MMMLib.Debug("addTextureJar-zip.");
-			if (addTexturesZip(file, pSearch)) {
-				MMMLib.Debug("getTexture-append-jar-done.");
-			} else {
-				MMMLib.Debug("getTexture-append-jar-fail.");
-			}
-		}
-		
-		// 意味なし？
-		if (file.isDirectory()) {
-			MMMLib.Debug("addTextureJar-file.");
-			boolean lflag = false;
-			
-			for (File t : file.listFiles()) {
-				if (t.isDirectory()) {
-					lflag |= addTexturesDir(t, pSearch);
-				}
-			}
-			if (lflag) {
-				MMMLib.Debug("getTexture-append-jar-done.");
-			} else {
-				MMMLib.Debug("getTexture-append-jar-fail.");
-			}
-			
-			Package package1 = (ModLoader.class).getPackage();
-			if(package1 != null)
-			{
-				String s = package1.getName().replace('.', File.separatorChar);
-				file = new File(file, s);
-				MMMLib.Debug("addTextureJar-file-Packege:%s", s);
-			} else {
-				MMMLib.Debug("addTextureJar-file-null.");
-			}
-			if (addTexturesDir(file, pSearch)) {
-				MMMLib.Debug("getTexture-append-jar-done.");
-			} else {
-				MMMLib.Debug("getTexture-append-jar-fail.");
-			}
-			
-		}
-	}
-	*/
-
 	protected boolean addTexturesDir(File file, String[] pSearch) {
 		// modsフォルダに突っ込んであるものも検索、再帰で。
 		if (file == null) {
 			return false;
+		}
+		
+		try {
+			FileManager.COMMON_CLASS_LOADER.addURL(file.toURI().toURL());
+		} catch (MalformedURLException e1) {
 		}
 		
 		try {
@@ -643,7 +596,8 @@ public class MMM_TextureManager {
 									String cname = tn.substring(rin.length()+1);
 									String pr="assets/minecraft/";
 									if(cname.startsWith(pr)) cname=cname.substring(pr.length());
-									if(FMLCommonHandler.instance().getSide()==Side.CLIENT) LMMNX_OldZipTexturesLoader.keysf.put(cname, nfile);
+									if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
+										LMMNX_OldZipTexturesLoader.keys.add(cname);
 								}
 							}
 //							addTextureName(s.substring(i).replace('\\', '/'));

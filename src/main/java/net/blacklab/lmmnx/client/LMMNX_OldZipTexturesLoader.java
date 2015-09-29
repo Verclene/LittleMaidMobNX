@@ -1,15 +1,12 @@
 package net.blacklab.lmmnx.client;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Set;
-import java.util.zip.ZipFile;
 
+import mmmlibx.lib.FileManager;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.IMetadataSerializer;
@@ -19,24 +16,14 @@ import com.google.common.collect.ImmutableSet;
 
 public class LMMNX_OldZipTexturesLoader implements IResourcePack {
 	
-	public static Map<String, String> keys = new HashMap<String, String>();
-	public static Map<String, File> keysf = new HashMap<String, File>();
+	public static ArrayList<String> keys = new ArrayList<String>();
 
-	@SuppressWarnings("resource")
 	@Override
 	public InputStream getInputStream(ResourceLocation arg0) throws IOException {
 		if(resourceExists(arg0)){
 			String key = arg0.getResourcePath();
 			if(key.startsWith("/")) key = key.substring(1);
-			String valuetmp = keys.get(key);
-			if(valuetmp==null){
-				File f = keysf.get(key);
-				return new FileInputStream(f);
-			}
-			File file = new File(valuetmp);
-			ZipFile zip = new ZipFile(file);
-			InputStream i = zip.getInputStream(zip.getEntry(key));
-			return i;
+			return FileManager.COMMON_CLASS_LOADER.getResourceAsStream(key);
 		}
 		return null;
 	}
@@ -66,7 +53,7 @@ public class LMMNX_OldZipTexturesLoader implements IResourcePack {
 	public boolean resourceExists(ResourceLocation arg0) {
 		String key = arg0.getResourcePath();
 		if(key.startsWith("/")) key = key.substring(1);
-		return keys.containsKey(key)||keysf.containsKey(key);
+		return keys.contains(key);
 	}
 
 }

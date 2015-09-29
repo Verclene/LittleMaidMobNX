@@ -15,6 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.MCPDummyContainer;
 import network.W_Message;
 
 /**
@@ -24,36 +25,6 @@ import network.W_Message;
  */
 public class LMM_ProxyClient extends LMM_ProxyCommon
 {
-	public static class SoundTickCountingThread extends Thread{
-		private boolean running = true;
-		
-		@Override
-		public synchronized void start() {
-			// TODO 自動生成されたメソッド・スタブ
-			super.start();
-		}
-
-		@Override
-		public void run() {
-			// TODO 自動生成されたメソッド・スタブ
-			while(running){
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-				}
-				if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT>0){
-					LMM_LittleMaidMobNX.proxy.OFFSET_COUNT--;
-				}
-			}
-		}
-		
-		public void cancel(){
-			running = false;
-		}
-
-	}
-	public SoundTickCountingThread countingThread;
-
 	public void init() {
 		RenderingRegistry.registerEntityRenderingHandler(LMM_EntityLittleMaid.class,new LMM_RenderLittleMaid(Minecraft.getMinecraft().getRenderManager(),0.3F));
 		RenderingRegistry.registerEntityRenderingHandler(MMM_EntitySelect.class,	new LMMNX_RenderEntitySelect(Minecraft.getMinecraft().getRenderManager(), 0.0F));
@@ -132,10 +103,10 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 		case LMN_Client_PlaySound : 
 			// 音声再生
 			LMM_EnumSound lsound9 = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(pPayload.data, 5));
-			lemaid.playSound(lsound9, MMM_Helper.getInt(pPayload.data, 9)==1);
 			LMM_LittleMaidMobNX.Debug(String.format("playSound:%s", lsound9.name()));
+			lemaid.playSound(lsound9, pPayload.data[9]==1);
 			break;
-		case LMMNX_NetSync.LMMNX_Sync_Under_Byte:
+		case LMMNX_NetSync.LMMNX_Sync:
 			LMMNX_NetSync.onPayLoad(lemaid, pPayload.data);
 			break;
 		}
@@ -172,11 +143,47 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	
 	@Override
 	public void playLittleMaidSound(World par1World, double x, double y, double z, String s, float v, float p, boolean b) {
-		// TODO 自動生成されたメソッド・スタブ
+/*
 		if(!par1World.isRemote) return;
-		if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT==0){
-			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=4;
-			par1World.playSound(x, y, z, s, v, p, b);
+//		if(LMM_LittleMaidMobNX.proxy.OFFSET_COUNT==0){
+//			LMM_LittleMaidMobNX.proxy.OFFSET_COUNT=2;
+			if(soundCount<=1){
+				soundCount++;
+				try{
+					par1World.playSound(x, y, z, s, v, p, b);
+				}catch(Exception exception){
+					Minecraft.getMinecraft().getSoundHandler().update();
+				}
+			}
+//		}
+*/
+	}
+	
+	public int soundCount = 0;
+	
+	public static class CountThread extends Thread{
+
+		public boolean isRunning = true;
+
+		@Override
+		public void run() {
+			while(isRunning){
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
+				if(((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).soundCount>0){
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+					}
+					((LMM_ProxyClient)LMM_LittleMaidMobNX.proxy).soundCount--;
+				}
+			}
+		}
+		
+		public void cancel(){
+			isRunning = false;
 		}
 	}
 }

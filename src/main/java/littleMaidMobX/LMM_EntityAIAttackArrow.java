@@ -49,7 +49,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 		if (!fEnable || entityliving == null || entityliving.isDead) {
 			fMaid.setAttackTarget(null);
 			//fMaid.setTarget(null);
-			fMaid.getNavigator().clearPathEntity();
+//			fMaid.getNavigator().clearPathEntity();
 			fTarget = null;
 			resetTask();
 			return false;

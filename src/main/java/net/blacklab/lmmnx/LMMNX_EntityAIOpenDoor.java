@@ -1,6 +1,7 @@
 package net.blacklab.lmmnx;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIOpenDoor;
 
@@ -16,13 +17,39 @@ public class LMMNX_EntityAIOpenDoor extends EntityAIOpenDoor {
 	}
 
 	@Override
+	public boolean continueExecuting() {
+		// TODO 自動生成されたメソッド・スタブ
+		LMM_LittleMaidMobNX.Debug("DOOR CONTINUE");
+		return super.continueExecuting();
+	}
+
+	@Override
+	public void startExecuting() {
+		// TODO 自動生成されたメソッド・スタブ
+		LMM_LittleMaidMobNX.Debug("DOOR START");
+		super.startExecuting();
+	}
+
+	@Override
+	public void resetTask() {
+		// TODO 自動生成されたメソッド・スタブ
+		LMM_LittleMaidMobNX.Debug("DOOR RESET");
+		super.resetTask();
+	}
+
+	@Override
+	public void updateTask() {
+		// TODO 自動生成されたメソッド・スタブ
+		LMM_LittleMaidMobNX.Debug("DOOR UPDATE");
+		super.updateTask();
+	}
+
+	@Override
 	public boolean shouldExecute() {
-		// TODO 水中行動時のラップをしただけ
+		LMM_LittleMaidMobNX.Debug("DOOR CHECK");
 		if(theMaid==null) return false;
-		if(!theMaid.isSwimming||!theMaid.isInWater()) {
-			return super.shouldExecute();
-		}
-		return false;
+		if(theMaid.isSwimming&&theMaid.isInWater()) return false;
+		return super.shouldExecute();
 	}
 	
 }

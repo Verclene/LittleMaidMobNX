@@ -61,7 +61,7 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 		}
 		theMaid.setAttackTarget(null);
 		theMaid.setRevengeTarget(null);
-		theMaid.getNavigator().clearPathEntity();
+//		theMaid.getNavigator().clearPathEntity();
 		return false;
 		
 	}

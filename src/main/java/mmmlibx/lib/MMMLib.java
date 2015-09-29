@@ -1,11 +1,16 @@
 package mmmlibx.lib;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
+import mmmlibx.lib.FileManager.CommonClassLoaderWrapper;
 import mmmlibx.lib.guns.GunsBase;
 import mmmlibx.lib.multiModel.MMMLoader.MMMTransformer;
+import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
@@ -35,19 +40,32 @@ public class MMMLib {
 
 	public static void Debug(String pText, Object... pData) {
 		// デバッグメッセージ
-		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage) {
+		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage||LMMNX_DevMode.DEBUG_PRINT_SWITCH) {
 			System.out.println(String.format("MMMLib-" + pText, pData));
 		}
 	}
 	public static void Debug(boolean isRemote, String pText, Object... pData) {
 		// デバッグメッセージ
-		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage) {
-			System.out.println(String.format("["+(isRemote? "Client":"Server")+"]MMMLib-" + pText, pData));
-		}
+		Debug("[Side="+(isRemote? "Client":"Server")+"]" + pText, pData);
 	}
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent pEvent) {
+		// ClassLoaderを初期化
+		List<URL> urls = new ArrayList<URL>();
+		try {
+			urls.add(FileManager.dirMods.toURI().toURL());
+		} catch (MalformedURLException e1) {
+		}
+		if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE){
+			for(File f:FileManager.dirDevIncludeClasses){
+				try {
+					urls.add(f.toURI().toURL());
+				} catch (MalformedURLException e) {
+				}
+			}
+		}
+		FileManager.COMMON_CLASS_LOADER = new CommonClassLoaderWrapper(urls.toArray(new URL[]{}), MMMLib.class.getClassLoader());
 
 		// MMMLibが立ち上がった時点で旧モデル置き換えを開始
 		MMMTransformer.isEnable = true;
@@ -113,14 +131,14 @@ public class MMMLib {
 //		MultiModelManager.instance.execute();
 		
 		// TODO test
-		List<File> llist = FileManager.getAllmodsFiles(getClass().getClassLoader(), true);
+		List<File> llist = FileManager.getAllmodsFiles(FileManager.COMMON_CLASS_LOADER, true);
 		for (File lf : llist) {
 			Debug("targetFiles: %s", lf.getAbsolutePath());
 		}
 		
 		
 		try {
-			Class<?> lc = ReflectionHelper.getClass(getClass().getClassLoader(), "net.minecraft.entity.EntityLivingBase");
+			Class<?> lc = ReflectionHelper.getClass(FileManager.COMMON_CLASS_LOADER, "net.minecraft.entity.EntityLivingBase");
 			Debug("test-getClass: %s", lc.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
