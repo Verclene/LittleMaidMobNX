@@ -29,14 +29,14 @@ public class LMM_EventHook
 			}
 		}
 	}
-	
+
 	public class RunThread extends Thread{
 		public PlayerEvent.PlayerLoggedInEvent e;
-		
+
 		public RunThread(PlayerEvent.PlayerLoggedInEvent ev){
 			e = ev;
 		}
-		
+
 		public void run(){
 			Version.VersionData v = Version.getLatestVersion("http://mc.el-blacklab.net/lmmnxversion.txt");
 			if(LMM_LittleMaidMobNX.VERSION_CODE < v.code){
@@ -69,15 +69,16 @@ public class LMM_EventHook
 			if(event.world.isRemote) maid.setTextureNames();
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
 		new RunThread(event).start();
 	}
-	
+
 	// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)
 	@SubscribeEvent
 	public void onEntitySpawned(EntityJoinWorldEvent event){
+		LMM_EntityLittleMaid.deleteDoppelganger(true, event.world, event.entity);
 		if (event.entity instanceof EntityArrow) {
 				EntityArrow arrow = (EntityArrow) event.entity;
 				if (arrow.shootingEntity instanceof LMM_IEntityLittleMaidAvatar) {
@@ -97,7 +98,7 @@ public class LMM_EventHook
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
 		LMM_EntityLittleMaid maid = event.maid;

@@ -117,7 +117,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 //	protected long maidContractLimit;		// 契約失効日
 	protected int maidContractLimit;		// 契約期間
-	protected long maidAnniversary;			// 契約日UIDとして使用
+	public long maidAnniversary;			// 契約日UIDとして使用
 	protected int maidDominantArm;			// 利き腕、1Byte
 	/** テクスチャ関連のデータを管理 **/
 	public MMM_TextureData textureData;
@@ -1438,45 +1438,41 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncFreedom();
 
 		// ドッペル対策
-		deleteDoppelganger(true);
+		deleteDoppelganger(true, worldObj, this);
 	}
 
-	public void deleteDoppelganger(boolean loading)
+	public static void deleteDoppelganger(boolean loading, World worldObj, Entity entity)
 	{
 		// ドッペル対策
-		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
+		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger/* && maidAnniversary > 0L*/) {
 			for (int i = 0; i < worldObj.loadedEntityList.size(); i++) {
 				Entity entity1 = (Entity)worldObj.loadedEntityList.get(i);
-				if (!entity1.isDead && entity1 instanceof LMM_EntityLittleMaid) {
-					LMM_EntityLittleMaid elm = (LMM_EntityLittleMaid)entity1;
+				if (!entity1.isDead && entity1 instanceof EntityLivingBase) {
+					EntityLivingBase elm = (EntityLivingBase)entity1;
 
-					if (elm == this) continue;
+					if (elm.equals(entity)) continue;
 
-					boolean c1 = elm.isContract() && elm.maidAnniversary == maidAnniversary
-							&& elm.getMaidMaster().equalsIgnoreCase(getMaidMaster());
+					boolean c1 = false;
+//					if(elm instanceof LMM_EntityLittleMaid && entity instanceof LMM_EntityLittleMaid){
+//						c1 = ((LMM_EntityLittleMaid) elm).isContract() &&
+//								((LMM_EntityLittleMaid)elm).maidAnniversary == ((LMM_EntityLittleMaid)entity).maidAnniversary
+//								&& ((LMM_EntityLittleMaid) elm).getMaidMaster().equalsIgnoreCase(((LMM_EntityLittleMaid) entity).getMaidMaster());
 
-					boolean c2 = elm.entityUniqueID.toString().contentEquals(this.entityUniqueID.toString());
+//					}
+
+					boolean c2 = elm.getUniqueID().toString().equals(entity.getUniqueID().toString());
 
 					if (c1 || c2) {
 						// 新しい方を残す
-						if (getEntityId() > elm.getEntityId()) {
-							LMM_LittleMaidMobNX.Debug(String.format("Load Doppelganger ID:%d, Anniversary=%d :"+c1+":"+c2,
-									elm.getEntityId(), elm.maidAnniversary));
+						LMM_LittleMaidMobNX.Debug("REMOVE DOPPELGANGER UUID %s", entity.getUniqueID());
+						if (entity.getEntityId() > elm.getEntityId()) {
 							elm.setDead();
 						} else {
-							LMM_LittleMaidMobNX.Debug(String.format("Load Doppelganger ID:%d, Anniversary=%d :"+c1+":"+c2,
-									getEntityId(), maidAnniversary));
-							setDead();
+							entity.setDead();
 							break;
 						}
 					}
 				}
-			}
-		} else {
-			if(loading)
-			{
-				LMM_LittleMaidMobNX.Debug(String.format("Load ID:%d, MaidMaster:%s, x:%.1f, y:%.1f, z:%.1f, Anniversary=%d",
-						getEntityId(), getMaidMaster(), posX, posY, posZ, maidAnniversary));
 			}
 		}
 	}
