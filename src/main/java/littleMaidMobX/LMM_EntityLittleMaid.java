@@ -1438,19 +1438,34 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncFreedom();
 
 		// ドッペル対策
+		deleteDoppelganger(true);
+	}
+
+	public void deleteDoppelganger(boolean loading)
+	{
+		// ドッペル対策
 		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
 			for (int i = 0; i < worldObj.loadedEntityList.size(); i++) {
 				Entity entity1 = (Entity)worldObj.loadedEntityList.get(i);
 				if (!entity1.isDead && entity1 instanceof LMM_EntityLittleMaid) {
 					LMM_EntityLittleMaid elm = (LMM_EntityLittleMaid)entity1;
-					if (elm != this && elm.isContract() && elm.maidAnniversary == maidAnniversary
-							&& elm.getMaidMaster().equalsIgnoreCase(getMaidMaster())) {
+
+					if (elm == this) continue;
+
+					boolean c1 = elm.isContract() && elm.maidAnniversary == maidAnniversary
+							&& elm.getMaidMaster().equalsIgnoreCase(getMaidMaster());
+
+					boolean c2 = elm.entityUniqueID.toString().contentEquals(this.entityUniqueID.toString());
+
+					if (c1 || c2) {
 						// 新しい方を残す
 						if (getEntityId() > elm.getEntityId()) {
-							LMM_LittleMaidMobNX.Debug(String.format("Load Doppelganger ID:%d, %d" ,elm.getEntityId(), maidAnniversary));
+							LMM_LittleMaidMobNX.Debug(String.format("Load Doppelganger ID:%d, Anniversary=%d :"+c1+":"+c2,
+									elm.getEntityId(), elm.maidAnniversary));
 							elm.setDead();
 						} else {
-							LMM_LittleMaidMobNX.Debug(String.format("Load Doppelganger ID:%d, %d" ,getEntityId(), maidAnniversary));
+							LMM_LittleMaidMobNX.Debug(String.format("Load Doppelganger ID:%d, Anniversary=%d :"+c1+":"+c2,
+									getEntityId(), maidAnniversary));
 							setDead();
 							break;
 						}
@@ -1458,9 +1473,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 			}
 		} else {
-			LMM_LittleMaidMobNX.Debug(String.format("Load ID:%d, MaidMaster:%s, x:%.1f, y:%.1f, z:%.1f, %d" ,getEntityId(), getMaidMaster(), posX, posY, posZ, maidAnniversary));
+			if(loading)
+			{
+				LMM_LittleMaidMobNX.Debug(String.format("Load ID:%d, MaidMaster:%s, x:%.1f, y:%.1f, z:%.1f, Anniversary=%d",
+						getEntityId(), getMaidMaster(), posX, posY, posZ, maidAnniversary));
+			}
 		}
 	}
+
 
 	public boolean canBePushed()
 	{
