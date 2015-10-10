@@ -1,6 +1,6 @@
-entity.lmmx.LittleMaidX.name=Little Maid
+entity.lmmx.LittleMaidX.name=LittleMaid
 
-item.lmmx:spawn_lmmx_egg.name=Little Maid
+item.lmmx:spawn_lmmx_egg.name=Spawn LittleMaid
 
 achievement.contract=Realization
 achievement.contract.desc=Employ a LittleMaid
@@ -25,75 +25,62 @@ achievement.ripper.desc=Make LittleMaid "Ripper" Mode
 achievement.torcher=I'm afraid of ghosts...
 achievement.torcher.desc=Make LittleMaid "Torcher" Mode
 
-littleMaidMob.mode.Torcher=Torcher
-littleMaidMob.mode.F-Torcher=F-Torcher
-littleMaidMob.mode.D-Torcher=D-Torcher
-littleMaidMob.mode.T-Torcher=T-Torcher
+littleMaidMob.mode.Torcher=Torch Layer
+littleMaidMob.mode.F-Torcher=Free Torch Layer
+littleMaidMob.mode.T-Torcher=Trace RS Torch Layer
 
 littleMaidMob.mode.Archer=Archer
 littleMaidMob.mode.F-Archer=Area defender(A)
-littleMaidMob.mode.T-Archer=Trace defender(A)
-littleMaidMob.mode.D-Archer=D-Archer
-littleMaidMob.mode.Blazingstar=Blazingstar
-littleMaidMob.mode.F-Blazingstar=F-Blazingstar
-littleMaidMob.mode.T-Blazingstar=T-Blazingstar
-littleMaidMob.mode.D-Blazingstar=D-Blazingstar
+littleMaidMob.mode.T-Archer=Trace RS defender(A)
+littleMaidMob.mode.Blazingstar=Blazing Star
+littleMaidMob.mode.F-Blazingstar=Blazing Star(Free)
+littleMaidMob.mode.T-Blazingstar=Blazing Star(Trace RS)
 
 littleMaidMob.mode.Playing=Playing
 littleMaidMob.mode.T-Playing=Playing
 littleMaidMob.mode.F-Playing=Playing
-littleMaidMob.mode.D-Playing=Playing
 
 littleMaidMob.mode.Pharmacist=Pharmacist
 littleMaidMob.mode.T-Pharmacist=T-Pharmacist
 littleMaidMob.mode.F-Pharmacist=F-Pharmacist
-littleMaidMob.mode.F-Pharmacist=D-Pharmacist
 
 littleMaidMob.mode.Healer=Healer
 littleMaidMob.mode.F-Healer=F-Healer
 littleMaidMob.mode.T-Healer=T-Healer
-littleMaidMob.mode.D-Healer=D-Healer
 
-littleMaidMob.mode.Cooking=Cooking
-littleMaidMob.mode.T-Cooking=T-Cooking
-littleMaidMob.mode.F-Cooking=F-Cooking
-littleMaidMob.mode.D-Cooking=D-Cooking
+littleMaidMob.mode.Cooking=Cook
+littleMaidMob.mode.T-Cooking=Cook(Trace RS)
+littleMaidMob.mode.F-Cooking=Cook(Free)
 
 littleMaidMob.mode.Strike=Strike
 littleMaidMob.mode.Wait=Wait
 littleMaidMob.mode.Wild=Wild
-littleMaidMob.mode.Escorter=Escorter
+littleMaidMob.mode.Escorter=Escort
 littleMaidMob.mode.F-Escorter=Freedom
-littleMaidMob.mode.D-Escorter=D-Escorter
-littleMaidMob.mode.T-Escorter=Tracer
+littleMaidMob.mode.T-Escorter=Trace RedStone
 
 littleMaidMob.mode.Fencer=Fencer
 littleMaidMob.mode.F-Fencer=Area defender(S)
-littleMaidMob.mode.T-Fencer=Trace defender(S)
-littleMaidMob.mode.D-Fencer=D-Fencer
-littleMaidMob.mode.Bloodsucker=Bloodsucker
-littleMaidMob.mode.F-Bloodsucker=F-Bloodsucker
-littleMaidMob.mode.T-Bloodsucker=Trace Bloodsucker
-littleMaidMob.mode.D-Bloodsucker=D-Bloodsucker
+littleMaidMob.mode.T-Fencer=Trace RS defender(S)
+littleMaidMob.mode.Bloodsucker=Random Killer
+littleMaidMob.mode.F-Bloodsucker=Phantom Killer
+littleMaidMob.mode.T-Bloodsucker=Trace RS Phantom Killer
 
-littleMaidMob.mode.Ripper=Ripper
-littleMaidMob.mode.F-Ripper=F-Ripper
-littleMaidMob.mode.D-Ripper=D-Ripper
-littleMaidMob.mode.T-Ripper=T-Ripper
+littleMaidMob.mode.Ripper=Shearer
+littleMaidMob.mode.F-Ripper=Free Shearer
+littleMaidMob.mode.T-Ripper=Trace RS Shearer
 littleMaidMob.mode.TNT-D=TNT-D
 littleMaidMob.mode.F-TNT-D=TNT-D
-littleMaidMob.mode.D-TNT-D=TNT-D
 littleMaidMob.mode.T-TNT-D=TNT-D
-littleMaidMob.mode.Detonator=Detonator
-littleMaidMob.mode.F-Detonator=F-Detonator
-littleMaidMob.mode.D-Detonator=D-Detonator
-littleMaidMob.mode.T-Detonator=T-Detonator
+littleMaidMob.mode.Detonator=Bomber
+littleMaidMob.mode.F-Detonator=Bomber
+littleMaidMob.mode.T-Detonator=Bomber
 littleMaidMob.mode.Farmer=Harvester girl
 littleMaidMob.mode.F-Farmer=Farmer
-littleMaidMob.mode.T-Farmer=Trace Farmer
+littleMaidMob.mode.T-Farmer=Trace RS Farmer
 littleMaidMob.mode.FarmPorter=Porter(Disabled)
 littleMaidMob.mode.F-FarmPorter=Porter(Free)
-littleMaidMob.mode.T-FarmPorter=Porter(Trace)
+littleMaidMob.mode.T-FarmPorter=Porter(Trace RS)
 
 littleMaidMob.text.Health=Health
 littleMaidMob.text.AP=AP

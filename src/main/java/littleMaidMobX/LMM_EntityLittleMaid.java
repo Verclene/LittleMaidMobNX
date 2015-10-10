@@ -493,9 +493,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			return "Playing";
 		} else {
 			String ls = getMaidModeString(maidMode);
-			if (maidOverDriveTime.isEnable()) {
-				ls = "D-" + ls;
-			} else
+//			if (maidOverDriveTime.isEnable()) {
+//				ls = "D-" + ls;
+//			} else
 			if (isTracer()) {
 				ls = "T-" + ls;
 			} else
@@ -1097,11 +1097,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		int lbase = 0;
 		if (maidOverDriveTime.isDelay()) {
 			int i;
-			if (maidOverDriveTime.isEnable()) {
+			// TODO TEMPORARY DISABLE
+//			if (maidOverDriveTime.isEnable()) {
 				i = 100;
-			} else {
-				i = 100 + maidOverDriveTime.getValue();
-			}
+//			} else {
+//				i = Math.min(0xff, maidOverDriveTime.getValue());
+//			}
 			lbase = i << 24 | 0x00df0f0f;
 		}
 
