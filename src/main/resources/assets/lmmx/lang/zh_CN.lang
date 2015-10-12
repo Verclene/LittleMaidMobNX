@@ -36,7 +36,7 @@ achievement.torcher.desc=开启照明模式
 achievement.contract=签订契约了 我的主人
 achievement.contract.desc=捕获一只野生女仆
 
-item.lmmx:spawn_lmmx_egg.name=女仆酱
+item.lmmx:spawn_lmmx_egg.name=生成 女仆酱
 
 littleMaidMob.mode.Torcher=照明模式
 littleMaidMob.mode.F-Torcher=自由-照明模式

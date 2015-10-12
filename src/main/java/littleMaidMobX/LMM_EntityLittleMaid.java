@@ -117,7 +117,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 //	protected long maidContractLimit;		// 契約失効日
 	protected int maidContractLimit;		// 契約期間
-	protected long maidAnniversary;			// 契約日UIDとして使用
+	public long maidAnniversary;			// 契約日UIDとして使用
 	protected int maidDominantArm;			// 利き腕、1Byte
 	/** テクスチャ関連のデータを管理 **/
 	public MMM_TextureData textureData;
@@ -493,9 +493,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			return "Playing";
 		} else {
 			String ls = getMaidModeString(maidMode);
-			if (maidOverDriveTime.isEnable()) {
-				ls = "D-" + ls;
-			} else
+//			if (maidOverDriveTime.isEnable()) {
+//				ls = "D-" + ls;
+//			} else
 			if (isTracer()) {
 				ls = "T-" + ls;
 			} else
@@ -1097,11 +1097,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		int lbase = 0;
 		if (maidOverDriveTime.isDelay()) {
 			int i;
-			if (maidOverDriveTime.isEnable()) {
+			// TODO TEMPORARY DISABLE
+//			if (maidOverDriveTime.isEnable()) {
 				i = 100;
-			} else {
-				i = 100 + maidOverDriveTime.getValue();
-			}
+//			} else {
+//				i = Math.min(0xff, maidOverDriveTime.getValue());
+//			}
 			lbase = i << 24 | 0x00df0f0f;
 		}
 
@@ -1437,29 +1438,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncMaidArmorVisible();
 		syncFreedom();
 
-		// ドッペル対策
-		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger && maidAnniversary > 0L) {
-			for (int i = 0; i < worldObj.loadedEntityList.size(); i++) {
-				Entity entity1 = (Entity)worldObj.loadedEntityList.get(i);
-				if (!entity1.isDead && entity1 instanceof LMM_EntityLittleMaid) {
-					LMM_EntityLittleMaid elm = (LMM_EntityLittleMaid)entity1;
-					if (elm != this && elm.isContract() && elm.maidAnniversary == maidAnniversary
-							&& elm.getMaidMaster().equalsIgnoreCase(getMaidMaster())) {
-						// 新しい方を残す
-						if (getEntityId() > elm.getEntityId()) {
-							LMM_LittleMaidMobNX.Debug(String.format("Load Doppelganger ID:%d, %d" ,elm.getEntityId(), maidAnniversary));
-							elm.setDead();
-						} else {
-							LMM_LittleMaidMobNX.Debug(String.format("Load Doppelganger ID:%d, %d" ,getEntityId(), maidAnniversary));
-							setDead();
-							break;
-						}
-					}
-				}
-			}
-		} else {
-			LMM_LittleMaidMobNX.Debug(String.format("Load ID:%d, MaidMaster:%s, x:%.1f, y:%.1f, z:%.1f, %d" ,getEntityId(), getMaidMaster(), posX, posY, posZ, maidAnniversary));
-		}
 	}
 
 	public boolean canBePushed()
