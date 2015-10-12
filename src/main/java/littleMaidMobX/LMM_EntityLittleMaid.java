@@ -1438,46 +1438,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncMaidArmorVisible();
 		syncFreedom();
 
-		// ドッペル対策
-		deleteDoppelganger(true, worldObj, this);
 	}
-
-	public static void deleteDoppelganger(boolean loading, World worldObj, Entity entity)
-	{
-		// ドッペル対策
-		if (LMM_LittleMaidMobNX.cfg_antiDoppelganger/* && maidAnniversary > 0L*/) {
-			for (int i = 0; i < worldObj.loadedEntityList.size(); i++) {
-				Entity entity1 = (Entity)worldObj.loadedEntityList.get(i);
-				if (!entity1.isDead && entity1 instanceof EntityLivingBase) {
-					EntityLivingBase elm = (EntityLivingBase)entity1;
-
-					if (elm.equals(entity)) continue;
-
-					boolean c1 = false;
-//					if(elm instanceof LMM_EntityLittleMaid && entity instanceof LMM_EntityLittleMaid){
-//						c1 = ((LMM_EntityLittleMaid) elm).isContract() &&
-//								((LMM_EntityLittleMaid)elm).maidAnniversary == ((LMM_EntityLittleMaid)entity).maidAnniversary
-//								&& ((LMM_EntityLittleMaid) elm).getMaidMaster().equalsIgnoreCase(((LMM_EntityLittleMaid) entity).getMaidMaster());
-
-//					}
-
-					boolean c2 = elm.getUniqueID().toString().equals(entity.getUniqueID().toString());
-
-					if (c1 || c2) {
-						// 新しい方を残す
-						LMM_LittleMaidMobNX.Debug("REMOVE DOPPELGANGER UUID %s", entity.getUniqueID());
-						if (entity.getEntityId() > elm.getEntityId()) {
-							elm.setDead();
-						} else {
-							entity.setDead();
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-
 
 	public boolean canBePushed()
 	{

@@ -5,11 +5,14 @@ import net.blacklab.lib.Version;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -75,10 +78,13 @@ public class LMM_EventHook
 		new RunThread(event).start();
 	}
 
-	// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)
 	@SubscribeEvent
 	public void onEntitySpawned(EntityJoinWorldEvent event){
-		LMM_EntityLittleMaid.deleteDoppelganger(true, event.world, event.entity);
+		if(event.entity instanceof EntityLivingBase){
+			event.setCanceled(LMM_EventHook.deleteDoppelganger(true, event.world, event.entity));
+		}
+
+		// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)
 		if (event.entity instanceof EntityArrow) {
 				EntityArrow arrow = (EntityArrow) event.entity;
 				if (arrow.shootingEntity instanceof LMM_IEntityLittleMaidAvatar) {
@@ -119,4 +125,33 @@ public class LMM_EventHook
 			event.setCanceled(true);
 		}
 	}
+
+	public static boolean deleteDoppelganger(boolean loading, World worldObj, Entity entity) {
+			// ドッペル対策
+			if (LMM_LittleMaidMobNX.cfg_antiDoppelganger/* && maidAnniversary > 0L*/) {
+				for (int i = 0; i < worldObj.loadedEntityList.size(); i++) {
+					Entity entity1 = (Entity)worldObj.loadedEntityList.get(i);
+					if (!entity1.isDead && entity1 instanceof EntityLivingBase) {
+						EntityLivingBase elm = (EntityLivingBase)entity1;
+
+						if (elm.equals(entity)) continue;
+
+						boolean c1 = elm.getClass().getName().equals(entity.getClass().getName());
+
+						boolean c2 = elm.getUniqueID().toString().equals(entity.getUniqueID().toString());
+
+						if (c1 && c2) {
+							// 新しい方を残す
+							LMM_LittleMaidMobNX.Debug("REMOVE DOPPELGANGER UUID %s", entity.getUniqueID());
+							if (entity.getEntityId() > elm.getEntityId()) {
+								elm.setDead();
+							} else {
+								return true;
+							}
+						}
+					}
+				}
+			}
+			return false;
+		}
 }
