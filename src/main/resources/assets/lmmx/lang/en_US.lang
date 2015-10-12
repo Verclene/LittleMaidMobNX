@@ -26,12 +26,12 @@ achievement.torcher=I'm afraid of ghosts...
 achievement.torcher.desc=Make LittleMaid "Torch Layer" Mode
 
 littleMaidMob.mode.Torcher=Torch Layer
-littleMaidMob.mode.F-Torcher=Free Torch Layer
-littleMaidMob.mode.T-Torcher=Trace RS Torch Layer
+littleMaidMob.mode.F-Torcher=Torch Layer(Free)
+littleMaidMob.mode.T-Torcher=Torch Layer(Trace RS)
 
 littleMaidMob.mode.Archer=Archer
 littleMaidMob.mode.F-Archer=Area defender(A)
-littleMaidMob.mode.T-Archer=Trace RS defender(A)
+littleMaidMob.mode.T-Archer=Area defender(A)(Trace RS)
 littleMaidMob.mode.Blazingstar=Blazing Star
 littleMaidMob.mode.F-Blazingstar=Blazing Star(Free)
 littleMaidMob.mode.T-Blazingstar=Blazing Star(Trace RS)
@@ -61,14 +61,14 @@ littleMaidMob.mode.T-Escorter=Trace RedStone
 
 littleMaidMob.mode.Fencer=Fencer
 littleMaidMob.mode.F-Fencer=Area defender(S)
-littleMaidMob.mode.T-Fencer=Trace RS defender(S)
+littleMaidMob.mode.T-Fencer=Area defender(S)(Trace RS)
 littleMaidMob.mode.Bloodsucker=Random Killer
 littleMaidMob.mode.F-Bloodsucker=Phantom Killer
 littleMaidMob.mode.T-Bloodsucker=Phantom Killer(Trace RS)
 
 littleMaidMob.mode.Ripper=Shearer
-littleMaidMob.mode.F-Ripper=Free Shearer
-littleMaidMob.mode.T-Ripper=Trace RS Shearer
+littleMaidMob.mode.F-Ripper=Shearer(Free)
+littleMaidMob.mode.T-Ripper=Shearer(Trace RS)
 littleMaidMob.mode.TNT-D=TNT-D
 littleMaidMob.mode.F-TNT-D=TNT-D
 littleMaidMob.mode.T-TNT-D=TNT-D
@@ -78,7 +78,7 @@ littleMaidMob.mode.T-Detonator=Bomber
 
 littleMaidMob.mode.Farmer=Harvester girl
 littleMaidMob.mode.F-Farmer=Farmer
-littleMaidMob.mode.T-Farmer=Trace RS Farmer
+littleMaidMob.mode.T-Farmer=Farmer(Trace RS)
 littleMaidMob.mode.FarmPorter=Porter(Disabled)
 littleMaidMob.mode.F-FarmPorter=Porter(Free)
 littleMaidMob.mode.T-FarmPorter=Porter(Trace RS)
