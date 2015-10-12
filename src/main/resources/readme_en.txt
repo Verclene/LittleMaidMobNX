@@ -11,17 +11,17 @@ LICENSE:
 
 Requires:
 	Java Runtime Environment 7 or later
-	Minecraft 1.8 with following mods: 
+	Minecraft 1.8 with following mods:
 		Minecraft Forge(Recommended) 1.8-11.14.1.1334 or later
 		EBLib EL1 Build 4(https://github.com/Verclene/EBLib-1.8/releases) or later
 		*This mod was built on Forge 11.14.3.1450
-	
+
 How to install :
 	Install forge, then put this and EBLib into mods folder.
 
 Config:
-	Refer to '<Game Directory>/config/littleMaidMobNX.cfg'
-	
+	is at '<Game Directory>/config/littleMaidMobNX.cfg'
+
 CAUTION
 	Do NOT use this mod on the world made on MC 1.6.x- with LMM.
 
@@ -30,33 +30,7 @@ How to change LittleMaid's look
 	Then right click the Maid(employed) to open GUI, and push 'select' button(which is behind the Maid on GUI).
 
 How to change LittleMaid's voice
-	Get any soundpack, and put it into mods folder.
+	Get a soundpack, and put it into mods folder.
 
 Changes
-	20150910	NX3 Build 72
-		CODE: [MEET WITH OCEAN]
-		New Features:
-			Swimming
-			Toggle Armor visibility, freedom and swimming from GUI
-		Adjusts:
-			Climbing blocks
-			Farmer AI
-			Fleeing rain AI
-	20150829	NX2 Build 42
-		Adjusts:
-			Rendering
-		Fixes:
-			Transparent wild-Maid issue
-	20150826	NX2 Build 36
-		New Features:
-			Farmer
-			Add some achievements
-		New APIs:
-			LMMNX_IItemSpecialSugar
-			LMMNX_ItemPutChestEvent
-		Modifies:
-			Creating dev-environment
-		Adjusts:
-			Climbing block
-			Some bugs on SMP
-			Playing sounds
+	Refer to: ( http://github.com/Verclene/LittleMaidMobNX/releases )

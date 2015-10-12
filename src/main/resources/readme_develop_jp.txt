@@ -1,4 +1,4 @@
-2015/06/04
+2015/10/12
 
 □開発環境構築について
 
@@ -18,3 +18,6 @@
     ※eclipseからの実行時「作業ディレクトリ」は必ず"${workspace_loc:<PROJECTNAME>/eclipse}"としてください
     ※ForgeGradleでビルドするときは必ず「NOT_IN_DEV」に戻してください。
     ※IDEAはサポートしていません
+5.  メイドの機能モードやマルチモデルの開発を別プロジェクトで行う場合、そのプロジェクト名を配列INCLUDEPROJECTに追加する。
+    ・例："Beverly18"で開発しているマルチモデルを読み込む　⇒　INCLUDEPROJECT = new String[]{"Beverly18"};
+6.  デバッグメッセージを出力させる場合、定数DEBUG_PRINT_SWITCHの値をtrueにする。
