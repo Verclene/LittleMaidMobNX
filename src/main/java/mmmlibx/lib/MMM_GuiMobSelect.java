@@ -62,6 +62,7 @@ public abstract class MMM_GuiMobSelect extends GuiScreen {
 		
 		for (Map.Entry<Class, String> le : entityMapClass.entrySet()) {
 			if (Modifier.isAbstract(le.getKey().getModifiers())) continue;
+			MMMLib.Debug("Add %s", le.getKey().getSimpleName());
 			int li = 0;
 			Entity lentity = null;
 			try {

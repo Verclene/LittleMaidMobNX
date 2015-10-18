@@ -233,7 +233,6 @@ public class LMM_IFF {
 	}
 
 	public static void loadIFFs() {
-		// サーバー側の
 		if (!MMM_Helper.isClient) {
 			// サーバー側処理
 			loadIFF("");
