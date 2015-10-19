@@ -122,7 +122,8 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 				}
 			} else {
 				inventorySlots.slotClick(slot.slotNumber, j, flag, mc.thePlayer);
-				inventorySlots.getSlot(slot.slotNumber).getStack();
+				ItemStack itemstack = inventorySlots.getSlot(slot.slotNumber).getStack();
+				mc.playerController.sendSlotPacket(itemstack,(slot.slotNumber - inventorySlots.inventorySlots.size()) + 9 + 36);
 			}
 		} else {
 			// Slot以外のところは捨てる

@@ -44,6 +44,7 @@ public class LMM_GuiIFF extends MMM_GuiMobSelect {
 	@Override
 	protected boolean checkEntity(String pName, Entity pEntity, int pIndex) {
 		boolean lf = false;
+		LMM_IFF.checkEntityStatic(pName, pEntity, pIndex, entityMap);
 		if (pEntity instanceof EntityLivingBase) {
 			if (pEntity instanceof LMM_EntityLittleMaid) {
 				if (pIndex == 0 || pIndex == 1) {

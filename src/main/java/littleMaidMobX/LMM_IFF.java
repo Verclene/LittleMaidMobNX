@@ -23,6 +23,7 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameData;
 import wrapper.W_Common;
 
 /**
@@ -321,7 +322,7 @@ public class LMM_IFF {
 							.append(LMM_TriggerSelect.selector.get(le.getKey()))
 							.append("=");
 					if (!le.getValue().isEmpty()) {
-						String itemName = (String) Item.itemRegistry.getNameForObject(le.getValue().get(0));
+						String itemName = Item.itemRegistry.getNameForObject(le.getValue().get(0)).toString();
 						sb.append(itemName);
 						for (int i = 1; i < le.getValue().size(); i++) {
 							itemName = (String) Item.itemRegistry.getNameForObject(le.getValue().get(i));
