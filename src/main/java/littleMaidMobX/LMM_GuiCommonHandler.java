@@ -36,7 +36,7 @@ public class LMM_GuiCommonHandler implements IGuiHandler
 				break;
 
 			case GUI_ID_IFF:
-				// 処理なし
+//				o = new LMM_ContainerTriggerSelect(player);
 				break;
 		}
 		return o;
@@ -57,7 +57,7 @@ public class LMM_GuiCommonHandler implements IGuiHandler
 				break;
 
 			case GUI_ID_IFF:
-				o = new LMM_GuiIFF(player.worldObj, maidClient);
+				o = new LMM_GuiIFF(world, player, maidClient);
 				break;
 		}
 		return o;

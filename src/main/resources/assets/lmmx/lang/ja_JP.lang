@@ -99,3 +99,5 @@ littleMaidMob.gui.toggle.swim.enable=水泳モードを有効にする
 littleMaidMob.gui.toggle.swim.disable=水泳モードを無効にする
 littleMaidMob.gui.toggle.freedom.enable=自由行動に切り替え
 littleMaidMob.gui.toggle.freedom.disable=自由行動を解除
+
+littleMaidMob.gui.iff.title=敵対／友好切り替え

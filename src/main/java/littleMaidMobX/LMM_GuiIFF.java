@@ -1,33 +1,38 @@
 package littleMaidMobX;
 
-import mmmlibx.lib.Client;
+
 import mmmlibx.lib.MMM_GuiMobSelect;
 import mmmlibx.lib.MMM_Helper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringTranslate;
 import net.minecraft.world.World;
 
 public class LMM_GuiIFF extends MMM_GuiMobSelect {
 
 	public static final String IFFString[] = {
-		"ENEMY", // 反撃、狩
-		"UNKNOWN", // 反撃
-		"FRIENDLY" // 攻撃しない
+		"ENEMY", 
+		"NEUTRAL", 
+		"FRIENDLY" 
 	};
 
 	protected LMM_EntityLittleMaid target;
+	protected EntityPlayer thePlayer;
 
-
-	public LMM_GuiIFF(World world, LMM_EntityLittleMaid pEntity) {
+	public LMM_GuiIFF(World world, EntityPlayer player, LMM_EntityLittleMaid pEntity) {
 		super(world);
-		screenTitle = "LittleMaid IFF";
+		screenTitle = StatCollector.translateToLocal("littleMaidMob.gui.iff.title");
 		target = pEntity;
+		thePlayer = player;
 		
 		// IFFをサーバーから取得
-		if (!Client.isIntegratedServerRunning()) {
+		if (!Minecraft.getMinecraft().isSingleplayer()) {
 			int li = 0;
 			for (String ls : LMM_IFF.DefaultIFF.keySet()) {
 				byte ldata[] = new byte[5 + ls.length()];
@@ -72,10 +77,10 @@ public class LMM_GuiIFF extends MMM_GuiMobSelect {
 		
 		StringTranslate stringtranslate = new StringTranslate();
 		
-		buttonList.add(new GuiButton(200, width / 2 - 130, height - 40, 120, 20,
+		buttonList.add(new GuiButton(200, width / 2 - 60, height - 40, 120, 20,
 				stringtranslate.translateKey("gui.done")));
-		buttonList.add(new GuiButton(201, width / 2 + 10, height - 40, 120, 20,
-				"Trigger Select"));
+//		buttonList.add(new GuiButton(201, width / 2 + 10, height - 40, 120, 20,
+//				"Trigger Select"));
 	}
 
 	@Override
@@ -87,7 +92,7 @@ public class LMM_GuiIFF extends MMM_GuiMobSelect {
 			mc.displayGuiScreen(null);
 		}
 		if (guibutton.id == 201) {
-			mc.displayGuiScreen(new LMM_GuiTriggerSelect(mc.thePlayer, this));
+			mc.displayGuiScreen(new LMM_GuiTriggerSelect(thePlayer, this));
 		}
 	}
 
@@ -111,7 +116,7 @@ public class LMM_GuiIFF extends MMM_GuiMobSelect {
 				tt = 0;
 			}
 			
-			if (!mc.isIntegratedServerRunning()) {
+			if (!mc.isSingleplayer()) {
 				// サーバーへ変更値を送る。
 				int li = 0;
 				for (String ls : LMM_IFF.DefaultIFF.keySet()) {

@@ -10,10 +10,12 @@ import java.util.TreeMap;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.BossStatus;
+import net.minecraft.inventory.Container;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -35,11 +37,13 @@ public abstract class MMM_GuiMobSelect extends GuiScreen {
 	}
 
 	public MMM_GuiMobSelect(World pWorld) {
+		super();
 		entityMap = new TreeMap<String, Entity>();
 		initEntitys(pWorld, true);
 	}
 
 	public MMM_GuiMobSelect(World pWorld, Map<String, Entity> pMap) {
+		super();
 		entityMap = pMap;
 		initEntitys(pWorld, false);
 	}

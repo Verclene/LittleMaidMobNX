@@ -13,6 +13,7 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -42,6 +43,12 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 		inventoryTrigger = (LMM_ContainerTriggerSelect) inventorySlots;
 		target = entityplayer;
 	}
+	
+	public LMM_GuiTriggerSelect(World world, EntityPlayer entityPlayer, LMM_EntityLittleMaid maid) {
+		// TODO 自動生成されたコンストラクター・スタブ
+		this(entityPlayer, null);
+		owner = new LMM_GuiIFF(world, entityPlayer, maid);
+	}
 
 	@Override
 	public void initGui() {
@@ -57,12 +64,12 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 		selectPage = 0;
 	}
 
-	@Override
-	protected void keyTyped(char c, int i) {
-		if (i == 1) {
-			mc.displayGuiScreen(owner);
-		}
-	}
+//	@Override
+//	protected void keyTyped(char c, int i) {
+//		if (i == 1) {
+//			mc.displayGuiScreen(owner);
+//		}
+//	}
 
 	@Override
 	public void onGuiClosed() {
@@ -123,6 +130,7 @@ public class LMM_GuiTriggerSelect extends GuiContainer {
 			} else {
 				inventorySlots.slotClick(slot.slotNumber, j, flag, mc.thePlayer);
 				ItemStack itemstack = inventorySlots.getSlot(slot.slotNumber).getStack();
+				LMM_LittleMaidMobNX.Debug("SLOT ITEM %d/%s", slot.slotNumber, itemstack!=null?itemstack.getItem().getUnlocalizedName():"null");
 				mc.playerController.sendSlotPacket(itemstack,(slot.slotNumber - inventorySlots.inventorySlots.size()) + 9 + 36);
 			}
 		} else {

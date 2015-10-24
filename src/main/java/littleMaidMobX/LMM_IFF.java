@@ -23,7 +23,6 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameData;
 import wrapper.W_Common;
 
 /**
@@ -237,10 +236,11 @@ public class LMM_IFF {
 		if (!MMM_Helper.isClient) {
 			// サーバー側処理
 			loadIFF("");
-			File lfile = MinecraftServer.getServer().getFile("");
+			File lfile = MinecraftServer.getServer().getFile("config");
 			for (File lf : lfile.listFiles()) {
-				if (lf.getName().endsWith("littleMaidMob.iff")) {
-					String ls = lf.getName().substring(17, lf.getName().length() - 20);
+				LMM_LittleMaidMobNX.Debug("FIND FILE %s", lf.getName());
+				if (lf.getName().startsWith("littleMaidMob_")&&lf.getName().endsWith(".iff")) {
+					String ls = lf.getName().substring(14, lf.getName().length() - 4);
 					LMM_LittleMaidMobNX.Debug(ls);
 					loadIFF(ls);
 				}
@@ -325,7 +325,7 @@ public class LMM_IFF {
 						String itemName = Item.itemRegistry.getNameForObject(le.getValue().get(0)).toString();
 						sb.append(itemName);
 						for (int i = 1; i < le.getValue().size(); i++) {
-							itemName = (String) Item.itemRegistry.getNameForObject(le.getValue().get(i));
+							itemName = Item.itemRegistry.getNameForObject(le.getValue().get(i)).toString();
 							sb.append(",").append(itemName);
 						}
 					}

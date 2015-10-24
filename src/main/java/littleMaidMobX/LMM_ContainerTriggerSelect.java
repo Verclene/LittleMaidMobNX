@@ -45,7 +45,7 @@ public class LMM_ContainerTriggerSelect extends ContainerCreative {
 		scrollTo(0.0F);
 		setWeaponlist(0.0F);
 	}
-
+	
 	private void initAllSelections() {
 		// コンテナ表示用アイテムの設定
 		this.itemList.clear();

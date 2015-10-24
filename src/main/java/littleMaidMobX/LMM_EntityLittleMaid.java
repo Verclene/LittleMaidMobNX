@@ -3044,15 +3044,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							}
 							else if (itemstack1.getItem() == Items.book) {
 								// IFFのオープン
-								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-								if (worldObj.isRemote) {
+//								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
+//								if (worldObj.isRemote) {
 									par1EntityPlayer.openGui(LMM_LittleMaidMobNX.instance,
 											LMM_GuiCommonHandler.GUI_ID_IFF,
 											this.worldObj,
 											(int)this.posX,
 											(int)this.posY,
 											(int)this.posZ);
-								}
+//								}
 								return true;
 							}
 							else if ((itemstack1.getItem() == Items.glass_bottle) && (experienceValue >= 5)) {
