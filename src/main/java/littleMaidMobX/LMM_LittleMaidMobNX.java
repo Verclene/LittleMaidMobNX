@@ -46,7 +46,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX4 Build 12";
+	public static final String VERSION = "NX4 Build 16";
 	public static final int VERSION_CODE = 9;
 
 	/*
@@ -131,8 +131,8 @@ public class LMM_LittleMaidMobNX {
 	// EBLib更新関係
 	public static boolean isEBLibNotLoaded = false;
 
-	public static final String EBLIB_MIN_VERSION_STRING="EL1 Build 5";
-	public static final int EBLIB_MIN_VERSION_CODE = 2;
+	public static final String EBLIB_MIN_VERSION_STRING="EL2 Build 2";
+	public static final int EBLIB_MIN_VERSION_CODE = 3;
 
 	@SidedProxy(
 			clientSide = "littleMaidMobX.LMM_ProxyClient",

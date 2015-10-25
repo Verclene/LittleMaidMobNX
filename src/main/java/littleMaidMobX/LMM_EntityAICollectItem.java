@@ -2,6 +2,7 @@ package littleMaidMobX;
 
 import java.util.List;
 
+import net.blacklab.lib.VectorUtil;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -104,7 +105,7 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 	public boolean canEntityItemBeSeen(Entity entity) {
 		// アイテムの可視判定
 //		return theMaid.worldObj.rayTraceBlocks(new Vec3(theMaid.posX, theMaid.posY + (double)theMaid.getEyeHeight(), theMaid.posZ), new Vec3(entity.posX, entity.posY + ((entity.getEntityBoundingBox().minY - entity.getEntityBoundingBox().minY) / 2), entity.posZ)) == null;
-		return theMaid.maidActiveModeClass.canMoveThrough(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY), MathHelper.floor_double(entity.posZ), false, true, false);
+		return VectorUtil.canMoveThrough(theMaid.maidActiveModeClass.owner, 0D, MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY), MathHelper.floor_double(entity.posZ), false, true, false);
 	}
 
 }

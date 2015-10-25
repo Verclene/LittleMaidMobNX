@@ -163,11 +163,11 @@ public class LMM_EntityMode_Archer extends LMM_EntityModeBase {
 		switch (pMode) {
 		case mmode_Archer:
 //			owner.getWeaponStatus();
-			updateGuns();
+//			updateGuns();
 			break;
 		case mmode_Blazingstar:
 //			owner.getWeaponStatus();
-			updateGuns();
+//			updateGuns();
 			// Blazingstarの特殊効果
 			World lworld = owner.worldObj;
 			List<Entity> llist = lworld.getEntitiesWithinAABB(Entity.class, owner.getEntityBoundingBox().expand(16D, 16D, 16D));

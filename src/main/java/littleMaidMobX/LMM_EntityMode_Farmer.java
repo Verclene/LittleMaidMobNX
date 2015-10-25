@@ -3,6 +3,7 @@ package littleMaidMobX;
 import java.util.Iterator;
 
 import net.blacklab.lib.ItemUtil;
+import net.blacklab.lib.VectorUtil;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
@@ -140,7 +141,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				return false;
 			}
 		}
-		if(!canMoveThrough(px, py, pz, py==MathHelper.floor_double(owner.posY-1D), true, false)) return false;
+		if(!VectorUtil.canMoveThrough(owner, 0.9D, px + 0.5D, py + 1.9D, pz + 0.5D, py==MathHelper.floor_double(owner.posY-1D), true, false)) return false;
 		if(isUnfarmedLand(px,py,pz)) return true;
 		if(isFarmedLand(px,py,pz)){
 			/*耕地が見つかっても、

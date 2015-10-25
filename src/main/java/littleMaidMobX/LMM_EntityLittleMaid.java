@@ -197,7 +197,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected float maidSoundRate;
 
 	// クライアント専用音声再生フラグ
-	private ArrayList<String> playingSound = new ArrayList<String>();
+	private ArrayList<LMM_EnumSound> playingSound = new ArrayList<LMM_EnumSound>();
 
 	// 実験用
 	private int firstload = 1;
@@ -850,25 +850,17 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
 		if (enumsound == LMM_EnumSound.Null) return;
-		if (worldObj.isRemote) {
+		if (worldObj.isRemote && enumsound!=LMM_EnumSound.Null) {
 			// NX1B47:サウンド乱数制限をクライアント依存に
-			String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
 			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
 				if(LMM_LittleMaidMobNX.cfg_soundPlayChance!=1 &&
 						LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
 			}
-			//まさかな…
-			if(s==null) return;
-			if(!s.isEmpty() && !s.startsWith("minecraft:"))
-			{
-				s = LMM_LittleMaidMobNX.DOMAIN + ":" + s;
-			}
-			LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
 
 			if(force){
-				playingSound.add(0, s);
+				playingSound.add(0, enumsound);
 			}else{
-				playingSound.add(s);
+				playingSound.add(enumsound);
 			}
 //			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
 //			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, s, getSoundVolume(), lpitch, false);
@@ -1895,8 +1887,20 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//音声再生
 		if(worldObj.isRemote&&!playingSound.isEmpty()){
 			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-			worldObj.playSound(posX, posY, posZ, playingSound.get(0), getSoundVolume(), lpitch, false);
-			playingSound.remove(0);
+			
+			for(LMM_EnumSound enumsound : playingSound){
+				String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
+				//まさかな…
+				if(s==null) return;
+				if(!s.isEmpty() && !s.startsWith("minecraft:"))
+				{
+					s = LMM_LittleMaidMobNX.DOMAIN + ":" + s;
+				}
+				LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
+
+				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
+			}
+			playingSound.clear();
 //			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, playingSound, getSoundVolume(), lpitch, false);
 		}
 		super.onEntityUpdate();

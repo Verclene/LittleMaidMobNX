@@ -1,5 +1,6 @@
 package littleMaidMobX;
 
+import net.blacklab.lib.VectorUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
@@ -147,7 +148,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
 		int v = getBlockLighting(px, py, pz);
-		if (v < 8 && canBlockBeSeen(px, py - 1, pz, true, true, false) && !owner.isMaidWait()) {		
+		if (v < 8 && VectorUtil.canBlockBeSeen(owner, px, py - 1, pz, true, true, false) && !owner.isMaidWait()) {		
 			if (owner.getNavigator().tryMoveToXYZ(px, py, pz, 1.0F) ) {
 				//owner.playLittleMaidSound(LMM_EnumSound.findTarget_D, true);
 				return true;
@@ -219,6 +220,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	@Override
 	public void updateAITick(int pMode) {
 		// トーチの設置
+/*
 		if (pMode == mmode_Torcher && owner.getNextEquipItem()) {
 			ItemStack lis = owner.getCurrentEquippedItem();
 			int lic = lis.stackSize;
@@ -269,6 +271,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 			}
 
 		}
+*/
 	}
 
 }
