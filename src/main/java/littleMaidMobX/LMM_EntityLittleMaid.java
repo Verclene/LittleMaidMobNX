@@ -12,6 +12,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import com.google.common.primitives.Bytes;
+import com.google.common.primitives.UnsignedBytes;
+import com.google.common.primitives.UnsignedInteger;
+
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.MMMLib;
 import mmmlibx.lib.MMM_Counter;
@@ -34,6 +38,7 @@ import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
@@ -496,10 +501,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //			if (maidOverDriveTime.isEnable()) {
 //				ls = "D-" + ls;
 //			} else
-			if (isTracer()) {
+			if (isTracer()&&isFreedom()) {
 				ls = "T-" + ls;
-			} else
-			if (isFreedom()) {
+			} else if (isFreedom()) {
 				ls = "F-" + ls;
 			}
 			return ls;
@@ -1088,13 +1092,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 発光処理用
 		int lbase = 0;
 		if (maidOverDriveTime.isDelay()) {
-			int i;
-			// TODO TEMPORARY DISABLE
-//			if (maidOverDriveTime.isEnable()) {
-				i = 100;
-//			} else {
-//				i = Math.min(0xff, maidOverDriveTime.getValue());
-//			}
+			int i = 0;
+			if (maidOverDriveTime.isEnable()) {
+				i = Math.min(255, Math.max(0, maidOverDriveTime.getValue()/2));
+			}
 			lbase = i << 24 | 0x00df0f0f;
 		}
 
@@ -1888,7 +1889,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if(worldObj.isRemote&&!playingSound.isEmpty()){
 			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
 			
-			for(LMM_EnumSound enumsound : playingSound){
+			for(LMM_EnumSound enumsound : new ArrayList<LMM_EnumSound>(playingSound)){
 				String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
 				//まさかな…
 				if(s==null) return;
@@ -2082,11 +2083,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			//flag = false;
 		}
 
-		//Waitなのに移動しようとした
-		if(isMaidWait()&&!navigator.noPath()){
-			navigator.clearPathEntity();
-		}
-
 		if(lhealth > 0) {
 			// 近接監視の追加はここ
 			// アイテムの回収
@@ -2205,12 +2201,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	private void superLivingUpdate() {
-		/*
-		if (this.jumpTicks > 0)
-		{
-			--this.jumpTicks;
-		}
-		*/
+		if(onGround) isJumping = false;
 
 		if (this.newPosRotationIncrements > 0)
 		{
@@ -2259,8 +2250,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		{
 			this.worldObj.theProfiler.startSection("newAi");
 			try{
-				this.updateEntityActionState();
+				updateEntityActionState();
 			}catch(Exception e){
+				e.printStackTrace();
 			}
 			this.worldObj.theProfiler.endSection();
 		}
@@ -3557,10 +3549,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public void setTracer(boolean pFlag) {
 		maidTracer = pFlag;
+		aiTracer.setEnable(pFlag);
 		setMaidFlags(pFlag, dataWatch_Flags_Tracer);
-		if (maidTracer) {
-			setFreedom(true);
-		}
+//		if (maidTracer) {
+//			setFreedom(true);
+//		}
 		aiTracer.setEnable(pFlag);
 	}
 
@@ -3568,7 +3561,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * トレーサーモードであるか？
 	 */
 	public boolean isTracer() {
-		return maidTracer;
+		return getMaidFlags(dataWatch_Flags_Tracer);
 	}
 
 
@@ -3605,11 +3598,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //		aiJumpTo.setEnable(!pFlag);
 		aiAvoidPlayer.setEnable(!pFlag);
 		aiFollow.setEnable(!pFlag);
-		aiTracer.setEnable(false);
+		aiTracer.setEnable(isTracer()&&pFlag);
 //		setAIMoveSpeed(pFlag ? moveSpeed_Nomal : moveSpeed_Max);
 //		setMoveForward(0.0F);
 		setPlayingRole(0);
 		if (maidFreedom && isContract()) {
+			setTracer(isTracer());
 			func_175449_a(
 //			setHomeArea(
 					new BlockPos(MathHelper.floor_double(posX),
