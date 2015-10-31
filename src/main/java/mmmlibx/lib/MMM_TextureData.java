@@ -139,7 +139,10 @@ public class MMM_TextureData  {
 		if (textureBox[1] instanceof MMM_TextureBox && owner != null) {
 			lbox = (MMM_TextureBox)textureBox[1];
 			for (int i = 0; i < 4; i++) {
-				ItemStack is = owner.getEquipmentInSlot(i + 1);
+				ItemStack is = i==3?
+						(owner instanceof LMM_EntityLittleMaid?
+								((LMM_EntityLittleMaid)owner).getHeadMountStackCopy():null) :
+						owner.getInventory()[i+1];
 				textures[1][i] = lbox.getArmorTextureName(MMM_TextureManager.tx_armor1, is);
 				textures[2][i] = lbox.getArmorTextureName(MMM_TextureManager.tx_armor2, is);
 				textures[3][i] = lbox.getArmorTextureName(MMM_TextureManager.tx_armor1light, is);

@@ -3635,6 +3635,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean isHeadMount(){
 		return ItemUtil.isHelm(maidInventory.mainInventory[17]);
 	}
+	
+	public ItemStack getHeadMountStackCopy(){
+		ItemStack stack = maidInventory.mainInventory[17];
+		if(ItemUtil.isHelm(stack)) return stack.copy();
+		return null;
+	}
 
 	/**
 	 * サーバーへテクスチャパックのインデックスを送る。

@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelCapsHelper;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -89,11 +90,9 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 	}
 
 	public ResourceLocation getArmorTextureName(int pIndex, ItemStack itemstack) {
-		// TODO レイヤー化しちゃってるのでもし本気で復活するなら別の手を打たないと…
 		// indexは0x40,0x50番台
 		// lightも追加
-		/*
-		if(itemstack == null) return null;
+		if(itemstack == null || !(itemstack.getItem() instanceof ItemArmor)) return null;
 		int renderIndex = ((ItemArmor)itemstack.getItem()).renderIndex;
 		int l = 0;
 		if (itemstack.getMaxDamage() > 0) {
@@ -110,8 +109,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 		{
 			renderIndex = renderIndex % MMM_TextureManager.armorFilenamePrefix.length;
 		}
-		*/
-		return getArmorTextureName(pIndex, MMM_TextureManager.armorFilenamePrefix[0], 0);
+		return getArmorTextureName(pIndex, MMM_TextureManager.armorFilenamePrefix[renderIndex], 0);
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ResourceLocation getArmorTextureName(int pIndex, String pArmorPrefix, int pDamage) {
