@@ -269,7 +269,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		mstatOpenInventory = false;
 //		isMaidChaseWait = false;
 		mstatTime = 6000;
-		maidOverDriveTime = new MMM_Counter(5, 300, -100);
+		maidOverDriveTime = new MMM_Counter(5, 300, -LMM_LittleMaidMobNX.cfg_maidOverdriveDelay);
 		mstatWorkingCount = new MMM_Counter(11, 10, -10);
 
 		// モデルレンダリング用のフラグ獲得用ヘルパー関数
@@ -1090,14 +1090,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public int colorMultiplier(float pLight, float pPartialTicks) {
 		// 発光処理用
-		int lbase = 0;
+		int lbase = 0, i = 0;
 		if (maidOverDriveTime.isDelay()) {
-			int i = 0;
-			if (maidOverDriveTime.isEnable()) {
-				i = Math.min(255, Math.max(0, maidOverDriveTime.getValue()/2));
+			if (maidOverDriveTime.getValue() > 0) {
+				i = 64;
+			}else{
+				i = (int) (128 - maidOverDriveTime.getValue() * (128f / LMM_LittleMaidMobNX.cfg_maidOverdriveDelay));
 			}
-			lbase = i << 24 | 0x00df0f0f;
+			LMM_LittleMaidMobNX.Debug("COUNT %d", maidOverDriveTime.getValue());
+		}else{
+			i = 0;
 		}
+		lbase = i << 24 | 0x00df0f0f;
 
 		if (isActiveModeClass()) {
 			lbase = lbase | getActiveModeClass().colorMultiplier(pLight, pPartialTicks);
@@ -3033,8 +3037,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							}
 							else if (itemstack1.getItem() == Items.gunpowder) {
 								// test TNT-D
-//								playSound(LMM_EnumSound.eatGunpowder, false);
 								maidOverDriveTime.setValue(itemstack1.stackSize * 10);
+								playSound("mob.zombie.infect");
 								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, itemstack1.stackSize);
 								return true;
 							}

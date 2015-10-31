@@ -46,7 +46,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX4 Build 25";
+	public static final String VERSION = "NX4 Build 31";
 	public static final int VERSION_CODE = 9;
 
 	/*
@@ -114,6 +114,8 @@ public class LMM_LittleMaidMobNX {
 	public static int cfg_soundPlayChance = 1;
 
 	public static boolean cfg_forceLivingSound = true;
+	
+	public static int cfg_maidOverdriveDelay = 64;
 
 	// 実績関係
 	public static Achievement ac_Contract;
@@ -218,6 +220,13 @@ public class LMM_LittleMaidMobNX {
 		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
 		cfg_soundPlayChance = Math.max(1,cfg.getInt("soundPlayChance", 1));
 		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
+		
+		cfg_maidOverdriveDelay = cfg.getInt("maidOverdriveDelay", 32);
+		if(cfg_maidOverdriveDelay < 1){
+			cfg_maidOverdriveDelay = 1;
+		}else if(cfg_maidOverdriveDelay > 128){
+			cfg_maidOverdriveDelay = 128;
+		}
 
 		//配列
 		String seedItemsOrgStr = cfg.getString("seedItems", "wheat_seeds, carrot, potato");
