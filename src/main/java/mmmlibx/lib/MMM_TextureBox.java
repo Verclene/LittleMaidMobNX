@@ -109,7 +109,7 @@ public class MMM_TextureBox extends MMM_TextureBoxBase {
 		{
 			renderIndex = renderIndex % MMM_TextureManager.armorFilenamePrefix.length;
 		}
-		return getArmorTextureName(pIndex, MMM_TextureManager.armorFilenamePrefix[renderIndex], 0);
+		return getArmorTextureName(pIndex, MMM_TextureManager.armorFilenamePrefix[renderIndex], l);
 	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ResourceLocation getArmorTextureName(int pIndex, String pArmorPrefix, int pDamage) {
