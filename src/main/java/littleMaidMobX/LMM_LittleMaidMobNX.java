@@ -6,6 +6,7 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
+import net.blacklab.lmmnx.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
 import net.blacklab.lmmnx.client.LMM_SoundResourcePack;
@@ -13,6 +14,7 @@ import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -46,7 +48,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX4 Build 31";
+	public static final String VERSION = "NX4 Build 34";
 	public static final int VERSION_CODE = 9;
 
 	/*
@@ -145,6 +147,8 @@ public class LMM_LittleMaidMobNX {
 	public static LMM_LittleMaidMobNX instance;
 
 	public static LMM_ItemSpawnEgg spawnEgg;
+	
+	public static LMMNX_ItemRegisterKey registerKey;
 
 	public static void Debug(String pText, Object... pVals) {
 		// デバッグメッセージ
@@ -267,6 +271,9 @@ public class LMM_LittleMaidMobNX {
 				Character.valueOf('e'), Items.egg,
 			});
 		}
+		
+		registerKey = new LMMNX_ItemRegisterKey();
+		GameRegistry.registerItem(registerKey, "lmmnx_registerkey");
 
 		ac_Contract		= (Achievement) new Achievement("achievement.contract"		, "contract"	, 0, 0, Items.cake				, null			).initIndependentStat().registerStat();
 		ac_Fencer		= (Achievement) new Achievement("achievement.fencer"		, "fencer"		, 4, 0, Items.diamond_sword		, ac_Contract	).initIndependentStat().registerStat();
@@ -376,22 +383,4 @@ public class LMM_LittleMaidMobNX {
 		LMM_IFF.loadIFFs();
 	}
 
-	@EventHandler
-	public void onServerStart(FMLServerStartingEvent evt){
-/*
-		if(evt.getSide()==Side.CLIENT){
-			countThread = new LMM_ProxyClient.CountThread();
-			countThread.start();
-		}
-*/
-		}
-
-	@EventHandler
-	public void onServerStop(FMLServerStoppingEvent evt){
-/*
-		if(evt.getSide()==Side.CLIENT){
-			if(countThread.isRunning) countThread.cancel();
-		}
-*/
-	}
 }

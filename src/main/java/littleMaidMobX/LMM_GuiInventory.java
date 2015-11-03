@@ -81,8 +81,8 @@ public class LMM_GuiInventory extends GuiContainer {
 		buttonList.add(visarmorbutton[1] = new GuiButtonArmorToggle  (301, guiLeft + 16, guiTop - 14, "littleMaidMob.gui.toggle.innerlight", true).setNode(0).setLight(1));
 		buttonList.add(visarmorbutton[2] = new GuiButtonArmorToggle  (302, guiLeft + 32, guiTop - 14, "littleMaidMob.gui.toggle.outer"     , true).setNode(1).setLight(0));
 		buttonList.add(visarmorbutton[3] = new GuiButtonArmorToggle  (303, guiLeft + 48, guiTop - 14, "littleMaidMob.gui.toggle.outerlight", true).setNode(1).setLight(1));
-		buttonList.add(frdmbutton        = new GuiButtonFreedomToggle(311, guiLeft + 64, guiTop - 16, "littleMaidMob.gui.toggle.freedom"   , entitylittlemaid.isSwimming, entitylittlemaid));
-		buttonList.add(swimbutton        = new GuiButtonSwimToggle   (310, guiLeft + 80, guiTop - 16, "littleMaidMob.gui.toggle.swim"      , entitylittlemaid.isSwimming));
+		buttonList.add(frdmbutton        = new GuiButtonFreedomToggle(311, guiLeft + 64, guiTop - 16, "littleMaidMob.gui.toggle.freedom"   , entitylittlemaid.swimmingEnabled, entitylittlemaid));
+		buttonList.add(swimbutton        = new GuiButtonSwimToggle   (310, guiLeft + 80, guiTop - 16, "littleMaidMob.gui.toggle.swim"      , entitylittlemaid.swimmingEnabled));
 	}
 
 	@Override
@@ -372,7 +372,7 @@ public class LMM_GuiInventory extends GuiContainer {
 			visarmorbutton[cnt].toggle = entitylittlemaid.isArmorVisible(cnt);
 		}
 		swimbutton.visible = true;
-		swimbutton.toggle = entitylittlemaid.isSwimming;
+		swimbutton.toggle = entitylittlemaid.swimmingEnabled;
 		frdmbutton.visible = true;
 		frdmbutton.toggle = entitylittlemaid.isFreedom();
 		if (ii > 25 && ii < 78 && jj > 7 && jj < 60) {

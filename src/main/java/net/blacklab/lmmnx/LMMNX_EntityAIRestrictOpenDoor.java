@@ -19,7 +19,7 @@ public class LMMNX_EntityAIRestrictOpenDoor extends EntityAIRestrictOpenDoor {
 	public void startExecuting() {
 		// TODO 自動生成されたメソッド・スタブ
 		if(theMaid==null) return;
-		if(theMaid.isSwimming||theMaid.isInWater()) return;
+		if(theMaid.swimmingEnabled||theMaid.isInWater()) return;
 		super.startExecuting();
 	}
 
@@ -27,7 +27,7 @@ public class LMMNX_EntityAIRestrictOpenDoor extends EntityAIRestrictOpenDoor {
 	public void resetTask() {
 		// TODO 自動生成されたメソッド・スタブ
 		if(theMaid==null) return;
-		if(theMaid.isSwimming||theMaid.isInWater()) return;
+		if(theMaid.swimmingEnabled||theMaid.isInWater()) return;
 		super.resetTask();
 	}
 
