@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import mmmlibx.lib.MMM_Helper;
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,8 +57,8 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() instanceof ItemFood || (litemstack.getItem() instanceof ItemPotion && MMM_Helper.hasEffect(litemstack))) {
 				owner.setMaidMode("Healer");
-				if (LMM_LittleMaidMobNX.ac_Healer != null) {
-					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Healer);
+				if (LMMNX_Achievements.ac_Healer != null) {
+					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Healer);
 				}
 				return true;
 			}

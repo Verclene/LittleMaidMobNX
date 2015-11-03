@@ -25,6 +25,9 @@ achievement.ripper.desc=Make LittleMaid "Shearer" Mode
 achievement.torcher=I'm afraid of ghosts...
 achievement.torcher.desc=Make LittleMaid "Torch Layer" Mode
 
+achievement.overprtct=Overprotection
+achievement.overprtct.desc="This is the hardest armor."
+
 littleMaidMob.mode.Torcher=Torch Layer
 littleMaidMob.mode.F-Torcher=Torch Layer(Free)
 littleMaidMob.mode.T-Torcher=Torch Layer(Trace RS)

@@ -6,6 +6,7 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.blacklab.lmmnx.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
@@ -48,7 +49,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX4 Build 34";
+	public static final String VERSION = "NX4 Build 36";
 	public static final int VERSION_CODE = 9;
 
 	/*
@@ -118,19 +119,6 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_forceLivingSound = true;
 	
 	public static int cfg_maidOverdriveDelay = 64;
-
-	// 実績関係
-	public static Achievement ac_Contract;
-	public static Achievement ac_Fencer;
-	public static Achievement ac_Bloodsucker;
-	public static Achievement ac_Archer;
-	public static Achievement ac_BlazingStar;
-	public static Achievement ac_Cooking;
-	public static Achievement ac_Farmer;
-	public static Achievement ac_Healer;
-	public static Achievement ac_Pharmacist;
-	public static Achievement ac_Ripper;
-	public static Achievement ac_Torcher;
 
 	// EBLib更新関係
 	public static boolean isEBLibNotLoaded = false;
@@ -275,32 +263,8 @@ public class LMM_LittleMaidMobNX {
 		registerKey = new LMMNX_ItemRegisterKey();
 		GameRegistry.registerItem(registerKey, "lmmnx_registerkey");
 
-		ac_Contract		= (Achievement) new Achievement("achievement.contract"		, "contract"	, 0, 0, Items.cake				, null			).initIndependentStat().registerStat();
-		ac_Fencer		= (Achievement) new Achievement("achievement.fencer"		, "fencer"		, 4, 0, Items.diamond_sword		, ac_Contract	).initIndependentStat().registerStat();
-		ac_Bloodsucker	= (Achievement) new Achievement("achievement.bloodsucker"	, "bloodsucker"	, 6, 0, Items.diamond_axe		, ac_Fencer		).initIndependentStat().registerStat();
-		ac_Archer		= (Achievement) new Achievement("achievement.archer"		, "archer"		, 2,-2, Items.bow				, ac_Contract	).initIndependentStat().registerStat();
-		ac_BlazingStar	= (Achievement) new Achievement("achievement.blazingstar"	, "blazingstar"	, 4,-2, Items.flint_and_steel	, ac_Archer		).initIndependentStat().registerStat();
-		ac_Cooking		= (Achievement) new Achievement("achievement.cooking"		, "cooking"		, 0,-4, Items.coal				, ac_Contract	).initIndependentStat().registerStat();
-		ac_Farmer		= (Achievement) new Achievement("achievement.farmer"		, "farmer"		,-2,-2, Items.diamond_hoe		, ac_Contract	).initIndependentStat().registerStat();
-		ac_Healer		= (Achievement) new Achievement("achievement.healer"		, "healer"		,-4, 0, Items.bread				, ac_Contract	).initIndependentStat().registerStat();
-		ac_Pharmacist	= (Achievement) new Achievement("achievement.pharmacist"	, "pharmacist"	,-2, 2, Items.nether_wart		, ac_Contract	).initIndependentStat().registerStat();
-		ac_Ripper		= (Achievement) new Achievement("achievement.ripper"		, "ripper"		, 0, 4, Items.shears			, ac_Contract	).initIndependentStat().registerStat();
-		ac_Torcher		= (Achievement) new Achievement("achievement.torcher"		, "torcher"		, 2, 2, Blocks.torch			, ac_Contract	).initIndependentStat().registerStat();
-
-		Achievement[] achievements = new Achievement[] {
-				ac_Contract,
-				ac_Fencer,
-				ac_Bloodsucker,
-				ac_Archer,
-				ac_BlazingStar,
-				ac_Cooking,
-				ac_Farmer,
-				ac_Healer,
-				ac_Pharmacist,
-				ac_Ripper,
-				ac_Torcher
-				};
-		AchievementPage.registerAchievementPage(new AchievementPage("LittleMaidNX", achievements));
+		// 実績追加
+		LMMNX_Achievements.initAchievements();
 
 		// AIリストの追加
 		LMM_EntityModeManager.init();

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import net.blacklab.lib.ItemUtil;
 import net.blacklab.lib.VectorUtil;
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
@@ -68,8 +69,8 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		if (litemstack != null) {
 			if (LMMNX_API_Farmer.isHoe(owner, litemstack)) {
 				owner.setMaidMode("Farmer");
-				if (LMM_LittleMaidMobNX.ac_Farmer != null) {
-					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Farmer);
+				if (LMMNX_Achievements.ac_Farmer != null) {
+					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Farmer);
 				}
 				return true;
 			}

@@ -44,6 +44,7 @@ import mmmlibx.lib.MMM_TextureManager;
 import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import net.blacklab.lib.ItemUtil;
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.blacklab.lmmnx.LMMNX_EntityAIOpenDoor;
 import net.blacklab.lmmnx.LMMNX_EntityAIRestrictOpenDoor;
 import net.blacklab.lmmnx.LMMNX_ItemRegisterKey;
@@ -3226,8 +3227,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 						deathTime = 0;
 						if (!worldObj.isRemote) {
-							if (LMM_LittleMaidMobNX.ac_Contract != null) {
-								par1EntityPlayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Contract);
+							if (LMMNX_Achievements.ac_Contract != null) {
+								par1EntityPlayer.triggerAchievement(LMMNX_Achievements.ac_Contract);
 							}
 							setContract(true);
 							W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));

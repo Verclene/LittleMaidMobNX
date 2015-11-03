@@ -2,6 +2,7 @@ package littleMaidMobX;
 
 import java.util.List;
 
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
@@ -82,13 +83,13 @@ public class LMM_EntityMode_Archer extends LMM_EntityModeBase {
 			if (litemstack.getItem() instanceof ItemBow || LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Bow", litemstack)) {
 				if (owner.maidInventory.getInventorySlotContainItem(ItemFlintAndSteel.class) > -1) {
 					owner.setMaidMode("Blazingstar");
-					if (LMM_LittleMaidMobNX.ac_BlazingStar != null) {
-						pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_BlazingStar);
+					if (LMMNX_Achievements.ac_BlazingStar != null) {
+						pentityplayer.triggerAchievement(LMMNX_Achievements.ac_BlazingStar);
 					}
 				} else {
 					owner.setMaidMode("Archer");
-					if (LMM_LittleMaidMobNX.ac_Archer != null) {
-						pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Archer);
+					if (LMMNX_Achievements.ac_Archer != null) {
+						pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Archer);
 					}
 				}
 				return true;

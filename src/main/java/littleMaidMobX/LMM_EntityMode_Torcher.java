@@ -1,6 +1,7 @@
 package littleMaidMobX;
 
 import net.blacklab.lib.VectorUtil;
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
@@ -58,8 +59,8 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() == Item.getItemFromBlock(Blocks.torch) || LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Torch", litemstack)) {
 				owner.setMaidMode("Torcher");
-				if (LMM_LittleMaidMobNX.ac_Torcher != null) {
-					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Torcher);
+				if (LMMNX_Achievements.ac_TorchLayer != null) {
+					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_TorchLayer);
 				}
 				return true;
 			}
