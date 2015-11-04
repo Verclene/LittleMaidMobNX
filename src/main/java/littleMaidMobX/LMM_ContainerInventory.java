@@ -93,9 +93,18 @@ public class LMM_ContainerInventory extends ContainerPlayer {
 	}
 
 	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		
+	public void putStackInSlot(int p_75141_1_, ItemStack p_75141_2_) {
+		super.putStackInSlot(p_75141_1_, p_75141_2_);
+		checkAchievements();
+	}
+
+	@Override
+	public void putStacksInSlots(ItemStack[] p_75131_1_) {
+		super.putStacksInSlots(p_75131_1_);
+		checkAchievements();
+	}
+	
+	protected void checkAchievements() {
 		boolean flag = true;
 		Slot slot;
 		Item item;
