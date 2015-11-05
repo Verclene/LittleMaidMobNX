@@ -13,15 +13,19 @@ public class LMMNX_Achievements {
 	
 	// 各モード
 	public static Achievement ac_Fencer;
-	public static Achievement ac_RandomKiller;
 	public static Achievement ac_Archer;
-	public static Achievement ac_BlazingStar;
 	public static Achievement ac_Cook;
 	public static Achievement ac_Farmer;
 	public static Achievement ac_Healer;
 	public static Achievement ac_Pharmacist;
 	public static Achievement ac_Shearer;
 	public static Achievement ac_TorchLayer;
+	
+	// モード拡張
+	public static Achievement ac_RandomKiller;
+	public static Achievement ac_Buster;
+
+	public static Achievement ac_BlazingStar;
 	
 	// アクション
 	public static Achievement ac_Overprtct;
@@ -30,6 +34,7 @@ public class LMMNX_Achievements {
 		ac_Contract		= (Achievement) new Achievement("achievement.contract"		, "contract"	, 0, 0, Items.cake				, null			).initIndependentStat().registerStat();
 		ac_Fencer		= (Achievement) new Achievement("achievement.fencer"		, "fencer"		,-4,-2, Items.diamond_sword		, ac_Contract	).initIndependentStat().registerStat();
 		ac_RandomKiller	= (Achievement) new Achievement("achievement.bloodsucker"	, "bloodsucker"	,-4,-4, Items.diamond_axe		, ac_Fencer		).initIndependentStat().registerStat();
+		ac_Buster		= (Achievement) new Achievement("achievement.zombuster"		, "zombuster"	,-5,-4, Items.iron_shovel		, ac_Fencer		).initIndependentStat().registerStat();
 		ac_Archer		= (Achievement) new Achievement("achievement.archer"		, "archer"		,-3,-2, Items.bow				, ac_Contract	).initIndependentStat().registerStat();
 		ac_BlazingStar	= (Achievement) new Achievement("achievement.blazingstar"	, "blazingstar"	,-3,-4, Items.flint_and_steel	, ac_Archer		).initIndependentStat().registerStat();
 		ac_Cook			= (Achievement) new Achievement("achievement.cooking"		, "cooking"		,-2,-2, Items.coal				, ac_Contract	).initIndependentStat().registerStat();
@@ -45,6 +50,7 @@ public class LMMNX_Achievements {
 				ac_Contract,
 				ac_Fencer,
 				ac_RandomKiller,
+				ac_Buster,
 				ac_Archer,
 				ac_BlazingStar,
 				ac_Cook,

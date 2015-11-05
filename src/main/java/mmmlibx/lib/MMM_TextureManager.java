@@ -460,11 +460,11 @@ public class MMM_TextureManager {
 			}
 			catch (Exception exception) {
 				MMMLib.Debug("getModelClass-Exception: %s", fname);
-				if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
+				if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
 			}
 			catch (Error error) {
 				MMMLib.Debug("getModelClass-Error: %s", fname);
-				if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
+				if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
 			}
 		}
 	}

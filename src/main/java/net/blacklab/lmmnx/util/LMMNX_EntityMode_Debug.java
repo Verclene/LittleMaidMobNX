@@ -34,12 +34,12 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 		ltasks[0] = pDefaultMove;
 		ltasks[1] = pDefaultTargeting;
 		
-		if(LMMNX_DevMode.DEBUG_PRINT_SWITCH) owner.addMaidMode(ltasks, "Debug", mmode_Debug);
+		if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE) owner.addMaidMode(ltasks, "Debug", mmode_Debug);
 	}
 
 	@Override
 	public boolean changeMode(EntityPlayer pentityplayer) {
-		if(!LMMNX_DevMode.DEBUG_PRINT_SWITCH) return false; 
+		if(!LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE) return false; 
 		ItemStack litemstackl0 = owner.maidInventory.getStackInSlot(17);
 		ItemStack litemstackl1 = owner.maidInventory.getStackInSlot(16);
 		if (litemstackl0 != null && litemstackl1 != null) {
@@ -53,7 +53,7 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 
 	@Override
 	public boolean setMode(int pMode) {
-		if(!LMMNX_DevMode.DEBUG_PRINT_SWITCH) return false; 
+		if(!LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE) return false; 
 		switch (pMode) {
 		case mmode_Debug :
 			owner.setBloodsuck(false);

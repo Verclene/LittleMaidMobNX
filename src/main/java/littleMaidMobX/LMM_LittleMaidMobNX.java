@@ -49,7 +49,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX4 Build 36";
+	public static final String VERSION = "NX4 Build 37";
 	public static final int VERSION_CODE = 9;
 
 	/*
@@ -140,7 +140,7 @@ public class LMM_LittleMaidMobNX {
 
 	public static void Debug(String pText, Object... pVals) {
 		// デバッグメッセージ
-		if (cfg_PrintDebugMessage||LMMNX_DevMode.DEBUG_PRINT_SWITCH) {
+		if (cfg_PrintDebugMessage||LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE) {
 			System.out.println(String.format("littleMaidMob-" + pText, pVals));
 		}
 	}

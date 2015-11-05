@@ -25,6 +25,9 @@ achievement.ripper.desc=リトルメイドを"毛刈り隊"モードにする
 achievement.torcher=おばけがこわいのです(泣)(震)
 achievement.torcher.desc=リトルメイドを"照明確保係"モードにする
 
+achievement.zombuster=こんなの武器じゃないわ．歯形のついたシャベルよ!
+achievement.zombuster.desc="だったら掘ればいいだろ!"
+
 littleMaidMob.mode.Torcher=移動時照明確保係
 littleMaidMob.mode.F-Torcher=待機時照明確保係
 littleMaidMob.mode.T-Torcher=巡回照明確保係

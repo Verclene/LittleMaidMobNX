@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
@@ -84,11 +85,17 @@ public class LMM_EntityMode_Fencer extends LMM_EntityModeBase {
 				if (LMMNX_Achievements.ac_Fencer != null) {
 					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Fencer);
 				}
+				if (litemstack.getItem() instanceof ItemSpade && LMMNX_Achievements.ac_Buster != null) {
+					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Buster);
+				}
 				return true;
 			} else  if (litemstack.getItem() instanceof ItemAxe || LMM_TriggerSelect.checkWeapon(owner.getMaidMaster(), "Axe", litemstack)) {
 				owner.setMaidMode("Bloodsucker");
 				if (LMMNX_Achievements.ac_RandomKiller != null) {
 					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_RandomKiller);
+				}
+				if (litemstack.getItem() instanceof ItemSpade && LMMNX_Achievements.ac_Buster != null) {
+					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Buster);
 				}
 				return true;
 			}
