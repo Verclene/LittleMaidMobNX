@@ -41,6 +41,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 import network.W_Network;
 
 @Mod(	modid   = LMM_LittleMaidMobNX.DOMAIN,
@@ -49,7 +50,7 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX4 Build 37";
+	public static final String VERSION = "NX4 Build 38";
 	public static final int VERSION_CODE = 9;
 
 	/*
@@ -273,7 +274,11 @@ public class LMM_LittleMaidMobNX {
 		W_Network.init(DOMAIN);
 
 		//Model
-		if(evt.getSide()==Side.CLIENT) ModelLoader.setCustomModelResourceLocation(LMM_LittleMaidMobNX.spawnEgg, 0, new ModelResourceLocation("lmmx:spawn_lmmx_egg","inventory"));
+		if (evt.getSide()==Side.CLIENT) {
+			ModelLoader.setCustomModelResourceLocation(LMM_LittleMaidMobNX.spawnEgg, 0, new ModelResourceLocation("lmmx:spawn_lmmx_egg","inventory"));
+			ModelLoader.setCustomModelResourceLocation(registerKey, 0, new ModelResourceLocation("lmmx:lmmnx_registerkey", "inventory"));
+			ModelLoader.setCustomModelResourceLocation(registerKey, 1, new ModelResourceLocation("lmmx:lmmnx_registerkey", "inventory"));
+		}
 
 	}
 
