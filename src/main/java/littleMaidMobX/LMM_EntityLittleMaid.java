@@ -2997,44 +2997,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						}
 						if (isRemainsContract()) {
 							// 通常
-							if (itemstack1.getItem()==LMM_LittleMaidMobNX.registerKey &&
-									!par1EntityPlayer.worldObj.isRemote) {
-								// トリガーセット
-								if (registerTick > 0) {
-									registerTick = -1;
-									par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.cancelregistration")));
-									return true;
-								}
-
-								NBTTagCompound tagCompound = itemstack1.getTagCompound();
-								if (tagCompound == null) return false;
-
-								String modeString = tagCompound.getString(LMMNX_ItemRegisterKey.RK_MODE_TAG);
-								if (modeString.isEmpty()) return false;
-
-								registerMode = modeString;
-								registerTick = 200;
-								par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.readyregistration") + registerMode));
-
-								return true;
-							} else if (registerTick > 0 && !par1EntityPlayer.worldObj.isRemote) {
-								List list = LMM_TriggerSelect.getuserTriggerList(MMM_Helper.getPlayerName(par1EntityPlayer), registerMode);
-								Item item = itemstack1.getItem();
-								if (item != null) {
-									boolean flag = false;
-									while(list.remove(item)) flag = true;
-									if (!flag) {
-										list.add(item);
-										par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.addtrigger") + " " + registerMode + "/+" + Item.itemRegistry.getNameForObject(item).toString()));
-									} else {
-										par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.removetrigger") + " " + registerMode + "/-" + Item.itemRegistry.getNameForObject(item).toString()));
-									}
-								}
-								LMM_IFF.saveIFF(MMM_Helper.getPlayerName(par1EntityPlayer));
-								registerTick = -1;
-								return true;
-							}
-							else if (LMMNX_API_Item.isSugar(itemstack1.getItem())) {
+							if (LMMNX_API_Item.isSugar(itemstack1.getItem())) {
 								// モード切替
 								boolean cmode = true;
 								if(itemstack1.getItem() instanceof LMMNX_IItemSpecialSugar){
@@ -3070,6 +3033,43 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 										setMaidWait(true);
 									}
 								}
+								return true;
+							}
+							else if (itemstack1.getItem()==LMM_LittleMaidMobNX.registerKey &&
+									!par1EntityPlayer.worldObj.isRemote) {
+								// トリガーセット
+								if (registerTick > 0) {
+									registerTick = -1;
+									par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.cancelregistration")));
+									return true;
+								}
+
+								NBTTagCompound tagCompound = itemstack1.getTagCompound();
+								if (tagCompound == null) return false;
+
+								String modeString = tagCompound.getString(LMMNX_ItemRegisterKey.RK_MODE_TAG);
+								if (modeString.isEmpty()) return false;
+
+								registerMode = modeString;
+								registerTick = 200;
+								par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.readyregistration") + registerMode));
+
+								return true;
+							} else if (registerTick > 0 && !par1EntityPlayer.worldObj.isRemote) {
+								List list = LMM_TriggerSelect.getuserTriggerList(MMM_Helper.getPlayerName(par1EntityPlayer), registerMode);
+								Item item = itemstack1.getItem();
+								if (item != null) {
+									boolean flag = false;
+									while(list.remove(item)) flag = true;
+									if (!flag) {
+										list.add(item);
+										par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.addtrigger") + " " + registerMode + "/+" + Item.itemRegistry.getNameForObject(item).toString()));
+									} else {
+										par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.removetrigger") + " " + registerMode + "/-" + Item.itemRegistry.getNameForObject(item).toString()));
+									}
+								}
+								LMM_IFF.saveIFF(MMM_Helper.getPlayerName(par1EntityPlayer));
+								registerTick = -1;
 								return true;
 							}
 							else if (itemstack1.getItem() == Items.dye) {
