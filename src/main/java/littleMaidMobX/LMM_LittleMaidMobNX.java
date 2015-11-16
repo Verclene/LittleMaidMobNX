@@ -237,7 +237,7 @@ public class LMM_LittleMaidMobNX {
 
 		MMM_TextureManager.instance.init();
 
-		EntityRegistry.registerModEntity(LMM_EntityLittleMaid.class, "LittleMaidX", 0, instance, 20, 3, true);
+		EntityRegistry.registerModEntity(LMM_EntityLittleMaid.class, "LittleMaidX", 0, instance, 80, 3, true);
 
 		spawnEgg = new LMM_ItemSpawnEgg();
 		spawnEgg.setUnlocalizedName(DOMAIN + ":spawn_lmmx_egg");

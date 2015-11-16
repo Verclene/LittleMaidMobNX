@@ -104,6 +104,8 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.stats.Achievement;
+import net.minecraft.stats.AchievementList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -1681,6 +1683,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// ダメージソースに応じて音声変更
 		if (par1DamageSource == DamageSource.fall) {
 			maidDamegeSound = LMM_EnumSound.hurt_fall;
+			if (isContractEX() && par2>=19 && par2<getHealth()) {
+				getMaidMasterEntity().triggerAchievement(LMMNX_Achievements.ac_Ashikubi);
+			}
 		}
 		if(!par1DamageSource.isUnblockable() && isBlocking()) {
 			// ブロッキング
@@ -1723,7 +1728,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				return false;
 			}
 		}
-
+		
 		LMM_LittleMaidMobNX.Debug("LMM_EntityLittleMaid.attackEntityFrom "+this+"("+this.maidAvatar+") <= "+entity);
 
 		// ダメージソースを特定して音声の設定
@@ -3105,6 +3110,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								// test TNT-D
 								maidOverDriveTime.setValue(itemstack1.stackSize * 10);
 								playSound("mob.zombie.infect");
+								if (itemstack1.stackSize == 64) {
+									getMaidMasterEntity().triggerAchievement(LMMNX_Achievements.ac_Boost);
+								}
 								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, itemstack1.stackSize);
 								return true;
 							}
@@ -3556,7 +3564,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			eatSugar(true, true, mode==EnumConsumeSugar.RECONTRACT);
 		}else if(item instanceof LMMNX_IItemSpecialSugar){
 			//モノグサ実装。良い子の皆さんはちゃんとif使うように…
-			eatSugar(((LMMNX_IItemSpecialSugar)item).onSugarEaten(this, mode, stack),true, mode==EnumConsumeSugar.RECONTRACT);
+			eatSugar(((LMMNX_IItemSpecialSugar)item).onSugarEaten(this, mode, stack), true, mode==EnumConsumeSugar.RECONTRACT);
 		}
 		maidInventory.decrStackSize(index, 1);
 	}
@@ -3582,6 +3590,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			maidContractLimit += 24000;
 			if (maidContractLimit > 168000) {
 				maidContractLimit = 168000;	// 24000 * 7
+			}
+			
+			if (worldObj.getTotalWorldTime() - maidAnniversary > 24000 * 365) {
+				getMaidMasterEntity().triggerAchievement(LMMNX_Achievements.ac_MyFavorite);
 			}
 		}
 

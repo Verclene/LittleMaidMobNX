@@ -28,6 +28,15 @@ achievement.torcher.desc=リトルメイドを"照明確保係"モードにす�
 achievement.zombuster=こんなの武器じゃないわ．歯形のついたシャベルよ!
 achievement.zombuster.desc="だったら掘ればいいだろ!"
 
+achievement.ashikubi=ｱｼｸﾋﾞｦｸｼﾞｷﾏｼﾀｰ
+achievement.ashikubi.desc="そのまま奴らの餌食に"
+
+achievement.boost=もっと熱くなれよ!
+achievement.boost.desc="砂糖の代わりには…ならないね．"
+
+achievement.myfavorite=My Favorite Things
+achievement.myfavorite.desc="ほとんど甘いものです．"
+
 littleMaidMob.mode.Torcher=移動時照明確保係
 littleMaidMob.mode.F-Torcher=待機時照明確保係
 littleMaidMob.mode.T-Torcher=巡回照明確保係

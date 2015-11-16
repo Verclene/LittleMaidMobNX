@@ -1,9 +1,13 @@
 package net.blacklab.lmmnx.util;
 
+import java.util.UUID;
+
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_EntityMode_Basic;
 import littleMaidMobX.LMM_LittleMaidMobNX;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -59,7 +63,11 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 			owner.setBloodsuck(false);
 			owner.aiAttack.setEnable(false);
 			owner.aiShooting.setEnable(false);
+			if (owner.getEntityAttribute(SharedMonsterAttributes.maxHealth).getModifier(UUID.nameUUIDFromBytes("lmm.littleMaidMob.maxhp".getBytes())) == null)
+				owner.getEntityAttribute(SharedMonsterAttributes.maxHealth).applyModifier(new AttributeModifier(UUID.nameUUIDFromBytes("lmm.littleMaidMob.maxhp".getBytes()), "DEBUGBOOST", 10d, 0));
 			return true;
+		default :
+			owner.getEntityAttribute(SharedMonsterAttributes.maxHealth).removeAllModifiers();
 		}
 		
 		return false;
@@ -68,10 +76,6 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 	@Override
 	public void updateAITick(int pMode) {
 		super.updateAITick(pMode);
-		if (pMode == mmode_Debug && owner.isRemainsContract()) {
-			int a = ReflectionHelper.getPrivateValue(LMM_EntityLittleMaid.class, owner, "maidContractLimit");
-			ReflectionHelper.setPrivateValue(LMM_EntityLittleMaid.class, owner, Math.max(a-500, 0), "maidContractLimit");
-		}
 	}
 
 }

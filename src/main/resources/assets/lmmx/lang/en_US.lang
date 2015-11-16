@@ -32,6 +32,15 @@ achievement.zombuster.desc="Get it and start digging!"
 achievement.overprtct=Overprotection
 achievement.overprtct.desc="This is the hardest armor."
 
+achievement.ashikubi=Ouch. That hurt :(
+achievement.ashikubi.desc="Just injured legs? You're almost dead."
+
+achievement.boost=Motto atsuku nareyo!
+achievement.boost.desc="Instead sugar? ... No way.
+
+achievement.myfavorite=My Favorite Things
+achievement.myfavorite.desc="Silver white sugars that melt into ..."
+
 littleMaidMob.mode.Torcher=Torch Layer
 littleMaidMob.mode.F-Torcher=Torch Layer(Free)
 littleMaidMob.mode.T-Torcher=Torch Layer(Trace RS)
