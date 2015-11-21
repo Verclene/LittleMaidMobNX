@@ -2,6 +2,8 @@ Little Maid Mob NX for Minecraft 1.8 - Verclene(elise_blacklab)
 
 This is an unofficial port of LittleMaidMob for Minecraft 1.8
 
+Tutorials of this MOD is here: https://github.com/Verclene/LittleMaidMobNX/wiki
+
 Ported MOD:
 	LittleMaidMob (littleMaidMob-1_6_2-6)
 		http://forum.minecraftuser.jp/viewtopic.php?f=13&t=176

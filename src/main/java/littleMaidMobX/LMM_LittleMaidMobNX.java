@@ -6,6 +6,7 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
+import net.blacklab.lib.ConfigList;
 import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.blacklab.lmmnx.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
@@ -22,7 +23,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -39,11 +39,13 @@ import network.W_Network;
 
 @Mod(	modid   = LMM_LittleMaidMobNX.DOMAIN,
 		name    = "LittleMaidMobNX",
-		version = LMM_LittleMaidMobNX.VERSION)
+		version = LMM_LittleMaidMobNX.VERSION,
+		dependencies = "required-after:net.blacklab.lib@[2.0.3,)")
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "NX4 Build 39";
+	public static final String VERSION = "4.0.43";
+	public static final String VERSION_FORSITE = "NX4 Build 43";
 	public static final int VERSION_CODE = 9;
 
 	/*
@@ -114,12 +116,6 @@ public class LMM_LittleMaidMobNX {
 	
 	public static int cfg_maidOverdriveDelay = 64;
 
-	// EBLib更新関係
-	public static boolean isEBLibNotLoaded = false;
-
-	public static final String EBLIB_MIN_VERSION_STRING="EL2 Build 2";
-	public static final int EBLIB_MIN_VERSION_CODE = 3;
-
 	@SidedProxy(
 			clientSide = "littleMaidMobX.LMM_ProxyClient",
 			serverSide = "littleMaidMobX.LMM_ProxyCommon")
@@ -166,22 +162,9 @@ public class LMM_LittleMaidMobNX {
 
 		randomSoundChance = new Random();
 
-		try{
-			if(Loader.isModLoaded("net.blacklab.lib")){
-				if(net.blacklab.lib.EBLib.VERSION_CODE<EBLIB_MIN_VERSION_CODE){
-					isEBLibNotLoaded = true;
-				}
-			}
-		}catch(Error e){
-			isEBLibNotLoaded = true;
-		}
-		if(isEBLibNotLoaded){
-			throw new IllegalStateException("EBLib is outdated or not found!\nMake sure that EBLib "+EBLIB_MIN_VERSION_STRING+" or higher is installed.");
-		}
-
 		//Config
 		// エラーチェックのため試験的にimportしない形にしてみる
-		net.blacklab.lib.ConfigList cfg = new net.blacklab.lib.ConfigList();
+		ConfigList cfg = new ConfigList();
 		try {
 			cfg.loadConfig(getName(), evt);
 		} catch (IOException e) {

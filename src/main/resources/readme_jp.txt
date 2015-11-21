@@ -2,7 +2,7 @@ Little Maid Mob NX for Minecraft 1.8 - Verclene(elise_blacklab)
 
 EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したものです。このテキストにもEMB4氏のパッケージに同梱されていたReadmeの内容を含みます。
 
-基本的な仕様は本家様記事をご覧ください。
+このMODのチュートリアルはhttps://github.com/Verclene/LittleMaidMobNX/wikiにあります．
 
 移植MOD:
 	http://forum.minecraftuser.jp/viewtopic.php?f=13&t=176
