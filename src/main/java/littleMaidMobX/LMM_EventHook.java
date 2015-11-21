@@ -32,14 +32,14 @@ public class LMM_EventHook
 			}
 		}
 	}
-	
+
 	public class RunThread extends Thread{
 		public PlayerEvent.PlayerLoggedInEvent e;
-		
+
 		public RunThread(PlayerEvent.PlayerLoggedInEvent ev){
 			e = ev;
 		}
-		
+
 		public void run(){
 			Version.VersionData v = Version.getLatestVersion("http://mc.el-blacklab.net/lmmnxversion.txt");
 			if(LMM_LittleMaidMobNX.VERSION_CODE < v.code){
@@ -72,12 +72,12 @@ public class LMM_EventHook
 			if(event.world.isRemote) maid.setTextureNames();
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
 		new RunThread(event).start();
 	}
-	
+
 	@SubscribeEvent
 	public void onEntitySpawned(EntityJoinWorldEvent event){
 		if(event.entity instanceof EntityLivingBase){
@@ -104,7 +104,7 @@ public class LMM_EventHook
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
 		LMM_EntityLittleMaid maid = event.maid;

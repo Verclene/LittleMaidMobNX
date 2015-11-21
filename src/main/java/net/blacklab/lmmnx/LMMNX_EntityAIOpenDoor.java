@@ -46,9 +46,8 @@ public class LMMNX_EntityAIOpenDoor extends EntityAIOpenDoor {
 
 	@Override
 	public boolean shouldExecute() {
-		LMM_LittleMaidMobNX.Debug("DOOR CHECK");
 		if(theMaid==null) return false;
-		if(theMaid.isSwimming&&theMaid.isInWater()) return false;
+		if(theMaid.swimmingEnabled&&theMaid.isInWater()) return false;
 		return super.shouldExecute();
 	}
 	

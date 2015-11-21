@@ -1,5 +1,7 @@
 package mmmlibx.lib;
 
+import littleMaidMobX.LMM_LittleMaidMobNX;
+
 
 /**
  * カウンタ用。
@@ -55,7 +57,7 @@ public class MMM_Counter {
 	}
 
 	public void onUpdate() {
-		if (fCounter > fDelayValue) {
+		if (isDelay()) {
 			fCounter--;
 		}
 	}

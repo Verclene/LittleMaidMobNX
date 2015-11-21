@@ -1,6 +1,7 @@
-entity.lmmx.LittleMaidX.name=Little Maid
+entity.lmmx.LittleMaidX.name=LittleMaid
 
 item.lmmx:spawn_lmmx_egg.name=Spawn LittleMaid
+item.lmmx:lmmnx_registerkey.name=Trigger Item Registerer
 
 achievement.contract=Realization
 achievement.contract.desc=Employ a LittleMaid
@@ -24,6 +25,21 @@ achievement.ripper=Go back, Green!
 achievement.ripper.desc=Make LittleMaid "Shearer" Mode
 achievement.torcher=I'm afraid of ghosts...
 achievement.torcher.desc=Make LittleMaid "Torch Layer" Mode
+
+achievement.zombuster=This's a shovel with a tooth-mark!
+achievement.zombuster.desc="Get it and start digging!"
+
+achievement.overprtct=Overprotection
+achievement.overprtct.desc="This is the hardest armor."
+
+achievement.ashikubi=Ouch. That hurt :(
+achievement.ashikubi.desc="Just injured legs? You're almost dead."
+
+achievement.boost=Motto atsuku nareyo!
+achievement.boost.desc="Instead sugar? ... No way.
+
+achievement.myfavorite=My Favorite Things
+achievement.myfavorite.desc="Silver white sugars that melt into ..."
 
 littleMaidMob.mode.Torcher=Torch Layer
 littleMaidMob.mode.F-Torcher=Torch Layer(Free)
@@ -99,3 +115,11 @@ littleMaidMob.gui.toggle.swim.enable=Enable Swimming Mode
 littleMaidMob.gui.toggle.swim.disable=Disable Swimming Mode
 littleMaidMob.gui.toggle.freedom.enable=Switch to Freedom Mode
 littleMaidMob.gui.toggle.freedom.disable=Switch to Folllow Mode
+
+littleMaidMob.gui.iff.title=Switch mobs to Enemy or Friendly
+
+littleMaidMob.chat.text.changeregistermode=Trigger Registration Mode changed to:
+littleMaidMob.chat.text.readyregistration=Now right-click with the item which you want to register as the Trigger: 
+littleMaidMob.chat.text.cancelregistration=§4Registration canceled.
+littleMaidMob.chat.text.addtrigger=Trigger item registered: 
+littleMaidMob.chat.text.removetrigger=Trigger item removed: 

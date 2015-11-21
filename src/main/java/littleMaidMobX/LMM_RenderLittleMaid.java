@@ -5,7 +5,6 @@ import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
 import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
-import net.blacklab.lmmnx.LMMNX_NetSync;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -28,8 +27,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
-
-import scala.tools.ant.sabbus.Break;
 
 @SuppressWarnings("deprecation")
 public class LMM_RenderLittleMaid extends RenderModelMulti {

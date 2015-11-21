@@ -1,6 +1,7 @@
 package littleMaidMobX;
 
 import mmmlibx.lib.MMM_Helper;
+import net.blacklab.lib.VectorUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -170,6 +171,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 					}
 					lcanattack &= (milsq > 3D || il < 0D);
 					lcanattack &= ldotarget;
+					lcanattack &= VectorUtil.canMoveThrough(fMaid, (fMaid.getEntityBoundingBox().maxY-fMaid.getEntityBoundingBox().minY)/2, fTarget.posX, fTarget.posY+(fTarget.getEyeHeight()/2), fTarget.posZ, true, true, true);
 					// 横移動
 					if (!lcanattack) {
 						// 射撃位置を確保する
@@ -259,7 +261,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 					
 					// 発生したEntityをチェックしてmaidAvatarEntityが居ないかを確認
 					// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)
-					/*
+/*
 					List<Entity> newentitys = worldObj.loadedEntityList.subList(lastentityid, worldObj.loadedEntityList.size());
 					boolean shootingflag = false;
 					if (newentitys != null && newentitys.size() > 0) {
@@ -301,7 +303,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 							}
 						}
 					}
-					*/
+*/
 				}
 			}
 		} else {

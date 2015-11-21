@@ -2,11 +2,11 @@ Little Maid Mob NX for Minecraft 1.8 - Verclene(elise_blacklab)
 
 EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したものです。このテキストにもEMB4氏のパッケージに同梱されていたReadmeの内容を含みます。
 
-基本的な仕様は本家様記事をご覧ください。
+このMODのチュートリアルはhttps://github.com/Verclene/LittleMaidMobNX/wikiにあります．
 
 移植MOD:
 	http://forum.minecraftuser.jp/viewtopic.php?f=13&t=176
-	
+
 	littleMaidMob-1_6_2-6
 	MMMLib-1_6_2-6
 	MMMLib-1.7.2-1
@@ -21,10 +21,10 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
 	Forge 1.8-Recommended 11.14.1.1334 またはそれ以降のバージョン
 	EBLib EL1 Build 4 またはそれ以降のバージョン
 	※このMODは、Forge 11.14.3.1450でビルドされています。
-	
+
 コンフィグ
 	configディレクトリにある「littleMaidMobNX.cfg」で設定できます。
-	
+
 使用方法
 	Forgeを導入し、EBLibと一緒にjarをmodsフォルダに入れる。
 
@@ -47,7 +47,7 @@ EMB4氏作LittleMaidMobXをベースとし、Minecraft1.8用に改造したも�
 	　LittleMaidMobNX用に再コンパイルする必要があります
 	※αブレンド(半透明)テクスチャに対応しています。
 	　使用する場合はlittleMaidMobNX.cfgの「isModelAlphaBlend」が「true」(デフォルト)になっていることを確認してください。
-	
+
 未実装機能
 	本トリガー
 

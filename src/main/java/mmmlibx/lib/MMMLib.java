@@ -40,7 +40,7 @@ public class MMMLib {
 
 	public static void Debug(String pText, Object... pData) {
 		// デバッグメッセージ
-		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage||LMMNX_DevMode.DEBUG_PRINT_SWITCH) {
+		if (LMM_LittleMaidMobNX.cfg_PrintDebugMessage||LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE) {
 			System.out.println(String.format("MMMLib-" + pText, pData));
 		}
 	}

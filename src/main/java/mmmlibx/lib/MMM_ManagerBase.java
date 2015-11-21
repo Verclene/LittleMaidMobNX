@@ -154,11 +154,11 @@ public abstract class MMM_ManagerBase {
 		}
 		catch (Exception exception) {
 			MMMLib.Debug("get%sClass-Exception.(%s)", getPreFix(), lclassname);
-			if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
+			if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
 		}
 		catch (Error error) {
 			MMMLib.Debug("get%sClass-Error: %s", getPreFix(), lclassname);
-			if(LMMNX_DevMode.DEBUG_PRINT_SWITCH && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
+			if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
 		}
 		
 	}

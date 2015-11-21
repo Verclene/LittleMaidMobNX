@@ -113,7 +113,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 
 		PathEntity entity = theMaid.getNavigator().getPathToEntityLiving(theOwner);
 		if(entity==null){
-			if(theMaid.handleWaterMovement()&&theMaid.isSwimming){
+			if(theMaid.handleWaterMovement()&&theMaid.swimmingEnabled){
 				int x = MathHelper.floor_double(theOwner.posX);
 				int z = MathHelper.floor_double(theOwner.posZ);
 				int y = MathHelper.floor_double(theOwner.posY);

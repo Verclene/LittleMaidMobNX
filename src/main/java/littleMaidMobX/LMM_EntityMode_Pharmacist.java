@@ -1,6 +1,7 @@
 package littleMaidMobX;
 
 import mmmlibx.lib.MMM_Helper;
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemPotion;
@@ -52,8 +53,8 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() instanceof ItemPotion && !MMM_Helper.hasEffect(litemstack)) {
 				owner.setMaidMode("Pharmacist");
-				if (LMM_LittleMaidMobNX.ac_Pharmacist != null) {
-					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Pharmacist);
+				if (LMMNX_Achievements.ac_Pharmacist != null) {
+					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Pharmacist);
 				}
 				return true;
 			}

@@ -31,22 +31,31 @@ public class LMM_EntityAITracerMove extends EntityAIBase implements LMM_IEntityA
 	}
 
 	@Override
+	public void updateTask() {
+		doExecute();
+	}
+
+	@Override
 	public boolean getEnable() {
 		return isEnable;
+	}
+	
+	protected boolean canUpdate() {
+		return isEnable && theMaid.isTracer() && theMaid.isFreedom();
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		return isEnable && !theMaid.isMaidWaitEx() &&  theMaid.getNavigator().noPath();
+		return canUpdate() && !theMaid.isMaidWaitEx() && theMaid.getNavigator().noPath();
+		
 	}
 
 	@Override
 	public boolean continueExecuting() {
 		return shouldExecute() || !theMaid.getNavigator().noPath();
 	}
-
-	@Override
-	public void startExecuting() {
+	
+	protected void doExecute() {
 		// ルート策定
 		// ターゲットをサーチ
 		int ox = MathHelper.floor_double(theMaid.posX);
@@ -102,7 +111,7 @@ public class LMM_EntityAITracerMove extends EntityAIBase implements LMM_IEntityA
 									tileZ = zz;
 //									theMaid.func_110171_b(xx, yy, zz, 16);
 									theMaid.func_175449_a(new BlockPos(xx, yy, zz), 16);
-									// TODO:Dummay
+									// TODO:Dummy
 									MMM_EntityDummy.setDummyEntity(theMaid, 0x004f4fff, xx, yy, zz);
 									flagdammy = true;
 									return;

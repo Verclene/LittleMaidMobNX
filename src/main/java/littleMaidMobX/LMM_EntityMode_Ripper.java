@@ -1,5 +1,6 @@
 package littleMaidMobX;
 
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -172,8 +173,8 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 		if (litemstack != null) {
 			if (litemstack.getItem() instanceof ItemShears) {
 				owner.setMaidMode("Ripper");
-				if (LMM_LittleMaidMobNX.ac_Ripper != null) {
-					pentityplayer.triggerAchievement(LMM_LittleMaidMobNX.ac_Ripper);
+				if (LMMNX_Achievements.ac_Shearer != null) {
+					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Shearer);
 				}
 				return true;
 			}

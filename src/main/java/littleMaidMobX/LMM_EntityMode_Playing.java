@@ -242,7 +242,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 
 	@Override
 	public void updateAITick(int pMode) {
-		if(owner.playingTick++<3||pMode!=mmode_Playing){
+		if(owner.playingTick++<5||pMode!=mmode_Playing){
 			return;
 		}
 		owner.playingTick = 0;

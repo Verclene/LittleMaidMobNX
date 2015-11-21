@@ -1,11 +1,14 @@
 package littleMaidMobX;
 
+import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -87,6 +90,33 @@ public class LMM_ContainerInventory extends ContainerPlayer {
 				}
 			});
 		}
+	}
+
+	@Override
+	public void putStackInSlot(int p_75141_1_, ItemStack p_75141_2_) {
+		super.putStackInSlot(p_75141_1_, p_75141_2_);
+		checkAchievements();
+	}
+
+	@Override
+	public void putStacksInSlots(ItemStack[] p_75131_1_) {
+		super.putStacksInSlots(p_75131_1_);
+		checkAchievements();
+	}
+	
+	protected void checkAchievements() {
+		boolean flag = true;
+		Slot slot;
+		Item item;
+		flag &= (slot = getSlot(54)).getHasStack() && (item = slot.getStack().getItem()) instanceof ItemArmor &&
+				((ItemArmor)item).getArmorMaterial() == ArmorMaterial.DIAMOND;
+		flag &= (slot = getSlot(55)).getHasStack() && (item = slot.getStack().getItem()) instanceof ItemArmor &&
+				((ItemArmor)item).getArmorMaterial() == ArmorMaterial.DIAMOND;
+		flag &= (slot = getSlot(56)).getHasStack() && (item = slot.getStack().getItem()) instanceof ItemArmor &&
+				((ItemArmor)item).getArmorMaterial() == ArmorMaterial.DIAMOND;
+
+		if (flag && !owner.worldObj.isRemote)
+			owner.getMaidMasterEntity().triggerAchievement(LMMNX_Achievements.ac_Overprtct);
 	}
 
 	@Override
