@@ -10,6 +10,7 @@ import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
 import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
 import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
 import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
+import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Register;
 import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
 import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
 import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
@@ -104,13 +105,13 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.stats.Achievement;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -265,7 +266,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	protected int maidArmorVisible = 15;
 
-	protected int registerTick = -1;
+	protected MMM_Counter registerTick;
 	protected String registerMode;
 
 	public LMM_EntityLittleMaid(World par1World) {
@@ -293,6 +294,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		mstatTime = 6000;
 		maidOverDriveTime = new MMM_Counter(5, 300, -LMM_LittleMaidMobNX.cfg_maidOverdriveDelay);
 		mstatWorkingCount = new MMM_Counter(11, 10, -10);
+		registerTick = new MMM_Counter(200, 200, -20);
 
 		// モデルレンダリング用のフラグ獲得用ヘルパー関数
 		maidCaps = new LMM_EntityCaps(this);
@@ -1090,7 +1092,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			// トレーサー
 			showParticleFX(EnumParticleTypes.EXPLOSION_NORMAL, 0.3D, 0.3D, 0.3D, 0.0D, 0.0D, 0.0D);
 			break;
-
+		case 17:
+			// トリガー登録
+			showParticleFX(EnumParticleTypes.FIREWORKS_SPARK, 0.05D, 0.05D, 0.05D);
+			break;
 		default:
 			super.handleHealthUpdate(par1);
 		}
@@ -1114,16 +1119,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 発光処理用
 		int lbase = 0, i = 0;
 		if (maidOverDriveTime.isDelay()) {
-			if (maidOverDriveTime.getValue() > 0) {
-				i = 64;
+			if (maidOverDriveTime.isEnable()) {
+				i = 128;
 			}else{
 				i = (int) (128 - maidOverDriveTime.getValue() * (128f / LMM_LittleMaidMobNX.cfg_maidOverdriveDelay));
 			}
-			LMM_LittleMaidMobNX.Debug("COUNT %d", maidOverDriveTime.getValue());
-		}else{
-			i = 0;
 		}
-		lbase = i << 24 | 0x00df0f0f;
+		lbase = i << 24 | 0x00df0000;
 
 		if (isActiveModeClass()) {
 			lbase = lbase | getActiveModeClass().colorMultiplier(pLight, pPartialTicks);
@@ -2333,15 +2335,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		int litemuse = 0;
 //		resetNavigator();
 		
-		if (!worldObj.isRemote) {
-			if (registerTick >= 0) {
-				registerTick--;
-			}
+		if (registerTick.isDelay()){
+			registerTick.onUpdate();
 
-			if (registerTick == 0) {
-				getOwner().addChatMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.cancelregistration")));
+			if (!registerTick.isEnable() && registerTick.getValue() == 0 && !worldObj.isRemote) {
+				getOwner().addChatMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.cancelregistration"))
+						.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_RED)));
 			}
 		}
+
 		// Entity初回生成時のインベントリ更新用
 		// サーバーの方が先に起動するのでクライアント側が更新を受け取れない
 		if (firstload > 0) {
@@ -2382,6 +2384,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			setDominantArm(dataWatcher.getWatchableObjectByte(dataWatch_DominamtArm));
 			updateMaidFlagsClient();
 			updateGotcha();
+			
+			if (registerTick.isEnable()) {
+				showParticleFX(EnumParticleTypes.VILLAGER_HAPPY, 0.0125D, 0.0125D, 0.0125D, 0D, -1.5D, 0D);
+			}
 
 			// 腕の挙動関連
 			litemuse = dataWatcher.getWatchableObjectInt(dataWatch_ItemUse);
@@ -2409,6 +2415,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			lf = mstatWorkingCount.isEnable();
 			if (getMaidFlags(dataWatch_Flags_Working) != lf) {
 				setMaidFlags(lf, dataWatch_Flags_Working);
+			}
+			// トリガー登録
+			lf = registerTick.isEnable();
+			if (getMaidFlags(dataWatch_Flags_Register) != lf) {
+				setMaidFlags(lf, dataWatch_Flags_Register);
 			}
 			// 拗ねる
 			if (!isContractEX() && !isFreedom()) {
@@ -3043,9 +3054,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 							else if (itemstack1.getItem()==LMM_LittleMaidMobNX.registerKey &&
 									!par1EntityPlayer.worldObj.isRemote) {
 								// トリガーセット
-								if (registerTick > 0) {
-									registerTick = -1;
-									par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.cancelregistration")));
+								if (registerTick.isEnable()) {
+									registerTick.setEnable(false);
+									par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.cancelregistration"))
+											.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_RED)));
 									return true;
 								}
 
@@ -3056,11 +3068,27 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								if (modeString.isEmpty()) return false;
 
 								registerMode = modeString;
-								registerTick = 200;
+								registerTick.setValue(200);
+
+								int count = tagCompound.getInteger(LMMNX_ItemRegisterKey.RK_COUNT);
+								if(++count >= LMMNX_ItemRegisterKey.RK_MAX_COUNT) {
+									par1EntityPlayer.destroyCurrentEquippedItem();
+								}
+								tagCompound.setInteger(LMMNX_ItemRegisterKey.RK_COUNT, count);
+
 								par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.readyregistration") + registerMode));
+								if(count >= LMMNX_ItemRegisterKey.RK_MAX_COUNT-10){
+									if(count<LMMNX_ItemRegisterKey.RK_MAX_COUNT){
+										par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.warningcount") +
+												(LMMNX_ItemRegisterKey.RK_MAX_COUNT-count)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+									} else {
+										par1EntityPlayer.addChatComponentMessage(new ChatComponentText(StatCollector.translateToLocal("littleMaidMob.chat.text.endcount"))
+												.setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_RED)));
+									}
+								}
 
 								return true;
-							} else if (registerTick > 0 && !par1EntityPlayer.worldObj.isRemote) {
+							} else if (registerTick.isEnable() && !par1EntityPlayer.worldObj.isRemote) {
 								List list = LMM_TriggerSelect.getuserTriggerList(MMM_Helper.getPlayerName(par1EntityPlayer), registerMode);
 								Item item = itemstack1.getItem();
 								if (item != null) {
@@ -3074,7 +3102,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 									}
 								}
 								LMM_IFF.saveIFF(MMM_Helper.getPlayerName(par1EntityPlayer));
-								registerTick = -1;
+								registerTick.setEnable(false);
 								return true;
 							}
 							else if (itemstack1.getItem() == Items.dye) {
@@ -3840,6 +3868,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		looksWithInterestAXIS = (li & dataWatch_Flags_looksWithInterestAXIS) > 0;
 		maidOverDriveTime.updateClient((li & dataWatch_Flags_OverDrive) > 0);
 		mstatWorkingCount.updateClient((li & dataWatch_Flags_Working) > 0);
+		registerTick.updateClient((li & dataWatch_Flags_Register) > 0);
 	}
 
 	/**

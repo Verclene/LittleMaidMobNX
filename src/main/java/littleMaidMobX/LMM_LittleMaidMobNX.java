@@ -39,14 +39,13 @@ import network.W_Network;
 
 @Mod(	modid   = LMM_LittleMaidMobNX.DOMAIN,
 		name    = "LittleMaidMobNX",
-		version = LMM_LittleMaidMobNX.VERSION,
-		dependencies = "required-after:net.blacklab.lib@[2.0.3,)")
+		version = LMM_LittleMaidMobNX.VERSION)
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.0.44";
-	public static final String VERSION_FORSITE = "NX4 Build 44";
-	public static final int VERSION_CODE = 9;
+	public static final String VERSION = "4.1.49";
+	public static final String VERSION_FORSITE = "NX4 Build 49";
+	public static final int VERSION_CODE = 10;
 
 	/*
 	public static String[] cfg_comment = {
@@ -239,6 +238,7 @@ public class LMM_LittleMaidMobNX {
 		
 		registerKey = new LMMNX_ItemRegisterKey();
 		GameRegistry.registerItem(registerKey, "lmmnx_registerkey");
+		GameRegistry.addShapelessRecipe(new ItemStack(registerKey), Items.egg, Items.sugar, Items.nether_wart);
 
 		// 実績追加
 		LMMNX_Achievements.initAchievements();

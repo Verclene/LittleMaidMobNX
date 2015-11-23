@@ -33,6 +33,8 @@ public class LMM_Statics
 	protected static final int dataWatch_Flags_LooksSugar				= 0x00000400;
 	protected static final int dataWatch_Flags_Bloodsuck				= 0x00000800;
 	protected static final int dataWatch_Flags_OverDrive				= 0x00001000;
+	protected static final int dataWatch_Flags_Register					= 0x00002000;
+
 	/** 紐の持ち主のEntityID。 */
 	protected static final int dataWatch_Gotcha			= 23;
 	
