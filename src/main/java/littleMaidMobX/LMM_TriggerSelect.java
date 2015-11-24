@@ -8,6 +8,7 @@ import java.util.Map;
 import mmmlibx.lib.MMM_Helper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * モード切り替え用トリガーアイテムのコンテナ。
@@ -76,7 +77,7 @@ public class LMM_TriggerSelect {
 		if (indexstr.isEmpty()) return;
 		String[] s = indexstr.split(",");
 		for (String t : s) {
-			Object o = Item.itemRegistry.getObject(t);
+			Object o = Item.itemRegistry.getObject(new ResourceLocation(t));
 			if(o instanceof Item)
 			{
 				indexlist.add((Item)o);

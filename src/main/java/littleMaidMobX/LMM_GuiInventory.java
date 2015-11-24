@@ -88,9 +88,9 @@ public class LMM_GuiInventory extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
-				lowerChestInventory.getName()), 8, 64, 0x404040);
+				lowerChestInventory.getCommandSenderName()), 8, 64, 0x404040);
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
-				upperChestInventory.getName()), 8, 114, 0x404040);
+				upperChestInventory.getCommandSenderName()), 8, 114, 0x404040);
 		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.Health"), 86, 8, 0x404040);
 		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.AP"), 86, 32, 0x404040);
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(

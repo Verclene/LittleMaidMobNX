@@ -115,7 +115,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	}
 
 	@Override
-	public boolean canUseCommand(int var1, String var2) {
+	public boolean canCommandSenderUseCommand(int var1, String var2) {
 		return false;
 	}
 
@@ -598,11 +598,14 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 		super.damageEntity(par1DamageSource, par2);
 	}
 	
+	// TODO 1.8.8検証
+/*
 	@Override	
 	public void func_152112_bu() {}
 
 	@Override
 	public void func_152111_bt(){}
+*/
 
 	/*
 	@Override

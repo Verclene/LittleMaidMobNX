@@ -8,7 +8,6 @@ import java.util.List;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.FileManager.CommonClassLoaderWrapper;
-import mmmlibx.lib.guns.GunsBase;
 import mmmlibx.lib.multiModel.MMMLoader.MMMTransformer;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.entity.Entity;
@@ -124,7 +123,7 @@ public class MMMLib {
 		// 独自スクリプトデコーダー
 //		EzRecipes.init();
 		// 
-		GunsBase.initAppend();
+//		GunsBase.initAppend();
 		
 		// 旧モデル用変換開始
 		MMMTransformer.isEnable = true;

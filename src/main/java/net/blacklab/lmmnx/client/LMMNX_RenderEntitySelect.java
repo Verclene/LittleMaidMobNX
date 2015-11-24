@@ -41,7 +41,7 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 		}
 
 		@Override
-		protected void func_177177_a() {
+		protected void initArmor() {
 			this.field_177189_c = mmodel;
 			this.field_177186_d = mmodel;
 		}
