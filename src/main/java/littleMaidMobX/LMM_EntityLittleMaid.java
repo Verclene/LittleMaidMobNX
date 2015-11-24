@@ -1117,15 +1117,25 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public int colorMultiplier(float pLight, float pPartialTicks) {
 		// 発光処理用
-		int lbase = 0, i = 0;
+		int lbase = 0, i = 0, j = 0, k = 0, x = 0, y = 0;
 		if (maidOverDriveTime.isDelay()) {
+			j = 0x00df0000;
 			if (maidOverDriveTime.isEnable()) {
-				i = 128;
+				x = 128;
 			}else{
-				i = (int) (128 - maidOverDriveTime.getValue() * (128f / LMM_LittleMaidMobNX.cfg_maidOverdriveDelay));
+				x = (int) (128 - maidOverDriveTime.getValue() * (128f / LMM_LittleMaidMobNX.cfg_maidOverdriveDelay));
 			}
 		}
-		lbase = i << 24 | 0x00df0000;
+		if (registerTick.isDelay()) {
+			k = 0x0000df00;
+			if (registerTick.isEnable()) {
+				y = 128;
+			}else{
+				y = (int) (128 - registerTick.getValue() * (128f / 20));
+			}
+		}
+		i = x==0 ? (y>=128 ? y : 0) : (y==0 ? x : Math.min(x, y));
+		lbase = i << 24 | j | k;
 
 		if (isActiveModeClass()) {
 			lbase = lbase | getActiveModeClass().colorMultiplier(pLight, pPartialTicks);
@@ -2385,10 +2395,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			updateMaidFlagsClient();
 			updateGotcha();
 			
-			if (registerTick.isEnable()) {
-				showParticleFX(EnumParticleTypes.VILLAGER_HAPPY, 0.0125D, 0.0125D, 0.0125D, 0D, -1.5D, 0D);
-			}
-
 			// 腕の挙動関連
 			litemuse = dataWatcher.getWatchableObjectInt(dataWatch_ItemUse);
 			for (int li = 0; li < mstatSwingStatus.length; li++) {

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import sun.rmi.transport.proxy.CGIHandler;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.ConfigList;
@@ -42,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.1.50";
-	public static final String VERSION_FORSITE = "NX4 Build 50";
+	public static final String VERSION = "4.1.51";
+	public static final String VERSION_FORSITE = "NX4 Build 51";
 	public static final int VERSION_CODE = 10;
 
 	/*
