@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -70,7 +71,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		}
 
 		@Override
-		protected void func_177177_a() {
+		protected void initArmor() {
 			this.field_177189_c = mmodel;
 			this.field_177186_d = mmodel;
 		}
@@ -358,14 +359,14 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			//tessellator.startDrawing(3);
-			tessellator.getWorldRenderer().startDrawing(3);
+			tessellator.getWorldRenderer().func_181668_a(3, new VertexFormat());
 			//tessellator.setColorOpaque_I(0);
 			GlStateManager.colorLogicOp(0);
 			int i = 16;
 			for(int j = 0; j <= i; j++)
 			{
 				float f5 = (float)j / (float)i;
-				tessellator.getWorldRenderer().addVertex(px + d15 * f5, py + d16 * (f5 * f5 + f5) * 0.5D + (((float)i - (float)j) / (i * 0.75F) + 0.125F), pz + d17 * f5);
+				tessellator.getWorldRenderer().func_181662_b(px + d15 * f5, py + d16 * (f5 * f5 + f5) * 0.5D + (((float)i - (float)j) / (i * 0.75F) + 0.125F), pz + d17 * f5);
 			}
 
 			tessellator.draw();
@@ -434,8 +435,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 	}
 
 	@Override
-	public void passSpecialRender(EntityLivingBase par1EntityLiving, double par2, double par4, double par6) {
-		super.passSpecialRender(par1EntityLiving, par2, par4, par6);
+	public void renderLivingAt(EntityLivingBase par1EntityLiving, double par2, double par4, double par6) {
+		super.renderLivingAt(par1EntityLiving, par2, par4, par6);
 
 		LMM_EntityLittleMaid llmm = (LMM_EntityLittleMaid)par1EntityLiving;
 		// 追加分

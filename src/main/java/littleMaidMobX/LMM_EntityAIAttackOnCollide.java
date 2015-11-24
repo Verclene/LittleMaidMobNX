@@ -113,7 +113,7 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 			return !theMaid.getNavigator().noPath();
 		}
 		
-		return theMaid.func_180485_d(new BlockPos(MathHelper.floor_double(entityTarget.posX), MathHelper.floor_double(entityTarget.posY), MathHelper.floor_double(entityTarget.posZ)));
+		return theMaid.isWithinHomeDistanceFromPosition(new BlockPos(MathHelper.floor_double(entityTarget.posX), MathHelper.floor_double(entityTarget.posY), MathHelper.floor_double(entityTarget.posZ)));
 	}
 
 	@Override

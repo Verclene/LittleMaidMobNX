@@ -73,7 +73,7 @@ public class LMM_InventoryLittleMaid extends InventoryPlayer {
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandSenderName() {
 		return "InsideSkirt";
 	}
 

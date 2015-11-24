@@ -110,7 +110,7 @@ public class LMM_EntityAITracerMove extends EntityAIBase implements LMM_IEntityA
 									tileY = yy;
 									tileZ = zz;
 //									theMaid.func_110171_b(xx, yy, zz, 16);
-									theMaid.func_175449_a(new BlockPos(xx, yy, zz), 16);
+									theMaid.setHomePosAndDistance(new BlockPos(xx, yy, zz), 16);
 									// TODO:Dummy
 									MMM_EntityDummy.setDummyEntity(theMaid, 0x004f4fff, xx, yy, zz);
 									flagdammy = true;

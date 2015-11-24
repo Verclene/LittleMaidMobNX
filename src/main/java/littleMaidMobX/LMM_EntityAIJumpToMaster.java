@@ -30,7 +30,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 		/*
 		if(theMaid.isMaidWaitEx()){
 			//待機時は3マスで強制帰還
-			if(theMaid.func_180486_cf().distanceSq(theMaid.posX, theMaid.posY, theMaid.posZ)>3D){
+			if(theMaid.getPosition().distanceSq(theMaid.posX, theMaid.posY, theMaid.posZ)>3D){
 				jumpTarget = false;
 				return true;
 			}
@@ -50,14 +50,14 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				LMM_LittleMaidMobNX.Debug(String.format("ID:%d, %d -> %d, Change HomeWorld. reset HomePosition.",
 						theMaid.getEntityId(),theMaid.homeWorld, theMaid.worldObj.provider.getDimensionId()));
 //				theMaid.func_110171_b(
-				theMaid.func_175449_a(new BlockPos(
+				theMaid.setHomePosAndDistance(new BlockPos(
 						MathHelper.floor_double(theMaid.posX),
 						MathHelper.floor_double(theMaid.posY),
 						MathHelper.floor_double(theMaid.posZ)), 16);
 				return false;
 			}
 			
-			if (theMaid.func_180486_cf().distanceSqToCenter(
+			if (theMaid.getHomePosition().distanceSqToCenter(
 					MathHelper.floor_double(theMaid.posX),
 					MathHelper.floor_double(theMaid.posY),
 					MathHelper.floor_double(theMaid.posZ)) > 400D) {
@@ -123,9 +123,9 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 			}
 		} else {
 			// ホームポジションエリア外で転移
-			int lx = theMaid.func_180486_cf().getX();
-			int ly = theMaid.func_180486_cf().getY();
-			int lz = theMaid.func_180486_cf().getZ();
+			int lx = theMaid.getPosition().getX();
+			int ly = theMaid.getPosition().getY();
+			int lz = theMaid.getPosition().getZ();
 			if (!(isCanJump(lx, ly, lz))) {
 				// ホームポジション消失
 				LMM_LittleMaidMobNX.Debug(String.format(
@@ -175,7 +175,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				}
 				if (f) {
 //					theMaid.func_110171_b(lx, ly, lz, (int) theMaid.func_110174_bM());
-					theMaid.func_175449_a(new BlockPos(lx, ly, lz), (int) theMaid.getMaximumHomeDistance());
+					theMaid.setHomePosAndDistance(new BlockPos(lx, ly, lz), (int) theMaid.getMaximumHomeDistance());
 					LMM_LittleMaidMobNX.Debug(String.format(
 							"Find new position:%d, %d, %d.", lx, ly, lz));
 				} else {

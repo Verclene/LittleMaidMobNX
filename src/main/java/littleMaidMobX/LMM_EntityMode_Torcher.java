@@ -127,7 +127,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		//離れすぎている
 		if(owner.isFreedom()){
 			//自由行動時
-			if(owner.func_180486_cf().distanceSqToCenter(px,py,pz) > limitDistance_Freedom){
+			if(owner.getPosition().distanceSqToCenter(px,py,pz) > limitDistance_Freedom){
 				return 15;
 			}
 		}else{

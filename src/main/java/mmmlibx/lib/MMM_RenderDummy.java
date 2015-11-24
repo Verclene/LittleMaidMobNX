@@ -36,15 +36,16 @@ public class MMM_RenderDummy extends Render {
 		RenderHelper.disableStandardItemLighting();
 		Tessellator tessellator = Tessellator.getInstance();
 		
-		tessellator.getWorldRenderer().startDrawingQuads();
+		// TODO 1.8.8検証
+		tessellator.getWorldRenderer().func_181675_d();
 		
 		GL11.glColor3f(1F, 1F, 1F);
 		if (entity instanceof MMM_EntityDummy) {
 			int cc = ((MMM_EntityDummy) entity).getColor();
 			int ca = MathHelper.floor_float(((MMM_EntityDummy) entity)
 					.getAlpha(1.0F) * 256);
-			//1.8検討
-			tessellator.getWorldRenderer().setColorRGBA_I(cc, ca);
+			// TODO 1.8.8検証
+			tessellator.getWorldRenderer().func_181671_a(cc, ca);
 		}
 		double xa = 0.3D;
 		double xb = 0.7D;
@@ -53,10 +54,10 @@ public class MMM_RenderDummy extends Render {
 		double za = 0.3D;
 		double zb = 0.7D;
 		
-		tessellator.getWorldRenderer().addVertex(xa, yy, za);
-		tessellator.getWorldRenderer().addVertex(xa, yy, zb);
-		tessellator.getWorldRenderer().addVertex(xb, yy, zb);
-		tessellator.getWorldRenderer().addVertex(xb, yy, za);
+		tessellator.getWorldRenderer().func_181662_b(xa, yy, za);
+		tessellator.getWorldRenderer().func_181662_b(xa, yy, zb);
+		tessellator.getWorldRenderer().func_181662_b(xb, yy, zb);
+		tessellator.getWorldRenderer().func_181662_b(xb, yy, za);
 		
 		
 		tessellator.draw();

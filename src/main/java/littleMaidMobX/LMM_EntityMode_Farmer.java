@@ -134,7 +134,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
 		if(owner.isFreedom()){
-			if(owner.func_180486_cf().distanceSq(px, py, pz)>limitDistance_Freedom){
+			if(owner.getPosition().distanceSq(px, py, pz)>limitDistance_Freedom){
 				return false;
 			}
 		}else if(owner.getMaidMasterEntity()!=null){

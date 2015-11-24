@@ -23,7 +23,7 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 		}
 		return ((theEntity.getNavigator().noPath() ?
 				(theEntity.isInsideOfMaterial(Material.water)) : theEntity.isInWater())
-				|| theEntity.handleLavaMovement());
+				|| theEntity.isInLava());
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 		super.updateTask();
 		double totalmotionY = 0d;
 		if(theEntity instanceof LMM_EntityLittleMaid){
-			if(theEntity.handleLavaMovement()){
+			if(theEntity.isInLava()){
 //				theEntity.motionY+=1.0D;
 				theEntity.getJumpHelper().setJumping();
 				return;

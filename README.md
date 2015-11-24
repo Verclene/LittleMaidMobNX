@@ -1,7 +1,7 @@
 # LittleMaidMobNX
-This project is unofficial port of LittleMaidMob to Minecraft 1.8.
+This project is unofficial port of LittleMaidMob to Minecraft 1.8.(branch for 1.8.8)
 
-Built on Forge 11.14.3.1450
+Built on Forge 11.14.4.1579
 Based on LittleMaidMobX-1.7.x-0.0.9-pre3, made by EMB4.
 This is open-source project, use it on NON-COMMERCIAL.
 
