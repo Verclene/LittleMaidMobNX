@@ -1712,6 +1712,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		float llasthealth = getHealth();
 		if (par2 > 0 && getActiveModeClass() != null && !getActiveModeClass().damageEntity(maidMode, par1DamageSource, par2)) {
 			getAvatarIF().W_damageEntity(par1DamageSource, par2);
+//			super.damageEntity(par1DamageSource, par2);
 
 			// ダメージを受けると待機を解除
 			setMaidWait(false);

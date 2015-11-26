@@ -4,6 +4,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.MathHelper;
 
@@ -28,7 +29,6 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 
 	@Override
 	public void updateTask() {
-		// TODO 自動生成されたメソッド・スタブ
 		super.updateTask();
 		double totalmotionY = 0d;
 		if(theEntity instanceof LMM_EntityLittleMaid){
@@ -39,6 +39,10 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 			}
 			LMM_EntityLittleMaid theMaid = (LMM_EntityLittleMaid) theEntity;
 			if(theMaid.handleWaterMovement()){
+				if(theMaid.getNavigator() instanceof PathNavigateGround) {
+					theMaid.resetNavigator();
+				}
+
 				int x = MathHelper.floor_double(theEntity.posX);
 				int z = MathHelper.floor_double(theEntity.posZ);
 				int y = MathHelper.floor_double(theEntity.getEntityBoundingBox().minY);
