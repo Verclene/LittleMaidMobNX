@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.MMMLib;
@@ -98,9 +99,7 @@ import net.minecraft.network.play.server.S04PacketEntityEquipment;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1EPacketRemoveEntityEffect;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -221,7 +220,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected float maidSoundRate;
 
 	// クライアント専用音声再生フラグ
-	private ArrayList<LMM_EnumSound> playingSound = new ArrayList<LMM_EnumSound>();
+	private CopyOnWriteArrayList<LMM_EnumSound> playingSound = new CopyOnWriteArrayList<LMM_EnumSound>();
 
 	// 実験用
 	private int firstload = 1;
@@ -316,15 +315,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		maidDamegeSound = LMM_EnumSound.hurt;
 		maidSoundInterval = 0;
 
-		//this.dataWatcher.addObject(16, new Byte((byte)0));
+		//dataWatcher.addObject(16, new Byte((byte)0));
 
 		// 野生種用初期値設定
 		setHealth(15F);
 
-		//1.8検討
 		// 移動用フィジカル設定
-		//getNavigator().setAvoidsWater(true);
-		//getNavigator().setBreakDoors(true);
+		((PathNavigateGround)navigator).setEnterDoors(true);
 
 		// TODO:これはテスト
 //		maidStabilizer.put("HeadTop", MMM_StabilizerManager.getStabilizer("WitchHat", "HeadTop"));
@@ -1001,10 +998,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		*/
 		if (LMM_LittleMaidMobNX.cfg_Dominant) {
 			// ドミナント
-			return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox())
-					&& this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty()
-					&& !this.worldObj.isAnyLiquid(this.getEntityBoundingBox())
-					/*&& this.getBlockPathWeight(lx, ly, lz) >= 0.0F*/;
+			return worldObj.checkNoEntityCollision(getEntityBoundingBox())
+					&& worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).isEmpty()
+					&& !worldObj.isAnyLiquid(getEntityBoundingBox())
+					/*&& getBlockPathWeight(lx, ly, lz) >= 0.0F*/;
 		}
 		return super.getCanSpawnHere();
 	}
@@ -1108,10 +1105,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			par1 = 0.0F;
 		}
 
-		this.getDataWatcher().updateObject(dataWatch_Absoption, Float.valueOf(par1));
+		getDataWatcher().updateObject(dataWatch_Absoption, Float.valueOf(par1));
 	}
 	public float getAbsorptionAmount() {
-		return this.getDataWatcher().getWatchableObjectFloat(dataWatch_Absoption);
+		return getDataWatcher().getWatchableObjectFloat(dataWatch_Absoption);
 	}
 
 
@@ -1484,7 +1481,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		// --------------------------------------------
 
-		return !this.isDead;
+		return !isDead;
 	}
 
 	// おんぶおばけは無敵
@@ -1531,7 +1528,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			// プレイヤーが馬に乗っているときは、肩車ではなく馬の後ろに乗る
 			if(ridingEntity.ridingEntity instanceof EntityHorse)
 			{
-				if(this.worldObj.isRemote)
+				if(worldObj.isRemote)
 				{
 					return (double)(yOffset - 2.8F);
 				}
@@ -1592,7 +1589,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			if(lep.ridingEntity instanceof EntityHorse)
 			{
 				EntityHorse horse = (EntityHorse)lep.ridingEntity;
-				if(this.worldObj.isRemote)
+				if(worldObj.isRemote)
 				{
 					dx = Math.sin((horse.renderYawOffset * Math.PI) / 180D) * 0.5;
 					dz = Math.cos((horse.renderYawOffset * Math.PI) / 180D) * 0.5;
@@ -1702,7 +1699,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if(!par1DamageSource.isUnblockable() && isBlocking()) {
 			// ブロッキング
 //			par2 = (1.0F + par2) * 0.5F;
-			LMM_LittleMaidMobNX.Debug(String.format("Blocking success ID:%d, %f -> %f" , this.getEntityId(), par2, (par2 = (1.0F + par2) * 0.5F)));
+			LMM_LittleMaidMobNX.Debug(String.format("Blocking success ID:%d, %f -> %f" , getEntityId(), par2, (par2 = (1.0F + par2) * 0.5F)));
 			maidDamegeSound = LMM_EnumSound.hurt_guard;
 		}
 		//デバッグ
@@ -1723,7 +1720,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			maidDamegeSound = LMM_EnumSound.hurt_nodamege;
 		}
 		*/
-		LMM_LittleMaidMobNX.Debug(String.format("GetDamage ID:%d, %s, %f/ %f" , this.getEntityId(), par1DamageSource.damageType, llasthealth - getHealth(), par2));
+		LMM_LittleMaidMobNX.Debug(String.format("GetDamage ID:%d, %s, %f/ %f" , getEntityId(), par1DamageSource.damageType, llasthealth - getHealth(), par2));
 //		super.damageEntity(par1DamageSource, par2);
 	}
 
@@ -1736,13 +1733,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		if(par1DamageSource.getDamageType().equalsIgnoreCase("thrown"))
 		{
-			if(entity!=null && this.maidAvatar!=null && entity.getEntityId()==this.maidAvatar.getEntityId())
+			if(entity!=null && maidAvatar!=null && entity.getEntityId()==maidAvatar.getEntityId())
 			{
 				return false;
 			}
 		}
 		
-		LMM_LittleMaidMobNX.Debug("LMM_EntityLittleMaid.attackEntityFrom "+this+"("+this.maidAvatar+") <= "+entity);
+		LMM_LittleMaidMobNX.Debug("LMM_EntityLittleMaid.attackEntityFrom "+this+"("+maidAvatar+") <= "+entity);
 
 		// ダメージソースを特定して音声の設定
 		maidDamegeSound = LMM_EnumSound.hurt;
@@ -1925,7 +1922,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if(worldObj.isRemote&&!playingSound.isEmpty()){
 			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
 			
-			for(LMM_EnumSound enumsound : playingSound){
+			Iterator<LMM_EnumSound> iterator = playingSound.iterator();
+			while(iterator.hasNext()){
+				LMM_EnumSound enumsound = iterator.next();
+				
 				String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
 				//まさかな…
 				if(s==null) return;
@@ -1936,8 +1936,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
 
 				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
+				while(playingSound.remove(enumsound));
 			}
-			playingSound.clear();
 //			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, playingSound, getSoundVolume(), lpitch, false);
 		}
 		super.onEntityUpdate();
@@ -1947,7 +1947,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * 埋葬対策コピー
 	 */
 	private boolean isBlockTranslucent(int par1, int par2, int par3) {
-		return this.worldObj.getBlockState(new BlockPos(par1, par2, par3)).getBlock().isNormalCube();
+		return worldObj.getBlockState(new BlockPos(par1, par2, par3)).getBlock().isNormalCube();
 	}
 
 	/**
@@ -1964,13 +1964,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		boolean lflag = false;
 		for (int li = 0; li < height; li++) {
-			lflag |= this.isBlockTranslucent(var7, var8 + li, var9);
+			lflag |= isBlockTranslucent(var7, var8 + li, var9);
 		}
 		if (lflag) {
-			boolean var14 = !this.isBlockTranslucent(var7 - 1, var8, var9) && !this.isBlockTranslucent(var7 - 1, var8 + 1, var9);
-			boolean var15 = !this.isBlockTranslucent(var7 + 1, var8, var9) && !this.isBlockTranslucent(var7 + 1, var8 + 1, var9);
-			boolean var16 = !this.isBlockTranslucent(var7, var8, var9 - 1) && !this.isBlockTranslucent(var7, var8 + 1, var9 - 1);
-			boolean var17 = !this.isBlockTranslucent(var7, var8, var9 + 1) && !this.isBlockTranslucent(var7, var8 + 1, var9 + 1);
+			boolean var14 = !isBlockTranslucent(var7 - 1, var8, var9) && !isBlockTranslucent(var7 - 1, var8 + 1, var9);
+			boolean var15 = !isBlockTranslucent(var7 + 1, var8, var9) && !isBlockTranslucent(var7 + 1, var8 + 1, var9);
+			boolean var16 = !isBlockTranslucent(var7, var8, var9 - 1) && !isBlockTranslucent(var7, var8 + 1, var9 - 1);
+			boolean var17 = !isBlockTranslucent(var7, var8, var9 + 1) && !isBlockTranslucent(var7, var8 + 1, var9 + 1);
 			byte var18 = -1;
 			double var19 = 9999.0D;
 
@@ -1997,19 +1997,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			float var21 = 0.1F;
 
 			if (var18 == 0) {
-				this.motionX = (-var21);
+				motionX = (-var21);
 			}
 
 			if (var18 == 1) {
-				this.motionX = var21;
+				motionX = var21;
 			}
 
 			if (var18 == 4) {
-				this.motionZ = (-var21);
+				motionZ = (-var21);
 			}
 
 			if (var18 == 5) {
-				this.motionZ = var21;
+				motionZ = var21;
 			}
 
 			return !(var14 | var15 | var16 | var17);
@@ -2059,6 +2059,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}*/
 
 		superLivingUpdate();
+		
+		// 水中関連
+		if (swimmingEnabled || !isContract()) {
+			((PathNavigateGround)navigator).setAvoidsWater(false);
+			((PathNavigateGround)navigator).setCanSwim(true);
+		} else {
+			((PathNavigateGround)navigator).setAvoidsWater(true);
+			((PathNavigateGround)navigator).setCanSwim(false);
+		}
 
 		maidInventory.decrementAnimations();
 
@@ -2101,18 +2110,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 		}
 
-		ItemStack itemstack = this.getInventory()[0];
+		ItemStack itemstack = getInventory()[0];
 
 		if (itemstack != null)
 		{
 			if (itemstack.isItemStackDamageable())
 			{
-				itemstack.setItemDamage(itemstack.getItemDamage() + this.rand.nextInt(2));
+				itemstack.setItemDamage(itemstack.getItemDamage() + rand.nextInt(2));
 
 				if (itemstack.getItemDamage() >= itemstack.getMaxDamage())
 				{
-					this.renderBrokenItemStack(itemstack);
-					// this.setCurrentItemOrArmor(4, (ItemStack)null);
+					renderBrokenItemStack(itemstack);
+					// setCurrentItemOrArmor(4, (ItemStack)null);
 				}
 			}
 
@@ -2230,109 +2239,122 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		super.setLocationAndAngles(x, y, z, yaw, pitch);
 	}
 
-	public void setLocationAndAnglesWithResetPath(double x, double y, double z, float yaw, float pitch){
-		setLocationAndAngles(x, y, z, yaw, pitch);
-		navigator.clearPathEntity();
-		resetNavigator();
-	}
-
 	private void superLivingUpdate() {
 		if(onGround) isJumping = false;
 
-		if (this.newPosRotationIncrements > 0)
+		if (newPosRotationIncrements > 0)
 		{
-			double d0 = this.posX + (this.newPosX - this.posX) / this.newPosRotationIncrements;
-			double d1 = this.posY + (this.newPosY - this.posY) / this.newPosRotationIncrements;
-			double d2 = this.posZ + (this.newPosZ - this.posZ) / this.newPosRotationIncrements;
-			double d3 = MathHelper.wrapAngleTo180_double(this.newRotationYaw - this.rotationYaw);
-			this.rotationYaw = (float)(this.rotationYaw + d3 / this.newPosRotationIncrements);
-			this.rotationPitch = (float)(this.rotationPitch + (this.newRotationPitch - this.rotationPitch) / this.newPosRotationIncrements);
-			--this.newPosRotationIncrements;
-			this.setPosition(d0, d1, d2);
-			this.setRotation(this.rotationYaw, this.rotationPitch);
+			double d0 = posX + (newPosX - posX) / newPosRotationIncrements;
+			double d1 = posY + (newPosY - posY) / newPosRotationIncrements;
+			double d2 = posZ + (newPosZ - posZ) / newPosRotationIncrements;
+			double d3 = MathHelper.wrapAngleTo180_double(newRotationYaw - rotationYaw);
+			rotationYaw = (float)(rotationYaw + d3 / newPosRotationIncrements);
+			rotationPitch = (float)(rotationPitch + (newRotationPitch - rotationPitch) / newPosRotationIncrements);
+			--newPosRotationIncrements;
+			setPosition(d0, d1, d2);
+			setRotation(rotationYaw, rotationPitch);
 		}
-		else if (!this.isServerWorld())
+		else if (!isServerWorld())
 		{
-			this.motionX *= 0.98D;
-			this.motionY *= 0.98D;
-			this.motionZ *= 0.98D;
-		}
-
-		if (Math.abs(this.motionX) < 0.005D)
-		{
-			this.motionX = 0.0D;
+			motionX *= 0.98D;
+			motionY *= 0.98D;
+			motionZ *= 0.98D;
 		}
 
-		if (Math.abs(this.motionY) < 0.005D)
+		if (Math.abs(motionX) < 0.005D)
 		{
-			this.motionY = 0.0D;
+			motionX = 0.0D;
 		}
 
-		if (Math.abs(this.motionZ) < 0.005D)
+		if (Math.abs(motionY) < 0.005D)
 		{
-			this.motionZ = 0.0D;
+			motionY = 0.0D;
 		}
 
-		this.worldObj.theProfiler.startSection("ai");
-
-		if (this.isMovementBlocked())
+		if (Math.abs(motionZ) < 0.005D)
 		{
-			this.isJumping = false;
-			this.moveStrafing = 0.0F;
-			this.moveForward = 0.0F;
-			this.randomYawVelocity = 0.0F;
+			motionZ = 0.0D;
 		}
-		else if (this.isServerWorld())
+
+		worldObj.theProfiler.startSection("ai");
+
+		if (isMovementBlocked())
 		{
-			this.worldObj.theProfiler.startSection("newAi");
+			isJumping = false;
+			moveStrafing = 0.0F;
+			moveForward = 0.0F;
+			randomYawVelocity = 0.0F;
+		}
+		else if (isServerWorld())
+		{
+			worldObj.theProfiler.startSection("newAi");
 			try{
-				updateEntityActionState();
+				superUpdateEntityActionState();
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			this.worldObj.theProfiler.endSection();
+			worldObj.theProfiler.endSection();
 		}
 
-		this.worldObj.theProfiler.endSection();
-		this.worldObj.theProfiler.startSection("jump");
+		worldObj.theProfiler.endSection();
+		worldObj.theProfiler.startSection("jump");
 
-		if (this.isInWater())
+		if (isInWater())
 		{
-			this.updateAITick();
+			updateAITick();
 		}
-		else if (this.isInLava())
+		else if (isInLava())
 		{
 			motionY += 0.0333333339D;
 		}
 
-		this.worldObj.theProfiler.endSection();
+		worldObj.theProfiler.endSection();
 
-		this.worldObj.theProfiler.startSection("travel");
-		this.moveStrafing *= 0.98F;
-		this.moveForward *= 0.98F;
-		this.randomYawVelocity *= 0.9F;
-		this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
-		this.worldObj.theProfiler.endSection();
+		worldObj.theProfiler.startSection("travel");
+		moveStrafing *= 0.98F;
+		moveForward *= 0.98F;
+		randomYawVelocity *= 0.9F;
+		moveEntityWithHeading(moveStrafing, moveForward);
+		worldObj.theProfiler.endSection();
 
-		this.worldObj.theProfiler.startSection("push");
+		worldObj.theProfiler.startSection("push");
 
-		if (!this.worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			this.collideWithNearbyEntities();
+			collideWithNearbyEntities();
 		}
 
-		this.worldObj.theProfiler.endSection();
+		worldObj.theProfiler.endSection();
 	}
-
-	protected void resetNavigator(){
-		if(handleWaterMovement()&&swimmingEnabled&&!(navigator instanceof PathNavigateSwimmer)){
-//			navigator.clearPathEntity();
-			navigator = new PathNavigateSwimmer(this, worldObj);
-		}
-		if((!handleWaterMovement()||!swimmingEnabled)&&!(navigator instanceof PathNavigateGround)){
-//			navigator.clearPathEntity();
-			navigator = new PathNavigateGround(this, worldObj);
-		}
+	
+	private void superUpdateEntityActionState() {
+		worldObj.theProfiler.startSection("checkDespawn");
+		despawnEntity();
+		worldObj.theProfiler.endSection();
+		worldObj.theProfiler.startSection("sensing");
+		getEntitySenses().clearSensingCache();
+		worldObj.theProfiler.endSection();
+		worldObj.theProfiler.startSection("targetSelector");
+		targetTasks.onUpdateTasks();
+		worldObj.theProfiler.endSection();
+		worldObj.theProfiler.startSection("goalSelector");
+		tasks.onUpdateTasks();
+		worldObj.theProfiler.endSection();
+		worldObj.theProfiler.startSection("navigation");
+		navigator.onUpdateNavigation();
+		worldObj.theProfiler.endSection();
+		worldObj.theProfiler.startSection("mob tick");
+		updateAITasks();
+		worldObj.theProfiler.endSection();
+		worldObj.theProfiler.startSection("controls");
+		worldObj.theProfiler.startSection("move");
+		moveHelper.onUpdateMoveHelper();
+		worldObj.theProfiler.endStartSection("look");
+		getLookHelper().onUpdateLook();
+//		worldObj.theProfiler.endStartSection("jump");
+//		jumpHelper.doJump();
+//		worldObj.theProfiler.endSection();
+		worldObj.theProfiler.endSection();
 	}
 
 	@Override
@@ -2428,7 +2450,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				setMaidWait(false);
 			}
 			// 移動速度の変更
-			IAttributeInstance latt = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+			IAttributeInstance latt = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
 			// 属性を解除
 			latt.removeModifier(attCombatSpeed);
 			if (isContract()) {
@@ -2530,7 +2552,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					// インベントリの中身が変わった
 					if (lchange || maidInventory.isChanged(li)) {
 						ItemStack st = maidInventory.getStackInSlot(li);
-						((WorldServer)worldObj).getEntityTracker().func_151248_b(this, new S04PacketEntityEquipment(this.getEntityId(), (li | lselect << 8) + 5, st));
+						((WorldServer)worldObj).getEntityTracker().func_151248_b(this, new S04PacketEntityEquipment(getEntityId(), (li | lselect << 8) + 5, st));
 						maidInventory.resetChanged(li);
 						LMM_LittleMaidMobNX.Debug(String.format("ID:%d-%s - Slot(%x:%d-%d,%d) Update.", getEntityId(), worldObj.isRemote ? "Client" : "Server", lselect, li, mstatSwingStatus[0].index, mstatSwingStatus[1].index));
 					}
@@ -2559,7 +2581,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 
 			// 斧装備時は攻撃力が上がる
-			IAttributeInstance latt = this.getEntityAttribute(SharedMonsterAttributes.attackDamage);
+			IAttributeInstance latt = getEntityAttribute(SharedMonsterAttributes.attackDamage);
 			// 属性を解除
 			latt.removeModifier(attAxeAmp);
 			ItemStack lis = getCurrentEquippedItem();
@@ -2623,7 +2645,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					if (entitymob.getAttackTarget() == mstatgotcha) {
 						//1.8検討
 						entitymob.setAttackTarget(this);
-						entitymob.getNavigator().setPath(this.getNavigator().getPath(), entitymob.moveForward);
+						entitymob.getNavigator().setPath(getNavigator().getPath(), entitymob.moveForward);
 					}
 				}
 			}
@@ -2670,7 +2692,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected void onNewPotionEffect(PotionEffect par1PotionEffect) {
 		super.onNewPotionEffect(par1PotionEffect);
 		if (mstatMasterEntity instanceof EntityPlayerMP) {
-			((EntityPlayerMP)mstatMasterEntity).playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(this.getEntityId(), par1PotionEffect));
+			((EntityPlayerMP)mstatMasterEntity).playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(getEntityId(), par1PotionEffect));
 		}
 	}
 
@@ -2679,7 +2701,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		super.onChangedPotionEffect(par1PotionEffect, par2);
 		// TODO:必要かどうかのチェック
 //		if (mstatMasterEntity instanceof EntityPlayerMP) {
-//			((EntityPlayerMP)mstatMasterEntity).playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(this.getEntityId(), par1PotionEffect));
+//			((EntityPlayerMP)mstatMasterEntity).playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(getEntityId(), par1PotionEffect));
 //		}
 	}
 
@@ -2687,7 +2709,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected void onFinishedPotionEffect(PotionEffect par1PotionEffect) {
 		super.onFinishedPotionEffect(par1PotionEffect);
 		if (mstatMasterEntity instanceof EntityPlayerMP) {
-			((EntityPlayerMP)mstatMasterEntity).playerNetServerHandler.sendPacket(new S1EPacketRemoveEntityEffect(this.getEntityId(), par1PotionEffect));
+			((EntityPlayerMP)mstatMasterEntity).playerNetServerHandler.sendPacket(new S1EPacketRemoveEntityEffect(getEntityId(), par1PotionEffect));
 		}
 	}
 
@@ -2958,8 +2980,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void displayGUIMaidInventory(EntityPlayer pEntityPlayer) {
 		if (!worldObj.isRemote) {
 			LMM_GuiCommonHandler.maidServer = this;
-			pEntityPlayer.openGui(LMM_LittleMaidMobNX.instance, LMM_GuiCommonHandler.GUI_ID_INVVENTORY, this.worldObj,
-					(int)this.posX, (int)this.posY, (int)this.posZ);
+			pEntityPlayer.openGui(LMM_LittleMaidMobNX.instance, LMM_GuiCommonHandler.GUI_ID_INVVENTORY, worldObj,
+					(int)posX, (int)posY, (int)posZ);
 		}
 		else
 		{
@@ -2970,7 +2992,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public boolean interact(EntityPlayer par1EntityPlayer)
 	{
-		MMMLib.Debug(this.worldObj.isRemote, "LMM_EntityLittleMaid.interact:"+par1EntityPlayer.getGameProfile().getName());
+		MMMLib.Debug(worldObj.isRemote, "LMM_EntityLittleMaid.interact:"+par1EntityPlayer.getGameProfile().getName());
 		float lhealth = getHealth();
 		ItemStack itemstack1 = par1EntityPlayer.getCurrentEquippedItem();
 
@@ -3128,9 +3150,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 								// 肩車
 								if (!worldObj.isRemote) {
 									if (ridingEntity == par1EntityPlayer) {
-										this.mountEntity(null);
+										mountEntity(null);
 									} else {
-										this.mountEntity(par1EntityPlayer);
+										mountEntity(par1EntityPlayer);
 									}
 									return true;
 								}
@@ -3151,10 +3173,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //								if (worldObj.isRemote) {
 									par1EntityPlayer.openGui(LMM_LittleMaidMobNX.instance,
 											LMM_GuiCommonHandler.GUI_ID_IFF,
-											this.worldObj,
-											(int)this.posX,
-											(int)this.posY,
-											(int)this.posZ);
+											worldObj,
+											(int)posX,
+											(int)posY,
+											(int)posZ);
 //								}
 								return true;
 							}
@@ -4176,7 +4198,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	public void setExperienceValue(int val)
 	{
-		this.experienceValue = val;
+		experienceValue = val;
 	}
 
 	public void setFlag(int par1, boolean par2) {

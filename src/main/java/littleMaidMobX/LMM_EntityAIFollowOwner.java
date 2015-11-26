@@ -77,7 +77,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		field_48310_h = 0;
 		//lastAvoidWater = petPathfinder.getAvoidsWater();
 		//petPathfinder.setAvoidsWater(false);
-		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).setAvoidsWater(false);
+//		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).setAvoidsWater(false);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 	public void resetTask() {
 		theMaid.setSprinting(false);
 		theOwner = null;
-		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).setAvoidsWater(true);
+//		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).setAvoidsWater(true);
 		petPathfinder.clearPathEntity();
 		//petPathfinder.setAvoidsWater(lastAvoidWater);
 	}
@@ -113,7 +113,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 
 		PathEntity entity = theMaid.getNavigator().getPathToEntityLiving(theOwner);
 		if(entity==null){
-			if(theMaid.handleWaterMovement()&&theMaid.swimmingEnabled){
+			if(theMaid.isInWater()&&theMaid.swimmingEnabled){
 				int x = MathHelper.floor_double(theOwner.posX);
 				int z = MathHelper.floor_double(theOwner.posZ);
 				int y = MathHelper.floor_double(theOwner.posY);
@@ -122,7 +122,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 					if(theMaid.worldObj.getBlockState(new BlockPos(x, y-1, z)).getBlock().getMaterial()==Material.water)
 						entity = theMaid.getNavigator().getPathToXYZ(theOwner.posX, theOwner.posY-1, theOwner.posZ);
 					else {
-						theMaid.setLocationAndAnglesWithResetPath(x, y+1, z, theMaid.rotationYaw, theMaid.rotationPitch);
+						theMaid.setLocationAndAngles(x, y+1, z, theMaid.rotationYaw, theMaid.rotationPitch);
 						updateTask();
 					}
 				}

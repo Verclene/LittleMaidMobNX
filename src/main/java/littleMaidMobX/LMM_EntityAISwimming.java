@@ -20,7 +20,7 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 	@Override
 	public boolean shouldExecute() {
 		if(theEntity instanceof LMM_EntityLittleMaid){
-			if(theEntity.handleWaterMovement()) return true;
+			if(theEntity.isInWater()) return true;
 		}
 		return ((theEntity.getNavigator().noPath() ?
 				(theEntity.isInsideOfMaterial(Material.water)) : theEntity.isInWater())
@@ -38,28 +38,24 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 				return;
 			}
 			LMM_EntityLittleMaid theMaid = (LMM_EntityLittleMaid) theEntity;
-			if(theMaid.handleWaterMovement()){
-				if(theMaid.getNavigator() instanceof PathNavigateGround) {
-					theMaid.resetNavigator();
-				}
-
+			if(theMaid.isInWater()){
 				int x = MathHelper.floor_double(theEntity.posX);
 				int z = MathHelper.floor_double(theEntity.posZ);
 				int y = MathHelper.floor_double(theEntity.getEntityBoundingBox().minY);
-				totalmotionY+= 0.03D*MathHelper.sin(theEntity.ticksExisted/8f);
+				totalmotionY+= 0.03D*MathHelper.cos(theEntity.ticksExisted/8f);
 //				if(theEntity.worldObj.isAnyLiquid(new AxisAlignedBB(x, y, z, x, y+h+1, z))){
 //					totalmotionY += 0.05D;
 //				}
 				
 				PathEntity pathEntity = theMaid.prevPathEntity;
-				if(pathEntity!=null&&theMaid.swimmingEnabled){
+				if(pathEntity!=null && (theMaid.swimmingEnabled||!theMaid.isContract())){
 					PathPoint pathPoint = pathEntity.getFinalPathPoint();
-					theEntity.motionX = ((pathPoint.xCoord>x)?1:(pathPoint.xCoord<x)?-1:0) * theEntity.getAIMoveSpeed()/3d;
-					theEntity.motionZ = ((pathPoint.zCoord>z)?1:(pathPoint.zCoord<z)?-1:0) * theEntity.getAIMoveSpeed()/3d;
-					totalmotionY +=		((pathPoint.yCoord>y)?1:(pathPoint.yCoord<y)?-1:0) * theEntity.getAIMoveSpeed()/3d;
+					theEntity.motionX = ((pathPoint.xCoord>x)?1:(pathPoint.xCoord<x)?-1:0) * theEntity.getAIMoveSpeed()/10d;
+					theEntity.motionZ = ((pathPoint.zCoord>z)?1:(pathPoint.zCoord<z)?-1:0) * theEntity.getAIMoveSpeed()/10d;
+					totalmotionY +=		((pathPoint.yCoord>y)?1:(pathPoint.yCoord<y)?-1:0) * theEntity.getAIMoveSpeed()/10d;
 				}else{
 				}
-				if(theMaid.swimmingEnabled&&theEntity.handleWaterMovement()){
+				if(theMaid.swimmingEnabled&&theEntity.isInWater()){
 					theEntity.motionY = totalmotionY;
 				}else{
 					theEntity.motionY = 0.04D;
