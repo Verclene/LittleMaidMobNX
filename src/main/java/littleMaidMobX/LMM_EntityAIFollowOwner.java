@@ -112,14 +112,12 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		field_48310_h = 10;
 
 		PathEntity entity = theMaid.getNavigator().getPathToEntityLiving(theOwner);
-		/*
 		if(entity==null){
 			if(theMaid.handleWaterMovement()&&theMaid.swimmingEnabled){
 				int x = MathHelper.floor_double(theOwner.posX);
 				int z = MathHelper.floor_double(theOwner.posZ);
 				int y = MathHelper.floor_double(theOwner.posY);
 				LMM_LittleMaidMobNX.Debug("TARGET POS %d,%d,%d", x,y,z);
-
 				if(theMaid.worldObj.getBlockState(new BlockPos(x, y, z)).getBlock().getMaterial()!=Material.water){
 					if(theMaid.worldObj.getBlockState(new BlockPos(x, y-1, z)).getBlock().getMaterial()==Material.water)
 						entity = theMaid.getNavigator().getPathToXYZ(theOwner.posX, theOwner.posY-1, theOwner.posZ);
@@ -131,7 +129,6 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 			}
 			return;
 		}
-		*/
 		theMaid.getNavigator().setPath(entity, moveSpeed);
 	}
 

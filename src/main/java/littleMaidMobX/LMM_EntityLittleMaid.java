@@ -98,6 +98,7 @@ import net.minecraft.network.play.server.S04PacketEntityEquipment;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1EPacketRemoveEntityEffect;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.pathfinding.PathPoint;
@@ -273,9 +274,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 初期設定
 		maidInventory = new LMM_InventoryLittleMaid(this);
 		if (par1World != null ) {
-			if (par1World.isRemote) {
+			if(par1World.isRemote)
+			{
 				maidAvatar = new LMM_EntityLittleMaidAvatar(par1World, this);
-			} else {
+			}
+			else
+			{
 				try{
 					maidAvatar = new LMM_EntityLittleMaidAvatarMP(par1World, this);
 				}catch(Throwable throwable){
@@ -316,6 +320,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		// 野生種用初期値設定
 		setHealth(15F);
+
+		//1.8検討
+		// 移動用フィジカル設定
+		//getNavigator().setAvoidsWater(true);
+		//getNavigator().setBreakDoors(true);
 
 		// TODO:これはテスト
 //		maidStabilizer.put("HeadTop", MMM_StabilizerManager.getStabilizer("WitchHat", "HeadTop"));
@@ -1683,8 +1692,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	protected void damageEntity(DamageSource par1DamageSource, float par2) {
-		// TODO ここは要調整
-
 		// ダメージソースに応じて音声変更
 		if (par1DamageSource == DamageSource.fall) {
 			maidDamegeSound = LMM_EnumSound.hurt_fall;
@@ -1704,8 +1711,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 被ダメ
 		float llasthealth = getHealth();
 		if (par2 > 0 && getActiveModeClass() != null && !getActiveModeClass().damageEntity(maidMode, par1DamageSource, par2)) {
-//			getAvatarIF().W_damageEntity(par1DamageSource, par2);
-			super.damageEntity(par1DamageSource, par2);
+			getAvatarIF().W_damageEntity(par1DamageSource, par2);
 
 			// ダメージを受けると待機を解除
 			setMaidWait(false);
@@ -2093,15 +2099,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				isInsideOpaque = false;
 			}
 		}
-		
-		// 水中関連
-		if (swimmingEnabled && !isInWater()) {
-			((PathNavigateGround)navigator).setCanSwim(true);
-			((PathNavigateGround)navigator).setAvoidsWater(false);
-		} else if (!swimmingEnabled && !isInWater()) {
-			((PathNavigateGround)navigator).setAvoidsWater(true);
-			((PathNavigateGround)navigator).setCanSwim(false);
-		}
 
 		ItemStack itemstack = this.getInventory()[0];
 
@@ -2228,7 +2225,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch){
-//		if(worldObj.isRemote) requestRenderParamRecall();
+		if(worldObj.isRemote) requestRenderParamRecall();
 		super.setLocationAndAngles(x, y, z, yaw, pitch);
 	}
 
@@ -3762,8 +3759,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	private boolean checkedTextureUpdate = false;
-	private int textureCoolTime = 0;
-
 	public boolean updateTexturePack() {
 		// テクスチャパックが更新されていないかをチェック
 		// クライアント側の
@@ -3787,10 +3782,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		*/
 		// TODO 移行準備:テクスチャ設定
 		if(!checkedTextureUpdate){
-			if (textureCoolTime<20) {
-				textureCoolTime++;
-				return false;
-			}
 			checkedTextureUpdate = true;
 			requestRenderParamRecall();
 		}
