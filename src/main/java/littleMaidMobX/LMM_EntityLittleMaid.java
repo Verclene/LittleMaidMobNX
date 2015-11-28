@@ -3593,7 +3593,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 			
 			if (worldObj.getTotalWorldTime() - maidAnniversary > 24000 * 365) {
-				getMaidMasterEntity().triggerAchievement(LMMNX_Achievements.ac_MyFavorite);
+				if (getMaidMasterEntity() != null) getMaidMasterEntity().triggerAchievement(LMMNX_Achievements.ac_MyFavorite);
 			}
 		}
 
