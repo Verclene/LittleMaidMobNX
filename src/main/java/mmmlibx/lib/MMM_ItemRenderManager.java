@@ -69,7 +69,7 @@ public class MMM_ItemRenderManager {
 		if (forgeRender == null) {
 			forgeRender = new MMM_ItemRendererForge();
 		}
-		MinecraftForgeClient.registerItemRenderer(pItem, forgeRender);
+//		MinecraftForgeClient.registerItemRenderer(pItem, forgeRender);
 		MMMLib.Debug("registerForge:%s", pItem.getClass().getSimpleName());
 	}
 

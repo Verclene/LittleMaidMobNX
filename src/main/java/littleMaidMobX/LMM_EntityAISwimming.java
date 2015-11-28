@@ -42,7 +42,7 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 				int x = MathHelper.floor_double(theEntity.posX);
 				int z = MathHelper.floor_double(theEntity.posZ);
 				int y = MathHelper.floor_double(theEntity.getEntityBoundingBox().minY);
-				totalmotionY+= 0.03D*MathHelper.cos(theEntity.ticksExisted/8f);
+				totalmotionY+= 0.05D*MathHelper.cos(theEntity.ticksExisted/8f);
 //				if(theEntity.worldObj.isAnyLiquid(new AxisAlignedBB(x, y, z, x, y+h+1, z))){
 //					totalmotionY += 0.05D;
 //				}
@@ -50,9 +50,9 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 				PathEntity pathEntity = theMaid.prevPathEntity;
 				if(pathEntity!=null && (theMaid.swimmingEnabled||!theMaid.isContract())){
 					PathPoint pathPoint = pathEntity.getFinalPathPoint();
-					theEntity.motionX = ((pathPoint.xCoord>x)?1:(pathPoint.xCoord<x)?-1:0) * theEntity.getAIMoveSpeed()/10d;
-					theEntity.motionZ = ((pathPoint.zCoord>z)?1:(pathPoint.zCoord<z)?-1:0) * theEntity.getAIMoveSpeed()/10d;
-					totalmotionY +=		((pathPoint.yCoord>y)?1:(pathPoint.yCoord<y)?-1:0) * theEntity.getAIMoveSpeed()/10d;
+					theEntity.motionX = ((pathPoint.xCoord>x)?1:(pathPoint.xCoord<x)?-1:0) * theEntity.getAIMoveSpeed()/5d;
+					theEntity.motionZ = ((pathPoint.zCoord>z)?1:(pathPoint.zCoord<z)?-1:0) * theEntity.getAIMoveSpeed()/5d;
+					totalmotionY +=		((pathPoint.yCoord>=y)?1:-1) * theEntity.getAIMoveSpeed()/5d;
 				}else{
 				}
 				if(theMaid.swimmingEnabled&&theEntity.isInWater()){

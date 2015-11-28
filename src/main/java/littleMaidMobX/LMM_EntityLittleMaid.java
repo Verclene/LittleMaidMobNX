@@ -49,8 +49,10 @@ import net.blacklab.lib.ItemUtil;
 import net.blacklab.lmmnx.LMMNX_Achievements;
 import net.blacklab.lmmnx.LMMNX_EntityAIOpenDoor;
 import net.blacklab.lmmnx.LMMNX_EntityAIRestrictOpenDoor;
+import net.blacklab.lmmnx.LMMNX_EntityAIWatchClosest;
 import net.blacklab.lmmnx.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.LMMNX_NetSync;
+import net.blacklab.lmmnx.LMMNX_PathNavigatorLittleMaid;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
 import net.minecraft.block.Block;
@@ -99,6 +101,7 @@ import net.minecraft.network.play.server.S04PacketEntityEquipment;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1EPacketRemoveEntityEffect;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Potion;
@@ -246,6 +249,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public LMM_EntityAISwimming aiSwiming;
 	public EntityAIPanic aiPanic;
 
+	public LMMNX_EntityAIWatchClosest aiWatchClosest;
 	// ActiveModeClass
 	protected LMM_EntityModeBase maidActiveModeClass;
 	public Profiler aiProfiler;
@@ -258,7 +262,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	protected boolean isWildSaved = false;
 
-	public boolean swimmingEnabled = false;
+	protected boolean swimmingEnabled = false;
 
 	// サーバ用テクスチャ処理移行フラグ
 	private boolean isMadeTextureNameFlag = false;
@@ -267,7 +271,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	protected MMM_Counter registerTick;
 	protected String registerMode;
-
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
 		// 初期設定
@@ -456,6 +459,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		aiPanic = new EntityAIPanic(this, 2.0F);
 		aiTracer = new LMM_EntityAITracerMove(this);
 		aiSit = new LMM_EntityAIWait(this);
+		
+		aiWatchClosest = new LMMNX_EntityAIWatchClosest(this, EntityLivingBase.class, 10F);
 
 		// TODO:これいらなくね？
 		aiProfiler = worldObj != null && worldObj.theProfiler != null ? worldObj.theProfiler : null;
@@ -488,7 +493,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		ltasks[0].addTask(41, aiOpenDoor);
 		ltasks[0].addTask(42, aiRestrictRain);
 		// 首の動き単独
-		ltasks[0].addTask(51, new EntityAIWatchClosest(this, EntityLivingBase.class, 10F));
+		ltasks[0].addTask(51, aiWatchClosest);
 		ltasks[0].addTask(52, new EntityAILookIdle(this));
 
 		// 追加分
@@ -497,6 +502,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 	}
 
+	@Override
+	protected PathNavigate getNewNavigator(World worldIn) {
+		return new LMMNX_PathNavigatorLittleMaid(this, worldIn);
+	}
 
 	public void addMaidMode(EntityAITasks[] peaiTasks, String pmodeName, int pmodeIndex) {
 		maidModeList.put(pmodeIndex, peaiTasks);
@@ -1901,19 +1910,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// TODO 自動生成されたメソッド・スタブ
 		if(getNavigator().getPath()!=null)
 			prevPathEntity = getNavigator().getPath();
-		boolean flag = !swimmingEnabled;
-		if(isInLava()){
-			jump();
-			flag = true;
-		}
-		if(!swimmingEnabled) flag = true;
-		if(swimmingEnabled&&isInWater()&&prevPathEntity!=null){
-			PathPoint pathPoint = prevPathEntity.getFinalPathPoint();
-			if(worldObj.getBlockState(new BlockPos(pathPoint.xCoord,pathPoint.yCoord+2,pathPoint.zCoord)).getBlock().getMaterial()!=Material.water)
-				flag = true;
-			if(getAir()<=0) flag = true;
-		}
-		if(flag) super.updateAITick();
+		if(swimmingEnabled) return;
+		super.updateAITick();
 	}
 
 	@Override
@@ -2233,15 +2231,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 	}
 
-	@Override
-	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch){
-		if(worldObj.isRemote) requestRenderParamRecall();
-		super.setLocationAndAngles(x, y, z, yaw, pitch);
-	}
-
 	private void superLivingUpdate() {
 		if(onGround) isJumping = false;
-
+	
 		if (newPosRotationIncrements > 0)
 		{
 			double d0 = posX + (newPosX - posX) / newPosRotationIncrements;
@@ -2260,24 +2252,24 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			motionY *= 0.98D;
 			motionZ *= 0.98D;
 		}
-
+	
 		if (Math.abs(motionX) < 0.005D)
 		{
 			motionX = 0.0D;
 		}
-
+	
 		if (Math.abs(motionY) < 0.005D)
 		{
 			motionY = 0.0D;
 		}
-
+	
 		if (Math.abs(motionZ) < 0.005D)
 		{
 			motionZ = 0.0D;
 		}
-
+	
 		worldObj.theProfiler.startSection("ai");
-
+	
 		if (isMovementBlocked())
 		{
 			isJumping = false;
@@ -2295,10 +2287,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 			worldObj.theProfiler.endSection();
 		}
-
+	
 		worldObj.theProfiler.endSection();
 		worldObj.theProfiler.startSection("jump");
-
+	
 		if (isInWater())
 		{
 			updateAITick();
@@ -2307,54 +2299,60 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		{
 			motionY += 0.0333333339D;
 		}
-
+	
 		worldObj.theProfiler.endSection();
-
+	
 		worldObj.theProfiler.startSection("travel");
 		moveStrafing *= 0.98F;
 		moveForward *= 0.98F;
 		randomYawVelocity *= 0.9F;
 		moveEntityWithHeading(moveStrafing, moveForward);
 		worldObj.theProfiler.endSection();
-
+	
 		worldObj.theProfiler.startSection("push");
-
+	
 		if (!worldObj.isRemote)
 		{
 			collideWithNearbyEntities();
 		}
-
+	
 		worldObj.theProfiler.endSection();
 	}
-	
+
 	private void superUpdateEntityActionState() {
-		worldObj.theProfiler.startSection("checkDespawn");
-		despawnEntity();
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("sensing");
-		getEntitySenses().clearSensingCache();
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("targetSelector");
-		targetTasks.onUpdateTasks();
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("goalSelector");
-		tasks.onUpdateTasks();
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("navigation");
-		navigator.onUpdateNavigation();
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("mob tick");
-		updateAITasks();
-		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.startSection("controls");
-		worldObj.theProfiler.startSection("move");
-		moveHelper.onUpdateMoveHelper();
-		worldObj.theProfiler.endStartSection("look");
-		getLookHelper().onUpdateLook();
-//		worldObj.theProfiler.endStartSection("jump");
-//		jumpHelper.doJump();
-//		worldObj.theProfiler.endSection();
-		worldObj.theProfiler.endSection();
+			worldObj.theProfiler.startSection("checkDespawn");
+			despawnEntity();
+			worldObj.theProfiler.endSection();
+			worldObj.theProfiler.startSection("sensing");
+			getEntitySenses().clearSensingCache();
+			worldObj.theProfiler.endSection();
+			worldObj.theProfiler.startSection("targetSelector");
+			targetTasks.onUpdateTasks();
+			worldObj.theProfiler.endSection();
+			worldObj.theProfiler.startSection("goalSelector");
+			tasks.onUpdateTasks();
+			worldObj.theProfiler.endSection();
+			worldObj.theProfiler.startSection("navigation");
+			navigator.onUpdateNavigation();
+			worldObj.theProfiler.endSection();
+			worldObj.theProfiler.startSection("mob tick");
+			updateAITasks();
+			worldObj.theProfiler.endSection();
+			worldObj.theProfiler.startSection("controls");
+			worldObj.theProfiler.startSection("move");
+			moveHelper.onUpdateMoveHelper();
+			worldObj.theProfiler.endStartSection("look");
+			getLookHelper().onUpdateLook();
+	//		worldObj.theProfiler.endStartSection("jump");
+	//		jumpHelper.doJump();
+	//		worldObj.theProfiler.endSection();
+			worldObj.theProfiler.endSection();
+		}
+
+	@Override
+	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch){
+		if(worldObj.isRemote) requestRenderParamRecall();
+		super.setLocationAndAngles(x, y, z, yaw, pitch);
 	}
 
 	@Override
@@ -2653,6 +2651,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	}
 
+	public boolean isSwimmingEnabled() {
+		return swimmingEnabled || !isContract();
+	}
 
 	@Override
 	public void onDeath(DamageSource par1DamageSource) {

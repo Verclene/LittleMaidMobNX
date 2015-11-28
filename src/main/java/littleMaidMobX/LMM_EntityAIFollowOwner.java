@@ -123,7 +123,6 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 						entity = theMaid.getNavigator().getPathToXYZ(theOwner.posX, theOwner.posY-1, theOwner.posZ);
 					else {
 						theMaid.setLocationAndAngles(x, y+1, z, theMaid.rotationYaw, theMaid.rotationPitch);
-						updateTask();
 					}
 				}
 			}

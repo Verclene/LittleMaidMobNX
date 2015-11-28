@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mmmlibx.lib.MMM_Helper;
+import net.blacklab.lmmnx.LMMNX_EntityAIWatchClosest;
+import net.blacklab.lmmnx.LMMNX_EntityAIWatchClosest2;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -85,9 +87,9 @@ public class LMM_EntityMode_Basic extends LMM_EntityModeBlockBase {
 		ltasks[0].addTask(9, owner.aiCollectItem);
 		ltasks[0].addTask(10, new EntityAILeapAtTarget(owner, 0.3F));
 		ltasks[0].addTask(11, owner.aiWander);
-		ltasks[0].addTask(12, new EntityAIWatchClosest2(owner, EntityLivingBase.class, 10F, 0.02F));
-		ltasks[0].addTask(13, new EntityAIWatchClosest2(owner, LMM_EntityLittleMaid.class, 10F, 0.02F));
-		ltasks[0].addTask(13, new EntityAIWatchClosest2(owner, EntityPlayer.class, 10F, 0.02F));
+		ltasks[0].addTask(12, new LMMNX_EntityAIWatchClosest2(owner, EntityLivingBase.class, 10F, 0.02F));
+		ltasks[0].addTask(13, new LMMNX_EntityAIWatchClosest2(owner, LMM_EntityLittleMaid.class, 10F, 0.02F));
+		ltasks[0].addTask(13, new LMMNX_EntityAIWatchClosest2(owner, EntityPlayer.class, 10F, 0.02F));
 		ltasks[0].addTask(13, new EntityAILookIdle(owner));
 
 		ltasks[1].addTask(1, new LMM_EntityAIHurtByTarget(owner, false));
