@@ -112,6 +112,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 		field_48310_h = 10;
 
 		PathEntity entity = theMaid.getNavigator().getPathToEntityLiving(theOwner);
+		/*
 		if(entity==null){
 			if(theMaid.isInWater()&&theMaid.swimmingEnabled){
 				int x = MathHelper.floor_double(theOwner.posX);
@@ -128,6 +129,7 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 			}
 			return;
 		}
+		*/
 		theMaid.getNavigator().setPath(entity, moveSpeed);
 	}
 

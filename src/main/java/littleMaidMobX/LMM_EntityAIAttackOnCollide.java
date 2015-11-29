@@ -56,6 +56,10 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 		attackRange = (double)theMaid.width + (double)entityTarget.width + 0.4D;
 		attackRange *= attackRange;
 		
+		if (theMaid.isFreedom() && !theMaid.isWithinHomeDistanceFromPosition(new BlockPos(MathHelper.floor_double(entityTarget.posX), MathHelper.floor_double(entityTarget.posY), MathHelper.floor_double(entityTarget.posZ)))) {
+			return false;
+		}
+		
 		if ((pathToTarget != null) || (theMaid.getDistanceSq(entityTarget.posX, entityTarget.getEntityBoundingBox().minY, entityTarget.posZ) <= attackRange)) {
 			return true;
 		}
@@ -91,9 +95,6 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 	@Override
 	public boolean continueExecuting() {
 		Entity lentity = theMaid.getAttackTarget();
-		if (lentity == null) {
-			lentity = theMaid.getAttackTarget();
-		}
 		if (lentity == null || entityTarget != lentity) {
 			return false;
 		}
@@ -113,7 +114,7 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 			return !theMaid.getNavigator().noPath();
 		}
 		
-		return theMaid.isWithinHomeDistanceFromPosition(new BlockPos(MathHelper.floor_double(entityTarget.posX), MathHelper.floor_double(entityTarget.posY), MathHelper.floor_double(entityTarget.posZ)));
+		return true;
 	}
 
 	@Override

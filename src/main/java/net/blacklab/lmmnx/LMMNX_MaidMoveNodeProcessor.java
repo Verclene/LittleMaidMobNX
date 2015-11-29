@@ -1,6 +1,5 @@
 package net.blacklab.lmmnx;
 
-import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -59,7 +58,7 @@ public class LMMNX_MaidMoveNodeProcessor extends WalkNodeProcessor {
 	 * Returns a point that the entity can safely move to
 	 */
 	private PathPoint getSafePoint(Entity entityIn, int x, int y, int z) {
-		int i = this.func_176186_b(entityIn, x, y, z);
+		int i = -1;//this.func_176186_b(entityIn, x, y, z);
 		return i == -1 ? this.openPoint(x, y, z) : null;
 	}
 	

@@ -570,6 +570,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void setSwimming(boolean flag){
 		swimmingEnabled = flag;
 	}
+	
+	public boolean isInWater() {
+		return inWater ? true : worldObj.getBlockState(getPosition()).getBlock().getMaterial() == Material.water;
+	}
 
 	public void setMaidArmorVisible(int i){
 		if(i<0) i=0;
