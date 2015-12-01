@@ -1,5 +1,6 @@
 package littleMaidMobX;
 
+import net.blacklab.lib.VectorUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.AxisAlignedBB;
@@ -201,7 +202,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 	/**
 	 * 転移先のチェック
 	 */
-	protected boolean isCanJump(int px, int py, int pz) {
+	protected boolean isCanJump(double px, double py, double pz) {
 		return theWorld.getBlockState(new BlockPos(px, py - 1, pz)).getBlock().getMaterial().isSolid()
 				&& theWorld.func_147461_a(boundingBox).isEmpty();
 	}
