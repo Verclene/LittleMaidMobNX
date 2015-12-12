@@ -1,7 +1,7 @@
 package littleMaidMobX;
 
 import mmmlibx.lib.MMM_Helper;
-import net.blacklab.lmmnx.LMMNX_Achievements;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;

@@ -2,9 +2,9 @@ package littleMaidMobX;
 
 import java.util.Iterator;
 
-import net.blacklab.lib.ItemUtil;
-import net.blacklab.lib.VectorUtil;
-import net.blacklab.lmmnx.LMMNX_Achievements;
+import net.blacklab.lib.minecraft.item.ItemUtil;
+import net.blacklab.lib.minecraft.vector.VectorUtil;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;

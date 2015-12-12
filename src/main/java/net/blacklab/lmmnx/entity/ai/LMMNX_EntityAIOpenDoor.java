@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.entity.ai;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_LittleMaidMobNX;

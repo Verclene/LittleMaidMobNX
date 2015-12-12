@@ -1,7 +1,7 @@
 package littleMaidMobX;
 
-import net.blacklab.lib.ItemUtil;
-import net.blacklab.lib.Version;
+import net.blacklab.lib.minecraft.item.ItemUtil;
+import net.blacklab.lib.version.Version;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;

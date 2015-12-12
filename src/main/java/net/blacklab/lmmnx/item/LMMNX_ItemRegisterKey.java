@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.item;
 
 import java.util.List;
 

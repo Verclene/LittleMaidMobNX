@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mmmlibx.lib.MMM_Helper;
-import net.blacklab.lmmnx.LMMNX_EntityAIWatchClosest;
-import net.blacklab.lmmnx.LMMNX_EntityAIWatchClosest2;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
+import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIWatchClosest;
+import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIWatchClosest2;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.entity.Entity;

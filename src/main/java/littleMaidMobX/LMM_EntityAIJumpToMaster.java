@@ -1,6 +1,6 @@
 package littleMaidMobX;
 
-import net.blacklab.lib.VectorUtil;
+import net.blacklab.lib.minecraft.vector.VectorUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.AxisAlignedBB;

@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.sync;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_LittleMaidMobNX;

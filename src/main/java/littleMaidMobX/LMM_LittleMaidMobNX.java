@@ -6,12 +6,12 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
-import net.blacklab.lib.ConfigList;
-import net.blacklab.lmmnx.LMMNX_Achievements;
-import net.blacklab.lmmnx.LMMNX_ItemRegisterKey;
+import net.blacklab.lib.config.ConfigList;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
 import net.blacklab.lmmnx.client.LMM_SoundResourcePack;
+import net.blacklab.lmmnx.item.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
@@ -41,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.3.68";
-	public static final String VERSION_FORSITE = "NX4 Build 68";
+	public static final String VERSION = "4.3.76";
+	public static final String VERSION_FORSITE = "NX4 Build 76";
 	public static final int VERSION_CODE = 11;
 
 	/*

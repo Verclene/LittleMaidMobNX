@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.entity.pathnavigate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

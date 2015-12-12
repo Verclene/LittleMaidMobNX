@@ -72,6 +72,9 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 				}else{
 					theEntity.motionY = 0.04D;
 				}
+				if (theMaid.getAir() == 0) {
+					theEntity.motionY += 0.2D;
+				}
 			}
 		}
 	}

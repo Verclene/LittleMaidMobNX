@@ -1,7 +1,7 @@
 package littleMaidMobX;
 
 import mmmlibx.lib.MMM_Helper;
-import net.blacklab.lib.VectorUtil;
+import net.blacklab.lib.minecraft.vector.VectorUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;

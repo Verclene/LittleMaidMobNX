@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.entity.ai;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
