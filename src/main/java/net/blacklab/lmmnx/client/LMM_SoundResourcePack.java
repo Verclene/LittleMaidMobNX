@@ -4,11 +4,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
-import littleMaidMobX.LMM_SoundManager;
+import mmmlibx.lib.FileManager;
 import net.minecraft.client.resources.DefaultResourcePack;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
@@ -27,9 +29,10 @@ public class LMM_SoundResourcePack implements IResourcePack {
 
 	@Override
 	public InputStream getInputStream(ResourceLocation par1ResourceLocation) throws IOException {
+		LMM_LittleMaidMobNX.Debug("GET STREAM %s", par1ResourceLocation.getResourcePath());
 		InputStream inputstream = getResourceStream(par1ResourceLocation);
 //		if (inputstream != null) {
-			return inputstream;
+		return inputstream;
 //		} else {
 //			throw new FileNotFoundException(par1ResourceLocation.getResourcePath());
 //		}
@@ -37,27 +40,52 @@ public class LMM_SoundResourcePack implements IResourcePack {
 
 	private InputStream getResourceStream(ResourceLocation resource) {
 		InputStream lis = null;
-		String iString = resource.getResourcePath();
-		if(iString.startsWith("/")) iString = iString.substring(1);
-		if(resource.getResourceDomain().equalsIgnoreCase(LMM_LittleMaidMobNX.DOMAIN))
-		{
-			if(iString.endsWith(".ogg")){
-				LMM_LittleMaidMobNX.Debug("SOUND path %s", iString);
-//				return FileManager.COMMON_CLASS_LOADER.getResourceAsStream("/"+iString);
-			}
-			lis = LMM_SoundManager.instance.getResourceStream(resource);
-//			LMM_LittleMaidMobNX.Debug("getResource:%s : %s", resource, lis);
+		if (resource.getResourcePath().endsWith("sounds.json")) {
+			return FileManager.COMMON_CLASS_LOADER.getResourceAsStream("LittleMaidMobNX/sounds.json");
+		}
+		if (resource.getResourcePath().endsWith(".ogg")) {
+			lis = FileManager.COMMON_CLASS_LOADER.getResourceAsStream(decodePathGetPath(resource));
 		}
 		return lis;
 	}
-
+	
 	@Override
 	public boolean resourceExists(ResourceLocation resource) {
-		return LMM_SoundManager.instance.existsResource(resource);
+		LMM_LittleMaidMobNX.Debug("RESOURCE CHECK %s", resource.getResourcePath());
+		if (resource.getResourcePath().endsWith("sounds.json")) {
+			return true;
+		}
+		if (resource.getResourcePath().endsWith(".ogg")) {
+			String f = decodePathGetName(resource);
+			return LMMNX_SoundRegistry.isSoundNameRegistered(f) ? LMMNX_SoundRegistry.getPathListFromRegisteredName(f)!=null : false;
+		}
+		return false;
+	}
+	
+	private String decodePathSplicePathStr(ResourceLocation rl) {
+		String path = rl.getResourcePath();
+		Pattern pattern = Pattern.compile("^/*?sounds/(.+)\\.ogg");
+		Matcher matcher = pattern.matcher(path);
+		if (matcher.find()) {
+			return matcher.group(1);
+		}
+		return null;
+	}
+	
+	private String decodePathGetName(ResourceLocation rl) {
+		String f = decodePathSplicePathStr(rl);
+		String[] gs = f.split("//");
+		return gs[0];
+	}
+	
+	private String decodePathGetPath(ResourceLocation rl) {
+		String f = decodePathSplicePathStr(rl);
+		String[] gs = f.split("//");
+		return gs.length>1 ? gs[1] : null;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static final Set lmmxResourceDomains = ImmutableSet.of(LMM_LittleMaidMobNX.DOMAIN);
+	public static final Set lmmxResourceDomains = ImmutableSet.of("lmmnx");
 
 	@Override
 	@SuppressWarnings("rawtypes")
@@ -85,7 +113,7 @@ public class LMM_SoundResourcePack implements IResourcePack {
 
 	@Override
 	public String getPackName() {
-		return "ModelAndSound";
+		return "LMMNXSound";
 	}
 
 }

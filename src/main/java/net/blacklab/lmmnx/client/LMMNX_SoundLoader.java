@@ -1,13 +1,19 @@
 package net.blacklab.lmmnx.client;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,10 +23,15 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import littleMaidMobX.LMM_EnumSound;
+import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.FileManager;
 import net.blacklab.lib.classutil.FileClassUtil;
+import net.minecraftforge.fml.common.FMLLog;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.logging.log4j.Level;
+
+import scala.tools.nsc.backend.icode.Members.IField;
 
 /**
  * 新サウンドローディング(from 4.3)
@@ -51,6 +62,7 @@ public class LMMNX_SoundLoader {
 		// 処理用のメソッドは全てインスタンス内に．
 		instance.searchDir(FileManager.dirMods);
 		instance.appendPath();
+		instance.createJson();
 	}
 	
 	private void searchDir(File f) {
@@ -74,9 +86,11 @@ public class LMMNX_SoundLoader {
 				pathStore.add(p);
 			}
 			if ("littleMaidMob.cfg".equals(t.getName())) {
+				LMM_LittleMaidMobNX.Debug("Cfg found in file %s", t.getAbsolutePath());
 				try {
 					decodeConfig(new FileInputStream(t));
 				} catch (FileNotFoundException e) {
+					LMM_LittleMaidMobNX.Debug("Cfg read fail: UNEXPECTED NOT FOUND.");
 				}
 			}
 		}
@@ -89,11 +103,12 @@ public class LMMNX_SoundLoader {
 			ZipEntry entry;
 			while ((entry = zipInputStream.getNextEntry()) != null) {
 				if ("littleMaidMob.cfg".equals(FileClassUtil.getFileName(entry.getName()))) {
+					LMM_LittleMaidMobNX.Debug("Cfg found in zip %s -> %s", f.getAbsolutePath(), entry.getName());
 					ZipFile zipFile = new ZipFile(f);
-					decodeConfig(zipFile.getInputStream((ZipArchiveEntry) entry));
+					decodeConfig(zipFile.getInputStream(new ZipArchiveEntry(entry.getName())));
 					zipFile.close();
 				}
-				if (".ogg".equals(entry.getName())) {
+				if (entry.getName().endsWith(".ogg")) {
 					String fString = entry.getName().substring(entry.getName().startsWith("/") ? 1 : 0);
 					pathStore.add(fString);
 				}
@@ -116,13 +131,17 @@ public class LMMNX_SoundLoader {
 				if (buf.startsWith("se_") && a != -1) {
 					LMM_EnumSound sound = LMM_EnumSound.valueOf(buf.substring(3, a));
 					String enmString = buf.substring(++a);
+					LMM_LittleMaidMobNX.Debug("LINE READ: detected %s as %s", enmString, sound.toString());
 
 					for (String s : enmString.split(",")) {
+						LMM_LittleMaidMobNX.Debug("DECODING %s", s);
 						String[] vlStrings = s.split(";");
 						Integer col = -1;
 						String name = vlStrings[vlStrings.length - 1];
+						String texname = LMMNX_SoundRegistry.DEFAULT_TEXTURE_REGISTRATION_KEY;
 						switch (vlStrings.length) {
 						case 3:
+							texname = vlStrings[0];
 						case 2:
 							try {
 								col = Integer.valueOf(vlStrings[vlStrings.length - 2]);
@@ -131,7 +150,8 @@ public class LMMNX_SoundLoader {
 							} catch (NumberFormatException e) {
 							}
 						case 1:
-							LMMNX_SoundRegistry.registerSoundName(sound, LMMNX_SoundRegistry.DEFAULT_TEXTURE_REGISTRATION_KEY, col, name);
+							LMM_LittleMaidMobNX.Debug("REGISTER NAME %s, %s, %s", texname, col, name);
+							LMMNX_SoundRegistry.registerSoundName(sound, texname, col, name);
 							break;
 						default:
 							break;
@@ -146,30 +166,103 @@ public class LMMNX_SoundLoader {
 		found = true;
 	}
 	
+	private void createJson() {
+		File jsonDir = new File(FileManager.dirMods, "LittleMaidMobNX");
+		if (jsonDir.isFile()) {
+			throw new IllegalStateException("Remove 'LittleMaidMobNX' file in the mods folder!");
+		}
+		if (!jsonDir.exists()) {
+			if (!jsonDir.mkdir()) {
+				FMLLog.log(Level.ERROR, "[LittleMaidMobNX]Making LittleMaidMobNX directory failed.");
+				found = false;
+				return;
+			}
+		}
+		
+		// JSON書き込み
+		File jsonFile = new File(jsonDir, "sounds.json");
+		if (jsonFile.isDirectory()) {
+			FMLLog.log(Level.ERROR, "[LittleMaidMobNX]There is sounds.json folder?");
+			found = false;
+			return;
+		}
+		try {
+			// 出力行を生成
+			List<CharSequence> output = new ArrayList<CharSequence>();
+			
+			// トップブロック
+			output.add("{");
+			
+				Iterator iterator = LMMNX_SoundRegistry.getRegisteredNamesList().iterator();
+				while (iterator.hasNext()) {
+					String soundName = (String) iterator.next();
+
+					List m = LMMNX_SoundRegistry.getPathListFromRegisteredName(soundName);
+					// サウンド登録名
+					output.add("  \"" + soundName + "\": {");
+					
+					// サウンドの各種設定
+					output.add("    \"category\": \"master\",");
+					output.add("    \"sounds\": [");
+					if (m!=null && !m.isEmpty()) {
+						Iterator n = m.iterator();
+						while (n.hasNext()) {
+							String path = (String) n.next();
+							output.add("      \"" + soundName + "//" + path + "\"" + (n.hasNext() ? "," : ""));
+						}
+					}
+						
+					output.add("    ]");
+
+					output.add("  }");
+					
+					if (iterator.hasNext()) {
+						output.add("  ,");
+					}
+				}
+			
+			output.add("}");
+
+			// Files.writeはJava7以降を要求
+			Files.write(jsonFile.toPath(), output, Charset.forName("UTF-8"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			FileManager.COMMON_CLASS_LOADER.addURL(jsonDir.toURI().toURL());
+		} catch (MalformedURLException e) {
+		}
+	}
+	
 	private void appendPath() {
 		for (String path : pathStore) {
 			// サーチ用に末尾の数値と拡張子を切り落とす
 			String p1 = "";
-			Pattern pattern = Pattern.compile("(.+)[0-9]*\\.ogg");
+			Pattern pattern = Pattern.compile("(.+?)[0-9]*+\\.ogg");
 			Matcher matcher = pattern.matcher(path);
 			if (matcher.find()) {
-				p1 = matcher.group();
+				p1 = matcher.group(1);
 			} else {
 				continue;
 			}
 			
 			// サウンドネーム式に置換
 			String p2 = p1.replace('/', '.');
-
+			
 			// サウンドネームとパスの比較を行う．
 			// 最低限，サウンドファイルの直上のディレクトリ名が一致していれば登録する．
 			// 基本的にネームは「littleMaidMob.〜」と登録されているはずである．
-			for (int i=0; i!=-1 && i!=p2.lastIndexOf("."); i=p2.indexOf(".", i+1)) {
-				String p3 = "littleMaidMob." + p2.substring(i+1);
-				if (LMMNX_SoundRegistry.getRegisteredNamesList().contains(p3)) {
+			int i = -1;
+			do {
+				String p3 = "littleMaidMob." + p2.substring(++i);
+				LMM_LittleMaidMobNX.Debug("NAME CHECK %s", p3);
+				if (LMMNX_SoundRegistry.isSoundNameRegistered(p3)) {
+					LMM_LittleMaidMobNX.Debug("APPEND SOUND PATH %s as %s", path, p3);
 					LMMNX_SoundRegistry.registerSoundPath(p3, path);
 				}
-			}
+				i=p2.indexOf(".", i);
+			} while (i!=-1 && i!=p2.lastIndexOf("."));
 		}
 	}
 

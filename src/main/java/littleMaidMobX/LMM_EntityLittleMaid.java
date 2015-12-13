@@ -49,6 +49,8 @@ import net.blacklab.lib.minecraft.item.ItemUtil;
 import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
+import net.blacklab.lmmnx.client.LMMNX_SoundLoader;
+import net.blacklab.lmmnx.client.LMMNX_SoundRegistry;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIRestrictOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIWatchClosest;
@@ -1927,17 +1929,25 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			Iterator<LMM_EnumSound> iterator = playingSound.iterator();
 			while(iterator.hasNext()){
 				LMM_EnumSound enumsound = iterator.next();
+				LMM_LittleMaidMobNX.Debug("REQ %s", enumsound);
 				
-				String s = LMM_SoundManager.instance.getSoundValue(enumsound, textureData.getTextureName(0), textureData.getColor());
-				//まさかな…
-				if(s==null) return;
-				if(!s.isEmpty() && !s.startsWith("minecraft:"))
-				{
-					s = LMM_LittleMaidMobNX.DOMAIN + ":" + s;
+				if (!LMMNX_SoundLoader.isFoundSoundpack()) {
+					worldObj.playSound(posX, posY, posZ, enumsound.DefaultValue, getSoundVolume(), lpitch, false);
+					playingSound.remove(enumsound);
+					continue;
 				}
-				LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), s));
+				
+				String sname = LMMNX_SoundRegistry.getSoundRegisteredName(enumsound, textureModelNameForClient, getColor());
+				LMM_LittleMaidMobNX.Debug("SRP %s", sname);
+				
+				if (sname == null || sname.isEmpty()) {
+					playingSound.remove(enumsound);
+					continue;
+				}
+				
+				LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), sname));
 
-				worldObj.playSound(posX, posY, posZ, s, getSoundVolume(), lpitch, false);
+				worldObj.playSound(posX, posY, posZ, "lmmnx:"+sname, getSoundVolume(), lpitch, false);
 				while(playingSound.remove(enumsound));
 			}
 //			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, playingSound, getSoundVolume(), lpitch, false);
