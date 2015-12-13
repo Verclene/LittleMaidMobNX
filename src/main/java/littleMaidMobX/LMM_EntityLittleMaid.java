@@ -936,8 +936,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		//livingSoundTick--;
-		if(getAttackTarget()!=null) return;
-		LMM_EnumSound so = LMM_EnumSound.Null;
+		if(getAttackTarget()!=null || Math.random() > 0.2) return;
+		LMM_EnumSound so = LMM_EnumSound.living_daytime;
 		if (getHealth() < 10)
 			so = LMM_EnumSound.living_whine;
 		else if (rand.nextFloat() < maidSoundRate) {
@@ -1948,7 +1948,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), sname));
 
 				worldObj.playSound(posX, posY, posZ, "lmmnx:"+sname, getSoundVolume(), lpitch, false);
-				while(playingSound.remove(enumsound));
+				playingSound.remove(enumsound);
 			}
 //			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, playingSound, getSoundVolume(), lpitch, false);
 		}

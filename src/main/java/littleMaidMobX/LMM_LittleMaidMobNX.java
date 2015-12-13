@@ -41,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.3.81";
-	public static final String VERSION_FORSITE = "NX4 Build 81";
+	public static final String VERSION = "4.3.82";
+	public static final String VERSION_FORSITE = "NX4 Build 82";
 	public static final int VERSION_CODE = 11;
 
 	/*
@@ -190,7 +190,7 @@ public class LMM_LittleMaidMobNX {
 
 		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
 		cfg_soundPlayChance = Math.max(1, cfg.getInt("soundPlayChance", 1));
-		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
+		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", true);
 
 		cfg_maidOverdriveDelay = cfg.getInt("maidOverdriveDelay", 32);
 		if (cfg_maidOverdriveDelay < 1) {

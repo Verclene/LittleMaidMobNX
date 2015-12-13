@@ -2,6 +2,7 @@ package net.blacklab.lmmnx.client;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,18 @@ public class LMMNX_SoundRegistry {
 			return;
 		}
 		map.put(new SinglePair<String, Integer>(texture, color), name);
+	}
+	
+	protected static void copySoundsAdjust() {
+		List sList = new ArrayList(Arrays.asList(LMM_EnumSound.values()));
+		for (int i=1; i<sList.size(); i++) {
+			String string = getSoundRegisteredName((LMM_EnumSound) sList.get(i), DEFAULT_TEXTURE_REGISTRATION_KEY, -1);
+			LMM_LittleMaidMobNX.Debug("CHECK %s/%s", sList.get(i), string);
+			if ("^".equals(string)) {
+				LMM_LittleMaidMobNX.Debug("COPY");
+				instR.registerMap.put((LMM_EnumSound) sList.get(i), instR.registerMap.get(sList.get(i-1)));
+			}
+		}
 	}
 	
 	public static List<String> getRegisteredNamesList() {

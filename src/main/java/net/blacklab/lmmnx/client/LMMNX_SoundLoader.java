@@ -9,10 +9,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -61,6 +63,7 @@ public class LMMNX_SoundLoader {
 		// 読み込みを開始するstaticメソッド．
 		// 処理用のメソッドは全てインスタンス内に．
 		instance.searchDir(FileManager.dirMods);
+		LMMNX_SoundRegistry.copySoundsAdjust();
 		instance.appendPath();
 		instance.createJson();
 	}
@@ -136,8 +139,11 @@ public class LMMNX_SoundLoader {
 					for (String s : enmString.split(",")) {
 						LMM_LittleMaidMobNX.Debug("DECODING %s", s);
 						String[] vlStrings = s.split(";");
+						// テクスチャ色
 						Integer col = -1;
+						// サウンド名
 						String name = vlStrings[vlStrings.length - 1];
+						// テクスチャネーム
 						String texname = LMMNX_SoundRegistry.DEFAULT_TEXTURE_REGISTRATION_KEY;
 						switch (vlStrings.length) {
 						case 3:
