@@ -173,6 +173,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		if (!haveNothing && isUnfarmedLand(px,py,pz) &&
 				curStack.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px, py, pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
 			owner.setSwing(10, LMM_EnumSound.Null, false);
+			owner.playLittleMaidSound(LMM_EnumSound.farmer_farm, false);
 			
 			/*
 			if (owner.maidAvatar.capabilities.isCreativeMode) {
@@ -192,6 +193,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				ItemStack stack = owner.maidInventory.getStackInSlot(index);
 				int li = stack.stackSize;
 				stack.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px,py,pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F);
+				owner.playLittleMaidSound(LMM_EnumSound.farmer_plant, false);
 				if (owner.maidAvatar.capabilities.isCreativeMode) {
 					stack.stackSize = li;
 				}
@@ -206,6 +208,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 			BlockPos pos = new BlockPos(px,py,pz);
 			owner.worldObj.destroyBlock(pos, true);
 			owner.setSwing(10, LMM_EnumSound.Null, false);
+			owner.playLittleMaidSound(LMM_EnumSound.farmer_harvest, false);
 			executeBlock(pMode,px,py-1,pz);
 //			return true;
 		}

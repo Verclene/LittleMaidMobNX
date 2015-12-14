@@ -22,7 +22,10 @@ public enum LMM_EnumSound {
 	cookingStart(0x221,		"Cooking Start Voice. Null is no Voice",				""),
 	cookingOver(0x222,		"Cooking Over Voice. Null is no Voice",					""),
 	installation(0x230,		"Installation Voice. Null is no Voice",					""),
-	collect_snow(0x240,		"Collecting snow Voice. Null is no Voice",				""),
+	farmer_farm(0x240,		"Farming ground Voice. Null is no Voice",				""),
+	farmer_plant(0x241,		"Planting seed Voice. Null is no Voice",				""),
+	farmer_harvest(0x242,	"Harvesting crops Voice. Null is no Voice",				""),
+	collect_snow(0x250,		"Collecting snow Voice. Null is no Voice",				""),
 
 	hurt(0x300,				"Dameged Voice. Null is no Voice",						"minecraft:mob.ghast.scream"),
 	hurt_snow(0x301,		"Dameged Voice from snowball. Null is no Voice",		""),
