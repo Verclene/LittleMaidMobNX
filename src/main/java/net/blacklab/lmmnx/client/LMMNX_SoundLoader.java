@@ -27,6 +27,8 @@ import java.util.zip.ZipInputStream;
 import littleMaidMobX.LMM_EnumSound;
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.FileManager;
+import mmmlibx.lib.MMM_TextureBox;
+import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.classutil.FileClassUtil;
 import net.minecraftforge.fml.common.FMLLog;
 
@@ -45,10 +47,13 @@ public class LMMNX_SoundLoader {
 	private boolean found = false;
 	private boolean sound = false;
 	
+	private List<String> loadedTPNames;
+	
 	private List<String> pathStore;
 	
 	public LMMNX_SoundLoader() {
 		pathStore = new ArrayList<String>();
+		loadedTPNames = new ArrayList<String>();
 	}
 	
 	public static boolean isFoundSoundpack() {
@@ -62,11 +67,20 @@ public class LMMNX_SoundLoader {
 	public static void load() {
 		// 読み込みを開始するstaticメソッド．
 		// 処理用のメソッドは全てインスタンス内に．
+		for (MMM_TextureBox box: MMM_TextureManager.getTextureList()) {
+			String s = box.textureName;
+			if (s!=null && !s.isEmpty()) {
+				instance.loadedTPNames.add(s);
+			}
+		}
+		
 		instance.searchDir(FileManager.dirMods);
 		LMMNX_SoundRegistry.copySoundsAdjust();
 		instance.appendPath();
 		instance.createJson();
 	}
+
+	private static Pattern CFG_FILE_PATTERN = Pattern.compile("(.+)\\.cfg");
 	
 	private void searchDir(File f) {
 		if (!f.isDirectory()) {
@@ -88,12 +102,24 @@ public class LMMNX_SoundLoader {
 				}
 				pathStore.add(p);
 			}
-			if ("littleMaidMob.cfg".equals(t.getName())) {
-				LMM_LittleMaidMobNX.Debug("Cfg found in file %s", t.getAbsolutePath());
-				try {
-					decodeConfig(new FileInputStream(t));
-				} catch (FileNotFoundException e) {
-					LMM_LittleMaidMobNX.Debug("Cfg read fail: UNEXPECTED NOT FOUND.");
+			Matcher matcher = CFG_FILE_PATTERN.matcher(t.getName());
+			if (matcher.find()) {
+				String cfgName = matcher.group(1);
+				if ("littleMaidMob".equals(cfgName)) {
+					LMM_LittleMaidMobNX.Debug("Cfg found in file %s", t.getAbsolutePath());
+					try {
+						decodeConfig(new FileInputStream(t), null);
+					} catch (FileNotFoundException e) {
+						LMM_LittleMaidMobNX.Debug("Cfg read fail: UNEXPECTED NOT FOUND.");
+					}
+				}
+				if (loadedTPNames.contains(cfgName)) {
+					try {
+						LMM_LittleMaidMobNX.Debug("Cfg found (T)in file %s", t.getAbsolutePath());
+						decodeConfig(new FileInputStream(t), cfgName);
+					} catch (FileNotFoundException e) {
+						LMM_LittleMaidMobNX.Debug("Cfg read fail: UNEXPECTED NOT FOUND.");
+					}
 				}
 			}
 		}
@@ -105,11 +131,22 @@ public class LMMNX_SoundLoader {
 			ZipInputStream zipInputStream = new ZipInputStream(inputStream);
 			ZipEntry entry;
 			while ((entry = zipInputStream.getNextEntry()) != null) {
-				if ("littleMaidMob.cfg".equals(FileClassUtil.getFileName(entry.getName()))) {
-					LMM_LittleMaidMobNX.Debug("Cfg found in zip %s -> %s", f.getAbsolutePath(), entry.getName());
-					ZipFile zipFile = new ZipFile(f);
-					decodeConfig(zipFile.getInputStream(new ZipArchiveEntry(entry.getName())));
-					zipFile.close();
+				String fName = FileClassUtil.getFileName(entry.getName());
+				Matcher matcher = CFG_FILE_PATTERN.matcher(fName);
+				if (matcher.find()) {
+					String cfgName = matcher.group(1);
+					if ("littleMaidMob".equals(cfgName)) {
+						LMM_LittleMaidMobNX.Debug("Cfg found in zip %s -> %s", f.getAbsolutePath(), entry.getName());
+						ZipFile zipFile = new ZipFile(f);
+						decodeConfig(zipFile.getInputStream(new ZipArchiveEntry(entry.getName())), null);
+						zipFile.close();
+					}
+					if (loadedTPNames.contains(cfgName)) {
+						LMM_LittleMaidMobNX.Debug("Cfg found (T)in zip %s -> %s", f.getAbsolutePath(), entry.getName());
+						ZipFile zipFile = new ZipFile(f);
+						decodeConfig(zipFile.getInputStream(new ZipArchiveEntry(entry.getName())), cfgName);
+						zipFile.close();
+					}
 				}
 				if (entry.getName().endsWith(".ogg")) {
 					String fString = entry.getName().substring(entry.getName().startsWith("/") ? 1 : 0);
@@ -125,7 +162,7 @@ public class LMMNX_SoundLoader {
 		
 	}
 	
-	private void decodeConfig(InputStream inputStream) {
+	private void decodeConfig(InputStream inputStream, String texture) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		try {
 			String buf;
@@ -156,8 +193,9 @@ public class LMMNX_SoundLoader {
 							} catch (NumberFormatException e) {
 							}
 						case 1:
-							LMM_LittleMaidMobNX.Debug("REGISTER NAME %s, %s, %s", texname, col, name);
-							LMMNX_SoundRegistry.registerSoundName(sound, texname, col, name);
+							String tString = texture!=null ? texture : texname;
+							LMM_LittleMaidMobNX.Debug("REGISTER NAME %s, %s, %s", tString, col, name);
+							LMMNX_SoundRegistry.registerSoundName(sound, tString, col, name);
 							break;
 						default:
 							break;

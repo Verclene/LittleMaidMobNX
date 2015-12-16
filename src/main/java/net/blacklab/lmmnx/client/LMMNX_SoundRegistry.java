@@ -87,16 +87,18 @@ public class LMMNX_SoundRegistry {
 					LMM_LittleMaidMobNX.Debug("FOUND 3 %s", entry.getValue());
 					value.setKey(entry.getValue()).setValue(3);
 				}
-				if (entry.getKey().getKey().equals(texture) &&
+				if (entry.getKey().getKey().equals(texture) && entry.getKey().getValue() == -1 &&
 						value.getValue() < 2) {
 					LMM_LittleMaidMobNX.Debug("FOUND 2 %s", entry.getValue());
 					value.setKey(entry.getValue()).setValue(2);
 				}
-				if (entry.getKey().getValue() == color && value.getValue() < 1) {
+				if (entry.getKey().getKey().equals(DEFAULT_TEXTURE_REGISTRATION_KEY) && entry.getKey().getValue() == color &&
+						value.getValue() < 1) {
 					LMM_LittleMaidMobNX.Debug("FOUND 1 %s", entry.getValue());
 					value.setKey(entry.getValue()).setValue(1);
 				}
-				if (value.getValue() == 0) {
+				if (entry.getKey().getKey().equals(DEFAULT_TEXTURE_REGISTRATION_KEY) && entry.getKey().getValue() == -1 &&
+						value.getValue() == 0) {
 					LMM_LittleMaidMobNX.Debug("FOUND 0 %s", entry.getValue());
 					value.setKey(entry.getValue());
 				}

@@ -1938,7 +1938,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				}
 				
 				String sname = LMMNX_SoundRegistry.getSoundRegisteredName(enumsound, textureModelNameForClient, getColor());
-				LMM_LittleMaidMobNX.Debug("SRP %s", sname);
+				LMM_LittleMaidMobNX.Debug("STC %s,%d/FRS %s", textureModelNameForClient, getColor(), sname);
 				
 				if (sname == null || sname.isEmpty()) {
 					playingSound.remove(enumsound);
