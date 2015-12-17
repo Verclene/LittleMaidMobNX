@@ -41,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.3.84";
-	public static final String VERSION_FORSITE = "NX4 Build 84";
+	public static final String VERSION = "4.3.85";
+	public static final String VERSION_FORSITE = "NX4 Build 85";
 	public static final int VERSION_CODE = 11;
 
 	/*
