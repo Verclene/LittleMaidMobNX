@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +24,9 @@ public class LMMNX_SoundRegistry {
 	// 実際の参照パス
 	private Map<String, List<String>> pathMap;
 	
+	// ロックされたテクスチャ
+	private List<String> markedTexture = new ArrayList<String>();
+	
 	private static LMMNX_SoundRegistry instR = new LMMNX_SoundRegistry();
 	
 	private LMMNX_SoundRegistry() {
@@ -36,20 +40,55 @@ public class LMMNX_SoundRegistry {
 		if (map == null) {
 			instR.registerMap.put(enumSound, new HashMap<Pair<String,Integer>, String>());
 			map = instR.registerMap.get(enumSound);
-		} else if (map.containsKey(new SinglePair(texture, color))) {
+		} else if (map.containsKey(new SinglePair(texture, color)) && !map.get(new SinglePair(texture, color)).equals("<P>")) {
 			return;
 		}
 		map.put(new SinglePair<String, Integer>(texture, color), name);
 	}
 	
+	protected static void markTexVoiceReserved(String texture) {
+		instR.markedTexture.add(texture);
+		for (LMM_EnumSound enumSound: new ArrayList<LMM_EnumSound>(Arrays.asList(LMM_EnumSound.values()))) {
+			Map<Pair<String, Integer>, String> map = instR.registerMap.get(enumSound);
+			if (map == null) {
+				instR.registerMap.put(enumSound, new HashMap<Pair<String,Integer>, String>());
+				map = instR.registerMap.get(enumSound);
+			}
+			map.put(new SinglePair<String, Integer>(texture, -1), "<P>");
+			
+			for (int i=0; i<16; i++) {
+				map.remove(new SinglePair<String, Integer>(texture, i));
+			}
+		}
+	}
+	
+	public static boolean isTexVoiceMarked(String texture) {
+		return instR.markedTexture.contains(texture);
+	}
+	
 	protected static void copySoundsAdjust() {
-		List sList = new ArrayList(Arrays.asList(LMM_EnumSound.values()));
-		for (int i=1; i<sList.size(); i++) {
-			String string = getSoundRegisteredName((LMM_EnumSound) sList.get(i), DEFAULT_TEXTURE_REGISTRATION_KEY, -1);
-			LMM_LittleMaidMobNX.Debug("CHECK %s/%s", sList.get(i), string);
+		LMM_EnumSound[] sList = LMM_EnumSound.values();
+		for (int i=1; i<sList.length; i++) {
+			String string = getSoundRegisteredName((LMM_EnumSound) sList[i], DEFAULT_TEXTURE_REGISTRATION_KEY, -1);
+			LMM_LittleMaidMobNX.Debug("CHECK %s/%s", sList[i], string);
 			if ("^".equals(string)) {
+				// TODO MARK CHECK
 				LMM_LittleMaidMobNX.Debug("COPY");
-				instR.registerMap.put((LMM_EnumSound) sList.get(i), instR.registerMap.get(sList.get(i-1)));
+				Map<Pair<String, Integer>, String> srcMap = instR.registerMap.get(sList[i-1]);
+				if (srcMap == null) {
+					continue;
+				}
+				Map<Pair<String, Integer>, String> dstMap = instR.registerMap.get(sList[i]);
+				if (dstMap == null) {
+					instR.registerMap.put(sList[i], new HashMap<Pair<String,Integer>, String>());
+					dstMap = instR.registerMap.get(sList[i]);
+				}
+				
+				for (Entry<Pair<String, Integer>, String> entry: srcMap.entrySet()) {
+					if (!instR.markedTexture.contains(entry.getKey().getKey())) {
+						dstMap.put(entry.getKey(), entry.getValue());
+					}
+				}
 			}
 		}
 	}
@@ -58,7 +97,7 @@ public class LMMNX_SoundRegistry {
 		List<String> retmap = new ArrayList<String>();
 		for (Map<Pair<String, Integer>, String> v: instR.registerMap.values()) {
 			for (String f: v.values()) {
-				if (!retmap.contains(f) && !f.endsWith("^") && !f.isEmpty() && f != null) retmap.add(f);
+				if (!retmap.contains(f) && !f.endsWith("^") && !f.equals("<P>") && !f.isEmpty() && f != null) retmap.add(f);
 			}
 		}
 		return retmap;

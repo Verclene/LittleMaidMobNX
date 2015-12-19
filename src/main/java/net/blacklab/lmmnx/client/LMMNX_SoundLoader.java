@@ -163,6 +163,9 @@ public class LMMNX_SoundLoader {
 	}
 	
 	private void decodeConfig(InputStream inputStream, String texture) {
+		if (texture != null) {
+			LMMNX_SoundRegistry.markTexVoiceReserved(texture);
+		}
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 		try {
 			String buf;
@@ -194,6 +197,10 @@ public class LMMNX_SoundLoader {
 							}
 						case 1:
 							String tString = texture!=null ? texture : texname;
+							if (texture == null && LMMNX_SoundRegistry.isTexVoiceMarked(texname)) {
+								LMM_LittleMaidMobNX.Debug("TEXTURE %s is marked by cfg", texname);
+								break;
+							}
 							LMM_LittleMaidMobNX.Debug("REGISTER NAME %s, %s, %s", tString, col, name);
 							LMMNX_SoundRegistry.registerSoundName(sound, tString, col, name);
 							break;
