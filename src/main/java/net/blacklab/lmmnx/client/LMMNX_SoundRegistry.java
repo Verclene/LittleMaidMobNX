@@ -85,7 +85,7 @@ public class LMMNX_SoundRegistry {
 				}
 				
 				for (Entry<Pair<String, Integer>, String> entry: srcMap.entrySet()) {
-					if (!instR.markedTexture.contains(entry.getKey().getKey())) {
+					if (!isTexVoiceMarked(entry.getKey().getKey())) {
 						dstMap.put(entry.getKey(), entry.getValue());
 					}
 				}

@@ -41,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.3.86";
-	public static final String VERSION_FORSITE = "NX4 Build 86";
+	public static final String VERSION = "4.3.88";
+	public static final String VERSION_FORSITE = "NX4 Build 88";
 	public static final int VERSION_CODE = 11;
 
 	/*
@@ -102,11 +102,7 @@ public class LMM_LittleMaidMobNX {
 	// public static boolean AlphaBlend = true;
 	// @MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
-	// サウンド試験調整
-	public static boolean cfg_ignoreForceSound = false;
-	public static int cfg_soundPlayChance = 1;
-
-	public static boolean cfg_forceLivingSound = true;
+	public static int cfg_soundPlayChance = 2;
 
 	public static int cfg_maidOverdriveDelay = 64;
 
@@ -188,9 +184,7 @@ public class LMM_LittleMaidMobNX {
 		cfg.setComment("isFixedWildMaid", "If 'true', additional textures of LittleMaid(no-contract) will never used.");
 		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
 
-		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
-		cfg_soundPlayChance = Math.max(1, cfg.getInt("soundPlayChance", 1));
-		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", true);
+		cfg_soundPlayChance = Math.max(2, cfg.getInt("soundPlayChance", 2));
 
 		cfg_maidOverdriveDelay = cfg.getInt("maidOverdriveDelay", 32);
 		if (cfg_maidOverdriveDelay < 1) {

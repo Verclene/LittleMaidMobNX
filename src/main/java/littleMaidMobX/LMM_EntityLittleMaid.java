@@ -35,6 +35,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import scala.util.Random;
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.MMMLib;
 import mmmlibx.lib.MMM_Counter;
@@ -889,19 +890,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * ネットワーク対応音声再生
 	 */
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
-		if (enumsound == LMM_EnumSound.Null) return;
 		if (worldObj.isRemote && enumsound!=LMM_EnumSound.Null) {
 			// NX1B47:サウンド乱数制限をクライアント依存に
-			if(!force||LMM_LittleMaidMobNX.cfg_ignoreForceSound){
-				if(LMM_LittleMaidMobNX.cfg_soundPlayChance!=1 &&
-						LMM_LittleMaidMobNX.randomSoundChance.nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
-			}
+			if(!force && new Random().nextInt(LMM_LittleMaidMobNX.cfg_soundPlayChance)!=0) return;
 
-			if(force){
-				playingSound.add(0, enumsound);
-			}else{
-				playingSound.add(enumsound);
-			}
+			playingSound.add(enumsound);
 //			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
 //			LMM_LittleMaidMobNX.proxy.playLittleMaidSound(worldObj, posX, posY, posZ, s, getSoundVolume(), lpitch, false);
 		}
@@ -972,9 +965,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
 			if(!worldObj.isRemote)
-				playLittleMaidSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
+				playLittleMaidSound(so, true);
 			else
-				playSound(so, LMM_LittleMaidMobNX.cfg_forceLivingSound);
+				playSound(so, true);
 		//	livingSoundTick = 1;
 		//}
 	}
