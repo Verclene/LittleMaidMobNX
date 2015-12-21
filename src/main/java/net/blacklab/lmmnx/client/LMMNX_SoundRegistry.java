@@ -69,25 +69,27 @@ public class LMMNX_SoundRegistry {
 	protected static void copySoundsAdjust() {
 		LMM_EnumSound[] sList = LMM_EnumSound.values();
 		for (int i=1; i<sList.length; i++) {
-			String string = getSoundRegisteredName((LMM_EnumSound) sList[i], DEFAULT_TEXTURE_REGISTRATION_KEY, -1);
-			LMM_LittleMaidMobNX.Debug("CHECK %s/%s", sList[i], string);
-			if ("^".equals(string)) {
-				// TODO MARK CHECK
-				LMM_LittleMaidMobNX.Debug("COPY");
-				Map<Pair<String, Integer>, String> srcMap = instR.registerMap.get(sList[i-1]);
-				if (srcMap == null) {
-					continue;
+			Map<Pair<String, Integer>, String> srcMap = instR.registerMap.get(sList[i-1]);
+			if (srcMap == null) {
+				continue;
+			}
+			Map<Pair<String, Integer>, String> dstMap = instR.registerMap.get(sList[i]);
+			if (dstMap == null) {
+				instR.registerMap.put(sList[i], new HashMap<Pair<String,Integer>, String>());
+				dstMap = instR.registerMap.get(sList[i]);
+			}
+			
+			boolean globalCopy = false;
+			for (Entry<Pair<String, Integer>, String> entry: srcMap.entrySet()) {
+				if (globalCopy && !isTexVoiceMarked(entry.getKey().getKey())) {
+					dstMap.put(entry.getKey(), entry.getValue());
 				}
-				Map<Pair<String, Integer>, String> dstMap = instR.registerMap.get(sList[i]);
-				if (dstMap == null) {
-					instR.registerMap.put(sList[i], new HashMap<Pair<String,Integer>, String>());
-					dstMap = instR.registerMap.get(sList[i]);
-				}
-				
-				for (Entry<Pair<String, Integer>, String> entry: srcMap.entrySet()) {
-					if (!isTexVoiceMarked(entry.getKey().getKey())) {
-						dstMap.put(entry.getKey(), entry.getValue());
+				if ("^".equals(entry.getValue())) {
+					if (DEFAULT_TEXTURE_REGISTRATION_KEY.equals(entry.getKey().getKey()) &&
+							entry.getKey().getValue() == -1) {
+						globalCopy = true;
 					}
+					dstMap.put(entry.getKey(), entry.getValue());
 				}
 			}
 		}
