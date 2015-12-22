@@ -126,6 +126,10 @@ public class LMMNX_SoundLoader {
 	}
 	
 	private void searchZip(File f) {
+		String zipname = FileClassUtil.getFileName(f.getAbsolutePath());
+		if (zipname.endsWith(".zip")) {
+			zipname = zipname.substring(0, zipname.length()-4);
+		}
 		try {
 			FileInputStream inputStream = new FileInputStream(f);
 			ZipInputStream zipInputStream = new ZipInputStream(inputStream);
@@ -138,7 +142,7 @@ public class LMMNX_SoundLoader {
 					if ("littleMaidMob".equals(cfgName)) {
 						LMM_LittleMaidMobNX.Debug("Cfg found in zip %s -> %s", f.getAbsolutePath(), entry.getName());
 						ZipFile zipFile = new ZipFile(f);
-						decodeConfig(zipFile.getInputStream(new ZipArchiveEntry(entry.getName())), null);
+						decodeConfig(zipFile.getInputStream(new ZipArchiveEntry(entry.getName())), loadedTPNames.contains(zipname) ? zipname : null);
 						zipFile.close();
 					}
 					if (loadedTPNames.contains(cfgName)) {

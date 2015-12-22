@@ -14,6 +14,7 @@ import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.FileManager;
 import net.blacklab.lib.obj.Pair;
 import net.blacklab.lib.obj.SinglePair;
+import net.minecraft.client.renderer.texture.Stitcher;
 
 public class LMMNX_SoundRegistry {
 	
@@ -79,17 +80,18 @@ public class LMMNX_SoundRegistry {
 				dstMap = instR.registerMap.get(sList[i]);
 			}
 			
-			boolean globalCopy = false;
-			for (Entry<Pair<String, Integer>, String> entry: srcMap.entrySet()) {
-				if (globalCopy && !isTexVoiceMarked(entry.getKey().getKey())) {
-					dstMap.put(entry.getKey(), entry.getValue());
-				}
-				if ("^".equals(entry.getValue())) {
-					if (DEFAULT_TEXTURE_REGISTRATION_KEY.equals(entry.getKey().getKey()) &&
-							entry.getKey().getValue() == -1) {
-						globalCopy = true;
+			for (Entry<Pair<String, Integer>, String> entryD: new HashMap<Pair<String, Integer>, String>(dstMap).entrySet()) {
+				if ("^".equals(entryD.getValue())) {
+					if (DEFAULT_TEXTURE_REGISTRATION_KEY.equals(entryD.getKey().getKey()) &&
+							entryD.getKey().getValue() == -1) {
+						for (Entry<Pair<String, Integer>, String> entryS: srcMap.entrySet()) {
+							if (!isTexVoiceMarked(entryS.getKey().getKey())) {
+								dstMap.put(entryS.getKey(), entryS.getValue());
+							}
+						}
+					} else {
+						dstMap.put(entryD.getKey(), srcMap.get(entryD.getKey()));
 					}
-					dstMap.put(entry.getKey(), entry.getValue());
 				}
 			}
 		}
@@ -99,7 +101,7 @@ public class LMMNX_SoundRegistry {
 		List<String> retmap = new ArrayList<String>();
 		for (Map<Pair<String, Integer>, String> v: instR.registerMap.values()) {
 			for (String f: v.values()) {
-				if (!retmap.contains(f) && !f.endsWith("^") && !f.equals("<P>") && !f.isEmpty() && f != null) retmap.add(f);
+				if (f!=null && !retmap.contains(f) && !f.endsWith("^") && !f.equals("<P>") && !f.isEmpty()) retmap.add(f);
 			}
 		}
 		return retmap;
