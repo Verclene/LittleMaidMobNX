@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -420,18 +421,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		renderString(lmm, par2, par4, par6, par8, par9);
 		// ロープ
 //		func_110827_b(lmm, par2, par4 - modelMain.model.getLeashOffset(lmm.maidCaps), par6, par8, par9);
-	}
-
-	@Override
-	protected void renderModel(EntityLivingBase par1EntityLiving, float par2,
-			float par3, float par4, float par5, float par6, float par7) {
-		if (!par1EntityLiving.isInvisible()) {
-			modelMain.setArmorRendering(true);
-		} else {
-			modelMain.setArmorRendering(false);
-		}
-		// アイテムのレンダリング位置を獲得するためrenderを呼ぶ必要がある
-		mainModel.render(par1EntityLiving, par2, par3, par4, par5, par6, par7);
 	}
 
 	@Override

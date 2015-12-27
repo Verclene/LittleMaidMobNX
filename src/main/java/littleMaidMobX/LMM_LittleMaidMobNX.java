@@ -41,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.3.91";
-	public static final String VERSION_FORSITE = "NX4 Build 91";
+	public static final String VERSION = "4.3.94";
+	public static final String VERSION_FORSITE = "NX4 Build 94";
 	public static final int VERSION_CODE = 11;
 
 	/*
@@ -126,7 +126,7 @@ public class LMM_LittleMaidMobNX {
 	public String getName() {
 		return "littleMaidMobNX";
 	}
-
+/*
 	public String getPriorities() {
 		// MMMLibを要求
 		return "required-after:mod_MMM_MMMLib";
@@ -135,7 +135,7 @@ public class LMM_LittleMaidMobNX {
 	public String getVersion() {
 		return "1.8";
 	}
-
+*/
 	public static Random randomSoundChance;
 
 	@EventHandler

@@ -126,7 +126,7 @@ public class LMMNX_SoundLoader {
 	}
 	
 	private void searchZip(File f) {
-		String zipname = FileClassUtil.getFileName(f.getAbsolutePath());
+		String zipname = FileClassUtil.getFileName(FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath()));
 		if (zipname.endsWith(".zip")) {
 			zipname = zipname.substring(0, zipname.length()-4);
 		}
