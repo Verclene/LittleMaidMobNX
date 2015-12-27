@@ -23,6 +23,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -274,6 +275,9 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 						GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
 						float f8 = 0.375F;
 						GlStateManager.scale(-f8, -f8, f8);
+					}else if (item instanceof ItemBow) {
+						GlStateManager.translate(lmm.maidDominantArm==1?-0.1125f:-0.05f, -0.0375F, -0.15F);
+						GlStateManager.rotate(10f, 0f, 1f, 0f);
 					}else{
 						GlStateManager.translate(0.0F, -0.0375F, 0.15F);
 					}
