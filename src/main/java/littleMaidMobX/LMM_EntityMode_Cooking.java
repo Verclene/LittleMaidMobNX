@@ -1,5 +1,6 @@
 package littleMaidMobX;
 
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,6 +50,9 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 		if (litemstack != null) {
 			if (owner.maidInventory.isItemBurned(0)) {
 				owner.setMaidMode("Cooking");
+				if (LMMNX_Achievements.ac_Cook != null) {
+					pentityplayer.triggerAchievement(LMMNX_Achievements.ac_Cook);
+				}
 				return true;
 			}
 		}

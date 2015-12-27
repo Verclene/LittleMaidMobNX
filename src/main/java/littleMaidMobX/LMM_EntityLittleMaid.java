@@ -1703,7 +1703,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (par1DamageSource == DamageSource.fall) {
 			maidDamegeSound = LMM_EnumSound.hurt_fall;
 			if (isContractEX() && par2>=19 && par2<getHealth()) {
-				getMaidMasterEntity().triggerAchievement(LMMNX_Achievements.ac_Ashikubi);
+				EntityPlayer player;
+				if ((player = getMaidMasterEntity()) != null)
+					player.triggerAchievement(LMMNX_Achievements.ac_Ashikubi);
 			}
 		}
 		if(!par1DamageSource.isUnblockable() && isBlocking()) {
@@ -3401,6 +3403,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public EntityLivingBase getOwner() {
 		return getMaidMasterEntity();
 	}
+
 	public String getMaidMaster() {
 		return W_Common.getOwnerName(this);
 	}
@@ -3654,7 +3657,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 			
 			if (worldObj.getTotalWorldTime() - maidAnniversary > 24000 * 365) {
-				getMaidMasterEntity().triggerAchievement(LMMNX_Achievements.ac_MyFavorite);
+				EntityPlayer player;
+				if ((player = getMaidMasterEntity()) != null)
+					player.triggerAchievement(LMMNX_Achievements.ac_MyFavorite);
 			}
 		}
 
