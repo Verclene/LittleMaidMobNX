@@ -41,8 +41,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.3.94";
-	public static final String VERSION_FORSITE = "NX4 Build 94";
+	public static final String VERSION = "4.3.95";
+	public static final String VERSION_FORSITE = "NX4 Build 95";
 	public static final int VERSION_CODE = 11;
 
 	/*
@@ -85,8 +85,6 @@ public class LMM_LittleMaidMobNX {
 	// @MLProp(info="LittleMaid Voice distortion.")
 	public static boolean cfg_VoiceDistortion = true;
 
-	// @MLProp(info="Default selected Texture Packege. Null is Random")
-	public static String cfg_defaultTexture = "";
 	// @MLProp(info="Print Debug Massages.")
 	public static boolean cfg_PrintDebugMessage = false;
 	// @MLProp(info="Print Death Massages.")
@@ -102,7 +100,7 @@ public class LMM_LittleMaidMobNX {
 	// public static boolean AlphaBlend = true;
 	// @MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
-	public static int cfg_soundPlayChance = 2;
+	public static float cfg_soundPlayRate = 2;
 
 	public static int cfg_maidOverdriveDelay = 64;
 
@@ -165,7 +163,6 @@ public class LMM_LittleMaidMobNX {
 		cfg_checkOwnerName = cfg.getBoolean("checkOwnerName", true);
 		cfg.setComment("DeathMessage", "Print chat message when your maid dies.");
 		cfg_DeathMessage = cfg.getBoolean("DeathMessage", true);
-		cfg_defaultTexture = "";
 		cfg_Dominant = cfg.getBoolean("Dominant", false);
 		cfg.setComment("enableSpawnEgg", "If 'true', you can use a recipe of LittleMaid SpawnEgg.");
 		cfg_enableSpawnEgg = cfg.getBoolean("enableSpawnEgg", true);
@@ -183,8 +180,8 @@ public class LMM_LittleMaidMobNX {
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
 		cfg.setComment("isFixedWildMaid", "If 'true', additional textures of LittleMaid(no-contract) will never used.");
 		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
-
-		cfg_soundPlayChance = Math.max(2, cfg.getInt("soundPlayChance", 2));
+		cfg.setComment("soundPlayRate", "Adjust frequency of playing some sounds. Type of value is float, value must be 1 or over.");
+		cfg_soundPlayRate = Math.max(1f, cfg.getFloat("soundPlayRate", 2f));
 
 		cfg_maidOverdriveDelay = cfg.getInt("maidOverdriveDelay", 32);
 		if (cfg_maidOverdriveDelay < 1) {
@@ -211,8 +208,6 @@ public class LMM_LittleMaidMobNX {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		cfg_defaultTexture = cfg_defaultTexture.trim();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance,
 				new LMM_GuiCommonHandler());
