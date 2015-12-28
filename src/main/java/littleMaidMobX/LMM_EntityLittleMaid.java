@@ -892,7 +892,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
 		if (worldObj.isRemote && enumsound!=LMM_EnumSound.Null) {
 			if (!force) {
-				if(Math.random() > 1.0 / LMM_LittleMaidMobNX.cfg_soundPlayRate) {
+				if(Math.random() > LMM_LittleMaidMobNX.cfg_soundPlayRate) {
 					return;
 				}
 			}
