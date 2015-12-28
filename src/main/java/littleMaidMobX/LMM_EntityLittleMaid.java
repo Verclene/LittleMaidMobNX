@@ -3026,7 +3026,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		if (mstatgotcha == null && par1EntityPlayer.fishEntity == null) {
-			if(itemstack1 != null && itemstack1.getItem() == Items.string) {
+			if(itemstack1 != null && itemstack1.getItem() == Items.lead) {
 				// 紐で繋ぐ
 				setGotcha(par1EntityPlayer.getEntityId());
 				mstatgotcha = par1EntityPlayer;

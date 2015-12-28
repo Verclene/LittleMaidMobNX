@@ -17,6 +17,9 @@ import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumType;
+import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumUsage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -323,6 +326,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 //		plittleMaid.textureModel0.isChild = plittleMaid.textureModel1.isChild = plittleMaid.textureModel2.isChild = plittleMaid.isChild();
 	}
 
+/*
 	@SuppressWarnings("unused")
 	protected void renderString(LMM_EntityLittleMaid plittleMaid, double px, double py, double pz, float f, float f1) {
 		// ひも
@@ -364,14 +368,24 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			//tessellator.startDrawing(3);
-			tessellator.getWorldRenderer().func_181668_a(3, new VertexFormat());
+			try {
+				tessellator.getWorldRenderer().func_181668_a(3, new VertexFormat()
+					.func_181721_a(new VertexFormatElement(0, EnumType.FLOAT, EnumUsage.NORMAL, 16)));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			//tessellator.setColorOpaque_I(0);
-			GlStateManager.colorLogicOp(0);
+			GlStateManager.color(1f, 1f, 1f);
+			tessellator.getWorldRenderer().addVertexData(new int[]{1, 1, 1, 12, 24});
 			int i = 16;
 			for(int j = 0; j <= i; j++)
 			{
 				float f5 = (float)j / (float)i;
-				tessellator.getWorldRenderer().func_181662_b(px + d15 * f5, py + d16 * (f5 * f5 + f5) * 0.5D + (((float)i - (float)j) / (i * 0.75F) + 0.125F), pz + d17 * f5);
+				try {
+					tessellator.getWorldRenderer().func_181662_b(px + d15 * f5, py + d16 * (f5 * f5 + f5) * 0.5D + (((float)i - (float)j) / (i * 0.75F) + 0.125F), pz + d17 * f5);
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
 			}
 
 			tessellator.draw();
@@ -379,6 +393,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
 	}
+*/
 /*
 	public void doRenderLitlleMaid(LMM_EntityLittleMaid plittleMaid, double px, double py, double pz, float f, float f1) {
 		// いくつか重複してるのであとで確認
@@ -422,7 +437,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		fcaps = lmm.maidCaps;
 //		doRenderLitlleMaid(lmm, par2, par4, par6, par8, par9);
 		renderModelMulti(lmm, par2, par4, par6, par8, par9, fcaps);
-		renderString(lmm, par2, par4, par6, par8, par9);
+//		renderString(lmm, par2, par4, par6, par8, par9);
 		// ロープ
 //		func_110827_b(lmm, par2, par4 - modelMain.model.getLeashOffset(lmm.maidCaps), par6, par8, par9);
 	}
