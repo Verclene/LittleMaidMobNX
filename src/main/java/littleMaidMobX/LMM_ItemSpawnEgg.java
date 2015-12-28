@@ -71,7 +71,7 @@ public class LMM_ItemSpawnEgg extends Item
 			entityliving = new LMM_EntityLittleMaid(par0World);
 
 			entityliving.setLocationAndAngles(par2, par4, par6, MathHelper.wrapAngleTo180_float(par0World.rand.nextFloat() * 360.0F), 0.0F);
-			((LMM_EntityLittleMaid)entityliving).setTextureNames();
+//			((LMM_EntityLittleMaid)entityliving).setTextureNames();
 			((LMM_EntityLittleMaid) entityliving).onSpawnWithEgg();
 			par0World.spawnEntityInWorld(entityliving);
 		} catch (Exception e) {

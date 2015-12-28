@@ -1,7 +1,7 @@
 entity.lmmx.LittleMaidX.name=LittleMaid
 
 item.lmmx:spawn_lmmx_egg.name=Spawn LittleMaid
-item.lmmx:lmmnx_registerkey.name=Trigger Item Registerer
+item.lmmx:lmmnx_registerkey.name=§eTrigger Item Registerer
 
 achievement.contract=Realization
 achievement.contract.desc=Employ a LittleMaid
@@ -120,6 +120,8 @@ littleMaidMob.gui.iff.title=Switch mobs to Enemy or Friendly
 
 littleMaidMob.chat.text.changeregistermode=Trigger Registration Mode changed to:
 littleMaidMob.chat.text.readyregistration=Now right-click with the item which you want to register as the Trigger: 
-littleMaidMob.chat.text.cancelregistration=§4Registration canceled.
+littleMaidMob.chat.text.cancelregistration=Registration canceled.
 littleMaidMob.chat.text.addtrigger=Trigger item registered: 
 littleMaidMob.chat.text.removetrigger=Trigger item removed: 
+littleMaidMob.chat.text.warningcount=WARNING: The number of registrations are left:
+littleMaidMob.chat.text.endcount=The number of registrations are no longer left. Craft a key again.

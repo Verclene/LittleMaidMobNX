@@ -9,18 +9,24 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
+import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumType;
+import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumUsage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
@@ -272,6 +278,9 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 						GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
 						float f8 = 0.375F;
 						GlStateManager.scale(-f8, -f8, f8);
+					}else if (item instanceof ItemBow) {
+						GlStateManager.translate(lmm.maidDominantArm==1?-0.1125f:-0.05f, -0.0375F, -0.15F);
+						GlStateManager.rotate(10f, 0f, 1f, 0f);
 					}else{
 						GlStateManager.translate(0.0F, -0.0375F, 0.15F);
 					}
@@ -317,6 +326,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 //		plittleMaid.textureModel0.isChild = plittleMaid.textureModel1.isChild = plittleMaid.textureModel2.isChild = plittleMaid.isChild();
 	}
 
+/*
 	@SuppressWarnings("unused")
 	protected void renderString(LMM_EntityLittleMaid plittleMaid, double px, double py, double pz, float f, float f1) {
 		// ひも
@@ -358,14 +368,24 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			//tessellator.startDrawing(3);
-			tessellator.getWorldRenderer().startDrawing(3);
+			try {
+				tessellator.getWorldRenderer().func_181668_a(3, new VertexFormat()
+					.func_181721_a(new VertexFormatElement(0, EnumType.FLOAT, EnumUsage.NORMAL, 16)));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			//tessellator.setColorOpaque_I(0);
-			GlStateManager.colorLogicOp(0);
+			GlStateManager.color(1f, 1f, 1f);
+			tessellator.getWorldRenderer().addVertexData(new int[]{1, 1, 1, 12, 24});
 			int i = 16;
 			for(int j = 0; j <= i; j++)
 			{
 				float f5 = (float)j / (float)i;
-				tessellator.getWorldRenderer().addVertex(px + d15 * f5, py + d16 * (f5 * f5 + f5) * 0.5D + (((float)i - (float)j) / (i * 0.75F) + 0.125F), pz + d17 * f5);
+				try {
+					tessellator.getWorldRenderer().addVertex(px + d15 * f5, py + d16 * (f5 * f5 + f5) * 0.5D + (((float)i - (float)j) / (i * 0.75F) + 0.125F), pz + d17 * f5);
+				} catch (Exception exception) {
+					exception.printStackTrace();
+				}
 			}
 
 			tessellator.draw();
@@ -373,6 +393,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
 	}
+*/
 /*
 	public void doRenderLitlleMaid(LMM_EntityLittleMaid plittleMaid, double px, double py, double pz, float f, float f1) {
 		// いくつか重複してるのであとで確認
@@ -416,26 +437,14 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		fcaps = lmm.maidCaps;
 //		doRenderLitlleMaid(lmm, par2, par4, par6, par8, par9);
 		renderModelMulti(lmm, par2, par4, par6, par8, par9, fcaps);
-		renderString(lmm, par2, par4, par6, par8, par9);
+//		renderString(lmm, par2, par4, par6, par8, par9);
 		// ロープ
 //		func_110827_b(lmm, par2, par4 - modelMain.model.getLeashOffset(lmm.maidCaps), par6, par8, par9);
 	}
 
 	@Override
-	protected void renderModel(EntityLivingBase par1EntityLiving, float par2,
-			float par3, float par4, float par5, float par6, float par7) {
-		if (!par1EntityLiving.isInvisible()) {
-			modelMain.setArmorRendering(true);
-		} else {
-			modelMain.setArmorRendering(false);
-		}
-		// アイテムのレンダリング位置を獲得するためrenderを呼ぶ必要がある
-		mainModel.render(par1EntityLiving, par2, par3, par4, par5, par6, par7);
-	}
-
-	@Override
-	public void passSpecialRender(EntityLivingBase par1EntityLiving, double par2, double par4, double par6) {
-		super.passSpecialRender(par1EntityLiving, par2, par4, par6);
+	public void renderLivingAt(EntityLivingBase par1EntityLiving, double par2, double par4, double par6) {
+		super.renderLivingAt(par1EntityLiving, par2, par4, par6);
 
 		LMM_EntityLittleMaid llmm = (LMM_EntityLittleMaid)par1EntityLiving;
 		// 追加分

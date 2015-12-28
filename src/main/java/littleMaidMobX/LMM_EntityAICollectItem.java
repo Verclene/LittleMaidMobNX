@@ -2,7 +2,7 @@ package littleMaidMobX;
 
 import java.util.List;
 
-import net.blacklab.lib.VectorUtil;
+import net.blacklab.lib.minecraft.vector.VectorUtil;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -72,7 +72,7 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 		super.startExecuting();
 		/*
 		lastAvoidWater = theMaid.getNavigator().getAvoidsWater();
-		theMaid.getNavigator().setAvoidsWater(true);
+		theMaid.getNavigator().func_179690_a(true);
 		*/
 	}
 
@@ -85,7 +85,7 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 	public void resetTask() {
 		targetItem = null;
 		theMaid.getNavigator().clearPathEntity();
-//		theMaid.getNavigator().setAvoidsWater(lastAvoidWater);
+//		theMaid.getNavigator().func_179690_a(lastAvoidWater);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class LMM_EntityAICollectItem extends EntityAIBase {
 		PathNavigate lnavigater = theMaid.getNavigator();
 		if (lnavigater.noPath()) {
 			if (targetItem.isInWater()) {
-				//lnavigater.setAvoidsWater(false);
+				//lnavigater.func_179690_a(false);
 			}
 			PathEntity lpath = lnavigater.getPathToXYZ(targetItem.posX, targetItem.posY, targetItem.posZ);
 			lnavigater.setPath(lpath, moveSpeed);

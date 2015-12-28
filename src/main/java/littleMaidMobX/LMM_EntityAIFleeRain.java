@@ -36,6 +36,10 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 		if (!theCreature.isWet()) {
 			return false;
 		}
+		
+		if (theCreature instanceof LMM_EntityLittleMaid && ((LMM_EntityLittleMaid) theCreature).isTracer()) {
+			return false;
+		}
 
 		if (!theWorld.canBlockSeeSky(new BlockPos(
 				MathHelper.floor_double(theCreature.posX),
@@ -80,7 +84,7 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 			int l = MathHelper.floor_double((theCreature.posZ + (i-5)));
 			
 			//離れすぎている
-			if(theCreature.func_180486_cf().distanceSq(j, k, l)>LMM_EntityMode_Torcher.limitDistance_Freedom &&
+			if(theCreature.getPosition().distanceSq(j, k, l)>LMM_EntityMode_Torcher.limitDistance_Freedom &&
 					((LMM_EntityLittleMaid)theCreature).isFreedom()){
 				continue;
 			}

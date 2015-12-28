@@ -1,6 +1,6 @@
 package littleMaidMobX;
 
-import net.blacklab.lmmnx.LMMNX_Achievements;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.IInventory;

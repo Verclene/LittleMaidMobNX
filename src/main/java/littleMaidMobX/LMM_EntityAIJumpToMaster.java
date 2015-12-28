@@ -1,5 +1,6 @@
 package littleMaidMobX;
 
+import net.blacklab.lib.minecraft.vector.VectorUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.AxisAlignedBB;
@@ -27,15 +28,6 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 
 	@Override
 	public boolean shouldExecute() {
-		/*
-		if(theMaid.isMaidWaitEx()){
-			//待機時は3マスで強制帰還
-			if(theMaid.func_180486_cf().distanceSq(theMaid.posX, theMaid.posY, theMaid.posZ)>3D){
-				jumpTarget = false;
-				return true;
-			}
-		}
-		*/
 		if (!isEnable || !theMaid.isContractEX() || theMaid.isMaidWaitEx()) {
 			// 契約個体のみが跳ぶ
 			return false;
@@ -50,10 +42,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				LMM_LittleMaidMobNX.Debug(String.format("ID:%d, %d -> %d, Change HomeWorld. reset HomePosition.",
 						theMaid.getEntityId(),theMaid.homeWorld, theMaid.worldObj.provider.getDimensionId()));
 //				theMaid.func_110171_b(
-				theMaid.func_175449_a(new BlockPos(
-						MathHelper.floor_double(theMaid.posX),
-						MathHelper.floor_double(theMaid.posY),
-						MathHelper.floor_double(theMaid.posZ)), 16);
+				theMaid.func_175449_a(theMaid.getPosition(), 16);
 				return false;
 			}
 			
@@ -113,7 +102,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 //							theMaid.setRevengeTarget(null);
 //							theMaid.setAttackTarget(null);
 //							theMaid.getNavigator().clearPathEntity();
-							theMaid.setLocationAndAnglesWithResetPath(
+							theMaid.setLocationAndAngles(
 									i + l + 0.5F, k, j + i1 + 0.5F,
 									theMaid.rotationYaw, theMaid.rotationPitch);
 							return;
@@ -123,9 +112,9 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 			}
 		} else {
 			// ホームポジションエリア外で転移
-			int lx = theMaid.func_180486_cf().getX();
-			int ly = theMaid.func_180486_cf().getY();
-			int lz = theMaid.func_180486_cf().getZ();
+			int lx = theMaid.getPosition().getX();
+			int ly = theMaid.getPosition().getY();
+			int lz = theMaid.getPosition().getZ();
 			if (!(isCanJump(lx, ly, lz))) {
 				// ホームポジション消失
 				LMM_LittleMaidMobNX.Debug(String.format(
@@ -194,7 +183,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 //			theMaid.setTarget(null);
 //			theMaid.setAttackTarget(null);
 //			theMaid.getNavigator().clearPathEntity();
-			theMaid.setLocationAndAnglesWithResetPath(lx + 05D, ly, lz + 0.5D,
+			theMaid.setLocationAndAngles(lx + 05D, ly, lz + 0.5D,
 					theMaid.rotationYaw, theMaid.rotationPitch);
 			
 		}
@@ -210,7 +199,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 	/**
 	 * 転移先のチェック
 	 */
-	protected boolean isCanJump(int px, int py, int pz) {
+	protected boolean isCanJump(double px, double py, double pz) {
 		return theWorld.getBlockState(new BlockPos(px, py - 1, pz)).getBlock().getMaterial().isSolid()
 				&& theWorld.func_147461_a(boundingBox).isEmpty();
 	}

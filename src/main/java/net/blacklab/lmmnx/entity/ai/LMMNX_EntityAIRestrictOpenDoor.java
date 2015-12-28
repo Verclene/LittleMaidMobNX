@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.entity.ai;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
 import net.minecraft.entity.EntityCreature;
@@ -19,7 +19,7 @@ public class LMMNX_EntityAIRestrictOpenDoor extends EntityAIRestrictOpenDoor {
 	public void startExecuting() {
 		// TODO 自動生成されたメソッド・スタブ
 		if(theMaid==null) return;
-		if(theMaid.swimmingEnabled||theMaid.isInWater()) return;
+		if(theMaid.isSwimmingEnabled()||theMaid.isInWater()) return;
 		super.startExecuting();
 	}
 
@@ -27,7 +27,7 @@ public class LMMNX_EntityAIRestrictOpenDoor extends EntityAIRestrictOpenDoor {
 	public void resetTask() {
 		// TODO 自動生成されたメソッド・スタブ
 		if(theMaid==null) return;
-		if(theMaid.swimmingEnabled||theMaid.isInWater()) return;
+		if(theMaid.isSwimmingEnabled()||theMaid.isInWater()) return;
 		super.resetTask();
 	}
 

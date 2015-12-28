@@ -43,7 +43,8 @@ public class MMM_ModelMulti_Stef extends MMM_ModelMulti_Steve {
 		bipedBody.addBox(-4.0F, 0.2F, -2.0F, 8, 12, 4, psize - 0.3F);
 		bipedBody.setRotationPoint(0.0F, 0.7F, 0.0F);
 		bust = new ModelRenderer(this, 16, 21);
-		bust.addBox(-4F, -2F, -2F, 8, 4, 4, psize - 0.3001F);
+		bust.addBox(-4F, -2F, -2F, 8, 4, 4, psize/* - 0.3001F*/);
+		bust.setScale(0.9f, 0.8f, 0.8f);
 		bust.setRotationPoint(0.0F, 4.25F, -1.4F).setRotateAngleDeg(50F, 0F, 0F);
 		
 		bipedRightArm = new ModelRenderer(this, 40, 16);

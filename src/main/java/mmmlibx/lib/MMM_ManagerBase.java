@@ -9,7 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
-import net.blacklab.lib.FileClassUtil;
+import net.blacklab.lib.classutil.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
 
 public abstract class MMM_ManagerBase {

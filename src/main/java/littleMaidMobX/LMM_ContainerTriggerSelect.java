@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 public class LMM_ContainerTriggerSelect extends ContainerCreative {
 
@@ -52,10 +53,10 @@ public class LMM_ContainerTriggerSelect extends ContainerCreative {
 
 		for (Object o : Item.itemRegistry.getKeys())
 		{
-			Item item = (Item)Item.itemRegistry.getObject(o);
+			Item item = (Item)Item.itemRegistry.getObject((ResourceLocation) o);
 			
 			if (item != null && item.getCreativeTab() != null) {
-				item.getSubItems(item, (CreativeTabs) null, this.itemList);
+				item.getSubItems(item, (CreativeTabs) null, (List<ItemStack>) this.itemList);
 			}
 		}
 

@@ -1,7 +1,7 @@
 package littleMaidMobX;
 
-import net.blacklab.lib.ItemUtil;
-import net.blacklab.lib.Version;
+import net.blacklab.lib.minecraft.item.ItemUtil;
+import net.blacklab.lib.version.Version;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
@@ -66,9 +66,9 @@ public class LMM_EventHook
 //			}
 			maid.isWildSaved = true;
 //			event.setResult(Result.ALLOW);
-			NBTTagCompound t = new NBTTagCompound();
-			maid.writeEntityToNBT(t);
-			maid.readEntityFromNBT(t);
+//			NBTTagCompound t = new NBTTagCompound();
+//			maid.writeEntityToNBT(t);
+//			maid.readEntityFromNBT(t);
 			if(event.world.isRemote) maid.setTextureNames();
 		}
 	}
@@ -81,7 +81,7 @@ public class LMM_EventHook
 	@SubscribeEvent
 	public void onEntitySpawned(EntityJoinWorldEvent event){
 		if(event.entity instanceof EntityLivingBase){
-			event.setCanceled(LMM_EventHook.deleteDoppelganger(true, event.world, event.entity));
+//			event.setCanceled(LMM_EventHook.deleteDoppelganger(true, event.world, event.entity));
 		}
 
 		// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)

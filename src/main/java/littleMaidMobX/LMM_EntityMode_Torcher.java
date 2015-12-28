@@ -1,7 +1,7 @@
 package littleMaidMobX;
 
-import net.blacklab.lib.VectorUtil;
-import net.blacklab.lmmnx.LMMNX_Achievements;
+import net.blacklab.lib.minecraft.vector.VectorUtil;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;
@@ -127,7 +127,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		//離れすぎている
 		if(owner.isFreedom()){
 			//自由行動時
-			if(owner.func_180486_cf().distanceSqToCenter(px,py,pz) > limitDistance_Freedom){
+			if(owner.getPosition().distanceSqToCenter(px,py,pz) > limitDistance_Freedom){
 				return 15;
 			}
 		}else{

@@ -36,6 +36,7 @@ public class MMM_RenderDummy extends Render {
 		RenderHelper.disableStandardItemLighting();
 		Tessellator tessellator = Tessellator.getInstance();
 		
+		// TODO 1.8.8検証
 		tessellator.getWorldRenderer().startDrawingQuads();
 		
 		GL11.glColor3f(1F, 1F, 1F);
@@ -43,7 +44,7 @@ public class MMM_RenderDummy extends Render {
 			int cc = ((MMM_EntityDummy) entity).getColor();
 			int ca = MathHelper.floor_float(((MMM_EntityDummy) entity)
 					.getAlpha(1.0F) * 256);
-			//1.8検討
+			// TODO 1.8.8検証
 			tessellator.getWorldRenderer().setColorRGBA_I(cc, ca);
 		}
 		double xa = 0.3D;

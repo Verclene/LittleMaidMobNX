@@ -21,7 +21,7 @@ import java.util.zip.ZipInputStream;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.multiModel.model.mc162.ModelMultiBase;
-import net.blacklab.lib.FileClassUtil;
+import net.blacklab.lib.classutil.FileClassUtil;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.entity.Entity;

@@ -2,9 +2,9 @@ package littleMaidMobX;
 
 import java.util.Iterator;
 
-import net.blacklab.lib.ItemUtil;
-import net.blacklab.lib.VectorUtil;
-import net.blacklab.lmmnx.LMMNX_Achievements;
+import net.blacklab.lib.minecraft.item.ItemUtil;
+import net.blacklab.lib.minecraft.vector.VectorUtil;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
@@ -134,7 +134,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
 		if(owner.isFreedom()){
-			if(owner.func_180486_cf().distanceSq(px, py, pz)>limitDistance_Freedom){
+			if(owner.getPosition().distanceSq(px, py, pz)>limitDistance_Freedom){
 				return false;
 			}
 		}else if(owner.getMaidMasterEntity()!=null){
@@ -173,6 +173,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 		if (!haveNothing && isUnfarmedLand(px,py,pz) &&
 				curStack.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px, py, pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
 			owner.setSwing(10, LMM_EnumSound.Null, false);
+			owner.playLittleMaidSound(LMM_EnumSound.farmer_farm, false);
 			
 			/*
 			if (owner.maidAvatar.capabilities.isCreativeMode) {
@@ -192,6 +193,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 				ItemStack stack = owner.maidInventory.getStackInSlot(index);
 				int li = stack.stackSize;
 				stack.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px,py,pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F);
+				owner.playLittleMaidSound(LMM_EnumSound.farmer_plant, false);
 				if (owner.maidAvatar.capabilities.isCreativeMode) {
 					stack.stackSize = li;
 				}
@@ -206,6 +208,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 			BlockPos pos = new BlockPos(px,py,pz);
 			owner.worldObj.destroyBlock(pos, true);
 			owner.setSwing(10, LMM_EnumSound.Null, false);
+			owner.playLittleMaidSound(LMM_EnumSound.farmer_harvest, false);
 			executeBlock(pMode,px,py-1,pz);
 //			return true;
 		}

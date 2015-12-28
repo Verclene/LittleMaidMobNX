@@ -2,7 +2,7 @@ package littleMaidMobX;
 
 import java.util.List;
 
-import net.blacklab.lmmnx.LMMNX_Achievements;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;

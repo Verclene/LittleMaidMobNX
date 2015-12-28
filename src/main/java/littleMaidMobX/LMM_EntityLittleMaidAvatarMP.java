@@ -598,12 +598,6 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 		super.damageEntity(par1DamageSource, par2);
 	}
 	
-	@Override	
-	public void func_152112_bu() {}
-
-	@Override
-	public void func_152111_bt(){}
-
 	/*
 	@Override
 	public boolean isEntityInvulnerable() {
@@ -615,6 +609,14 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	@Override
 	public boolean isEntityInvulnerable(DamageSource source){
 		return false;
+	}
+
+	@Override
+	public void func_152111_bt() {
+	}
+
+	@Override
+	public void func_152112_bu() {
 	}
 
 	@Override

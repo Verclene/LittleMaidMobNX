@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.item;
 
 import java.util.List;
 
@@ -17,6 +17,9 @@ import net.minecraft.world.World;
 public class LMMNX_ItemRegisterKey extends Item {
 	
 	public static final String RK_MODE_TAG = "LMMNX_RK_MODE";
+	public static final String RK_COUNT = "LMMNX_RK_COUNT";
+	
+	public static final int RK_MAX_COUNT = 32;
 	
 	public LMMNX_ItemRegisterKey() {
 		setUnlocalizedName(LMM_LittleMaidMobNX.DOMAIN + ":lmmnx_registerkey");
@@ -54,6 +57,7 @@ public class LMMNX_ItemRegisterKey extends Item {
 		NBTTagCompound tagCompound = stack.getTagCompound();
 		if(tagCompound != null) {
 			tooltip.add("Mode: "+tagCompound.getString(RK_MODE_TAG));
+			tooltip.add("Remains: " + (RK_MAX_COUNT-tagCompound.getInteger(RK_COUNT)));
 		}
 	}
 /*
