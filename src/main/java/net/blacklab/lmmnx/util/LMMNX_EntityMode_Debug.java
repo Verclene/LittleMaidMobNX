@@ -66,8 +66,6 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 			if (owner.getEntityAttribute(SharedMonsterAttributes.maxHealth).getModifier(UUID.nameUUIDFromBytes("lmm.littleMaidMob.maxhp".getBytes())) == null)
 				owner.getEntityAttribute(SharedMonsterAttributes.maxHealth).applyModifier(new AttributeModifier(UUID.nameUUIDFromBytes("lmm.littleMaidMob.maxhp".getBytes()), "DEBUGBOOST", 10d, 0));
 			return true;
-		default :
-			owner.getEntityAttribute(SharedMonsterAttributes.maxHealth).removeAllModifiers();
 		}
 		
 		return false;

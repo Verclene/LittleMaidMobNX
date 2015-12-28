@@ -6,12 +6,12 @@ import java.util.Random;
 
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
-import net.blacklab.lib.ConfigList;
-import net.blacklab.lmmnx.LMMNX_Achievements;
-import net.blacklab.lmmnx.LMMNX_ItemRegisterKey;
+import net.blacklab.lib.config.ConfigList;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
 import net.blacklab.lmmnx.client.LMM_SoundResourcePack;
+import net.blacklab.lmmnx.item.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResourcePack;
@@ -37,13 +37,13 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import network.W_Network;
 
-@Mod(modid = LMM_LittleMaidMobNX.DOMAIN, name = "LittleMaidMobNX", version = LMM_LittleMaidMobNX.VERSION)
+@Mod(modid = LMM_LittleMaidMobNX.DOMAIN, name = "LittleMaidMobNX", version = LMM_LittleMaidMobNX.VERSION, acceptedMinecraftVersions="[1.8,1.8.8]")
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.2.52";
-	public static final String VERSION_FORSITE = "NX4 Build 52";
-	public static final int VERSION_CODE = 10;
+	public static final String VERSION = "4.3.106";
+	public static final String VERSION_FORSITE = "NX4 Build 106";
+	public static final int VERSION_CODE = 11;
 
 	/*
 	 * public static String[] cfg_comment = {
@@ -85,8 +85,6 @@ public class LMM_LittleMaidMobNX {
 	// @MLProp(info="LittleMaid Voice distortion.")
 	public static boolean cfg_VoiceDistortion = true;
 
-	// @MLProp(info="Default selected Texture Packege. Null is Random")
-	public static String cfg_defaultTexture = "";
 	// @MLProp(info="Print Debug Massages.")
 	public static boolean cfg_PrintDebugMessage = false;
 	// @MLProp(info="Print Death Massages.")
@@ -102,11 +100,7 @@ public class LMM_LittleMaidMobNX {
 	// public static boolean AlphaBlend = true;
 	// @MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
-	// サウンド試験調整
-	public static boolean cfg_ignoreForceSound = false;
-	public static int cfg_soundPlayChance = 1;
-
-	public static boolean cfg_forceLivingSound = true;
+	public static float cfg_soundPlayRate = 1;
 
 	public static int cfg_maidOverdriveDelay = 64;
 
@@ -130,7 +124,7 @@ public class LMM_LittleMaidMobNX {
 	public String getName() {
 		return "littleMaidMobNX";
 	}
-
+/*
 	public String getPriorities() {
 		// MMMLibを要求
 		return "required-after:mod_MMM_MMMLib";
@@ -139,7 +133,7 @@ public class LMM_LittleMaidMobNX {
 	public String getVersion() {
 		return "1.8";
 	}
-
+*/
 	public static Random randomSoundChance;
 
 	@EventHandler
@@ -169,7 +163,6 @@ public class LMM_LittleMaidMobNX {
 		cfg_checkOwnerName = cfg.getBoolean("checkOwnerName", true);
 		cfg.setComment("DeathMessage", "Print chat message when your maid dies.");
 		cfg_DeathMessage = cfg.getBoolean("DeathMessage", true);
-		cfg_defaultTexture = "";
 		cfg_Dominant = cfg.getBoolean("Dominant", false);
 		cfg.setComment("enableSpawnEgg", "If 'true', you can use a recipe of LittleMaid SpawnEgg.");
 		cfg_enableSpawnEgg = cfg.getBoolean("enableSpawnEgg", true);
@@ -187,10 +180,8 @@ public class LMM_LittleMaidMobNX {
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
 		cfg.setComment("isFixedWildMaid", "If 'true', additional textures of LittleMaid(no-contract) will never used.");
 		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
-
-		cfg_ignoreForceSound = cfg.getBoolean("ignoreForceSound", false);
-		cfg_soundPlayChance = Math.max(1, cfg.getInt("soundPlayChance", 1));
-		cfg_forceLivingSound = cfg.getBoolean("forceLivingSound", false);
+		cfg.setComment("soundPlayRate", "Adjust frequency of playing some sounds. Type of value is float, value must be 1 or less.");
+		cfg_soundPlayRate = Math.min(1f, cfg.getFloat("soundPlayRate", 1f));
 
 		cfg_maidOverdriveDelay = cfg.getInt("maidOverdriveDelay", 32);
 		if (cfg_maidOverdriveDelay < 1) {
@@ -217,8 +208,6 @@ public class LMM_LittleMaidMobNX {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		cfg_defaultTexture = cfg_defaultTexture.trim();
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance,
 				new LMM_GuiCommonHandler());

@@ -2,7 +2,7 @@ package littleMaidMobX;
 
 import java.util.List;
 
-import net.blacklab.lib.VectorUtil;
+import net.blacklab.lib.minecraft.vector.VectorUtil;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;

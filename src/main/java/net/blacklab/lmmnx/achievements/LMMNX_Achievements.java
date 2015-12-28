@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx;
+package net.blacklab.lmmnx.achievements;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;

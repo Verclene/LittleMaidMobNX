@@ -7,7 +7,7 @@ import static littleMaidMobX.LMM_Statics.LMN_Server_SaveIFF;
 import static littleMaidMobX.LMM_Statics.LMN_Server_SetIFFValue;
 import static littleMaidMobX.LMM_Statics.LMN_Server_UpdateSlots;
 import mmmlibx.lib.MMM_Helper;
-import net.blacklab.lmmnx.LMMNX_NetSync;
+import net.blacklab.lmmnx.sync.LMMNX_NetSync;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;

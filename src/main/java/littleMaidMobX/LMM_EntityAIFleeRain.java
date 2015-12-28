@@ -36,6 +36,10 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 		if (!theCreature.isWet()) {
 			return false;
 		}
+		
+		if (theCreature instanceof LMM_EntityLittleMaid && ((LMM_EntityLittleMaid) theCreature).isTracer()) {
+			return false;
+		}
 
 		if (!theWorld.canBlockSeeSky(new BlockPos(
 				MathHelper.floor_double(theCreature.posX),

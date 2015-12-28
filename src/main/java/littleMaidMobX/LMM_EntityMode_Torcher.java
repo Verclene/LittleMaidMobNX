@@ -1,7 +1,7 @@
 package littleMaidMobX;
 
-import net.blacklab.lib.VectorUtil;
-import net.blacklab.lmmnx.LMMNX_Achievements;
+import net.blacklab.lib.minecraft.vector.VectorUtil;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialLiquid;

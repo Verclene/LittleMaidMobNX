@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import mmmlibx.lib.MMM_Helper;
-import net.blacklab.lmmnx.LMMNX_Achievements;
+import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;

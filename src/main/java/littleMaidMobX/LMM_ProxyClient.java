@@ -7,8 +7,9 @@ import mmmlibx.lib.MMM_EntityDummy;
 import mmmlibx.lib.MMM_EntitySelect;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_RenderDummy;
-import net.blacklab.lmmnx.LMMNX_NetSync;
 import net.blacklab.lmmnx.client.LMMNX_RenderEntitySelect;
+import net.blacklab.lmmnx.client.LMMNX_SoundLoader;
+import net.blacklab.lmmnx.sync.LMMNX_NetSync;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityPickupFX;
 import net.minecraft.entity.Entity;
@@ -127,9 +128,10 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 	public void loadSounds()
 	{
 		// 音声の解析
-		LMM_SoundManager.instance.init();
+//		LMM_SoundManager.instance.init();
 		// サウンドパック
-		LMM_SoundManager.instance.loadDefaultSoundPack();
+//		LMM_SoundManager.instance.loadDefaultSoundPack();
+		LMMNX_SoundLoader.load();
 	}
 
 	public boolean isSinglePlayer()

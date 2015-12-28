@@ -5,7 +5,7 @@ import java.util.List;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_TriggerSelect;
-import net.blacklab.lib.ItemUtil;
+import net.blacklab.lib.minecraft.item.ItemUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;

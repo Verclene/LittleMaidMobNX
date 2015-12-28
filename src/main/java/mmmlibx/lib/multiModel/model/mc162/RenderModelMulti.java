@@ -2,6 +2,7 @@ package mmmlibx.lib.multiModel.model.mc162;
 
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.MMMLib;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;

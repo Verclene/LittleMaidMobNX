@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
 
 import mmmlibx.lib.FileManager;
 import mmmlibx.lib.MMMLib;
-import net.blacklab.lib.FileClassUtil;
+import net.blacklab.lib.classutil.FileClassUtil;
 import net.minecraft.util.ResourceLocation;
 
 public class LMM_SoundManager {
