@@ -1374,11 +1374,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				setMaidMode(0x0000);	// Wild
 			}
 //			setMaidMode((b & 0xf0) >> 4);
-			int lhx = MathHelper.floor_double(posX);
-			int lhy = MathHelper.floor_double(posY);
-			int lhz = MathHelper.floor_double(posZ);;
+//			int lhx = MathHelper.floor_double(posX);
+//			int lhy = MathHelper.floor_double(posY);
+//			int lhz = MathHelper.floor_double(posZ);;
 //			func_110172_bL().set(lhx, lhy, lhz);
-			setHomePosAndDistance(new BlockPos(lhx,lhy,lhz),(int)getMaximumHomeDistance());
+			setHomePosAndDistance(getPosition(),(int)getMaximumHomeDistance());
 			long lcl = par1nbtTagCompound.getLong("Limit");
 			if (isContract() && lcl == 0) {
 				maidContractLimit = 24000;
@@ -3752,11 +3752,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setPlayingRole(0);
 		if (maidFreedom && isContract()) {
 			setTracer(isTracer());
-			setHomePosAndDistance(
-//			setHomeArea(
-					new BlockPos(MathHelper.floor_double(posX),
-					MathHelper.floor_double(posY),
-					MathHelper.floor_double(posZ)), 16);
+			setHomePosAndDistance(getPosition(), 16);
 		} else {
 			detachHome();
 		}

@@ -42,10 +42,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				LMM_LittleMaidMobNX.Debug(String.format("ID:%d, %d -> %d, Change HomeWorld. reset HomePosition.",
 						theMaid.getEntityId(),theMaid.homeWorld, theMaid.worldObj.provider.getDimensionId()));
 //				theMaid.func_110171_b(
-				theMaid.setHomePosAndDistance(new BlockPos(
-						MathHelper.floor_double(theMaid.posX),
-						MathHelper.floor_double(theMaid.posY),
-						MathHelper.floor_double(theMaid.posZ)), 16);
+				theMaid.setHomePosAndDistance(theMaid.getPosition(), 16);
 				return false;
 			}
 			
