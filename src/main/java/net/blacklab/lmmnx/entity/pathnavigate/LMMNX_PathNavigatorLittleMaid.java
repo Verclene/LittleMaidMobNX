@@ -20,10 +20,10 @@ public class LMMNX_PathNavigatorLittleMaid extends PathNavigateGround {
 	}
 
 	@Override
-	protected PathFinder getPathFinder() {
-		nodeProcessor = new LMMNX_MaidMoveNodeProcessor();
-		nodeProcessor.setEnterDoors(true);
-		return new PathFinder(nodeProcessor);
+	protected PathFinder func_179679_a() {
+		field_179695_a = new LMMNX_MaidMoveNodeProcessor();
+		field_179695_a.func_176175_a(true);
+		return new PathFinder(field_179695_a);
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class LMMNX_PathNavigatorLittleMaid extends PathNavigateGround {
 				}
 			}
 
-			checkForStuck(vec3);
+			func_179677_a(vec3);
 			return;
 		}
 		super.pathFollow();

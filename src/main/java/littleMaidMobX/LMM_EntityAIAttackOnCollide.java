@@ -56,7 +56,7 @@ public class LMM_EntityAIAttackOnCollide extends EntityAIBase implements LMM_IEn
 		attackRange = (double)theMaid.width + (double)entityTarget.width + 0.4D;
 		attackRange *= attackRange;
 		
-		if (theMaid.isFreedom() && !theMaid.isWithinHomeDistanceFromPosition(new BlockPos(MathHelper.floor_double(entityTarget.posX), MathHelper.floor_double(entityTarget.posY), MathHelper.floor_double(entityTarget.posZ)))) {
+		if (theMaid.isFreedom() && !theMaid.func_180485_d(new BlockPos(MathHelper.floor_double(entityTarget.posX), MathHelper.floor_double(entityTarget.posY), MathHelper.floor_double(entityTarget.posZ)))) {
 			return false;
 		}
 		

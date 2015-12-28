@@ -115,7 +115,7 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(int var1, String var2) {
+	public boolean canUseCommand(int var1, String var2) {
 		return false;
 	}
 
@@ -612,11 +612,11 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	}
 
 	@Override
-	public void sendEnterCombat() {
+	public void func_152111_bt() {
 	}
 
 	@Override
-	public void sendEndCombat() {
+	public void func_152112_bu() {
 	}
 
 	@Override

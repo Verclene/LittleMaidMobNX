@@ -37,12 +37,17 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import network.W_Network;
 
-@Mod(modid = LMM_LittleMaidMobNX.DOMAIN, name = "LittleMaidMobNX", version = LMM_LittleMaidMobNX.VERSION, acceptedMinecraftVersions="[1.8,1.8.8]")
+@Mod(
+		modid = LMM_LittleMaidMobNX.DOMAIN,
+		name = "LittleMaidMobNX",
+		version = LMM_LittleMaidMobNX.VERSION,
+		acceptedMinecraftVersions=LMM_LittleMaidMobNX.ACCEPTED_MCVERSION)
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.3.106";
-	public static final String VERSION_FORSITE = "NX4 Build 106";
+	public static final String VERSION = "4.3.107";
+	public static final String VERSION_FORSITE = "NX4 Build 107";
+	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.8]";
 	public static final int VERSION_CODE = 11;
 
 	/*

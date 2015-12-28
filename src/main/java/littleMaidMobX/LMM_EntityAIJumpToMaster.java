@@ -42,11 +42,11 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				LMM_LittleMaidMobNX.Debug(String.format("ID:%d, %d -> %d, Change HomeWorld. reset HomePosition.",
 						theMaid.getEntityId(),theMaid.homeWorld, theMaid.worldObj.provider.getDimensionId()));
 //				theMaid.func_110171_b(
-				theMaid.setHomePosAndDistance(theMaid.getPosition(), 16);
+				theMaid.func_175449_a(theMaid.getPosition(), 16);
 				return false;
 			}
 			
-			if (theMaid.getHomePosition().distanceSqToCenter(
+			if (theMaid.func_180486_cf().distanceSqToCenter(
 					MathHelper.floor_double(theMaid.posX),
 					MathHelper.floor_double(theMaid.posY),
 					MathHelper.floor_double(theMaid.posZ)) > 400D) {
@@ -164,7 +164,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				}
 				if (f) {
 //					theMaid.func_110171_b(lx, ly, lz, (int) theMaid.func_110174_bM());
-					theMaid.setHomePosAndDistance(new BlockPos(lx, ly, lz), (int) theMaid.getMaximumHomeDistance());
+					theMaid.func_175449_a(new BlockPos(lx, ly, lz), (int) theMaid.getMaximumHomeDistance());
 					LMM_LittleMaidMobNX.Debug(String.format(
 							"Find new position:%d, %d, %d.", lx, ly, lz));
 				} else {

@@ -76,8 +76,8 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 	public void startExecuting() {
 		field_48310_h = 0;
 		//lastAvoidWater = petPathfinder.getAvoidsWater();
-		//petPathfinder.setAvoidsWater(false);
-//		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).setAvoidsWater(false);
+		//petPathfinder.func_179690_a(false);
+//		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).func_179690_a(false);
 	}
 
 	/**
@@ -86,9 +86,9 @@ public class LMM_EntityAIFollowOwner extends EntityAIBase implements LMM_IEntity
 	public void resetTask() {
 		theMaid.setSprinting(false);
 		theOwner = null;
-//		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).setAvoidsWater(true);
+//		if(!theMaid.isInWater()) ((PathNavigateGround)this.theMaid.getNavigator()).func_179690_a(true);
 		petPathfinder.clearPathEntity();
-		//petPathfinder.setAvoidsWater(lastAvoidWater);
+		//petPathfinder.func_179690_a(lastAvoidWater);
 	}
 
 	/**

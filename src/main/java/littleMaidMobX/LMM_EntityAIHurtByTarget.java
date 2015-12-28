@@ -88,7 +88,7 @@ public class LMM_EntityAIHurtByTarget extends EntityAIHurtByTarget {
 		}
 		
 		// 基点から一定距離離れている場合も攻撃しない
-		if (!taskOwner.isWithinHomeDistanceFromPosition(new BlockPos(MathHelper.floor_double(par1EntityLiving.posX), MathHelper.floor_double(par1EntityLiving.posY), MathHelper.floor_double(par1EntityLiving.posZ)))) {
+		if (!taskOwner.isWithinHomeDistanceCurrentPosition()) {
 			return false;
 		}
 		

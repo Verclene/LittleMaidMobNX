@@ -14,30 +14,30 @@ public class LMMNX_MaidMoveNodeProcessor extends WalkNodeProcessor {
 	protected boolean canSwim;
 	
 	@Override
-	public void setCanSwim(boolean canSwimIn) {
-		super.setCanSwim(canSwimIn);
+	public void func_176178_d(boolean canSwimIn) {
+		super.func_176178_d(canSwimIn);
 		canSwim = canSwimIn;
 	}
 	
 	@Override
-	public PathPoint getPathPointTo(Entity entityIn) {
+	public PathPoint func_176161_a(Entity entityIn) {
 		if (canSwim) {
-			return this.openPoint(MathHelper.floor_double(entityIn.getEntityBoundingBox().minX), MathHelper.floor_double(entityIn.getEntityBoundingBox().minY + 0.5D), MathHelper.floor_double(entityIn.getEntityBoundingBox().minZ));
+			return this.func_176159_a(MathHelper.floor_double(entityIn.getEntityBoundingBox().minX), MathHelper.floor_double(entityIn.getEntityBoundingBox().minY + 0.5D), MathHelper.floor_double(entityIn.getEntityBoundingBox().minZ));
 		}
-		return super.getPathPointTo(entityIn);
+		return super.func_176161_a(entityIn);
 	}
 
 	@Override
-	public PathPoint getPathPointToCoords(Entity entityIn, double x, double y,
+	public PathPoint func_176160_a(Entity entityIn, double x, double y,
 			double target) {
 		if (canSwim) {
-			return this.openPoint(MathHelper.floor_double(x - (double)(entityIn.width / 2.0F)), MathHelper.floor_double(y + 0.5D), MathHelper.floor_double(target - (double)(entityIn.width / 2.0F)));
+			return this.func_176159_a(MathHelper.floor_double(x - (double)(entityIn.width / 2.0F)), MathHelper.floor_double(y + 0.5D), MathHelper.floor_double(target - (double)(entityIn.width / 2.0F)));
 		}
-		return super.getPathPointToCoords(entityIn, x, y, target);
+		return super.func_176160_a(entityIn, x, y, target);
 	}
 	
 	@Override
-	public int findPathOptions(PathPoint[] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
+	public int func_176164_a(PathPoint[] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
 		if (canSwim && entityIn.isInWater()) {
 			int i = 0;
 
@@ -51,7 +51,7 @@ public class LMMNX_MaidMoveNodeProcessor extends WalkNodeProcessor {
 
 			return i;
 		}
-		return super.findPathOptions(pathOptions, entityIn, currentPoint, targetPoint, maxDistance);
+		return super.func_176164_a(pathOptions, entityIn, currentPoint, targetPoint, maxDistance);
 	}
 
 	/**
@@ -59,16 +59,16 @@ public class LMMNX_MaidMoveNodeProcessor extends WalkNodeProcessor {
 	 */
 	private PathPoint getSafePoint(Entity entityIn, int x, int y, int z) {
 		int i = -1;//this.func_176186_b(entityIn, x, y, z);
-		return i == -1 ? this.openPoint(x, y, z) : null;
+		return i == -1 ? this.func_176159_a(x, y, z) : null;
 	}
-	
-	private int func_176186_b(Entity entityIn, int x, int y, int z) {
-		BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
-		for (int i = x; i < x + this.entitySizeX; ++i) {
-			for (int j = y; j < y + this.entitySizeY; ++j) {
-				for (int k = z; k < z + this.entitySizeZ; ++k) {
-					Block block = this.blockaccess.getBlockState(blockpos$mutableblockpos.func_181079_c(i, j, k)).getBlock();
+/*
+	private int func_176186_b(Entity entityIn, int x, int y, int z) {
+
+		for (int i = x; i < x + this.field_176168_c; ++i) {
+			for (int j = y; j < y + this.field_176165_d; ++j) {
+				for (int k = z; k < z + this.field_176166_e; ++k) {
+					Block block = entityIn.worldObj.getBlockState(new BlockPos(i, j, k)).getBlock();
 
 					if (block.getMaterial() != Material.water) {
 						return 0;
@@ -79,4 +79,5 @@ public class LMMNX_MaidMoveNodeProcessor extends WalkNodeProcessor {
 
 		return -1;
 	}
+*/
 }

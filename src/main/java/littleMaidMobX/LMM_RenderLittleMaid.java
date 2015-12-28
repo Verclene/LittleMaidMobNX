@@ -76,7 +76,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		}
 
 		@Override
-		protected void initArmor() {
+		protected void func_177177_a() {
 			this.field_177189_c = mmodel;
 			this.field_177186_d = mmodel;
 		}
@@ -382,7 +382,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 			{
 				float f5 = (float)j / (float)i;
 				try {
-					tessellator.getWorldRenderer().func_181662_b(px + d15 * f5, py + d16 * (f5 * f5 + f5) * 0.5D + (((float)i - (float)j) / (i * 0.75F) + 0.125F), pz + d17 * f5);
+					tessellator.getWorldRenderer().addVertex(px + d15 * f5, py + d16 * (f5 * f5 + f5) * 0.5D + (((float)i - (float)j) / (i * 0.75F) + 0.125F), pz + d17 * f5);
 				} catch (Exception exception) {
 					exception.printStackTrace();
 				}

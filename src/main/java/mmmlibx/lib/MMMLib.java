@@ -24,7 +24,8 @@ import network.W_Network;
 
 @Mod(	modid	= "MMMLibX",
 		name	= "MMMLibX",
-		version	= LMM_LittleMaidMobNX.VERSION)
+		version	= LMM_LittleMaidMobNX.VERSION,
+		acceptedMinecraftVersions=LMM_LittleMaidMobNX.ACCEPTED_MCVERSION)
 public class MMMLib {
 
 	public static boolean cfg_isModelAlphaBlend = true;

@@ -327,7 +327,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setHealth(15F);
 
 		// 移動用フィジカル設定
-		((PathNavigateGround)navigator).setEnterDoors(true);
+		((PathNavigateGround)navigator).func_179691_c(true);
 
 		// TODO:これはテスト
 //		maidStabilizer.put("HeadTop", MMM_StabilizerManager.getStabilizer("WitchHat", "HeadTop"));
@@ -506,7 +506,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	@Override
-	protected PathNavigate getNewNavigator(World worldIn) {
+	protected PathNavigate func_175447_b(World worldIn) {
 		return new LMMNX_PathNavigatorLittleMaid(this, worldIn);
 	}
 
@@ -1378,7 +1378,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //			int lhy = MathHelper.floor_double(posY);
 //			int lhz = MathHelper.floor_double(posZ);;
 //			func_110172_bL().set(lhx, lhy, lhz);
-			setHomePosAndDistance(getPosition(),(int)getMaximumHomeDistance());
+			func_175449_a(getPosition(),(int)getMaximumHomeDistance());
 			long lcl = par1nbtTagCompound.getLong("Limit");
 			if (isContract() && lcl == 0) {
 				maidContractLimit = 24000;
@@ -1439,7 +1439,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			int lhy = par1nbtTagCompound.getInteger("homeY");
 			int lhz = par1nbtTagCompound.getInteger("homeZ");
 //			func_110172_bL().set(lhx, lhy, lhz);
-			setHomePosAndDistance(new BlockPos(lhx, lhy, lhz),(int)getMaximumHomeDistance());
+			func_175449_a(new BlockPos(lhx, lhy, lhz),(int)getMaximumHomeDistance());
 			homeWorld = par1nbtTagCompound.getInteger("homeWorld");
 
 			// Tiles
@@ -2071,11 +2071,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		
 		// 水中関連
 		if (swimmingEnabled || !isContract()) {
-			((PathNavigateGround)navigator).setAvoidsWater(false);
-			((PathNavigateGround)navigator).setCanSwim(true);
+			((PathNavigateGround)navigator).func_179690_a(false);
+			((PathNavigateGround)navigator).func_179693_d(true);
 		} else {
-			((PathNavigateGround)navigator).setAvoidsWater(true);
-			((PathNavigateGround)navigator).setCanSwim(false);
+			((PathNavigateGround)navigator).func_179690_a(true);
+			((PathNavigateGround)navigator).func_179693_d(false);
 		}
 
 		maidInventory.decrementAnimations();
@@ -3478,7 +3478,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			getNavigator().clearPathEntity();
 			clearTilePosAll();
 			/*
-			setHomePosAndDistance(
+			func_175449_a(
 					new BlockPos(MathHelper.floor_double(lastTickPosX),
 					MathHelper.floor_double(lastTickPosY),
 					MathHelper.floor_double(lastTickPosZ)), 0);
@@ -3752,7 +3752,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setPlayingRole(0);
 		if (maidFreedom && isContract()) {
 			setTracer(isTracer());
-			setHomePosAndDistance(getPosition(), 16);
+			func_175449_a(getPosition(), 16);
 		} else {
 			detachHome();
 		}
@@ -3938,9 +3938,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	@Override
-	public void setHomePosAndDistance(BlockPos par1, int par4) {
+	public void func_175449_a(BlockPos par1, int par4) {
 		homeWorld = dimension;
-		super.setHomePosAndDistance(par1, par4);
+		super.func_175449_a(par1, par4);
 	}
 
 	@Override
