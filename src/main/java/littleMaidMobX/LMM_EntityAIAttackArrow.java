@@ -45,6 +45,22 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 	@Override
 	public boolean shouldExecute() {
 		EntityLivingBase entityliving = fMaid.getAttackTarget();
+		boolean a = isExecutable();
+		if (a && !VectorUtil.canMoveThrough(
+				fMaid, fMaid.getEyeHeight(),
+				entityliving.posX, entityliving.posY+entityliving.getEyeHeight(), entityliving.posZ, false, true, false)) {
+			fMaid.setAttackTarget(null);
+			//fMaid.setTarget(null);
+//			fMaid.getNavigator().clearPathEntity();
+			fTarget = null;
+			resetTask();
+			return false;
+		}
+		return a;
+	}
+	
+	protected boolean isExecutable() {
+		EntityLivingBase entityliving = fMaid.getAttackTarget();
 		if(fMaid.isMaidWaitEx()) return false;
 		
 		if (!fEnable || entityliving == null || entityliving.isDead) {
@@ -74,13 +90,13 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 
 	@Override
 	public boolean continueExecuting() {
-		return shouldExecute() || (fTarget != null && !fMaid.getNavigator().noPath());
+		return isExecutable() || (fTarget != null && !fMaid.getNavigator().noPath());
 	}
 
 	@Override
 	public void resetTask() {
 		fTarget = null;
-		fAvatar.stopUsingItem();
+//		fAvatar.stopUsingItem();
 		fAvatar.clearItemInUse();
 		fForget=0;
 	}
@@ -104,21 +120,27 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 		
 		double lrange = 225D;
 		double ldist = fMaid.getDistanceSqToEntity(fTarget);
-		boolean lsee = fMaid.getEntitySenses().canSee(fTarget);
+		boolean lsee = fMaid.getEntitySenses().canSee(fTarget) &&
+				VectorUtil.canMoveThrough(
+						fMaid, fMaid.getEyeHeight()/2,
+						fTarget.posX, fTarget.posY+fTarget.getEyeHeight()/2, fTarget.posZ, false, true, false);
+		
+		// 攻撃対象を見る
+		if (fTarget!=null) fMaid.getLookHelper().setLookPositionWithEntity(fTarget, 30F, 30F);
+
+		if(fForget>=15){
+			resetTask();
+			return;
+		}
 		
 		// 視界の外に出たら一定時間で飽きる
 		if (lsee) {
 			fForget = 0;
 		} else {
 			fForget++;
+			return;
 		}
 		
-		// 攻撃対象を見る
-		fMaid.getLookHelper().setLookPositionWithEntity(fTarget, 30F, 30F);
-		
-		if(fForget>=20){
-			resetTask();
-		}
 		if (ldist < lrange) {
 			if(fTarget==null){
 				resetTask();
@@ -177,7 +199,6 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 					}
 					lcanattack &= (milsq > 3D || il < 0D);
 					lcanattack &= ldotarget;
-					lcanattack &= VectorUtil.canMoveThrough(fMaid, (fMaid.getEntityBoundingBox().maxY-fMaid.getEntityBoundingBox().minY)/2, fTarget.posX, fTarget.posY+(fTarget.getEyeHeight()/2), fTarget.posZ, true, true, true);
 					// 横移動
 					if (!lcanattack) {
 						// 射撃位置を確保する
@@ -218,7 +239,6 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 							if (!getAvatarIF().isUsingItemLittleMaid()) {
 								// 構え
 								if (!fMaid.weaponFullAuto || lcanattack) {
-									// フルオート兵装の場合は射線確認
 									int at = ((helmid == Items.iron_helmet) || (helmid == Items.diamond_helmet)) ? 26 : 16;
 									if (swingState.attackTime < at) {
 										fMaid.setSwing(at, LMM_EnumSound.sighting, !fMaid.isPlaying());
@@ -316,7 +336,7 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 			// 有効射程外
 			if (fMaid.getNavigator().noPath()) {
 				fMaid.getNavigator().tryMoveToEntityLiving(fTarget, 1.0);
-				fMaid.setAttackTarget(null);
+//				fMaid.setAttackTarget(null);
 			}
 			if (fMaid.weaponFullAuto && getAvatarIF().getIsItemTrigger()) {
 				FMLCommonHandler.instance().getFMLLogger().debug("DEBUG INFO=NO TARGET");
