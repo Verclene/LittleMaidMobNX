@@ -81,7 +81,7 @@ public class LMM_EventHook
 	@SubscribeEvent
 	public void onEntitySpawned(EntityJoinWorldEvent event){
 		if(event.entity instanceof EntityLivingBase){
-//			event.setCanceled(LMM_EventHook.deleteDoppelganger(true, event.world, event.entity));
+			event.setCanceled(deleteDoppelganger(true, event.world, event.entity));
 		}
 
 		// TODO issue #9 merge from LittleMaidMobAX(https://github.com/asiekierka/littleMaidMobX/commit/92b2850b1bc4a70b69629cfc84c92748174c8bc6)
@@ -138,13 +138,12 @@ public class LMM_EventHook
 
 						boolean c1 = elm.getClass().getName().equals(entity.getClass().getName());
 
-						boolean c2 = elm.getUniqueID().toString().equals(entity.getUniqueID().toString());
+						boolean c2 = elm.getUniqueID().equals(entity.getUniqueID());
 
 						if (c1 && c2) {
-							// 新しい方を残す
 							LMM_LittleMaidMobNX.Debug("REMOVE DOPPELGANGER UUID %s", entity.getUniqueID());
-							if (entity.getEntityId() > elm.getEntityId()) {
-								elm.setDead();
+							if (entity.getEntityId() < elm.getEntityId()) {
+								entity.setDead();
 							} else {
 								return true;
 							}

@@ -931,16 +931,16 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		//livingSoundTick--;
-		if(getAttackTarget()!=null || Math.random() > 0.2) return;
-		LMM_EnumSound so = LMM_EnumSound.living_daytime;
+		if(getAttackTarget()!=null || Math.random() > 0.3) return;
+		LMM_EnumSound so = LMM_EnumSound.Null;
 		if (getHealth() < 10)
 			so = LMM_EnumSound.living_whine;
-		else if (rand.nextFloat() < maidSoundRate) {
+		else /*if (rand.nextFloat() < maidSoundRate) */{
 			if (mstatTime > 23500 || mstatTime < 1500) {
 				so = LMM_EnumSound.living_morning;
 			} else if (mstatTime < 12500) {
 				if (isContract()) {
-					BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(new BlockPos(MathHelper.floor_double(posX + 0.5D), posY, MathHelper.floor_double(posZ + 0.5D)));
+					BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(getPosition());
 					TempCategory ltemp = biomegenbase.getTempCategory();
 					if (ltemp == TempCategory.COLD) {
 						so = LMM_EnumSound.living_cold;
@@ -950,10 +950,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						so = LMM_EnumSound.living_daytime;
 					}
 					if (worldObj.isRaining()) {
-						if (biomegenbase.canSpawnLightningBolt()) {
-							so = LMM_EnumSound.living_rain;
-						} else if (biomegenbase.getEnableSnow()) {
+						if (biomegenbase.getEnableSnow()) {
 							so = LMM_EnumSound.living_snow;
+						} else {
+							so = LMM_EnumSound.living_rain;
 						}
 					}
 				} else {
