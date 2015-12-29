@@ -1298,7 +1298,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void readEntityFromNBT(NBTTagCompound par1nbtTagCompound) {
 		// データロード
-		if(maidAvatar==null) return;
 		super.readEntityFromNBT(par1nbtTagCompound);
 
 		if (par1nbtTagCompound.hasKey("ModeColor")) {

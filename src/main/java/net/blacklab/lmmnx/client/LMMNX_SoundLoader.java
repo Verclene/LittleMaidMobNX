@@ -221,6 +221,9 @@ public class LMMNX_SoundLoader {
 		found = true;
 	}
 	
+	/**
+	 * sounds.jsonの生成
+	 */
 	private void createJson() {
 		File jsonDir = new File(FileManager.dirMods, "LittleMaidMobNX");
 		if (jsonDir.isFile()) {
@@ -305,20 +308,25 @@ public class LMMNX_SoundLoader {
 			// サウンドネーム式に置換
 			String p2 = p1.replace('/', '.');
 			
-			// サウンドネームとパスの比較を行う．
-			// 最低限，サウンドファイルの直上のディレクトリ名が一致していれば登録する．
-			// 基本的にネームは「littleMaidMob.〜」と登録されているはずである．
-			int i = -1;
-			do {
-				String p3 = "littleMaidMob." + p2.substring(++i);
-				LMM_LittleMaidMobNX.Debug("NAME CHECK %s", p3);
-				if (LMMNX_SoundRegistry.isSoundNameRegistered(p3)) {
-					LMM_LittleMaidMobNX.Debug("APPEND SOUND PATH %s as %s", path, p3);
-					LMMNX_SoundRegistry.registerSoundPath(p3, path);
-				}
-				i=p2.indexOf(".", i);
-			} while (i!=-1 && i!=p2.lastIndexOf("."));
+			checkPathAndRegister(path, p2, "");
+			checkPathAndRegister(path, p2, "littleMaidMob.");
 		}
+	}
+	/**
+	 * サウンドネームとパスの比較を行う．
+	 * 最低限，サウンドファイルの直上のディレクトリ名が一致していれば登録する．
+	 */
+	private void checkPathAndRegister(String path, String str, String prefix) {
+		int i = -1;
+		do {
+			String p3 = prefix + str.substring(++i);
+			LMM_LittleMaidMobNX.Debug("NAME CHECK %s", p3);
+			if (LMMNX_SoundRegistry.isSoundNameRegistered(p3)) {
+				LMM_LittleMaidMobNX.Debug("APPEND SOUND PATH %s as %s", path, p3);
+				LMMNX_SoundRegistry.registerSoundPath(p3, path);
+			}
+			i=str.indexOf(".", i);
+		} while (i!=-1 && i!=str.lastIndexOf("."));
 	}
 
 }

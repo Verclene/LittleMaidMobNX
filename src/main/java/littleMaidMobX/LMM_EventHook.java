@@ -142,8 +142,8 @@ public class LMM_EventHook
 
 						if (c1 && c2) {
 							LMM_LittleMaidMobNX.Debug("REMOVE DOPPELGANGER UUID %s", entity.getUniqueID());
-							if (entity.getEntityId() < elm.getEntityId()) {
-								entity.setDead();
+							if (entity.getEntityId() > elm.getEntityId()) {
+								elm.setDead();
 							} else {
 								return true;
 							}

@@ -45,10 +45,10 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "4.4.109";
-	public static final String VERSION_FORSITE = "NX4 Build 109";
+	public static final String VERSION = "5.0.1";
+	public static final String VERSION_FORSITE = "NX5 Build 1";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.8]";
-	public static final int VERSION_CODE = 12;
+	public static final int VERSION_CODE = 13;
 
 	/*
 	 * public static String[] cfg_comment = {
