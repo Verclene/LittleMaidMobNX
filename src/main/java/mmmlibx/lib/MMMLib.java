@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
@@ -103,7 +104,7 @@ public class MMMLib {
 		if (MMM_Helper.isClient) {
 			// テクスチャパックの構築
 //			MMM_TextureManager.loadTextures();
-			MMM_StabilizerManager.loadStabilizer();
+//			MMM_StabilizerManager.loadStabilizer();
 			// テクスチャインデックスの構築
 			Debug("Localmode: InitTextureList.");
 			MMM_TextureManager.instance.initTextureList(true);

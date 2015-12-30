@@ -9,6 +9,7 @@ import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -225,21 +226,15 @@ public class MMM_TextureManager {
 		}
 		*/
 		
-		for (String[] lss : searchPrefix) {
-			MMMLib.Debug("getTexture[%s:%s].", lss[0], lss[1]);
+		for (String[] lst : searchPrefix) {
 			// mods
-			for (File lf : FileManager.getFileList(lss[0])) {
-				for (String[] lst : searchPrefix) {
-					boolean lflag;
-					if (lf.isDirectory()) {
-						// ディレクトリ
-						lflag = addTexturesDir(lf, lst);
-					} else {
-						// zip
-						lflag = addTexturesZip(lf, lst);
-					}
-					MMMLib.Debug("getTexture-append-%s-%s.", lf.getName(), lflag ? "done" : "fail");
-				}
+			searchFiles(FileManager.dirMods, lst);
+			if (LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV) {
+				searchFiles(FileManager.dirDevClasses, lst);
+			}
+			if (LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE) {
+				for (File ln: FileManager.dirDevIncludeClasses)
+					searchFiles(ln, lst);
 			}
 		}
 		
@@ -299,6 +294,22 @@ public class MMM_TextureManager {
 		setDefaultTexture(EntityLivingBase.class, getTextureBox("default_" + defaultModelName));
 		
 		return false;
+	}
+	
+	private void searchFiles(File ln, String[] lst) {
+		MMMLib.Debug("getTexture[%s:%s].", lst[0], lst[1]);
+		// mods
+		for (File lf : ln.listFiles()) {
+			boolean lflag;
+			if (lf.isDirectory()) {
+				// ディレクトリ
+				lflag = addTexturesDir(lf, lst);
+			} else {
+				// zip
+				lflag = addTexturesZip(lf, lst);
+			}
+			MMMLib.Debug("getTexture-append-%s-%s.", lf.getName(), lflag ? "done" : "fail");
+		}
 	}
 
 	public void buildCrafterTexture() {
@@ -460,11 +471,11 @@ public class MMM_TextureManager {
 			}
 			catch (Exception exception) {
 				MMMLib.Debug("getModelClass-Exception: %s", fname);
-				if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
+				if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE || LMM_LittleMaidMobNX.cfg_PrintDebugMessage) exception.printStackTrace();
 			}
 			catch (Error error) {
 				MMMLib.Debug("getModelClass-Error: %s", fname);
-				if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE && LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
+				if(LMMNX_DevMode.DEVELOPMENT_DEBUG_MODE || LMM_LittleMaidMobNX.cfg_PrintDebugMessage) error.printStackTrace();
 			}
 		}
 	}
@@ -602,6 +613,9 @@ public class MMM_TextureManager {
 							}
 //							addTextureName(s.substring(i).replace('\\', '/'));
 						}
+					} else {
+						// サブフォルダ分のアーカイブを検索
+						addTexturesZip(nfile, pSearch);
 					}
 				}
 			}

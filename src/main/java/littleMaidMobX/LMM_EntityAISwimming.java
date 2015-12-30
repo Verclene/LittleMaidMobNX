@@ -55,7 +55,6 @@ public class LMM_EntityAISwimming extends EntityAISwimming {
 				PathEntity pathEntity = theMaid.prevPathEntity;
 				if(pathEntity!=null && (theMaid.swimmingEnabled||!theMaid.isContract())){
 					pathPoint = pathEntity.getFinalPathPoint();
-					LMM_LittleMaidMobNX.Debug("TPT %d, %d, %d", pathPoint.xCoord, pathPoint.yCoord, pathPoint.zCoord);
 					theEntity.motionX = ((pathPoint.xCoord>x)?1:(pathPoint.xCoord<x)?-1:0) * theEntity.getAIMoveSpeed()/5d;
 					theEntity.motionZ = ((pathPoint.zCoord>z)?1:(pathPoint.zCoord<z)?-1:0) * theEntity.getAIMoveSpeed()/5d;
 					totalmotionY +=		((pathPoint.yCoord>=y)?1:-1) * theEntity.getAIMoveSpeed()/5d;
