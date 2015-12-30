@@ -11,6 +11,7 @@ import java.util.zip.ZipInputStream;
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.blacklab.lib.classutil.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
+import net.minecraftforge.common.MinecraftForge;
 
 public abstract class MMM_ManagerBase {
 
@@ -56,16 +57,21 @@ public abstract class MMM_ManagerBase {
 		}
 		
 		// mods
+		decodeDirectory(root, root);
 		for (File lf : root.listFiles()) {
-			if (lf.isDirectory()) {
-				// ディレクトリの解析
-				startSearch(lf, false);
-				if (root.equals(FileManager.dirMods)) {
-					decodeDirectory(lf, root);
-				}
-			} else {
-				// Zipの解析
+			if (lf.isFile() && (lf.getName().endsWith(".zip") || lf.getName().endsWith(".jar"))) {
+				// パッケージ
 				decodeZip(lf);
+			} else if (lf.isDirectory()) {
+				// ディレクトリの解析
+				String md = FileClassUtil.getLinuxAntiDotName(lf.getAbsolutePath());
+				if (md.endsWith("/")) {
+					md = md.substring(0, md.length()-1);
+				}
+				String mf = FileClassUtil.getFileName(md);
+				if (mf.equals(MinecraftForge.MC_VERSION)) {
+					startSearch(lf, false);
+				}
 			}
 		}
 	}
