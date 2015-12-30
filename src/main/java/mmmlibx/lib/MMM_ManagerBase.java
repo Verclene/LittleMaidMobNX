@@ -40,8 +40,7 @@ public abstract class MMM_ManagerBase {
 			}
 		}
 
-		File lf1 = new File(FileManager.dirMods, ls);
-		startSearch(lf1, false);
+		startSearch(FileManager.dirMods, false);
 	}
 	
 	private void startSearch(File root, boolean dev){
@@ -57,15 +56,16 @@ public abstract class MMM_ManagerBase {
 		}
 		
 		// mods
-		for (Entry<String, List<File>> le : FileManager.fileList.entrySet()) {
-			for (File lf : le.getValue()) {
-				if (lf.isDirectory()) {
-					// ディレクトリの解析
+		for (File lf : root.listFiles()) {
+			if (lf.isDirectory()) {
+				// ディレクトリの解析
+				startSearch(lf, false);
+				if (root.equals(FileManager.dirMods)) {
 					decodeDirectory(lf, root);
-				} else {
-					// Zipの解析
-					decodeZip(lf);
 				}
+			} else {
+				// Zipの解析
+				decodeZip(lf);
 			}
 		}
 	}
