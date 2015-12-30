@@ -3,8 +3,7 @@ package mmmlibx.lib;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Modifier;
-import java.util.List;
-import java.util.Map.Entry;
+import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -26,12 +25,6 @@ public abstract class MMM_ManagerBase {
 		// ロード
 		
 		// 開発用
-		Package lpackage = MMMLib.class.getPackage();
-		String ls = "";
-		if (lpackage != null) {
-			ls = MMMLib.class.getPackage().getName().replace('.', File.separatorChar);
-		}
-
 		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
 			startSearch(FileManager.dirDevClasses, true);
 			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
@@ -77,6 +70,11 @@ public abstract class MMM_ManagerBase {
 	}
 
 	private void decodeDirectory(File pfile, File pRoot) {
+		try {
+			FileManager.COMMON_CLASS_LOADER.addURL(pRoot.toURI().toURL());
+		} catch (MalformedURLException e) {
+			return;
+		}
 		// ディレクトリ内のクラスを検索
 		for (File lf : pfile.listFiles()) {
 			if (lf.isFile()) {
@@ -97,6 +95,12 @@ public abstract class MMM_ManagerBase {
 
 	private void decodeZip(File pfile) {
 		// zipファイルを解析
+		try {
+			// 多分いらんと思う…
+			FileManager.COMMON_CLASS_LOADER.addURL(pfile.toURI().toURL());
+		} catch (MalformedURLException e) {
+			return;
+		}
 		try {
 			FileInputStream fileinputstream = new FileInputStream(pfile);
 			ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);

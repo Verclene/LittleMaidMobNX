@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class FileManager {
 		@Override
 		public void addURL(URL url) {
 			// 可視化
+			if (new ArrayList(Arrays.asList(getURLs())).contains(url)) return;
 			super.addURL(url);
 		}
 		
