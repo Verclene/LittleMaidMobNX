@@ -3,14 +3,14 @@ package mmmlibx.lib;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Modifier;
-import java.util.List;
-import java.util.Map.Entry;
+import java.net.MalformedURLException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.blacklab.lib.classutil.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
+import net.minecraftforge.common.MinecraftForge;
 
 public abstract class MMM_ManagerBase {
 
@@ -25,12 +25,6 @@ public abstract class MMM_ManagerBase {
 		// ロード
 		
 		// 開発用
-		Package lpackage = MMMLib.class.getPackage();
-		String ls = "";
-		if (lpackage != null) {
-			ls = MMMLib.class.getPackage().getName().replace('.', File.separatorChar);
-		}
-
 		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
 			startSearch(FileManager.dirDevClasses, true);
 			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
@@ -56,21 +50,31 @@ public abstract class MMM_ManagerBase {
 		}
 		
 		// mods
+		decodeDirectory(root, root);
 		for (File lf : root.listFiles()) {
-			if (lf.isDirectory()) {
-				// ディレクトリの解析
-				startSearch(lf, false);
-				if (root.equals(FileManager.dirMods)) {
-					decodeDirectory(lf, root);
-				}
-			} else {
-				// Zipの解析
+			if (lf.isFile() && (lf.getName().endsWith(".zip") || lf.getName().endsWith(".jar"))) {
+				// パッケージ
 				decodeZip(lf);
+			} else if (lf.isDirectory()) {
+				// ディレクトリの解析
+				String md = FileClassUtil.getLinuxAntiDotName(lf.getAbsolutePath());
+				if (md.endsWith("/")) {
+					md = md.substring(0, md.length()-1);
+				}
+				String mf = FileClassUtil.getFileName(md);
+				if (mf.equals(MinecraftForge.MC_VERSION)) {
+					startSearch(lf, false);
+				}
 			}
 		}
 	}
 
 	private void decodeDirectory(File pfile, File pRoot) {
+		try {
+			FileManager.COMMON_CLASS_LOADER.addURL(pRoot.toURI().toURL());
+		} catch (MalformedURLException e) {
+			return;
+		}
 		// ディレクトリ内のクラスを検索
 		for (File lf : pfile.listFiles()) {
 			if (lf.isFile()) {
@@ -91,6 +95,12 @@ public abstract class MMM_ManagerBase {
 
 	private void decodeZip(File pfile) {
 		// zipファイルを解析
+		try {
+			// 多分いらんと思う…
+			FileManager.COMMON_CLASS_LOADER.addURL(pfile.toURI().toURL());
+		} catch (MalformedURLException e) {
+			return;
+		}
 		try {
 			FileInputStream fileinputstream = new FileInputStream(pfile);
 			ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
