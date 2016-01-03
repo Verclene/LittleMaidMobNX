@@ -9,17 +9,11 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumType;
-import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumUsage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,9 +22,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 
@@ -64,8 +56,8 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 		public boolean field_177193_i;
 		public LMM_EntityLittleMaid lmm;
 		private int renderCount;
-		
-		public static final float renderScale = 0.0625F; 
+
+		public static final float renderScale = 0.0625F;
 
 		public MMMLayerArmor(RendererLivingEntity p_i46125_1_) {
 			super(p_i46125_1_);
@@ -234,9 +226,9 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 						GL11.glDisable(GL11.GL_ALPHA_TEST);
 					}catch(Exception e){ break OUTERLIGHT; }
 				}
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			}
 
+			}
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
 	}
 
@@ -267,7 +259,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 					GlStateManager.pushMatrix();
 
 					modelMain.model.Arms[lmm.maidDominantArm].postRender(0.0625F);
-					
+
 					Item item = itemstack.getItem();
 					Minecraft minecraft = Minecraft.getMinecraft();
 

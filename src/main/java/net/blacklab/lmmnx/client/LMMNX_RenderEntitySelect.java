@@ -12,13 +12,14 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 public class LMMNX_RenderEntitySelect extends RenderModelMulti {
-	
+
 	public class MMMLayerArmor extends LayerArmorBase{
 
 		public RendererLivingEntity p1;
@@ -51,7 +52,7 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 			ModelBaseDuo model = (ModelBaseDuo) paramModelBase;
 			model.showArmorParts(paramInt);
 		}
-		
+
 		@Override
 		public void doRenderLayer(EntityLivingBase par1EntityLiving,
 				float par2, float par3, float par4,
@@ -65,7 +66,7 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 			render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 1);
 			render(par1EntityLiving, par2, par3, par4, par6, par7, par8, 0);
 		}
-		
+
 		public void setModelValues(EntityLivingBase par1EntityLiving) {
 			if (par1EntityLiving instanceof ITextureEntity) {
 				ITextureEntity ltentity = (ITextureEntity)par1EntityLiving;
@@ -83,14 +84,14 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 			mmodel.showAllParts();
 			mmodel.isAlphablend = true;
 		}
-		
+
 		public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7, int renderParts) {
 			//初回のみ指定値設定
-			if(renderCount==0) this.setModelValues(lmm);
-			
+			/*if(renderCount==0) */this.setModelValues(lmm);
+
 			//総合
 			mmodel.showArmorParts(renderParts);
-			
+
 			//Inner
 			INNER:{
 				if(mmodel.modelInner==null) break INNER;
@@ -104,7 +105,7 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 				mmodel.modelInner.mainFrame.render(0.0625F);
 				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
 			}
-			
+
 			// 発光Inner
 			INNERLIGHT: if (renderCount == 0 && mmodel.modelInner!=null) {
 				ResourceLocation texInnerLight = mmodel.textureInnerLight[renderParts];
@@ -116,7 +117,7 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
 					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 					GL11.glDepthFunc(GL11.GL_LEQUAL);
-					
+
 					Client.setLightmapTextureCoords(0x00f000f0);//61680
 					if (mmodel.textureLightColor == null) {
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -153,7 +154,7 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 				mmodel.modelOuter.mainFrame.render(0.0625F);
 				//mmodel.modelOuter.mainFrame.render(0.0625F, true);
 			}
-			
+
 			// 発光Outer
 			OUTERLIGHT: if (renderCount == 0 && mmodel.modelOuter!=null) {
 				ResourceLocation texOuterLight = mmodel.textureOuterLight[renderParts];
@@ -165,7 +166,7 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 					GL11.glEnable(GL11.GL_ALPHA_TEST);
 					GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 					GL11.glDepthFunc(GL11.GL_LEQUAL);
-					
+
 					Client.setLightmapTextureCoords(0x00f000f0);//61680
 					if (mmodel.textureLightColor == null) {
 						GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -180,22 +181,29 @@ public class LMMNX_RenderEntitySelect extends RenderModelMulti {
 					mmodel.modelOuter.mainFrame.render(0.0625F);
 					Client.setLightmapTextureCoords(mmodel.lighting);
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-//					GL11.glDisable(GL11.GL_BLEND);
-//					GL11.glDisable(GL11.GL_ALPHA_TEST);
+					GL11.glDisable(GL11.GL_BLEND);
+					GL11.glDisable(GL11.GL_ALPHA_TEST);
 				}
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			}
 
 			//カウントインクリメント
-			renderCount++;
-			if(renderCount>=300) renderCount=30;
+//			renderCount++;
+//			if(renderCount>=500) renderCount=0;
 		}
 	}
 
 
 	public LMMNX_RenderEntitySelect(RenderManager manager, float pShadowSize) {
 		super(manager, pShadowSize);
-		this.addLayer(new MMMLayerArmor(this));
+		addLayer(new MMMLayerArmor(this));
+	}
+
+
+	@Override
+	public void doRender(EntityLiving par1EntityLiving, double par2,
+			double par4, double par6, float par8, float par9) {
+		super.doRender(par1EntityLiving, par2, par4, par6, par8, par9);
 	}
 
 }

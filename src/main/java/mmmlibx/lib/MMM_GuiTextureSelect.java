@@ -5,6 +5,7 @@ import java.io.IOException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.StatCollector;
@@ -44,7 +45,6 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 
 	@Override
 	protected void keyTyped(char par1, int par2) {
-		
 		if (par2 == 1) {
 			mc.displayGuiScreen(owner);
 		}
@@ -69,10 +69,16 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
+		GlStateManager.disableColorMaterial();
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.disableTexture2D();
+		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
 		drawDefaultBackground();
 		selectPanel.drawScreen(par1, par2, par3);
 		drawCenteredString(mc.fontRendererObj, StatCollector.translateToLocal(screenTitle), width / 2, 4, 0xffffff);
-		
+
 		GL11.glPushMatrix();
 		GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
@@ -104,10 +110,11 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 		}
 		GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		
+
 		GL11.glPopMatrix();
+		RenderHelper.disableStandardItemLighting();
 		super.drawScreen(par1, par2, par3);
-		
+
 	}
 
 	@Override
