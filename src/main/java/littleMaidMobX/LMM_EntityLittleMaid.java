@@ -1377,7 +1377,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //			int lhy = MathHelper.floor_double(posY);
 //			int lhz = MathHelper.floor_double(posZ);;
 //			func_110172_bL().set(lhx, lhy, lhz);
-			func_175449_a(getPosition(),(int)getMaximumHomeDistance());
+			func_175449_a(getPosition(), (int) getMaximumHomeDistance());
 			long lcl = par1nbtTagCompound.getLong("Limit");
 			if (isContract() && lcl == 0) {
 				maidContractLimit = 24000;
@@ -3751,11 +3751,16 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		setPlayingRole(0);
 		if (maidFreedom && isContract()) {
 			setTracer(isTracer());
-			func_175449_a(getPosition(), 16);
+			func_175449_a(getPosition(), (int) getMaximumHomeDistance());
 		} else {
 			detachHome();
 		}
 		setMaidFlags(maidFreedom, dataWatch_Flags_Freedom);
+	}
+
+	@Override
+	public float getMaximumHomeDistance() {
+		return 20f;
 	}
 
 	public boolean isFreedom() {
@@ -3767,6 +3772,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			LMMNX_NetSync.LMMNX_Sync,
 			0, 0, 0, 0,
 			LMMNX_NetSync.LMMNX_Sync_UB_Freedom, (byte)(isFreedom()?1:0)
+		};
+		syncNet(b);
+	}
+	
+	protected void requestChangeFreedom(boolean flag) {
+		byte[] b = new byte[]{
+			LMMNX_NetSync.LMMNX_Sync,
+			0, 0, 0, 0,
+			LMMNX_NetSync.LMMNX_Sync_UB_Freedom, (byte)(flag?1:0)
 		};
 		syncNet(b);
 	}

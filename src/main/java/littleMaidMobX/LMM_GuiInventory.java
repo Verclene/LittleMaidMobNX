@@ -512,8 +512,7 @@ public class LMM_GuiInventory extends GuiContainer {
 			break;
 		case 311 :
 			frdmbutton.toggle=!frdmbutton.toggle;
-			entitylittlemaid.setFreedom(frdmbutton.toggle);
-			entitylittlemaid.syncFreedom();
+			entitylittlemaid.requestChangeFreedom(frdmbutton.toggle);
 			entitylittlemaid.handleHealthUpdate((byte) (frdmbutton.toggle?12:13));
 			break;
 		}
