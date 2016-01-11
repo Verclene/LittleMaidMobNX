@@ -2050,7 +2050,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		//雪合戦試験
-		if (maidFreedom && worldObj.isDaytime() && !isPlaying() && (maidMode==0||maidMode==1)){
+		if ((isFreedom() || !isContractEX()) && worldObj.isDaytime() && !isPlaying() && (maidMode==0||maidMode==1)){
 			if(LMM_EntityMode_Playing.checkSnows(
 						MathHelper.floor_double(posX),
 						MathHelper.floor_double(posY),

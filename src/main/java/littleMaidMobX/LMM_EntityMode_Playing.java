@@ -246,7 +246,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 			return;
 		}
 		owner.playingTick = 0;
-		if (owner.isFreedom()) {
+		if (owner.isFreedom() || !owner.isContractEX()) {
 			// 自由行動中の固体は虎視眈々と隙をうかがう。
 			if (owner.worldObj.isDaytime()) {
 				// 昼間のお遊び

@@ -71,12 +71,17 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 			resetTask();
 			return false;
 		}
-		for (ItemStack stack: fMaid.maidInventory.mainInventory) {
-			if (stack!=null &&
-					(stack.getItem()==Items.arrow || LMM_TriggerSelect.checkWeapon(fMaid.getMaidMaster(), "Arrow", stack))) {
+		if (fMaid.getMaidModeInt() == LMM_EntityMode_Archer.mmode_Archer ||
+				fMaid.getMaidModeInt() == LMM_EntityMode_Archer.mmode_Blazingstar)
+			for (ItemStack stack: fMaid.maidInventory.mainInventory) {
+			if (stack != null && stack.getItem()==Items.arrow || LMM_TriggerSelect.checkWeapon(fMaid.getMaidMaster(), "Arrow", stack)) {
 				fTarget = entityliving;
 				return true;
 			}
+		}
+		if (fMaid.isPlaying()) {
+			fTarget = entityliving;
+			return true;
 		}
 		return false;
 	}
