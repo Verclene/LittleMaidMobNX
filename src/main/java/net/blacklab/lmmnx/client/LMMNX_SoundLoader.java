@@ -1,20 +1,16 @@
 package net.blacklab.lmmnx.client;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,35 +31,33 @@ import net.minecraftforge.fml.common.FMLLog;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.logging.log4j.Level;
 
-import scala.tools.nsc.backend.icode.Members.IField;
-
 /**
  * 新サウンドローディング(from 4.3)
  *
  */
 public class LMMNX_SoundLoader {
-	
+
 	protected static LMMNX_SoundLoader instance = new LMMNX_SoundLoader();
 	private boolean found = false;
 	private boolean sound = false;
-	
+
 	private List<String> loadedTPNames;
-	
+
 	private List<String> pathStore;
-	
+
 	public LMMNX_SoundLoader() {
 		pathStore = new ArrayList<String>();
 		loadedTPNames = new ArrayList<String>();
 	}
-	
+
 	public static boolean isFoundSoundpack() {
 		return instance.found;
 	}
-	
+
 	public static boolean isSoundLoaded() {
 		return instance.sound;
 	}
-	
+
 	public static void load() {
 		// 読み込みを開始するstaticメソッド．
 		// 処理用のメソッドは全てインスタンス内に．
@@ -73,7 +67,7 @@ public class LMMNX_SoundLoader {
 				instance.loadedTPNames.add(s);
 			}
 		}
-		
+
 		instance.searchDir(FileManager.dirMods);
 		LMMNX_SoundRegistry.copySoundsAdjust();
 		instance.appendPath();
@@ -81,7 +75,7 @@ public class LMMNX_SoundLoader {
 	}
 
 	private static Pattern CFG_FILE_PATTERN = Pattern.compile("(.+)\\.cfg");
-	
+
 	private void searchDir(File f) {
 		if (!f.isDirectory()) {
 			throw new IllegalStateException(f.getName()+" is not a directory!");
@@ -124,7 +118,7 @@ public class LMMNX_SoundLoader {
 			}
 		}
 	}
-	
+
 	private void searchZip(File f) {
 		String zipname = FileClassUtil.getFileName(FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath()));
 		if (zipname.endsWith(".zip")) {
@@ -163,9 +157,9 @@ public class LMMNX_SoundLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void decodeConfig(InputStream inputStream, String texture) {
 		if (texture != null) {
 			LMMNX_SoundRegistry.markTexVoiceReserved(texture);
@@ -220,7 +214,7 @@ public class LMMNX_SoundLoader {
 		}
 		found = true;
 	}
-	
+
 	/**
 	 * sounds.jsonの生成
 	 */
@@ -236,7 +230,7 @@ public class LMMNX_SoundLoader {
 				return;
 			}
 		}
-		
+
 		// JSON書き込み
 		File jsonFile = new File(jsonDir, "sounds.json");
 		if (jsonFile.isDirectory()) {
@@ -247,10 +241,10 @@ public class LMMNX_SoundLoader {
 		try {
 			// 出力行を生成
 			List<CharSequence> output = new ArrayList<CharSequence>();
-			
+
 			// トップブロック
 			output.add("{");
-			
+
 				Iterator iterator = LMMNX_SoundRegistry.getRegisteredNamesList().iterator();
 				while (iterator.hasNext()) {
 					String soundName = (String) iterator.next();
@@ -258,7 +252,7 @@ public class LMMNX_SoundLoader {
 					List m = LMMNX_SoundRegistry.getPathListFromRegisteredName(soundName);
 					// サウンド登録名
 					output.add("  \"" + soundName + "\": {");
-					
+
 					// サウンドの各種設定
 					output.add("    \"category\": \"master\",");
 					output.add("    \"sounds\": [");
@@ -269,16 +263,16 @@ public class LMMNX_SoundLoader {
 							output.add("      \"" + soundName + "//" + path + "\"" + (n.hasNext() ? "," : ""));
 						}
 					}
-						
+
 					output.add("    ]");
 
 					output.add("  }");
-					
+
 					if (iterator.hasNext()) {
 						output.add("  ,");
 					}
 				}
-			
+
 			output.add("}");
 
 			// Files.writeはJava7以降を要求
@@ -286,13 +280,13 @@ public class LMMNX_SoundLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			FileManager.COMMON_CLASS_LOADER.addURL(jsonDir.toURI().toURL());
 		} catch (MalformedURLException e) {
 		}
 	}
-	
+
 	private void appendPath() {
 		for (String path : pathStore) {
 			// サーチ用に末尾の数値と拡張子を切り落とす
@@ -304,10 +298,10 @@ public class LMMNX_SoundLoader {
 			} else {
 				continue;
 			}
-			
+
 			// サウンドネーム式に置換
 			String p2 = p1.replace('/', '.');
-			
+
 			checkPathAndRegister(path, p2, "");
 			checkPathAndRegister(path, p2, "littleMaidMob.");
 		}

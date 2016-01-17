@@ -1,11 +1,11 @@
 package littleMaidMobX;
 
-import net.blacklab.lib.minecraft.vector.VectorUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 
 public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntityAI {
@@ -42,14 +42,11 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				LMM_LittleMaidMobNX.Debug(String.format("ID:%d, %d -> %d, Change HomeWorld. reset HomePosition.",
 						theMaid.getEntityId(),theMaid.homeWorld, theMaid.worldObj.provider.getDimensionId()));
 //				theMaid.func_110171_b(
-				theMaid.func_175449_a(theMaid.getPosition(), 16);
+				theMaid.func_175449_a(theMaid.getPosition(), (int) theMaid.getMaximumHomeDistance());
 				return false;
 			}
 			
-			if (theMaid.func_180486_cf().distanceSqToCenter(
-					MathHelper.floor_double(theMaid.posX),
-					MathHelper.floor_double(theMaid.posY),
-					MathHelper.floor_double(theMaid.posZ)) > 400D) {
+			if (!theMaid.isWithinHomeDistanceCurrentPosition()) {
 				jumpTarget = false;
 				LMM_LittleMaidMobNX.Debug(String.format(
 						"ID:%d(%s) Jump To Home.", theMaid.getEntityId(),
@@ -82,8 +79,8 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 	@Override
 	public void startExecuting() {
 		if (jumpTarget) {
-			int i = MathHelper.floor_double(theOwner.posX) - 2;
-			int j = MathHelper.floor_double(theOwner.posZ) - 2;
+			int i = theOwner.getPosition().getX() - 2;
+			int j = theOwner.getPosition().getZ() - 2;
 			int k = MathHelper.floor_double(theOwner.getEntityBoundingBox().minY);
 			
 			for (int l = 0; l <= 4; l++) {
@@ -112,9 +109,9 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 			}
 		} else {
 			// ホームポジションエリア外で転移
-			int lx = theMaid.getPosition().getX();
-			int ly = theMaid.getPosition().getY();
-			int lz = theMaid.getPosition().getZ();
+			int lx = theMaid.func_180486_cf().getX();
+			int ly = theMaid.func_180486_cf().getY();
+			int lz = theMaid.func_180486_cf().getZ();
 			if (!(isCanJump(lx, ly, lz))) {
 				// ホームポジション消失
 				LMM_LittleMaidMobNX.Debug(String.format(
@@ -164,7 +161,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 				}
 				if (f) {
 //					theMaid.func_110171_b(lx, ly, lz, (int) theMaid.func_110174_bM());
-					theMaid.func_175449_a(new BlockPos(lx, ly, lz), (int) theMaid.getMaximumHomeDistance());
+//					theMaid.func_175449_a(new BlockPos(lx, ly, lz), (int) theMaid.getMaximumHomeDistance());
 					LMM_LittleMaidMobNX.Debug(String.format(
 							"Find new position:%d, %d, %d.", lx, ly, lz));
 				} else {
@@ -183,9 +180,9 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 //			theMaid.setTarget(null);
 //			theMaid.setAttackTarget(null);
 //			theMaid.getNavigator().clearPathEntity();
-			theMaid.setLocationAndAngles(lx + 05D, ly, lz + 0.5D,
+			theMaid.setLocationAndAngles(lx + 0.5D, ly, lz + 0.5D,
 					theMaid.rotationYaw, theMaid.rotationPitch);
-			
+			return;
 		}
 		
 		//theMaid.setTarget(null);
@@ -200,8 +197,8 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 	 * 転移先のチェック
 	 */
 	protected boolean isCanJump(double px, double py, double pz) {
-		return theWorld.getBlockState(new BlockPos(px, py - 1, pz)).getBlock().getMaterial().isSolid()
-				&& theWorld.func_147461_a(boundingBox).isEmpty();
+		return theWorld.getBlockState(new BlockPos(px, py - 1, pz)).getBlock().getMaterial().isSolid()/*
+				&& theWorld.func_147461_a(boundingBox).isEmpty()*/;
 	}
 
 	@Override

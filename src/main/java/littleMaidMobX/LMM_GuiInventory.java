@@ -365,6 +365,8 @@ public class LMM_GuiInventory extends GuiContainer {
 	@Override
 	public void drawScreen(int i, int j, float f) {
 		super.drawScreen(i, j, f);
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
 		int ii = i - guiLeft;
 		int jj = j - guiTop;
 		for(int cnt=0;cnt<4;cnt++){
@@ -388,8 +390,6 @@ public class LMM_GuiInventory extends GuiContainer {
 			GL11.glTranslatef(i - ii, j - jj, 0.0F);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 //			RenderHelper.disableStandardItemLighting();
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
 
 			if (entitylittlemaid.textureData.textureBox[0] != null) {
 				String ls1 = entitylittlemaid.textureData.getTextureName(0);
@@ -409,8 +409,6 @@ public class LMM_GuiInventory extends GuiContainer {
 			}
 			GL11.glPopMatrix();
 //			RenderHelper.enableStandardItemLighting();
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
 		} else {
 			txbutton[0].visible = false;
 			txbutton[1].visible = false;
@@ -418,7 +416,8 @@ public class LMM_GuiInventory extends GuiContainer {
 			txbutton[3].visible = false;
 			selectbutton.visible = false;
 		}
-
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
 	}
 
 	@Override
@@ -512,8 +511,7 @@ public class LMM_GuiInventory extends GuiContainer {
 			break;
 		case 311 :
 			frdmbutton.toggle=!frdmbutton.toggle;
-			entitylittlemaid.setFreedom(frdmbutton.toggle);
-			entitylittlemaid.syncFreedom();
+			entitylittlemaid.requestChangeFreedom(frdmbutton.toggle);
 			entitylittlemaid.handleHealthUpdate((byte) (frdmbutton.toggle?12:13));
 			break;
 		}

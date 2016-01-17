@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI {
 
 	protected EntityCreature theCreature;
+	protected LMM_EntityLittleMaid theMaid;
 	protected double shelterX;
 	protected double shelterY;
 	protected double shelterZ;
@@ -21,6 +22,9 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 
 	public LMM_EntityAIFleeRain(EntityCreature par1EntityCreature, float pMoveSpeed) {
 		theCreature = par1EntityCreature;
+		if (theCreature instanceof LMM_EntityLittleMaid) {
+			theMaid = (LMM_EntityLittleMaid) theCreature;
+		}
 		movespeed = pMoveSpeed;
 		theWorld = par1EntityCreature.worldObj;
 		isEnable = false;
@@ -33,18 +37,15 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 			return false;
 		}
 
-		if (!theCreature.isWet()) {
+		if (!theMaid.isWet()) {
 			return false;
 		}
 		
-		if (theCreature instanceof LMM_EntityLittleMaid && ((LMM_EntityLittleMaid) theCreature).isTracer()) {
+		if (theMaid.isTracer()) {
 			return false;
 		}
 
-		if (!theWorld.canBlockSeeSky(new BlockPos(
-				MathHelper.floor_double(theCreature.posX),
-				(int) theCreature.getEntityBoundingBox().minY+1,
-				MathHelper.floor_double(theCreature.posZ)))) {
+		if (!theWorld.canBlockSeeSky(theMaid.getPosition())) {
 			return false;
 		}
 
@@ -62,35 +63,33 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 
 	@Override
 	public boolean continueExecuting() {
-		return theCreature.getNavigator().noPath()?false:theWorld.canBlockSeeSky(new BlockPos(
-				MathHelper.floor_double(theCreature.posX),
-				(int) theCreature.getEntityBoundingBox().minY+1,
-				MathHelper.floor_double(theCreature.posZ)));
+		return theMaid.getNavigator().noPath() ? false :
+			theWorld.canBlockSeeSky(theMaid.getPosition());
 	}
 
 	@Override
 	public void startExecuting() {
 		LMM_LittleMaidMobNX.Debug("EXECUTE %04.2f,%04.2f,%04.2f", shelterX, shelterY, shelterZ);
-		theCreature.getNavigator().tryMoveToXYZ(shelterX, shelterY, shelterZ, movespeed);
+		theMaid.getNavigator().tryMoveToXYZ(shelterX, shelterY, shelterZ, movespeed);
 	}
 
 	private Vec3 findPossibleShelter() {
-		Random random = theCreature.getRNG();
+		Random random = theMaid.getRNG();
 		
 		for (int i = 0; i < 10; i++) {
-			int j = MathHelper.floor_double((theCreature.posX + (i-5)));
-			int k = MathHelper.floor_double((theCreature.getEntityBoundingBox().minY +
+			int j = MathHelper.floor_double((theMaid.posX + (i-5)));
+			int k = MathHelper.floor_double((theMaid.getEntityBoundingBox().minY +
 					random.nextInt(4)) - 2D);
-			int l = MathHelper.floor_double((theCreature.posZ + (i-5)));
+			int l = MathHelper.floor_double((theMaid.posZ + (i-5)));
 			
 			//離れすぎている
-			if(theCreature.getPosition().distanceSq(j, k, l)>LMM_EntityMode_Torcher.limitDistance_Freedom &&
-					((LMM_EntityLittleMaid)theCreature).isFreedom()){
+			if(theMaid.getPosition().distanceSq(j, k, l)>LMM_EntityMode_Torcher.limitDistance_Freedom &&
+					theMaid.isFreedom()){
 				continue;
 			}
 			
 			if (!theWorld.canBlockSeeSky(new BlockPos(j, k, l))/*
-					&& theCreature.getBlockPathWeight(j, k, l) > -0.5F*/) {
+					&& theMaid.getBlockPathWeight(j, k, l) > -0.5F*/) {
 				return new Vec3(j, k, l);
 			}
 		}

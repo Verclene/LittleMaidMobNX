@@ -246,7 +246,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 			return;
 		}
 		owner.playingTick = 0;
-		if (owner.isFreedom()) {
+		if (owner.isFreedom() || !owner.isContractEX()) {
 			// 自由行動中の固体は虎視眈々と隙をうかがう。
 			if (owner.worldObj.isDaytime()) {
 				// 昼間のお遊び
@@ -307,7 +307,7 @@ public class LMM_EntityMode_Playing extends LMM_EntityModeBase {
 		if (par1DamageSource.getSourceOfDamage() instanceof EntitySnowball) {
 			// お遊び判定用、雪玉かどうか判定
 			owner.maidDamegeSound = LMM_EnumSound.hurt_snow;
-			if (!owner.isContract() || (owner.isFreedom()&&owner.maidMode==1)) {
+			if (!owner.isContractEX() || (owner.isFreedom() && owner.maidMode==1)) {
 				owner.setPlayingRole(mpr_QuickShooter);
 				owner.setMaidWait(false);
 				owner.setMaidWaitCount(0);
