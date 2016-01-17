@@ -6,10 +6,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -127,8 +129,8 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 		double ldist = fMaid.getDistanceSqToEntity(fTarget);
 		boolean lsee = fMaid.getEntitySenses().canSee(fTarget) &&
 				VectorUtil.canMoveThrough(
-						fMaid, fMaid.getEyeHeight()/2,
-						fTarget.posX, fTarget.posY+fTarget.getEyeHeight()/2, fTarget.posZ, false, true, false);
+						fMaid, fMaid.getEyeHeight(),
+						fTarget.posX, fTarget.posY+fTarget.getEyeHeight(), fTarget.posZ, false, true, false);
 		
 		// 攻撃対象を見る
 		if (fTarget!=null) fMaid.getLookHelper().setLookPositionWithEntity(fTarget, 30F, 30F);
@@ -236,6 +238,9 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 						LMM_LittleMaidMobNX.Debug("id:%d shoot.", fMaid.getEntityId());
 						fAvatar.stopUsingItem();
 						fMaid.setSwing(30, LMM_EnumSound.shoot, !fMaid.isPlaying());
+						if (fMaid.isPlaying()) {
+							resetTask();
+						}
 					} else {
 						// チャージ
 						if (litemstack.getMaxItemUseDuration() > 500) {
@@ -265,6 +270,11 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 									fMaid.mstatAimeBow = false;
 									fMaid.setSwing(10, (litemstack.stackSize == itemcount) ? LMM_EnumSound.shoot_burst : LMM_EnumSound.Null, !fMaid.isPlaying());
 									LMM_LittleMaidMobNX.Debug(String.format("id:%d throw weapon.(%d:%f:%f)", fMaid.getEntityId(), swingState.attackTime, fMaid.rotationYaw, fMaid.rotationYawHead));
+									swingState.attackTime = 5;
+									if (fMaid.maidMode == LMM_EntityMode_Playing.mmode_Playing) {
+										fMaid.setMaidWaitCount(10);
+//										return;
+									}
 								} else {
 									if(fMaid.maidMode!=LMM_EntityMode_Playing.mmode_Playing)
 										LMM_LittleMaidMobNX.Debug(String.format("ID:%d-friendly fire throw weapon.", fMaid.getEntityId()));
@@ -344,10 +354,8 @@ public class LMM_EntityAIAttackArrow extends EntityAIBase implements LMM_IEntity
 //				fMaid.setAttackTarget(null);
 			}
 			if (fMaid.weaponFullAuto && getAvatarIF().getIsItemTrigger()) {
-				FMLCommonHandler.instance().getFMLLogger().debug("DEBUG INFO=NO TARGET");
 				fAvatar.stopUsingItem();
 			} else {
-				FMLCommonHandler.instance().getFMLLogger().debug("DEBUG INFO=NO TARGET(C)");
 				fAvatar.clearItemInUse();
 			}
 			resetTask();
