@@ -2,16 +2,16 @@ package mmmlibx.lib;
 
 import java.io.IOException;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class MMM_GuiTextureSelect extends GuiScreen {
 
@@ -69,16 +69,12 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		GlStateManager.disableColorMaterial();
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-		GlStateManager.disableTexture2D();
-		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-
 		drawDefaultBackground();
 		selectPanel.drawScreen(par1, par2, par3);
 		drawCenteredString(mc.fontRendererObj, StatCollector.translateToLocal(screenTitle), width / 2, 4, 0xffffff);
-
+		
+		super.drawScreen(par1, par2, par3);
+		
 		GL11.glPushMatrix();
 		GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
@@ -91,30 +87,34 @@ public class MMM_GuiTextureSelect extends GuiScreen {
 		GL11.glScalef(60F, -60F, 60F);
 		selectPanel.entity.renderYawOffset = -25F;
 		selectPanel.entity.rotationYawHead = -10F;
-		selectPanel.entity.modeArmor = selectPanel.mode;
+		ResourceLocation ltex[];
 		if (selectPanel.mode) {
-			selectPanel.entity.textureData.textureBox[0] = MMM_GuiTextureSlot.blankBox;
+			selectPanel.entity.textureData.textureBox[0] = selectPanel.blankBox;
 			selectPanel.entity.textureData.textureBox[1] = lbox;
 			selectPanel.entity.setTextureNames("default");
 		} else {
 			selectPanel.entity.textureData.textureBox[0] = lbox;
-			selectPanel.entity.textureData.textureBox[1] = MMM_GuiTextureSlot.blankBox;
+			selectPanel.entity.textureData.textureBox[1] = selectPanel.blankBox;
 			selectPanel.entity.setColor(selectColor);
 			selectPanel.entity.setTextureNames();
 		}
-		Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(selectPanel.entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		mc.getRenderManager().renderEntityWithPosYaw(selectPanel.entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		for (int li = 0; li < 16; li++) {
 			if (lbox.hasColor(li)) {
 				break;
 			}
 		}
 		GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-
 		GL11.glPopMatrix();
-		RenderHelper.disableStandardItemLighting();
-		super.drawScreen(par1, par2, par3);
 
+		RenderHelper.disableStandardItemLighting();
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
+		RenderHelper.enableGUIStandardItemLighting();
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	}
 
 	@Override
