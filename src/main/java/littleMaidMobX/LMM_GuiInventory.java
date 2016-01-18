@@ -365,6 +365,7 @@ public class LMM_GuiInventory extends GuiContainer {
 	@Override
 	public void drawScreen(int i, int j, float f) {
 		super.drawScreen(i, j, f);
+
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
 		int ii = i - guiLeft;
