@@ -45,8 +45,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "5.0.33";
-	public static final String VERSION_FORSITE = "NX5 Build 33";
+	public static final String VERSION = "5.0.34";
+	public static final String VERSION_FORSITE = "NX5 Build 34";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.9]";
 	public static final int VERSION_CODE = 13;
 
@@ -88,7 +88,7 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_enableSpawnEgg = true;
 
 	// @MLProp(info="LittleMaid Voice distortion.")
-	public static boolean cfg_VoiceDistortion = true;
+	public static boolean cfg_VoiceDistortion = false;
 
 	// @MLProp(info="Print Debug Massages.")
 	public static boolean cfg_PrintDebugMessage = false;
@@ -168,6 +168,8 @@ public class LMM_LittleMaidMobNX {
 		cfg_checkOwnerName = cfg.getBoolean("checkOwnerName", true);
 		cfg.setComment("DeathMessage", "Print chat message when your maid dies.");
 		cfg_DeathMessage = cfg.getBoolean("DeathMessage", true);
+		cfg.setComment("VoiceDistortion", "If 'true', voices distorts like as vanila mobs.");
+		cfg_VoiceDistortion = cfg.getBoolean("VoiceDistortion", false);
 		cfg_Dominant = cfg.getBoolean("Dominant", false);
 		cfg.setComment("enableSpawnEgg", "If 'true', you can use a recipe of LittleMaid SpawnEgg.");
 		cfg_enableSpawnEgg = cfg.getBoolean("enableSpawnEgg", true);
