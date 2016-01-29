@@ -141,7 +141,9 @@ public class LMM_GuiInventory extends GuiContainer {
 //		Minecraft.getMinecraft().getRenderManager().playerViewY = 180F;
 		GlStateManager.translate(0.0F, 0.0F/*entitylittlemaid.yOffset*/, 0.0F);
 		Minecraft.getMinecraft().getRenderManager().setPlayerViewY(180F);
+		Minecraft.getMinecraft().getRenderManager().setRenderShadow(false);
 		Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entitylittlemaid, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		Minecraft.getMinecraft().getRenderManager().setRenderShadow(true);
 		entitylittlemaid.renderYawOffset = f2;
 		entitylittlemaid.rotationYaw = f3;
 		entitylittlemaid.rotationYawHead = f4;
