@@ -125,3 +125,6 @@ littleMaidMob.chat.text.addtrigger=Trigger item registered:
 littleMaidMob.chat.text.removetrigger=Trigger item removed: 
 littleMaidMob.chat.text.warningcount=WARNING: The number of registrations are left:
 littleMaidMob.chat.text.endcount=The number of registrations are no longer left. Craft a key again.
+
+system.lmmnx.chat.text.newversion=New version avaliable
+system.lmmnx.chat.text.checkversion=Go to: http://el-blacklab.net/

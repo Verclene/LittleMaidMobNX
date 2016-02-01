@@ -7,6 +7,8 @@ import java.util.Random;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.config.ConfigList;
+import net.blacklab.lib.version.Version;
+import net.blacklab.lib.version.Version.VersionData;
 import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
@@ -45,10 +47,13 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "5.0.35";
-	public static final String VERSION_FORSITE = "NX5 Build 35";
+	public static final String VERSION = "5.0.36";
+	public static final String VERSION_FORSITE = "NX5 Build 36";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.9]";
 	public static final int VERSION_CODE = 13;
+	
+	public static final VersionData currentVersion = new VersionData(VERSION_CODE, VERSION, VERSION_FORSITE);
+	public static VersionData latestVersion = new VersionData(1, "1.0.1", "NX1");
 
 	/*
 	 * public static String[] cfg_comment = {
@@ -215,6 +220,8 @@ public class LMM_LittleMaidMobNX {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		latestVersion = Version.getLatestVersion("http://mc.el-blacklab.net/lmmnxversion.txt", 10000);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance,
 				new LMM_GuiCommonHandler());
