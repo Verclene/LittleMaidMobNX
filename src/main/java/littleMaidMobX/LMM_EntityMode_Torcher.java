@@ -148,8 +148,17 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
+		if (owner.isFreedom() && Math.random() > 0.2f &&
+				owner.func_180486_cf().distanceSq(px, py, pz) > 400d) {
+			return false;
+		}
+		if (!owner.isFreedom() && Math.random() > 0.2f && owner.getMaidMasterEntity()!=null &&
+				owner.getMaidMasterEntity().getDistanceSq(px, py, pz) > 144d) {
+			return false;
+		}
+
 		int v = getBlockLighting(px, py, pz);
-		if (v < 8 && VectorUtil.canBlockBeSeen(owner, px, py - 1, pz, true, true, false) && !owner.isMaidWait()) {		
+		if (v < 8 && VectorUtil.canBlockBeSeen(owner, px, py - 1, pz, true, true, true) && !owner.isMaidWait()) {		
 			if (owner.getNavigator().tryMoveToXYZ(px, py, pz, 1.0F) ) {
 				//owner.playLittleMaidSound(LMM_EnumSound.findTarget_D, true);
 				return true;
@@ -273,6 +282,13 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 
 		}
 */
+	}
+	
+	@Override
+	protected void onJump() {
+		if (Math.random() > 0.1d) {
+			owner.getNavigator().clearPathEntity();
+		}
 	}
 
 }

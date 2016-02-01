@@ -102,6 +102,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 							theMaid.setLocationAndAngles(
 									i + l + 0.5F, k, j + i1 + 0.5F,
 									theMaid.rotationYaw, theMaid.rotationPitch);
+							theMaid.onJump();
 							return;
 						}
 					}
@@ -182,6 +183,7 @@ public class LMM_EntityAIJumpToMaster extends EntityAIBase implements LMM_IEntit
 //			theMaid.getNavigator().clearPathEntity();
 			theMaid.setLocationAndAngles(lx + 0.5D, ly, lz + 0.5D,
 					theMaid.rotationYaw, theMaid.rotationPitch);
+			theMaid.onJump();
 			return;
 		}
 		

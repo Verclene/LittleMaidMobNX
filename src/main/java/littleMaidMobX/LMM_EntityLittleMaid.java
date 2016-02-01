@@ -3784,6 +3784,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		};
 		syncNet(b);
 	}
+	
+	protected void onJump() {
+		getActiveModeClass().onJump();
+	}
 
 	public boolean isHeadMount(){
 		return ItemUtil.isHelm(maidInventory.mainInventory[17]);
