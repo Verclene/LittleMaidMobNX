@@ -149,11 +149,11 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
 		if (owner.isFreedom() && Math.random() > 0.2f &&
-				owner.func_180486_cf().distanceSq(px, py, pz) > 400d) {
+				owner.func_180486_cf().distanceSq(px, py, pz) > limitDistance_Freedom) {
 			return false;
 		}
 		if (!owner.isFreedom() && Math.random() > 0.2f && owner.getMaidMasterEntity()!=null &&
-				owner.getMaidMasterEntity().getDistanceSq(px, py, pz) > 144d) {
+				owner.getMaidMasterEntity().getDistanceSq(px, py, pz) > limitDistance_Follow) {
 			return false;
 		}
 

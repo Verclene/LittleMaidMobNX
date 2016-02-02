@@ -149,12 +149,14 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 			 * ①周りに未耕作の地域がある場合はtrueを返さない
 			 * ②種を持っていない場合もfalse
 			 */
+/*
 			int p=WATER_RADIUS*3;
 			for(int az=-p;az<=p;az++){
 				for(int ax=-p;ax<=p;ax++){
 					if(isUnfarmedLand(px+ax,py,pz+az)) return false;
 				}
 			}
+*/
 			if(getHadSeedIndex()==-1)
 				return false;
 			return true;
