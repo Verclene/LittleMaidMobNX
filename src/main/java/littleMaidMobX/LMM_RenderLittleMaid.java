@@ -5,7 +5,11 @@ import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import mmmlibx.lib.multiModel.model.mc162.ModelBaseDuo;
 import mmmlibx.lib.multiModel.model.mc162.RenderModelMulti;
+import net.blacklab.lib.minecraft.item.ItemUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.BlockFlower;
+import net.minecraft.block.BlockSkull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,6 +21,7 @@ import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
@@ -251,6 +256,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 				float p_177141_5_, float p_177141_6_, float p_177141_7_,
 				float p_177141_8_) {
 			LMM_EntityLittleMaid lmm = (LMM_EntityLittleMaid) p_177141_1_;
+			Minecraft minecraft = Minecraft.getMinecraft();
 			if(!lmm.isMaidWait()){
 				ItemStack itemstack = lmm.getCurrentEquippedItem();
 
@@ -261,7 +267,6 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 					modelMain.model.Arms[lmm.maidDominantArm].postRender(0.0625F);
 
 					Item item = itemstack.getItem();
-					Minecraft minecraft = Minecraft.getMinecraft();
 
 					if (item instanceof ItemBlock && Block.getBlockFromItem(item).getRenderType() == 2)
 					{
@@ -270,7 +275,7 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 						GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
 						float f8 = 0.375F;
 						GlStateManager.scale(-f8, -f8, f8);
-					}else if (item instanceof ItemBow) {
+					}else if (item==Items.bow) {
 						GlStateManager.translate(lmm.maidDominantArm==1?-0.1125f:-0.05f, -0.0375F, -0.15F);
 						GlStateManager.rotate(10f, 0f, 1f, 0f);
 					}else{
@@ -281,8 +286,9 @@ public class LMM_RenderLittleMaid extends RenderModelMulti {
 					GlStateManager.popMatrix();
 
 				}
-
+				
 			}
+
 		}
 
 

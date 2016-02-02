@@ -145,7 +145,8 @@ public class MMM_GuiTextureSlot extends GuiSlot {
 		MMM_TextureManager.instance.checkTextureBoxServer(lbox);
 		GL11.glDisable(GL11.GL_BLEND);
 		
-		owner.drawString(this.owner.mc.fontRendererObj, lbox.textureName, var2 + (mode?32:16), var3 + 25, -1);
+		owner.drawString(this.owner.mc.fontRendererObj, lbox.textureName,
+				var2 + 207 - mc.fontRendererObj.getStringWidth(lbox.textureName), var3 + 25, -1);
 		GL11.glTranslatef(var2 + 8F, var3 + 25F, 50F);
 		GL11.glScalef(12F, -12F, 12F);
 		entity.renderYawOffset = 30F;
@@ -153,21 +154,24 @@ public class MMM_GuiTextureSlot extends GuiSlot {
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
 		entity.modeArmor = mode;
 		if (mode) {
-			GL11.glTranslatef(1F, 0, 0);
-			Map<Integer, ResourceLocation> lmap = lbox.armors.get("default");
-			if (lmap != null) {
+			GL11.glTranslatef(0f, 0.25F, 0f);
+			for (int li = 0; li < MMM_TextureManager.armorFilenamePrefix.length; li++) {
+				GL11.glTranslatef(1F, 0, 0);
+				Map<Integer, ResourceLocation> lmap = lbox.armors.get(MMM_TextureManager.armorFilenamePrefix[li]);
+				if (lmap != null) {
 //				ltxname = entity.getTextures(1);
 //				ltxname[0] = ltxname[1] = ltxname[2] = ltxname[3] =
 //						lbox.getArmorTextureName(MMM_TextureManager.tx_armor1, "default", 0);
 //				ltxname = entity.getTextures(2);
 //				ltxname[0] = ltxname[1] = ltxname[2] = ltxname[3] =
 //						lbox.getArmorTextureName(MMM_TextureManager.tx_armor2, "default", 0);
-				entity.setTextureNames("default");
+					entity.setTextureNames("default");
+					Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+				}
+				entity.setTextureNames((String) lbox.armors.keySet().toArray()[0]);
 				Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+				Client.setLightmapTextureCoords(0x00f0);//61680
 			}
-			entity.setTextureNames((String) lbox.armors.keySet().toArray()[0]);
-			Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-			Client.setLightmapTextureCoords(0x00f0);//61680
 		} else {
 			// テクスチャ表示
 			for (int li = 0; li < 16; li++) {

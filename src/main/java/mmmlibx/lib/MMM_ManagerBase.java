@@ -10,7 +10,10 @@ import java.util.zip.ZipInputStream;
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.blacklab.lib.classutil.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.relauncher.FMLInjectionData;
 
 public abstract class MMM_ManagerBase {
 
@@ -49,7 +52,10 @@ public abstract class MMM_ManagerBase {
 			return;
 		}
 		
-		// mods
+		// mods]
+		String mcv = (String) FMLInjectionData.data()[4];
+		MMMLib.Debug("MC %s", mcv);
+		MMMLib.Debug("START SEARCH MODS FOLDER");
 		decodeDirectory(root, root);
 		for (File lf : root.listFiles()) {
 			if (lf.isFile() && (lf.getName().endsWith(".zip") || lf.getName().endsWith(".jar"))) {
@@ -61,8 +67,12 @@ public abstract class MMM_ManagerBase {
 				if (md.endsWith("/")) {
 					md = md.substring(0, md.length()-1);
 				}
+
+				MMMLib.Debug("DIR SEARCH %s", md);
 				String mf = FileClassUtil.getFileName(md);
-				if (mf.equals(MinecraftForge.MC_VERSION)) {
+				MMMLib.Debug(" SPLICE %s", mf);
+				if (mf.equals(mcv)) {
+					MMMLib.Debug("DEBUG START SEARCH DIVIDED FOLDER");
 					startSearch(lf, false);
 				}
 			}

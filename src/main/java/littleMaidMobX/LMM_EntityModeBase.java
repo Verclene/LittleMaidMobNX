@@ -222,7 +222,12 @@ public abstract class LMM_EntityModeBase {
 	 */
 	public void updateBlock() {
 	}
-
+	
+	/**
+	 * ワープ時にEntityから呼ばれる．
+	 */
+	protected void onJump() {
+	}
 
 	/**
 	 * 独自索敵処理の使用有無

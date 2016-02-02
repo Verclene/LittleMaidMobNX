@@ -7,6 +7,8 @@ import java.util.Random;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.config.ConfigList;
+import net.blacklab.lib.version.Version;
+import net.blacklab.lib.version.Version.VersionData;
 import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
@@ -45,10 +47,13 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "5.0.31";
-	public static final String VERSION_FORSITE = "NX5 Build 31";
+	public static final String VERSION = "5.0.39";
+	public static final String VERSION_FORSITE = "NX5 Build 39";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.9]";
 	public static final int VERSION_CODE = 13;
+	
+	public static final VersionData currentVersion = new VersionData(VERSION_CODE, VERSION, VERSION_FORSITE);
+	public static VersionData latestVersion = new VersionData(1, "1.0.1", "NX1");
 
 	/*
 	 * public static String[] cfg_comment = {
@@ -88,7 +93,7 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_enableSpawnEgg = true;
 
 	// @MLProp(info="LittleMaid Voice distortion.")
-	public static boolean cfg_VoiceDistortion = true;
+	public static boolean cfg_VoiceDistortion = false;
 
 	// @MLProp(info="Print Debug Massages.")
 	public static boolean cfg_PrintDebugMessage = false;
@@ -168,6 +173,8 @@ public class LMM_LittleMaidMobNX {
 		cfg_checkOwnerName = cfg.getBoolean("checkOwnerName", true);
 		cfg.setComment("DeathMessage", "Print chat message when your maid dies.");
 		cfg_DeathMessage = cfg.getBoolean("DeathMessage", true);
+		cfg.setComment("VoiceDistortion", "If 'true', voices distorts like as vanila mobs.");
+		cfg_VoiceDistortion = cfg.getBoolean("VoiceDistortion", false);
 		cfg_Dominant = cfg.getBoolean("Dominant", false);
 		cfg.setComment("enableSpawnEgg", "If 'true', you can use a recipe of LittleMaid SpawnEgg.");
 		cfg_enableSpawnEgg = cfg.getBoolean("enableSpawnEgg", true);
@@ -213,6 +220,8 @@ public class LMM_LittleMaidMobNX {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		latestVersion = Version.getLatestVersion("http://mc.el-blacklab.net/lmmnxversion.txt", 10000);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance,
 				new LMM_GuiCommonHandler());

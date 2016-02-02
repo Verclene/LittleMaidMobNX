@@ -12,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -33,26 +34,6 @@ public class LMM_EventHook
 		}
 	}
 
-	public class RunThread extends Thread{
-		public PlayerEvent.PlayerLoggedInEvent e;
-
-		public RunThread(PlayerEvent.PlayerLoggedInEvent ev){
-			e = ev;
-		}
-
-		public void run(){
-			Version.VersionData v = Version.getLatestVersion("http://mc.el-blacklab.net/lmmnxversion.txt");
-			if(LMM_LittleMaidMobNX.VERSION_CODE < v.code){
-				//バージョンが古い
-				// TODO これメイドのAvatarキャッチしない？
-				try{
-					//別スレッドから使えるんかい
-					e.player.addChatMessage(new ChatComponentText("[LittleMaidMobNX]New Version Avaliable : "+v.name));
-					e.player.addChatMessage(new ChatComponentText("[LittleMaidMobNX]Go to : http://el-blacklab.net/"));
-				}catch(Exception e){}
-			}
-		}
-	}
 	@SubscribeEvent
 	public void onEntitySpawn(LivingSpawnEvent event){
 		if(event.entityLiving instanceof LMM_EntityLittleMaid){
@@ -75,7 +56,12 @@ public class LMM_EventHook
 
 	@SubscribeEvent
 	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
-		new RunThread(event).start();
+		if (!event.player.worldObj.isRemote && LMM_LittleMaidMobNX.currentVersion.compareVersion(LMM_LittleMaidMobNX.latestVersion) > 0) {
+			event.player.addChatComponentMessage(new ChatComponentText(String.format("[LittleMaidMobNX]%s : %s",
+					StatCollector.translateToLocal("system.lmmnx.chat.text.newverstion"), LMM_LittleMaidMobNX.latestVersion.shownName)));
+			event.player.addChatComponentMessage(new ChatComponentText(String.format("[LittleMaidMobNX]%s",
+					StatCollector.translateToLocal("system.lmmnx.chat.text.checkversion"))));
+		}
 	}
 
 	@SubscribeEvent

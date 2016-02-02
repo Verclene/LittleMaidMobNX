@@ -11,6 +11,7 @@ import java.util.Map;
 
 import net.blacklab.lib.classutil.FileClassUtil;
 import net.blacklab.lmmnx.util.LMMNX_DevMode;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.FMLInjectionData;
 
 public class FileManager {
@@ -50,7 +51,7 @@ public class FileManager {
 
 	static {
 		Object[] lo = FMLInjectionData.data();
-		dirMinecraft = (File)lo[6];
+		dirMinecraft = (File) FMLInjectionData.data()[6];
 		minecraftDir = dirMinecraft.getPath();
 		dirMods = new File(dirMinecraft, "mods");
 		//開発モード
