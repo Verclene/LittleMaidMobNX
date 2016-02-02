@@ -12,9 +12,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
@@ -148,17 +149,16 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
-		if (owner.isFreedom() && Math.random() > 0.2f &&
-				owner.func_180486_cf().distanceSq(px, py, pz) > limitDistance_Freedom) {
+		if (owner.isFreedom() && owner.func_180486_cf().distanceSq(px, py, pz) > limitDistance_Freedom) {
 			return false;
 		}
-		if (!owner.isFreedom() && Math.random() > 0.2f && owner.getMaidMasterEntity()!=null &&
+		if (!owner.isFreedom() && owner.getMaidMasterEntity()!=null &&
 				owner.getMaidMasterEntity().getDistanceSq(px, py, pz) > limitDistance_Follow) {
 			return false;
 		}
 
 		int v = getBlockLighting(px, py, pz);
-		if (v < 8 && VectorUtil.canBlockBeSeen(owner, px, py - 1, pz, true, true, true) && !owner.isMaidWait()) {		
+		if (v < 8 && VectorUtil.canBlockBeSeen(owner, px, py - 1, pz, true, true, true) && !owner.isMaidWait()) {
 			if (owner.getNavigator().tryMoveToXYZ(px, py, pz, 1.0F) ) {
 				//owner.playLittleMaidSound(LMM_EnumSound.findTarget_D, true);
 				return true;
@@ -286,7 +286,9 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	
 	@Override
 	protected void onJump() {
-		if (Math.random() > 0.1d) {
+		PathEntity pathEntity = owner.getNavigator().getPath();
+		PathPoint destination = pathEntity.getFinalPathPoint();
+		if (!checkBlock(owner.getMaidModeInt(), destination.xCoord, destination.yCoord, destination.zCoord)) {
 			owner.getNavigator().clearPathEntity();
 		}
 	}
