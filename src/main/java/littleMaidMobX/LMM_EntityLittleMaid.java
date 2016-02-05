@@ -274,6 +274,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	protected MMM_Counter registerTick;
 	protected String registerMode;
+	
+	// NX5 レベル関連
+	private int maidLevel = 1;
+	private float maidExperience = 0;
+	
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
 		// 初期設定
@@ -1281,6 +1286,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setInteger("homeY", getPosition().getY());
 		par1nbtTagCompound.setInteger("homeZ", getPosition().getZ());
 		par1nbtTagCompound.setInteger("homeWorld", homeWorld);
+		
+		par1nbtTagCompound.setInteger("LMMNX_MAID_LV", maidLevel);
+		par1nbtTagCompound.setFloat("LMMNX_MAID_EXP", maidExperience);
+		
 		// Tiles
 		NBTTagCompound lnbt = new NBTTagCompound();
 		par1nbtTagCompound.setTag("Tiles", lnbt);
@@ -1463,6 +1472,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		isMadeTextureNameFlag = par1nbtTagCompound.getBoolean("isMadeTextureNameFlag");
+		
+		maidLevel = Math.max(par1nbtTagCompound.getInteger("LMMNX_MAID_LV"), 1);
+		maidExperience = par1nbtTagCompound.getFloat("LMMNX_MAID_EXP");
 
 		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
 		if(!worldObj.isRemote) recallRenderParamTextureName(textureModelNameForClient, textureArmorNameForClient);
@@ -3797,6 +3809,16 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		ItemStack stack = maidInventory.mainInventory[17];
 		if(ItemUtil.isHelm(stack)) return stack.copy();
 		return null;
+	}
+	
+	// レベルを取得
+	public int getMaidLevel() {
+		return maidLevel;
+	}
+	
+	// 現在経験値を取得
+	public float getMaidExperience() {
+		return maidExperience;
 	}
 
 	/**

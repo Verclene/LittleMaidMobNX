@@ -93,8 +93,12 @@ public class LMM_GuiInventory extends GuiContainer {
 				upperChestInventory.getName()), 8, 114, 0x404040);
 		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.Health"), 86, 8, 0x404040);
 		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.AP"), 86, 32, 0x404040);
-		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
-				"littleMaidMob.text.STATUS"), 86, 8, 0x404040);
+		
+		// LV表示
+		// LV数値
+		String lvString = String.format("Lv. %d", entitylittlemaid.getMaidLevel());
+		mc.fontRendererObj.drawString(lvString, 87, 8, 0x404040);
+		mc.fontRendererObj.drawString(lvString, 86, 7, 0xf0f0f0);
 
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
 				"littleMaidMob.mode.".concat(entitylittlemaid.getMaidModeString())), 86, 61, 0x404040);
@@ -255,6 +259,15 @@ public class LMM_GuiInventory extends GuiContainer {
 
 		Client.setTexture(icons);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		
+		// EXPゲージ
+//		GlStateManager.disableLighting();
+//		GlStateManager.disableDepth();
+		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+135, guiTop+8+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
+//		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+85+50*entitylittlemaid.getMaidExperience(), guiTop+8+mc.fontRendererObj.FONT_HEIGHT, 0x004000, 0x00f000);
+//		GlStateManager.enableLighting();
+//		GlStateManager.enableDepth();
+
 
 		int lhealth = MathHelper.ceiling_float_int(entitylittlemaid.getHealth());
 		int llasthealth = lhealth + MathHelper.ceiling_float_int(entitylittlemaid.getLastDamage());
