@@ -55,6 +55,7 @@ import net.blacklab.lmmnx.client.LMMNX_SoundRegistry;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIRestrictOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIWatchClosest;
+import net.blacklab.lmmnx.entity.lmm.exp.ExperienceUtil;
 import net.blacklab.lmmnx.entity.pathnavigate.LMMNX_PathNavigatorLittleMaid;
 import net.blacklab.lmmnx.item.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.sync.LMMNX_NetSync;
@@ -1287,7 +1288,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setInteger("homeZ", getPosition().getZ());
 		par1nbtTagCompound.setInteger("homeWorld", homeWorld);
 		
-		par1nbtTagCompound.setInteger("LMMNX_MAID_LV", maidLevel);
 		par1nbtTagCompound.setFloat("LMMNX_MAID_EXP", maidExperience);
 		
 		// Tiles
@@ -1473,8 +1473,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		isMadeTextureNameFlag = par1nbtTagCompound.getBoolean("isMadeTextureNameFlag");
 		
-		maidLevel = Math.max(par1nbtTagCompound.getInteger("LMMNX_MAID_LV"), 1);
 		maidExperience = par1nbtTagCompound.getFloat("LMMNX_MAID_EXP");
+		maidLevel = ExperienceUtil.getLevelFromExp(maidExperience);
 
 		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
 		if(!worldObj.isRemote) recallRenderParamTextureName(textureModelNameForClient, textureArmorNameForClient);
@@ -2485,6 +2485,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				latt.applyModifier(attSneakingSpeed);
 			}
 //			isSprinting()
+			
 		}
 
 		// 独自処理用毎時処理
@@ -3811,14 +3812,33 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return null;
 	}
 	
-	// レベルを取得
+	/**
+	 *  レベルを取得
+	 * @return
+	 */
 	public int getMaidLevel() {
 		return maidLevel;
 	}
 	
-	// 現在経験値を取得
+	/**
+	 *  現在経験値を取得
+	 * @return
+	 */
 	public float getMaidExperience() {
 		return maidExperience;
+	}
+	
+	/**
+	 * 経験値を追加
+	 * @param value
+	 */
+	public void addMaidExperience(float value) {
+		maidExperience += value;
+		if (ExperienceUtil.getLevelFromExp(maidExperience) > getMaidLevel()) {
+			maidLevel++;
+			playSound("random.levelup");
+			
+		}
 	}
 
 	/**

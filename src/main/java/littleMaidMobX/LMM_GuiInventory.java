@@ -10,6 +10,7 @@ import mmmlibx.lib.gui.GuiButtonNextPage;
 import net.blacklab.lmmnx.client.GuiButtonArmorToggle;
 import net.blacklab.lmmnx.client.GuiButtonFreedomToggle;
 import net.blacklab.lmmnx.client.GuiButtonSwimToggle;
+import net.blacklab.lmmnx.entity.lmm.exp.ExperienceUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -260,15 +261,6 @@ public class LMM_GuiInventory extends GuiContainer {
 		Client.setTexture(icons);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		
-		// EXPゲージ
-//		GlStateManager.disableLighting();
-//		GlStateManager.disableDepth();
-		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+135, guiTop+8+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
-//		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+85+50*entitylittlemaid.getMaidExperience(), guiTop+8+mc.fontRendererObj.FONT_HEIGHT, 0x004000, 0x00f000);
-//		GlStateManager.enableLighting();
-//		GlStateManager.enableDepth();
-
-
 		int lhealth = MathHelper.ceiling_float_int(entitylittlemaid.getHealth());
 		int llasthealth = lhealth + MathHelper.ceiling_float_int(entitylittlemaid.getLastDamage());
 		this.rand.setSeed(updateCounter * 312871);

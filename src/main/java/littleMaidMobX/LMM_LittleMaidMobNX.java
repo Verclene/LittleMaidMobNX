@@ -47,10 +47,10 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "5.0.41";
-	public static final String VERSION_FORSITE = "NX5 Build 41";
+	public static final String VERSION = "5.0.42";
+	public static final String VERSION_FORSITE = "NX5 Build 42";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.9]";
-	public static final int VERSION_CODE = 13;
+	public static final int VERSION_CODE = 14;
 	
 	public static final VersionData currentVersion = new VersionData(VERSION_CODE, VERSION, VERSION_FORSITE);
 	public static VersionData latestVersion = new VersionData(1, "1.0.1", "NX1");
