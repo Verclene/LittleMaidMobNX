@@ -186,11 +186,14 @@ public class LMM_GuiInventory extends GuiContainer {
 		int lj = guiLeft;
 		int lk = guiTop;
 		drawTexturedModalRect(lj, lk, 0, 0, xSize, ySize);
+		
+		// EXPゲージ
+		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+155, guiTop+8+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
 
 		// PotionEffect
 		displayDebuffEffects();
 
-		// LP/AP
+		// LP/APUnity Tweak Toolからテーマを選択して適用
 		drawHeathArmor(0, 0);
 /*
 		MMM_Client.setTexture(field_110324_m);
