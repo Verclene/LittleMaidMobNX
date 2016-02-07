@@ -95,14 +95,9 @@ public class LMM_GuiInventory extends GuiContainer {
 		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.Health"), 86, 8, 0x404040);
 		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.AP"), 86, 32, 0x404040);
 		
-		// LV表示
-		// LV数値
-		String lvString = String.format("Lv. %d", entitylittlemaid.getMaidLevel());
-		mc.fontRendererObj.drawString(lvString, 87, 8, 0x404040);
-		mc.fontRendererObj.drawString(lvString, 86, 7, 0xf0f0f0);
-
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
 				"littleMaidMob.mode.".concat(entitylittlemaid.getMaidModeString())), 86, 61, 0x404040);
+
 //	      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -187,13 +182,10 @@ public class LMM_GuiInventory extends GuiContainer {
 		int lk = guiTop;
 		drawTexturedModalRect(lj, lk, 0, 0, xSize, ySize);
 		
-		// EXPゲージ
-		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+155, guiTop+8+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
-
 		// PotionEffect
 		displayDebuffEffects();
 
-		// LP/APUnity Tweak Toolからテーマを選択して適用
+		// LP/AP
 		drawHeathArmor(0, 0);
 /*
 		MMM_Client.setTexture(field_110324_m);
@@ -376,8 +368,6 @@ public class LMM_GuiInventory extends GuiContainer {
 	public void drawScreen(int i, int j, float f) {
 		super.drawScreen(i, j, f);
 
-		GlStateManager.disableLighting();
-		GlStateManager.disableDepth();
 		int ii = i - guiLeft;
 		int jj = j - guiTop;
 		for(int cnt=0;cnt<4;cnt++){
@@ -388,6 +378,23 @@ public class LMM_GuiInventory extends GuiContainer {
 		swimbutton.toggle = entitylittlemaid.swimmingEnabled;
 		frdmbutton.visible = true;
 		frdmbutton.toggle = entitylittlemaid.isFreedom();
+	
+		// EXPゲージ
+		GlStateManager.colorMask(true, true, true, false);
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+165, guiTop+7+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
+		// LV数値
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(guiLeft, guiTop, 0);
+		String lvString = String.format("Lv. %d", entitylittlemaid.getMaidLevel());
+		mc.fontRendererObj.drawString(lvString, 87, 8, 0xff404040);
+		mc.fontRendererObj.drawString(lvString, 86, 7, 0xfff0f0f0);
+		GlStateManager.popMatrix();
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
+		GlStateManager.colorMask(true, true, true, true);
+
 		if (ii > 25 && ii < 78 && jj > 7 && jj < 60) {
 			// ボタンの表示
 			txbutton[0].visible = true;
@@ -412,11 +419,17 @@ public class LMM_GuiInventory extends GuiContainer {
 				int lby = 68;
 				int lcolor;
 				lcolor = jj < 20 ? 0xc0882222 : 0xc0000000;
+				GlStateManager.disableLighting();
+				GlStateManager.disableDepth();
+				GlStateManager.colorMask(true, true, true, false);
 				drawGradientRect(lbx - 3, lby - 4, lbx + ltwmax + 3, lby + 8, lcolor, lcolor);
 				drawString(this.mc.fontRendererObj, ls1, 52 - ltw1 / 2, lby - 2, -1);
 				lcolor = jj > 46 ? 0xc0882222 : 0xc0000000;
 				drawGradientRect(lbx - 3, lby + 8, lbx + ltwmax + 3, lby + 16 + 4, lcolor, lcolor);
 				drawString(this.mc.fontRendererObj, ls2, 52 - ltw2 / 2, lby + 10, -1);
+				GlStateManager.enableLighting();
+				GlStateManager.enableDepth();
+				GlStateManager.colorMask(true, true, true, true);
 			}
 			GL11.glPopMatrix();
 //			RenderHelper.enableStandardItemLighting();
@@ -427,9 +440,9 @@ public class LMM_GuiInventory extends GuiContainer {
 			txbutton[3].visible = false;
 			selectbutton.visible = false;
 		}
-		GlStateManager.enableLighting();
-		GlStateManager.enableDepth();
 	}
+	
+	
 
 	@Override
 	public void updateScreen() {
