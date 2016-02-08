@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx.entity.lmm.exp;
+package net.blacklab.lmmnx.entity.exp;
 
 import net.minecraft.util.MathHelper;
 
@@ -11,7 +11,7 @@ public class ExperienceUtil {
 	public static final int EXP_FUNCTION_MAX = 300;
 	
 	public static float getRequiredExpToLevel(int level) {
-		return (float) (A / K * (Math.exp(K * level) - Math.exp(K)));
+		return (float) (A / K * (Math.exp(K * level) - EXP_K));
 	}
 	
 	public static int getLevelFromExp(float exp) {

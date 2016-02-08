@@ -1,22 +1,22 @@
 package littleMaidMobX;
 
 import net.blacklab.lib.minecraft.item.ItemUtil;
-import net.blacklab.lib.version.Version;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -108,6 +108,17 @@ public class LMM_EventHook
 			}
 		}
 		if(event.maidStackIndex==17&&ItemUtil.isHelm(stack)){
+			event.setCanceled(true);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPickUpXP(PlayerPickupXpEvent event) {
+		EntityPlayer player = event.entityPlayer;
+		if (player instanceof LMM_EntityLittleMaidAvatarMP) {
+			LMM_EntityLittleMaid maid = ((LMM_EntityLittleMaidAvatarMP) player).avatar;
+			maid.addMaidExperience(event.orb.getXpValue()/100f);
+			maid.playSound("random.orb");
 			event.setCanceled(true);
 		}
 	}

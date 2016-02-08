@@ -50,6 +50,7 @@ public class LMM_Statics
 	/** EntityPlayer と EntityTameable で17番がかぶっているため、EntityPlayer側を28へ移動。 */
 	protected static final int dataWatch_AbsorptionAmount	= 28;
 	
+	protected static final int dataWatch_MaidExperience	= 29;
 	
 	/**
 	 * 自由設定値。

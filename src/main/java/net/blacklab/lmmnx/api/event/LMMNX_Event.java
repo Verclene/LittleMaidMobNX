@@ -9,8 +9,12 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public class LMMNX_Event extends Event {
 	
 	public static class LMMNX_MaidLevelUpEvent extends LMMNX_Event {
-		public LMMNX_MaidLevelUpEvent(LMM_EntityLittleMaid maid) {
+		
+		public int level = 0;
+
+		public LMMNX_MaidLevelUpEvent(LMM_EntityLittleMaid maid, int level) {
 			super(maid);
+			this.level = level;
 		}
 	}
 

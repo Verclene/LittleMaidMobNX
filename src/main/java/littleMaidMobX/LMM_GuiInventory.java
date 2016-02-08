@@ -10,7 +10,7 @@ import mmmlibx.lib.gui.GuiButtonNextPage;
 import net.blacklab.lmmnx.client.GuiButtonArmorToggle;
 import net.blacklab.lmmnx.client.GuiButtonFreedomToggle;
 import net.blacklab.lmmnx.client.GuiButtonSwimToggle;
-import net.blacklab.lmmnx.entity.lmm.exp.ExperienceUtil;
+import net.blacklab.lmmnx.entity.exp.ExperienceUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -383,7 +383,11 @@ public class LMM_GuiInventory extends GuiContainer {
 		GlStateManager.colorMask(true, true, true, false);
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
+		int level = entitylittlemaid.getMaidLevel();
+		float currentxp = entitylittlemaid.getMaidExperience() - ExperienceUtil.getRequiredExpToLevel(level);
+		float nextxp = ExperienceUtil.getRequiredExpToLevel(level+1) - ExperienceUtil.getRequiredExpToLevel(level);
 		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+165, guiTop+7+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
+		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+85+(int)(80*currentxp/nextxp), guiTop+7+mc.fontRendererObj.FONT_HEIGHT, 0xf0008000, 0xf000f000);
 		// LV数値
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(guiLeft, guiTop, 0);

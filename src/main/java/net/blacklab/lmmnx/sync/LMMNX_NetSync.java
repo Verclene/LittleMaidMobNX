@@ -13,7 +13,6 @@ public class LMMNX_NetSync {
 	public static final byte LMMNX_Sync_UB_Freedom = (byte) 0x02;
 	//クライアントのみ
 	public static final byte LMMNX_Sync_UB_RequestParamRecall = (byte) 0x03;
-	public static final byte LMMNX_Sync_UB_RequestExperience = (byte) 0x04;
 	
 	// サーバがテクスチャ設定を受信(C->S)
 	public static final byte LMMNX_Sync_String_MT_RequestChangeRender   = (byte) 0x10;
@@ -22,14 +21,8 @@ public class LMMNX_NetSync {
 	public static final byte LMMNX_Sync_String_MT_RecallParam = (byte) 0x12;
 	public static final byte LMMNX_Sync_String_AT_RecallParam = (byte) 0x13;
 	
-	// 経験値情報を送受信
-	public static final byte LMMNX_Sync_Float_Experience = (byte) 0x20;
-	
 	public static void onPayLoad(LMM_EntityLittleMaid pMaid, byte[] pData){
 		if(pData==null) return;
-		if ((pData[5] & 0x20) == 0x20) {
-			onPayLoad(pMaid, pData[5], MMM_Helper.getFloat(pData, 6));
-		}
 		if((pData[5] & 0x10) == 0x10){
 			onPayLoad(pMaid, pData[5], MMM_Helper.getStr(pData, 6));
 			return;
@@ -57,9 +50,6 @@ public class LMMNX_NetSync {
 			pMaid.syncMaidArmorVisible();
 			pMaid.recallRenderParamTextureName(pMaid.textureModelNameForClient, pMaid.textureArmorNameForClient);
 			break;
-		case LMMNX_Sync_UB_RequestExperience:
-			pMaid.syncExperience();
-			break;
 		}
 	}
 	
@@ -80,12 +70,4 @@ public class LMMNX_NetSync {
 		}
 	}
 	
-	public static void onPayLoad(LMM_EntityLittleMaid pMaid, byte pMode, float pFloat) {
-		switch (pMode) {
-		case LMMNX_Sync_Float_Experience:
-			pMaid.addMaidExperience(pFloat-pMaid.getMaidExperience());
-			break;
-		}
-	}
-
 }

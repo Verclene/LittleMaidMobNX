@@ -55,7 +55,7 @@ import net.blacklab.lmmnx.client.LMMNX_SoundRegistry;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIRestrictOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIWatchClosest;
-import net.blacklab.lmmnx.entity.lmm.exp.ExperienceUtil;
+import net.blacklab.lmmnx.entity.exp.ExperienceUtil;
 import net.blacklab.lmmnx.entity.pathnavigate.LMMNX_PathNavigatorLittleMaid;
 import net.blacklab.lmmnx.item.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.sync.LMMNX_NetSync;
@@ -281,7 +281,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected String registerMode;
 	
 	// NX5 レベル関連
-	private int maidLevel = 1;
 	private float maidExperience = 0;
 	
 	public LMM_EntityLittleMaid(World par1World) {
@@ -441,8 +440,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		dataWatcher.addObject(dataWatch_DominamtArm, Byte.valueOf((byte)0));
 		// 26:アイテムの使用判定
 		dataWatcher.addObject(dataWatch_ItemUse, Integer.valueOf(0));
-		// 27:保持経験値
+		// 27:保持経験値(互換性維持)
 		dataWatcher.addObject(dataWatch_ExpValue, Integer.valueOf(0));
+		// 28:メイド経験値
+		dataWatcher.addObject(LMM_Statics.dataWatch_MaidExperience, Float.valueOf(0));
 
 		// TODO:test
 		// 31:自由変数、EntityMode等で使用可能な変数。
@@ -722,34 +723,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncNet(b2b);
 	}
 	
-	/*
-	 * C→S
-	 * 経験値の送信をリクエスト
-	 */
-	public void requestSyncExperience() {
-		byte b[] = new byte[] {
-				LMMNX_NetSync.LMMNX_Sync,
-				0, 0, 0, 0, 
-				LMMNX_NetSync.LMMNX_Sync_UB_RequestExperience, 0
-		};
-		syncNet(b);
-	}
-	
-	/**
-	 * S→C
-	 * 経験値を送信
-	 */
-	public void syncExperience() {
-		byte b[] =new byte[] {
-				LMMNX_NetSync.LMMNX_Sync,
-				0, 0, 0, 0,
-				LMMNX_NetSync.LMMNX_Sync_Float_Experience,
-				0, 0, 0, 0
-		};
-		MMM_Helper.setFloat(b, 6, getMaidExperience());
-		syncNet(b);
-	}
-
 	/**
 	 * Client専用。
 	 */
@@ -1320,7 +1293,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setInteger("homeZ", getPosition().getZ());
 		par1nbtTagCompound.setInteger("homeWorld", homeWorld);
 		
-		par1nbtTagCompound.setFloat("LMMNX_MAID_EXP", maidExperience);
+		par1nbtTagCompound.setFloat("LMMNX_MAID_EXP", getMaidExperience());
 		
 		// Tiles
 		NBTTagCompound lnbt = new NBTTagCompound();
@@ -1506,7 +1479,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		isMadeTextureNameFlag = par1nbtTagCompound.getBoolean("isMadeTextureNameFlag");
 		
 		maidExperience = par1nbtTagCompound.getFloat("LMMNX_MAID_EXP");
-		maidLevel = ExperienceUtil.getLevelFromExp(maidExperience);
+		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExperience, maidExperience);
 
 		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
 		if(!worldObj.isRemote) recallRenderParamTextureName(textureModelNameForClient, textureArmorNameForClient);
@@ -2453,14 +2426,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				requestRenderParamRecall();
 //				setTextureNames();
 			}
-			if (!expUpdated) {
-				requestSyncExperience();
-				expUpdated = true;
-			}
 			setMaidMode(dataWatcher.getWatchableObjectShort(dataWatch_Mode));
 			setDominantArm(dataWatcher.getWatchableObjectByte(dataWatch_DominamtArm));
 			updateMaidFlagsClient();
 			updateGotcha();
+			
+			// メイド経験値
+			if (ticksExisted%10 == 0) {
+				maidExperience = dataWatcher.getWatchableObjectFloat(LMM_Statics.dataWatch_MaidExperience);
+			}
 			
 			// 腕の挙動関連
 			litemuse = dataWatcher.getWatchableObjectInt(dataWatch_ItemUse);
@@ -3296,7 +3270,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						syncSwimming();
 						syncMaidArmorVisible();
 						syncFreedom();
-						syncExperience();
 					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;
@@ -3848,7 +3821,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * @return
 	 */
 	public int getMaidLevel() {
-		return maidLevel;
+		return ExperienceUtil.getLevelFromExp(maidExperience);
 	}
 	
 	/**
@@ -3864,11 +3837,17 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * @param value
 	 */
 	public void addMaidExperience(float value) {
+		if (!isContractEX()) {
+			return;
+		}
+		int currentLevel = getMaidLevel();
 		maidExperience += value;
-		if (maidExperience >= ExperienceUtil.getRequiredExpToLevel(getMaidLevel()+1)) {
-			maidLevel++;
-			playSound("random.levelup");
-			MinecraftForge.EVENT_BUS.post(new LMMNX_Event.LMMNX_MaidLevelUpEvent(this));
+		if (!worldObj.isRemote) {
+			dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExperience, maidExperience);
+			if (maidExperience >= ExperienceUtil.getRequiredExpToLevel(currentLevel+1)) {
+				playSound("random.levelup");
+				MinecraftForge.EVENT_BUS.post(new LMMNX_Event.LMMNX_MaidLevelUpEvent(this, getMaidLevel()));
+			}
 		}
 	}
 
