@@ -15,6 +15,9 @@ public class ExperienceUtil {
 	}
 	
 	public static int getLevelFromExp(float exp) {
+		if (exp==0) {
+			return 1;
+		}
 		return MathHelper.floor_double(Math.log(K*exp/A + EXP_K)/K);
 	}
 }

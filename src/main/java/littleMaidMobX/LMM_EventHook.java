@@ -117,9 +117,8 @@ public class LMM_EventHook
 		EntityPlayer player = event.entityPlayer;
 		if (player instanceof LMM_EntityLittleMaidAvatarMP) {
 			LMM_EntityLittleMaid maid = ((LMM_EntityLittleMaidAvatarMP) player).avatar;
-			maid.addMaidExperience(event.orb.getXpValue()/100f);
+			maid.addMaidExperience(event.orb.getXpValue()/1.5f);
 			maid.playSound("random.orb");
-			event.setCanceled(true);
 		}
 	}
 
