@@ -272,6 +272,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	protected int maidArmorVisible = 15;
 
+	private static final int[] ZBOUND_BLOCKOFFS = new int[]{  1,  1,  0, -1, -1, -1,  0,  1};
+	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
+	public int DEBUGCOUNT = 0;
+	private boolean isInsideOpaque = false;
+	private boolean expUpdated;
 	protected MMM_Counter registerTick;
 	protected String registerMode;
 	
@@ -715,6 +720,34 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		byte b2b[] = Arrays.copyOf(b2, b2.length+armor.length());
 		MMM_Helper.setStr(b2b, 6, armor);
 		syncNet(b2b);
+	}
+	
+	/*
+	 * C→S
+	 * 経験値の送信をリクエスト
+	 */
+	public void requestSyncExperience() {
+		byte b[] = new byte[] {
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0, 
+				LMMNX_NetSync.LMMNX_Sync_UB_RequestExperience, 0
+		};
+		syncNet(b);
+	}
+	
+	/**
+	 * S→C
+	 * 経験値を送信
+	 */
+	public void syncExperience() {
+		byte b[] =new byte[] {
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_Float_Experience,
+				0, 0, 0, 0
+		};
+		MMM_Helper.setFloat(b, 6, getMaidExperience());
+		syncNet(b);
 	}
 
 	/**
@@ -2037,12 +2070,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return false;
 	}
 
-	private static final int[] ZBOUND_BLOCKOFFS = new int[]{  1,  1,  0, -1, -1, -1,  0,  1};
-	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
-
-	public int DEBUGCOUNT = 0;
-	private boolean isInsideOpaque = false;
-
 	@Override
 	public void onLivingUpdate() {
 		// 回復判定
@@ -2425,6 +2452,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			if (lupd) {
 				requestRenderParamRecall();
 //				setTextureNames();
+			}
+			if (!expUpdated) {
+				requestSyncExperience();
+				expUpdated = true;
 			}
 			setMaidMode(dataWatcher.getWatchableObjectShort(dataWatch_Mode));
 			setDominantArm(dataWatcher.getWatchableObjectByte(dataWatch_DominamtArm));
@@ -3265,6 +3296,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						syncSwimming();
 						syncMaidArmorVisible();
 						syncFreedom();
+						syncExperience();
 					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;
@@ -3833,7 +3865,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public void addMaidExperience(float value) {
 		maidExperience += value;
-		if (ExperienceUtil.getLevelFromExp(maidExperience) > getMaidLevel()) {
+		if (maidExperience >= ExperienceUtil.getRequiredExpToLevel(getMaidLevel()+1)) {
 			maidLevel++;
 			playSound("random.levelup");
 			MinecraftForge.EVENT_BUS.post(new LMMNX_Event.LMMNX_MaidLevelUpEvent(this));
