@@ -2,8 +2,10 @@ package littleMaidMobX;
 
 import mmmlibx.lib.MMM_Helper;
 import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemSpade;
@@ -180,7 +182,7 @@ public class LMM_EntityMode_Fencer extends LMM_EntityModeBase {
 		
 		return ll;
 	}
-
+	
 	@Override
 	public boolean checkItemStack(ItemStack pItemStack) {
 		// 装備アイテムを回収

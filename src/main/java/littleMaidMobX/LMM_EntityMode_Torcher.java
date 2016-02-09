@@ -120,21 +120,18 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		return !(owner.getCurrentEquippedItem() == null);
 	}
 
-	public static final double limitDistance_Freedom = 361D;
-	public static final double limitDistance_Follow  = 100D;
-
 	protected int getBlockLighting(int px, int py, int pz) {
 		World worldObj = owner.worldObj;
 		//離れすぎている
 		if(owner.isFreedom()){
 			//自由行動時
-			if(owner.getPosition().distanceSqToCenter(px,py,pz) > limitDistance_Freedom){
+			if(owner.getPosition().distanceSqToCenter(px,py,pz) > LMM_EntityModeBase.limitDistance_Freedom){
 				return 15;
 			}
 		}else{
 			//追従時
 			if(owner.getMaidMasterEntity()!=null){
-				if(owner.getMaidMasterEntity().getPosition().distanceSqToCenter(px,py,pz) > limitDistance_Follow){
+				if(owner.getMaidMasterEntity().getPosition().distanceSqToCenter(px,py,pz) > LMM_EntityModeBase.limitDistance_Follow){
 					return 15;
 				}
 			}
@@ -149,11 +146,11 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 	
 	@Override
 	public boolean checkBlock(int pMode, int px, int py, int pz) {
-		if (owner.isFreedom() && owner.func_180486_cf().distanceSq(px, py, pz) > limitDistance_Freedom) {
+		if (owner.isFreedom() && owner.func_180486_cf().distanceSq(px, py, pz) > LMM_EntityModeBase.limitDistance_Freedom) {
 			return false;
 		}
 		if (!owner.isFreedom() && owner.getMaidMasterEntity()!=null &&
-				owner.getMaidMasterEntity().getDistanceSq(px, py, pz) > limitDistance_Follow) {
+				owner.getMaidMasterEntity().getDistanceSq(px, py, pz) > LMM_EntityModeBase.limitDistance_Follow) {
 			return false;
 		}
 

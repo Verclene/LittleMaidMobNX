@@ -1807,6 +1807,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				maidDamegeSound = LMM_EnumSound.hurt_nodamege;
 			}
 			playLittleMaidSound(maidDamegeSound, force);
+
+			// 減EXP対象
+			if (par1DamageSource.getEntity() instanceof EntityPlayer || par1DamageSource.getDamageType().equals("inWall") ||
+					par1DamageSource.getDamageType().equals("inFire") || par1DamageSource.getDamageType().equals("inLava") ||
+					par1DamageSource.getDamageType().equals("anvil") || par1DamageSource.getDamageType().equals("fall") ||
+					par1DamageSource.getDamageType().equals("cactus") || par1DamageSource.getDamageType().equals("onFire")) {
+				addMaidExperience(-2.0f*par2);
+			}
+
 			return false;
 		}
 
@@ -3660,7 +3669,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			setSwing(2, (getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar, false);
 		}
 		int h = hurtResistantTime;
-		if(heal) heal(1);
+		if(heal) {
+			heal(1);
+			if(!recontract) addMaidExperience(1.2f);
+		}
 		hurtResistantTime = h;
 		playSound("random.pop");
 		LMM_LittleMaidMobNX.Debug(("eat Sugar." + worldObj.isRemote));
@@ -3677,6 +3689,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				if ((player = getMaidMasterEntity()) != null)
 					player.triggerAchievement(LMMNX_Achievements.ac_MyFavorite);
 			}
+			addMaidExperience(4.5f);
 		}
 
 		// 暫定処理

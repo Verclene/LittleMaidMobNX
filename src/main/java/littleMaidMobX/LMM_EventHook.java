@@ -14,6 +14,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
@@ -90,6 +91,14 @@ public class LMM_EventHook
 			}
 		}
 	}
+	
+	@SubscribeEvent
+	public void onLivingAttack(LivingAttackEvent event) {
+		Entity entity = event.source.getEntity();
+		if (entity instanceof LMM_EntityLittleMaidAvatarMP) {
+			((LMM_EntityLittleMaidAvatarMP) entity).avatar.addMaidExperience(0.09f * event.ammount);
+		}
+	}
 
 	@SubscribeEvent
 	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
@@ -117,7 +126,7 @@ public class LMM_EventHook
 		EntityPlayer player = event.entityPlayer;
 		if (player instanceof LMM_EntityLittleMaidAvatarMP) {
 			LMM_EntityLittleMaid maid = ((LMM_EntityLittleMaidAvatarMP) player).avatar;
-			maid.addMaidExperience(event.orb.getXpValue()/1.5f);
+			maid.addMaidExperience(event.orb.getXpValue()/4.8f);
 			maid.playSound("random.orb");
 		}
 	}
