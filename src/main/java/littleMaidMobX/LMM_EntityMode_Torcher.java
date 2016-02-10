@@ -175,7 +175,7 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		// TODO:当たり判定をどうするか
 		if (lis.onItemUse(owner.maidAvatar, owner.worldObj, new BlockPos(px, py - 1, pz), EnumFacing.UP, 0.5F, 1.0F, 0.5F)) {
 			owner.setSwing(10, LMM_EnumSound.installation, false);
-			
+			owner.addMaidExperience(0.32f);
 			if (owner.maidAvatar.capabilities.isCreativeMode) {
 				lis.stackSize = li;
 			}

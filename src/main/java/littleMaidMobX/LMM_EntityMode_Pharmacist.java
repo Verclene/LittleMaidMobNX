@@ -196,6 +196,7 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 						ltile.setInventorySlotContents(li, null);
 						owner.playSound("random.pop");
 						owner.setSwing(5, LMM_EnumSound.cookingOver, false);
+						owner.addMaidExperience(0.2f);
 						lflag = true;
 					}
 				}
@@ -217,6 +218,7 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 						owner.playSound("random.pop");
 						owner.setSwing(5, LMM_EnumSound.cookingStart, false);
 						owner.getNextEquipItem();
+						owner.addMaidExperience(0.25f);
 						lflag = true;
 					}
 				}
@@ -242,6 +244,7 @@ public class LMM_EntityMode_Pharmacist extends LMM_EntityModeBlockBase {
 					owner.maidInventory.setInventorySlotContents(inventryPos, null);
 					owner.playSound("random.pop");
 					owner.setSwing(15, LMM_EnumSound.Null, false);
+					owner.addMaidExperience(4.5f);
 					lflag = true;
 				} 
 				else if (litemstack1 == null || (litemstack1.getItem() instanceof ItemPotion && MMM_Helper.hasEffect(litemstack1)) || !litemstack1.getItem().isPotionIngredient(litemstack1)) {

@@ -211,6 +211,7 @@ public class LMM_EntityMode_Farmer extends LMM_EntityModeBase {
 			owner.worldObj.destroyBlock(pos, true);
 			owner.setSwing(10, LMM_EnumSound.Null, false);
 			owner.playLittleMaidSound(LMM_EnumSound.farmer_harvest, false);
+			owner.addMaidExperience(4f);
 			executeBlock(pMode,px,py-1,pz);
 //			return true;
 		}

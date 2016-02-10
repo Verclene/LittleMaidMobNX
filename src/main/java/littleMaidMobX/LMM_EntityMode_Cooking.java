@@ -161,6 +161,7 @@ public class LMM_EntityMode_Cooking extends LMM_EntityModeBlockBase {
 						dropExpOrb(litemstack, li - litemstack.stackSize);
 						owner.playSound("random.pop");
 						owner.setSwing(5, LMM_EnumSound.cookingOver, false);
+						owner.addMaidExperience(4.2f);
 //                    	if (!pEntityLittleMaid.maidInventory.isItemBurned(pEntityLittleMaid.maidInventory.currentItem)) {
 						owner.getNextEquipItem();
 //                    	}

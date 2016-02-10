@@ -270,6 +270,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 			} else {
 				owner.maidAvatar.interactWith(pEntity);
 				owner.setSwing(20, LMM_EnumSound.attack, !owner.isPlaying());
+				owner.addMaidExperience(2.1f);
 			}
 			if (lis.stackSize <= 0) {
 				owner.maidInventory.setInventoryCurrentSlotContents(null);

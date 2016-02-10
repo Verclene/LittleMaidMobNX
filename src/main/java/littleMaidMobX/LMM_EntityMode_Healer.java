@@ -159,6 +159,7 @@ public class LMM_EntityMode_Healer extends LMM_EntityModeBase {
 								}
 								owner.maidInventory.setInventoryCurrentSlotContents(itemstack1);
 								owner.getNextEquipItem();
+								owner.addMaidExperience(2.4f);
 							}
 						}
 						else if (itemstack1.getItem() instanceof ItemPotion) {

@@ -96,7 +96,7 @@ public class LMM_EventHook
 	public void onLivingAttack(LivingAttackEvent event) {
 		Entity entity = event.source.getEntity();
 		if (entity instanceof LMM_EntityLittleMaidAvatarMP) {
-			((LMM_EntityLittleMaidAvatarMP) entity).avatar.addMaidExperience(0.09f * event.ammount);
+			((LMM_EntityLittleMaidAvatarMP) entity).avatar.addMaidExperience(0.18f * event.ammount);
 		}
 	}
 
@@ -126,7 +126,7 @@ public class LMM_EventHook
 		EntityPlayer player = event.entityPlayer;
 		if (player instanceof LMM_EntityLittleMaidAvatarMP) {
 			LMM_EntityLittleMaid maid = ((LMM_EntityLittleMaidAvatarMP) player).avatar;
-			maid.addMaidExperience(event.orb.getXpValue()/4.8f);
+			maid.addMaidExperience(event.orb.getXpValue()/10);
 			maid.playSound("random.orb");
 		}
 	}

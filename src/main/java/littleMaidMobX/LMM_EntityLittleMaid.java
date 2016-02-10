@@ -1864,6 +1864,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				PotionEffect potioneffect;
 				for (Iterator iterator = list.iterator(); iterator.hasNext(); entityliving.addPotionEffect(new PotionEffect(potioneffect))) {
 					potioneffect = (PotionEffect)iterator.next();
+					addMaidExperience(0.49f*(potioneffect.getDuration()==0?240:potioneffect.getDuration())/20);
 				}
 			}
 			if(itemstack.stackSize <= 0) {
