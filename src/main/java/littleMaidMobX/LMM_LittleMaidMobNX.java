@@ -47,11 +47,11 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "5.0.49";
-	public static final String VERSION_FORSITE = "NX5 Build 49";
+	public static final String VERSION = "5.0.50";
+	public static final String VERSION_FORSITE = "NX5 Build 50";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.9]";
 	public static final int VERSION_CODE = 14;
-	
+
 	public static final VersionData currentVersion = new VersionData(VERSION_CODE, VERSION, VERSION_FORSITE);
 	public static VersionData latestVersion = new VersionData(1, "1.0.1", "NX1");
 
@@ -220,7 +220,7 @@ public class LMM_LittleMaidMobNX {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		latestVersion = Version.getLatestVersion("http://mc.el-blacklab.net/lmmnxversion.txt", 10000);
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance,
