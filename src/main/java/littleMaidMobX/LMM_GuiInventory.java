@@ -67,6 +67,7 @@ public class LMM_GuiInventory extends GuiContainer {
 		// entitylittlemaid.setOpenInventory(true);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -94,7 +95,7 @@ public class LMM_GuiInventory extends GuiContainer {
 				upperChestInventory.getName()), 8, 114, 0x404040);
 		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.Health"), 86, 8, 0x404040);
 		//fontRenderer.drawString(StatCollector.translateToLocal("littleMaidMob.text.AP"), 86, 32, 0x404040);
-		
+
 		mc.fontRendererObj.drawString(StatCollector.translateToLocal(
 				"littleMaidMob.mode.".concat(entitylittlemaid.getMaidModeString())), 86, 61, 0x404040);
 
@@ -181,7 +182,7 @@ public class LMM_GuiInventory extends GuiContainer {
 		int lj = guiLeft;
 		int lk = guiTop;
 		drawTexturedModalRect(lj, lk, 0, 0, xSize, ySize);
-		
+
 		// PotionEffect
 		displayDebuffEffects();
 
@@ -255,7 +256,7 @@ public class LMM_GuiInventory extends GuiContainer {
 
 		Client.setTexture(icons);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		
+
 		int lhealth = MathHelper.ceiling_float_int(entitylittlemaid.getHealth());
 		int llasthealth = lhealth + MathHelper.ceiling_float_int(entitylittlemaid.getLastDamage());
 		this.rand.setSeed(updateCounter * 312871);
@@ -378,7 +379,7 @@ public class LMM_GuiInventory extends GuiContainer {
 		swimbutton.toggle = entitylittlemaid.swimmingEnabled;
 		frdmbutton.visible = true;
 		frdmbutton.toggle = entitylittlemaid.isFreedom();
-	
+
 		// EXPゲージ
 		GlStateManager.colorMask(true, true, true, false);
 		GlStateManager.disableLighting();
@@ -445,8 +446,8 @@ public class LMM_GuiInventory extends GuiContainer {
 			selectbutton.visible = false;
 		}
 	}
-	
-	
+
+
 
 	@Override
 	public void updateScreen() {

@@ -250,7 +250,6 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 		if (owner.getSwingStatusDominant().canAttack()) {
 			ItemStack lis = owner.getCurrentEquippedItem();
 			if (pEntity instanceof EntityCreeper) {
-				// TODO:カットオフ
 				// なんでPrivateにかえたし
 				try {
 					lis.damageItem((Integer)ObfuscationReflectionHelper.getPrivateValue(EntityCreeper.class,
