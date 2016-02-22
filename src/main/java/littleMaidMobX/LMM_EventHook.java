@@ -15,6 +15,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
@@ -96,10 +97,18 @@ public class LMM_EventHook
 	public void onLivingAttack(LivingAttackEvent event) {
 		Entity entity = event.source.getEntity();
 		if (entity instanceof LMM_EntityLittleMaidAvatarMP) {
-			((LMM_EntityLittleMaidAvatarMP) entity).avatar.addMaidExperience(0.18f * event.ammount);
+			((LMM_EntityLittleMaidAvatarMP) entity).avatar.addMaidExperience(0.16f * event.ammount);
 		}
 	}
-
+	
+	@SubscribeEvent
+	public void onLivingHurt(LivingHurtEvent event) {
+		Entity entity = event.source.getSourceOfDamage();
+		if (entity instanceof EntityArrow && ((EntityArrow) entity).shootingEntity instanceof LMM_EntityLittleMaid) {
+			((LMM_EntityLittleMaid)((EntityArrow) entity).shootingEntity).addMaidExperience(0.18f * event.ammount);
+		}
+	}
+	
 	@SubscribeEvent
 	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
 		LMM_EntityLittleMaid maid = event.maid;

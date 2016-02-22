@@ -21,6 +21,10 @@ public class ExperienceHandler {
 	
 	public void onLevelUp(int level) {
 		/*
+		 * 報酬付与・固定アイテム
+		 */
+		
+		/*
 		 * 最大HP上昇
 		 */
 		double modifyamount = 0;
@@ -56,6 +60,7 @@ public class ExperienceHandler {
 	}
 	
 	public void onUpdate() {
+		
 	}
 
 }

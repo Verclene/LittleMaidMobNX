@@ -1,18 +1,15 @@
 package net.blacklab.lmmnx.util;
 
-import java.util.UUID;
+import com.ibm.icu.text.Normalizer.Mode;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_EntityMode_Basic;
 import littleMaidMobX.LMM_LittleMaidMobNX;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 	
@@ -63,8 +60,6 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 			owner.setBloodsuck(false);
 			owner.aiAttack.setEnable(false);
 			owner.aiShooting.setEnable(false);
-			if (owner.getEntityAttribute(SharedMonsterAttributes.maxHealth).getModifier(UUID.nameUUIDFromBytes("lmm.littleMaidMob.maxhp".getBytes())) == null)
-				owner.getEntityAttribute(SharedMonsterAttributes.maxHealth).applyModifier(new AttributeModifier(UUID.nameUUIDFromBytes("lmm.littleMaidMob.maxhp".getBytes()), "DEBUGBOOST", 10d, 0));
 			return true;
 		}
 		
@@ -74,6 +69,9 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 	@Override
 	public void updateAITick(int pMode) {
 		super.updateAITick(pMode);
+		if (pMode == mmode_Debug && owner.ticksExisted%4 == 0) {
+			owner.addMaidExperience(10f);
+		}
 	}
 
 }
