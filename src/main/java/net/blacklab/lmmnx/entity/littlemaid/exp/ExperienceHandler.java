@@ -3,9 +3,12 @@ package net.blacklab.lmmnx.entity.littlemaid.exp;
 import java.util.UUID;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
+import net.blacklab.lmmnx.util.NXCommonUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 
 public class ExperienceHandler {
@@ -23,6 +26,9 @@ public class ExperienceHandler {
 		/*
 		 * 報酬付与・固定アイテム
 		 */
+		if (level%20 == 0) {
+			NXCommonUtil.giveItem(new ItemStack(Items.name_tag), theMaid);
+		}
 		
 		/*
 		 * 最大HP上昇
