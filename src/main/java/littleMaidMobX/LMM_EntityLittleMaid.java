@@ -3612,7 +3612,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		/**その他（つまみ食いとか）**/OTHER
 	};
 
-	/** 砂糖を食べる。インベントリの左上から消費する。
+	/** インベントリ内の砂糖を食べる。左上から消費する。
 	 * @param mode EnumConsumeSugar型の定数
 	 */
 	public void consumeSugar(EnumConsumeSugar mode){
@@ -3641,7 +3641,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		maidInventory.decrStackSize(index, 1);
 	}
 
-	/** 主に砂糖を食べる仕草やその後のこと。
+	/** 主に砂糖を食べる仕草やその後のこと。consumeSugar()から呼ばれる．
+	 * interact()等メイドインベントリ外の砂糖を食べさせるときはこっちを直接呼ぶべし．
 	 * ペロッ・・・これは・・・砂糖ッ！！
 	 * @param heal デフォルトの1回復をするか？
 	 * @param motion 腕を振るか？
