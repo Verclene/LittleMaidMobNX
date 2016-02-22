@@ -3063,7 +3063,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 									cmode = ((LMMNX_IItemSpecialSugar)itemstack1.getItem()).onSugarInteract(worldObj, par1EntityPlayer, itemstack1, this);
 								}
 								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-								eatSugar(true, false, true);
+								eatSugar(true, false, false);
 								if(!cmode) return true;
 								worldObj.setEntityState(this, (byte)11);
 
@@ -3654,7 +3654,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		int h = hurtResistantTime;
 		if(heal) {
 			heal(1);
-			if(!recontract) addMaidExperience(1.2f);
+			if(!recontract) addMaidExperience(0.8f);
 		}
 		hurtResistantTime = h;
 		playSound("random.pop");
@@ -3672,7 +3672,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				if ((player = getMaidMasterEntity()) != null)
 					player.triggerAchievement(LMMNX_Achievements.ac_MyFavorite);
 			}
-			addMaidExperience(4.5f);
+			addMaidExperience(3.5f);
 		}
 
 		// 暫定処理
