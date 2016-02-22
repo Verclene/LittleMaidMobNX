@@ -33,7 +33,8 @@ import net.blacklab.lmmnx.client.LMMNX_SoundRegistry;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIRestrictOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIWatchClosest;
-import net.blacklab.lmmnx.entity.exp.ExperienceUtil;
+import net.blacklab.lmmnx.entity.littlemaid.exp.ExperienceHandler;
+import net.blacklab.lmmnx.entity.littlemaid.exp.ExperienceUtil;
 import net.blacklab.lmmnx.entity.pathnavigate.LMMNX_PathNavigatorLittleMaid;
 import net.blacklab.lmmnx.item.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.sync.LMMNX_NetSync;
@@ -254,12 +255,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
 	public int DEBUGCOUNT = 0;
 	private boolean isInsideOpaque = false;
-	private boolean expUpdated;
 	protected MMM_Counter registerTick;
 	protected String registerMode;
 
 	// NX5 レベル関連
 	private float maidExperience = 0;
+	protected ExperienceHandler experienceHandler;
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -332,6 +333,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		for (LMM_EntityModeBase lem : maidEntityModeList) {
 			lem.initEntity();
 		}
+		experienceHandler = new ExperienceHandler(this);
 
 		/*
 		if(par1World.isRemote){
@@ -2402,6 +2404,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		// モデルサイズのリアルタイム変更有り？
 		textureData.onUpdate();
+		
+		getExperienceHandler().onUpdate();
 		// リアルタイム変動値をアップデート
 		if (worldObj.isRemote) {
 			// クライアント側
@@ -3841,8 +3845,17 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExperience, maidExperience);
 		if (maidExperience >= ExperienceUtil.getRequiredExpToLevel(currentLevel+1)) {
 			playSound("random.levelup");
+			getExperienceHandler().onLevelUp(currentLevel+1);
 			MinecraftForge.EVENT_BUS.post(new LMMNX_Event.LMMNX_MaidLevelUpEvent(this, getMaidLevel()));
 		}
+	}
+	
+	/**
+	 * 取得経験値による操作を定義するExperienceHandlerを取得
+	 * @return
+	 */
+	public ExperienceHandler getExperienceHandler() {
+		return experienceHandler;
 	}
 
 	/**

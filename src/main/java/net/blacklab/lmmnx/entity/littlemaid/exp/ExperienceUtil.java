@@ -1,4 +1,4 @@
-package net.blacklab.lmmnx.entity.exp;
+package net.blacklab.lmmnx.entity.littlemaid.exp;
 
 import net.minecraft.util.MathHelper;
 

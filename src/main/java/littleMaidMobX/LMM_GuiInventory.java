@@ -10,7 +10,7 @@ import mmmlibx.lib.gui.GuiButtonNextPage;
 import net.blacklab.lmmnx.client.GuiButtonArmorToggle;
 import net.blacklab.lmmnx.client.GuiButtonFreedomToggle;
 import net.blacklab.lmmnx.client.GuiButtonSwimToggle;
-import net.blacklab.lmmnx.entity.exp.ExperienceUtil;
+import net.blacklab.lmmnx.entity.littlemaid.exp.ExperienceUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
