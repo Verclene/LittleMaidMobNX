@@ -29,6 +29,9 @@ public class ExperienceHandler {
 		if (level%20 == 0) {
 			NXCommonUtil.giveItem(new ItemStack(Items.name_tag), theMaid);
 		}
+		if (level%50 == 0) {
+			NXCommonUtil.giveItem(new ItemStack(Items.emerald, level/50), theMaid);
+		}
 		
 		/*
 		 * 最大HP上昇

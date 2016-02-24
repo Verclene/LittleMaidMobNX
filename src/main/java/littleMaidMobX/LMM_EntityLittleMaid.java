@@ -3844,6 +3844,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		int currentLevel = getMaidLevel();
 		maidExperience += value;
+		
+		// レベルが下がってしまう場合はそれ以上引かない
+		if (maidExperience < ExperienceUtil.getRequiredExpToLevel(currentLevel)) {
+			maidExperience = ExperienceUtil.getRequiredExpToLevel(currentLevel);
+		}
+		
 		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExperience, maidExperience);
 		if (maidExperience >= ExperienceUtil.getRequiredExpToLevel(currentLevel+1)) {
 			playSound("random.levelup");
