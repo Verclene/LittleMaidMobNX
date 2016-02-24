@@ -1,5 +1,7 @@
 package net.blacklab.lmmnx.util;
 
+import java.lang.reflect.Field;
+
 import com.ibm.icu.text.Normalizer.Mode;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
@@ -10,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 	
@@ -69,8 +72,18 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 	@Override
 	public void updateAITick(int pMode) {
 		super.updateAITick(pMode);
-		if (pMode == mmode_Debug && owner.ticksExisted%4 == 0) {
-			owner.addMaidExperience(10f);
+		if (pMode == mmode_Debug) {
+			try {
+				int limit = (Integer) ObfuscationReflectionHelper.getPrivateValue(LMM_EntityLittleMaid.class, owner, "maidContractLimit");
+				limit-=5000;
+				if (limit<0) {
+					limit = 0;
+				}
+				ObfuscationReflectionHelper.setPrivateValue(LMM_EntityLittleMaid.class, owner, limit, "maidContractLimit");
+			} catch (SecurityException e) {
+			} catch (IllegalArgumentException e) {
+			}
+			
 		}
 	}
 

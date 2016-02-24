@@ -3044,6 +3044,38 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 
 			if (isContract()) {
+				// Issue #35: 契約失効時の処理を優先化
+				if(!isRemainsContract() && itemstack1 != null){
+					// ストライキ
+					if (itemstack1.getItem() == Items.sugar) {
+						// 受取拒否
+						worldObj.setEntityState(this, (byte)10);
+						return true;
+					} else if (itemstack1.getItem() == Items.cake) {
+						// 再契約
+						MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
+						maidContractLimit = (24000 * 7);
+						setFreedom(false);
+						setTracer(false);
+						setMaidWait(false);
+						setMaidMode("Escorter");
+						if(!isMaidContractOwner(par1EntityPlayer)){
+							// あんなご主人なんか捨てて、僕のもとへおいで(洗脳)
+							W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));
+							playLittleMaidSound(LMM_EnumSound.getCake, true);
+							worldObj.setEntityState(this, (byte)7);
+							maidContractLimit = (24000 * 7);
+							maidAnniversary = worldObj.getTotalWorldTime();
+						}else{
+							// ごめんねメイドちゃん
+							worldObj.setEntityState(this, (byte)11);
+							playLittleMaidSound(LMM_EnumSound.Recontract, true);
+
+						}
+						return true;
+					}
+
+				}
 				// 契約状態
 				if (lhealth > 0F && isMaidContractOwner(par1EntityPlayer)) {
 					if (itemstack1 != null) {
@@ -3266,37 +3298,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;
-				}
-				if(!isRemainsContract() && itemstack1 != null){
-					// ストライキ
-					if (itemstack1.getItem() == Items.sugar) {
-						// 受取拒否
-						worldObj.setEntityState(this, (byte)10);
-						return true;
-					} else if (itemstack1.getItem() == Items.cake) {
-						// 再契約
-						MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-						maidContractLimit = (24000 * 7);
-						setFreedom(false);
-						setTracer(false);
-						setMaidWait(false);
-						setMaidMode("Escorter");
-						if(!isMaidContractOwner(par1EntityPlayer)){
-							// あんなご主人なんか捨てて、僕のもとへおいで(洗脳)
-							W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));
-							playLittleMaidSound(LMM_EnumSound.getCake, true);
-							worldObj.setEntityState(this, (byte)7);
-							maidContractLimit = (24000 * 7);
-							maidAnniversary = worldObj.getTotalWorldTime();
-						}else{
-							// ごめんねメイドちゃん
-							worldObj.setEntityState(this, (byte)11);
-							playLittleMaidSound(LMM_EnumSound.Recontract, true);
-
-						}
-						return true;
-					}
-
 				}
 			} else {
 				// 未契約
