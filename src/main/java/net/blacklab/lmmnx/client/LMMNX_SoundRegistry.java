@@ -3,6 +3,7 @@ package net.blacklab.lmmnx.client;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +22,7 @@ public class LMMNX_SoundRegistry {
 	public static final String DEFAULT_TEXTURE_REGISTRATION_KEY = "!#DEFAULT#!";
 
 	// Sound→((テクスチャ名+色)+パス)の順．
-	private Map<LMM_EnumSound, HashMap<Pair<String, Integer>, String>> registerMap;
+	private EnumMap<LMM_EnumSound, HashMap<Pair<String, Integer>, String>> registerMap;
 	// 実際の参照パス
 	private Map<String, List<String>> pathMap;
 	
@@ -31,7 +32,7 @@ public class LMMNX_SoundRegistry {
 	private static LMMNX_SoundRegistry instR = new LMMNX_SoundRegistry();
 	
 	private LMMNX_SoundRegistry() {
-		registerMap = new HashMap<LMM_EnumSound, HashMap<Pair<String,Integer>,String>>();
+		registerMap = new EnumMap<LMM_EnumSound, HashMap<Pair<String,Integer>,String>>(LMM_EnumSound.class);
 		pathMap = new HashMap<String, List<String>>();
 	}
 
