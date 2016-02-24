@@ -27,6 +27,7 @@ import mmmlibx.lib.MMM_TextureBox;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.classutil.FileClassUtil;
 import net.minecraftforge.fml.common.FMLLog;
+import scala.Char;
 
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.logging.log4j.Level;
@@ -85,7 +86,7 @@ public class LMMNX_SoundLoader {
 				searchDir(t);
 			}
 			if (t.getName().endsWith(".zip")) {
-				searchZip(t);
+				searchZip(t, Charset.forName("UTF-8"));
 			}
 			if (t.getName().endsWith(".ogg")) {
 				String c1 = FileClassUtil.getLinuxAntiDotName(t.getAbsolutePath());
@@ -119,14 +120,14 @@ public class LMMNX_SoundLoader {
 		}
 	}
 
-	private void searchZip(File f) {
+	private void searchZip(File f, Charset charset) {
 		String zipname = FileClassUtil.getFileName(FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath()));
 		if (zipname.endsWith(".zip")) {
 			zipname = zipname.substring(0, zipname.length()-4);
 		}
 		try {
 			FileInputStream inputStream = new FileInputStream(f);
-			ZipInputStream zipInputStream = new ZipInputStream(inputStream);
+			ZipInputStream zipInputStream = new ZipInputStream(inputStream, charset);
 			ZipEntry entry;
 			while ((entry = zipInputStream.getNextEntry()) != null) {
 				String fName = FileClassUtil.getFileName(entry.getName());
@@ -156,6 +157,14 @@ public class LMMNX_SoundLoader {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// 文字コード違反
+			if (charset.equals(Charset.forName("UTF-8")) && Charset.isSupported("Shift_JIS")) {
+				System.err.println("Sound Loading Failed. Trying S-JIS Loading.");
+				searchZip(f, Charset.forName("Shift_JIS"));
+			} else {
+				System.err.println("Errors occured during loading soundpack.");
+			}
 		}
 
 	}
