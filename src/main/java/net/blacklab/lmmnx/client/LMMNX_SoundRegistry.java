@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,22 +14,21 @@ import littleMaidMobX.LMM_LittleMaidMobNX;
 import mmmlibx.lib.FileManager;
 import net.blacklab.lib.obj.Pair;
 import net.blacklab.lib.obj.SinglePair;
-import net.minecraft.client.renderer.texture.Stitcher;
 
 public class LMMNX_SoundRegistry {
-	
+
 	public static final String DEFAULT_TEXTURE_REGISTRATION_KEY = "!#DEFAULT#!";
 
 	// Sound→((テクスチャ名+色)+パス)の順．
 	private EnumMap<LMM_EnumSound, HashMap<Pair<String, Integer>, String>> registerMap;
 	// 実際の参照パス
 	private Map<String, List<String>> pathMap;
-	
+
 	// ロックされたテクスチャ
 	private List<String> markedTexture = new ArrayList<String>();
-	
+
 	private static LMMNX_SoundRegistry instR = new LMMNX_SoundRegistry();
-	
+
 	private LMMNX_SoundRegistry() {
 		registerMap = new EnumMap<LMM_EnumSound, HashMap<Pair<String,Integer>,String>>(LMM_EnumSound.class);
 		pathMap = new HashMap<String, List<String>>();
@@ -47,7 +45,7 @@ public class LMMNX_SoundRegistry {
 		}
 		map.put(new SinglePair<String, Integer>(texture, color), name);
 	}
-	
+
 	protected static void markTexVoiceReserved(String texture) {
 		instR.markedTexture.add(texture);
 		for (LMM_EnumSound enumSound: new ArrayList<LMM_EnumSound>(Arrays.asList(LMM_EnumSound.values()))) {
@@ -57,21 +55,21 @@ public class LMMNX_SoundRegistry {
 				map = instR.registerMap.get(enumSound);
 			}
 			map.put(new SinglePair<String, Integer>(texture, -1), "<P>");
-			
+
 			for (int i=0; i<16; i++) {
 				map.remove(new SinglePair<String, Integer>(texture, i));
 			}
 		}
 	}
-	
+
 	public static boolean isTexVoiceMarked(String texture) {
 		return instR.markedTexture.contains(texture);
 	}
-	
+
 	protected static void copySoundsAdjust() {
 		LMM_EnumSound[] sList = LMM_EnumSound.values();
 		for (int i=1; i<sList.length; i++) {
-			Map<Pair<String, Integer>, String> srcMap = instR.registerMap.get(sList[i-1]);
+			Map<Pair<String, Integer>, String> srcMap = instR.registerMap.get(sList[i & -16]);
 			if (srcMap == null) {
 				continue;
 			}
@@ -80,7 +78,7 @@ public class LMMNX_SoundRegistry {
 				instR.registerMap.put(sList[i], new HashMap<Pair<String,Integer>, String>());
 				dstMap = instR.registerMap.get(sList[i]);
 			}
-			
+
 			for (Entry<Pair<String, Integer>, String> entryD: new HashMap<Pair<String, Integer>, String>(dstMap).entrySet()) {
 				if ("^".equals(entryD.getValue())) {
 					if (DEFAULT_TEXTURE_REGISTRATION_KEY.equals(entryD.getKey().getKey()) &&
@@ -97,7 +95,7 @@ public class LMMNX_SoundRegistry {
 			}
 		}
 	}
-	
+
 	public static List<String> getRegisteredNamesList() {
 		List<String> retmap = new ArrayList<String>();
 		for (Map<Pair<String, Integer>, String> v: instR.registerMap.values()) {
@@ -107,7 +105,7 @@ public class LMMNX_SoundRegistry {
 		}
 		return retmap;
 	}
-	
+
 	public static void registerSoundPath(String name, String path) {
 		// サウンドの種類を増やす
 		List<String> g = instR.pathMap.get(name);
@@ -117,7 +115,7 @@ public class LMMNX_SoundRegistry {
 		}
 		g.add(path);
 	}
-	
+
 	public static String getSoundRegisteredName(LMM_EnumSound sound, String texture, Integer color) {
 		HashMap<Pair<String, Integer>, String> tMap = instR.registerMap.get(sound);
 		Pair<String, Integer> value = new SinglePair<String, Integer>(null, 0);
@@ -150,30 +148,30 @@ public class LMMNX_SoundRegistry {
 		}
 		return value.getKey();
 	}
-	
+
 	public static boolean isSoundNameRegistered(String name) {
 		return getRegisteredNamesList().contains(name);
 	}
-	
+
 	public static List<String> getPathListFromRegisteredName(String name) {
 		return instR.pathMap.get(name);
 	}
-	
+
 	public static String getPathFromRegisteredName(String name){
 		List<String> g = getPathListFromRegisteredName(name);
 		if (g == null) return null;
 		String ret = g.get((int)(Math.random() * g.size()));
 		return ret;
 	}
-	
+
 	public static InputStream getSoundStream(String name) {
 		String aString = getPathFromRegisteredName(name);
 		LMM_LittleMaidMobNX.Debug("GETSTREAM %s", aString);
 		return FileManager.COMMON_CLASS_LOADER.getResourceAsStream(aString);
 	}
-	
+
 	public static InputStream getSoundStream(LMM_EnumSound sound, String texture, Integer color) {
 		return getSoundStream(getSoundRegisteredName(sound, texture, color));
 	}
-	
+
 }
