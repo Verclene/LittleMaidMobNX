@@ -420,10 +420,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		dataWatcher.addObject(dataWatch_DominamtArm, Byte.valueOf((byte)0));
 		// 26:アイテムの使用判定
 		dataWatcher.addObject(dataWatch_ItemUse, Integer.valueOf(0));
-		// 27:保持経験値(互換性維持)
-		dataWatcher.addObject(dataWatch_ExpValue, Integer.valueOf(0));
-		// 28:メイド経験値
-		dataWatcher.addObject(LMM_Statics.dataWatch_MaidExperience, Float.valueOf(0));
+		// 27:保持経験値
+		/**
+		 * TODO 旧コメにあった「互換性保持」の意味がよく分からなかった．
+		 * バニラには27番を使うMobはいないし，旧版継承の問題？
+		 * バニラ由来のexperienceValueはほとんど利用していないので上書き．
+		 */
+		dataWatcher.addObject(LMM_Statics.dataWatch_MaidExpValue , Float.valueOf(0));
 
 		// TODO:test
 		// 31:自由変数、EntityMode等で使用可能な変数。
@@ -1252,7 +1255,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setBoolean("isWildSaved", isWildSaved);
 		par1nbtTagCompound.setInteger("LimitCount", maidContractLimit);
 		par1nbtTagCompound.setLong("Anniversary", maidAnniversary);
-		par1nbtTagCompound.setInteger("EXP", experienceValue);
+//		par1nbtTagCompound.setInteger("EXP", experienceValue);
 		par1nbtTagCompound.setInteger("DominantArm", maidDominantArm);
 		par1nbtTagCompound.setInteger("Color", textureData.getColor());
 		par1nbtTagCompound.setString("texName", textureData.getTextureName(0));
@@ -1459,7 +1462,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		isMadeTextureNameFlag = par1nbtTagCompound.getBoolean("isMadeTextureNameFlag");
 
 		maidExperience = par1nbtTagCompound.getFloat("LMMNX_MAID_EXP");
-		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExperience, maidExperience);
+		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExpValue, maidExperience);
 
 		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
 		if(!worldObj.isRemote) recallRenderParamTextureName(textureModelNameForClient, textureArmorNameForClient);
@@ -1879,7 +1882,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	protected int getExperiencePoints(EntityPlayer par1EntityPlayer) {
-		return experienceValue;
+		return 0;
 	}
 
 
@@ -2404,7 +2407,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		// モデルサイズのリアルタイム変更有り？
 		textureData.onUpdate();
-		
+
 		getExperienceHandler().onUpdate();
 		// リアルタイム変動値をアップデート
 		if (worldObj.isRemote) {
@@ -2425,7 +2428,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 			// メイド経験値
 			if (ticksExisted%10 == 0) {
-				maidExperience = dataWatcher.getWatchableObjectFloat(LMM_Statics.dataWatch_MaidExperience);
+				maidExperience = dataWatcher.getWatchableObjectFloat(LMM_Statics.dataWatch_MaidExpValue);
 			}
 
 			// 腕の挙動関連
@@ -2581,11 +2584,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			// 構えの更新
 			updateAimebow();
 
-			// TODO:test
-			if (dataWatcher.getWatchableObjectInt(dataWatch_ExpValue) != experienceValue) {
-				dataWatcher.updateObject(dataWatch_ExpValue, Integer.valueOf(experienceValue));
-			}
-
 			// 自分より大きなものは乗っけない（イカ除く）
 			if (riddenByEntity != null && !(riddenByEntity instanceof EntitySquid)) {
 				if (height * width < riddenByEntity.height * riddenByEntity.width) {
@@ -2606,10 +2604,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				// 属性を設定
 				latt.applyModifier(attAxeAmp);
 			}
-		} else {
-			// Client
-			// TODO:test
-			experienceValue = dataWatcher.getWatchableObjectInt(dataWatch_ExpValue);
 		}
 
 		// 紐で拉致
@@ -3232,7 +3226,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 											(int)posZ);
 //								}
 								return true;
-							}
+							}/*
 							else if ((itemstack1.getItem() == Items.glass_bottle) && (experienceValue >= 5)) {
 								// Expボトル
 								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
@@ -3244,7 +3238,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 									}
 								}
 								return true;
-							}
+							}*/
 							else if (itemstack1.getItem() instanceof ItemPotion) {
 								// ポーション
 								if(!worldObj.isRemote) {
@@ -3845,20 +3839,20 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		int currentLevel = getMaidLevel();
 		maidExperience += value;
-		
+
 		// レベルが下がってしまう場合はそれ以上引かない
 		if (maidExperience < ExperienceUtil.getRequiredExpToLevel(currentLevel)) {
 			maidExperience = ExperienceUtil.getRequiredExpToLevel(currentLevel);
 		}
-		
-		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExperience, maidExperience);
+
+		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExpValue, maidExperience);
 		if (maidExperience >= ExperienceUtil.getRequiredExpToLevel(currentLevel+1)) {
 			playSound("random.levelup");
 			getExperienceHandler().onLevelUp(currentLevel+1);
 			MinecraftForge.EVENT_BUS.post(new LMMNX_Event.LMMNX_MaidLevelUpEvent(this, getMaidLevel()));
 		}
 	}
-	
+
 	/**
 	 * 取得経験値による操作を定義するExperienceHandlerを取得
 	 * @return
@@ -4292,9 +4286,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return (dataWatcher.getWatchableObjectInt(dataWatch_ItemUse) & (1 << pIndex)) > 0;
 	}
 
-	public void setExperienceValue(int val)
-	{
-		experienceValue = val;
+	public void setExperienceValue(int val) {
+//		experienceValue = val;
 	}
 
 	public void setFlag(int par1, boolean par2) {

@@ -92,7 +92,7 @@ public class LMM_EventHook
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onLivingAttack(LivingAttackEvent event) {
 		Entity entity = event.source.getEntity();
@@ -100,7 +100,7 @@ public class LMM_EventHook
 			((LMM_EntityLittleMaidAvatarMP) entity).avatar.addMaidExperience(0.16f * event.ammount);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onLivingHurt(LivingHurtEvent event) {
 		Entity entity = event.source.getSourceOfDamage();
@@ -108,7 +108,7 @@ public class LMM_EventHook
 			((LMM_EntityLittleMaid)((EntityArrow) entity).shootingEntity).addMaidExperience(0.18f * event.ammount);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
 		LMM_EntityLittleMaid maid = event.maid;
@@ -129,14 +129,16 @@ public class LMM_EventHook
 			event.setCanceled(true);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onPickUpXP(PlayerPickupXpEvent event) {
 		EntityPlayer player = event.entityPlayer;
 		if (player instanceof LMM_EntityLittleMaidAvatarMP) {
 			LMM_EntityLittleMaid maid = ((LMM_EntityLittleMaidAvatarMP) player).avatar;
-			maid.addMaidExperience(event.orb.getXpValue()/10);
+			maid.addMaidExperience(event.orb.getXpValue()/10f);
 			maid.playSound("random.orb");
+			event.orb.setDead();
+			event.setCanceled(true);
 		}
 	}
 
