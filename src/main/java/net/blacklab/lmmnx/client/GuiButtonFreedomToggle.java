@@ -36,7 +36,7 @@ public class GuiButtonFreedomToggle extends GuiButtonSwimToggle {
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		GlStateManager.enableAlpha();
-		GlStateManager.disableBlend();
+//		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 	}
 

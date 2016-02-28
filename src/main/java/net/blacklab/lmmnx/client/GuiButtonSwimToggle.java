@@ -31,7 +31,7 @@ public class GuiButtonSwimToggle extends GuiButtonArmorToggle {
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		GlStateManager.enableAlpha();
-		GlStateManager.disableBlend();
+//		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 	}
 

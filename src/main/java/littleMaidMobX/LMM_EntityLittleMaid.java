@@ -261,7 +261,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// NX5 レベル関連
 	private float maidExperience = 0;				// 経験値
 	protected ExperienceHandler experienceHandler;	// 経験値アクション制御
-	protected char gainExpBoost = 1;					// 取得経験値倍率 そんなに大きい値を使わないからbyteでいいと思う
+	protected int gainExpBoost = 1;					// 取得経験値倍率
 
 
 	public LMM_EntityLittleMaid(World par1World) {
@@ -3894,19 +3894,19 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	/**
 	 * 経験値ブーストを取得
 	 */
-	public char getExpBooster() {
+	public int getExpBooster() {
 		return gainExpBoost;
 	}
 
 	/**
 	 * 経験値ブーストを設定
-	 * @param v ブースト値(正, char範囲)
+	 * @param v ブースト値(0以上)
 	 */
 	public void setExpBooster(int v) {
-		if (v < 0 || v > Character.MAX_VALUE) {
+		if (v < 0) {
 			throw new IllegalStateException("Value is out of bound.");
 		}
-		gainExpBoost = (char)v;
+		gainExpBoost = v;
 	}
 
 	/**

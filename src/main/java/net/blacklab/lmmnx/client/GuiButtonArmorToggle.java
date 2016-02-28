@@ -83,12 +83,11 @@ public class GuiButtonArmorToggle extends GuiButton {
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		GlStateManager.enableAlpha();
-		GlStateManager.disableBlend();
+//		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 	}
 
 	protected void handleHovered(int mouseX, int mouseY) {
-		// TODO 自動生成されたメソッド・スタブ
 		hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 	}
 
