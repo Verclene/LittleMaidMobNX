@@ -16,7 +16,7 @@ public class LMMNX_NetSync {
 
 	// メイド経験値ブースト
 	public static final byte LMMNX_Sync_UB_RequestExpBoost = (byte)0x04;			// C->S
-	public static final byte LMMNX_Sync_Integer_RecallExpBoost = (byte)0x10;		// S->C
+	public static final byte LMMNX_Sync_Integer_SetExpBoost = (byte)0x10;
 
 	// サーバがテクスチャ設定を受信(C->S)
 	public static final byte LMMNX_Sync_String_MT_RequestChangeRender   = (byte) 0x20;
@@ -68,7 +68,7 @@ public class LMMNX_NetSync {
 
 	public static void onPayLoad(LMM_EntityLittleMaid pMaid, byte pMode, Integer pInteger) {
 		switch (pMode) {
-		case LMMNX_Sync_Integer_RecallExpBoost:
+		case LMMNX_Sync_Integer_SetExpBoost:
 			pMaid.setExpBooster(pInteger);
 			break;
 		}

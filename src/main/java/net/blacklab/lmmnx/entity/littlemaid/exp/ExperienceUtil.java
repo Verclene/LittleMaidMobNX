@@ -20,4 +20,13 @@ public class ExperienceUtil {
 		}
 		return MathHelper.floor_double(Math.log(K*exp/A + EXP_K)/K);
 	}
+
+	public static int getBoosterLimit(int level) {
+		// レベルによるブースト制限
+		if (level <=  10) return   1;
+		if (level <=  20) return   5;
+		if (level <=  50) return  20;
+		if (level <= 100) return  50;
+		return 64 * 18;
+	}
 }

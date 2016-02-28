@@ -261,8 +261,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	// NX5 レベル関連
 	private float maidExperience = 0;				// 経験値
 	protected ExperienceHandler experienceHandler;	// 経験値アクション制御
-	protected int gainExpBoost = 1;					// 取得経験値倍率
-
+	private int gainExpBoost = 1;					// 取得経験値倍率
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -716,7 +715,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		byte b[] = new byte[] {
 				LMMNX_NetSync.LMMNX_Sync,
 				0, 0, 0, 0,
-				LMMNX_NetSync.LMMNX_Sync_UB_RequestExpBoost
+				LMMNX_NetSync.LMMNX_Sync_UB_RequestExpBoost, 0
 		};
 		syncNet(b);
 	}
@@ -729,7 +728,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		byte b[] = new byte[] {
 				LMMNX_NetSync.LMMNX_Sync,
 				0, 0, 0, 0,
-				LMMNX_NetSync.LMMNX_Sync_Integer_RecallExpBoost,
+				LMMNX_NetSync.LMMNX_Sync_Integer_SetExpBoost,
 				0, 0, 0, 0
 		};
 		MMM_Helper.setInt(b, 6, getExpBooster());
@@ -2259,7 +2258,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						consumeSugar(EnumConsumeSugar.HEAL);
 					}
 					// つまみ食い
-					if (rand.nextInt(50000) == 0) {
+					if (rand.nextInt(MathHelper.floor_float(50000/(getExpBooster()*(1.05f+0.005f*getExpBooster())))) == 0) {
 						consumeSugar(EnumConsumeSugar.OTHER);
 					}
 					// 契約更新
@@ -3319,6 +3318,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						syncSwimming();
 						syncMaidArmorVisible();
 						syncFreedom();
+						recallExpBoost();
 					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;
@@ -3664,7 +3664,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			//モノグサ実装。良い子の皆さんはちゃんとif使うように…
 			eatSugar(((LMMNX_IItemSpecialSugar)item).onSugarEaten(this, mode, stack), true, mode==EnumConsumeSugar.RECONTRACT);
 		}
-		maidInventory.decrStackSize(index, 1);
+		if (mode == EnumConsumeSugar.RECONTRACT) {
+			addMaidExperience(3.5f);
+		} else if (mode == EnumConsumeSugar.HEAL) {
+			addMaidExperience(0.8f);
+		}
+		maidInventory.decrStackSize(index, Math.min(1, mode == EnumConsumeSugar.OTHER ? 1 : getExpBooster()));
 	}
 
 	/** 主に砂糖を食べる仕草やその後のこと。consumeSugar()から呼ばれる．
@@ -3681,7 +3686,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		int h = hurtResistantTime;
 		if(heal) {
 			heal(1);
-			addMaidExperience(0.8f);
 		}
 		hurtResistantTime = h;
 		playSound("random.pop");
@@ -3699,7 +3703,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				if ((player = getMaidMasterEntity()) != null)
 					player.triggerAchievement(LMMNX_Achievements.ac_MyFavorite);
 			}
-			addMaidExperience(3.5f);
 		}
 
 		// 暫定処理
@@ -3868,6 +3871,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		int currentLevel = getMaidLevel();
+		if (maidExperience > 0) {
+			value *= getExpBooster();
+		}
 		maidExperience += value;
 
 		// レベルが下がってしまう場合はそれ以上引かない
@@ -3903,8 +3909,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * @param v ブースト値(0以上)
 	 */
 	public void setExpBooster(int v) {
-		if (v < 0) {
-			throw new IllegalStateException("Value is out of bound.");
+		if (v < 1) {
+			v = 1;
+		}
+		if (v > ExperienceUtil.getBoosterLimit(getMaidLevel())) {
+			v = ExperienceUtil.getBoosterLimit(getMaidLevel());
 		}
 		gainExpBoost = v;
 	}

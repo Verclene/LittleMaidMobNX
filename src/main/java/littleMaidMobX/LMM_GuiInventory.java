@@ -372,10 +372,10 @@ public class LMM_GuiInventory extends GuiContainer {
 
 	@Override
 	public void drawScreen(int i, int j, float f) {
+
 		super.drawScreen(i, j, f);
 
-		int ii = i - guiLeft;
-		int jj = j - guiTop;
+		// 事前処理
 		for(int cnt=0;cnt<4;cnt++){
 			visarmorbutton[cnt].visible = true;
 			visarmorbutton[cnt].toggle = entitylittlemaid.isArmorVisible(cnt);
@@ -384,6 +384,17 @@ public class LMM_GuiInventory extends GuiContainer {
 		swimbutton.toggle = entitylittlemaid.swimmingEnabled;
 		frdmbutton.visible = true;
 		frdmbutton.toggle = entitylittlemaid.isFreedom();
+
+		int booster = entitylittlemaid.getExpBooster();
+		if (booster >= ExperienceUtil.getBoosterLimit(entitylittlemaid.getMaidLevel()))
+			boostPlus.setEnabled(false);
+		else boostPlus.setEnabled(true);
+		if (booster <= 1)
+			boostMinus.setEnabled(false);
+		else boostMinus.setEnabled(true);
+
+		int ii = i - guiLeft;
+		int jj = j - guiTop;
 
 		// EXPゲージ
 		GlStateManager.colorMask(true, true, true, false);
@@ -397,7 +408,7 @@ public class LMM_GuiInventory extends GuiContainer {
 
 		//経験値ブースト
 		drawGradientRect(guiLeft+112, guiTop-16, guiLeft+xSize-16, guiTop, 0x80202020, 0x80202020);
-		drawCenteredString(fontRendererObj, String.format("x%d", entitylittlemaid.getExpBooster()), guiLeft+112+(xSize-128)/2, guiTop-12, 0xffffff);
+		drawCenteredString(fontRendererObj, String.format("x%d", booster), guiLeft+112+(xSize-128)/2, guiTop-12, 0xffffff);
 
 		// LV数値
 		GlStateManager.pushMatrix();
@@ -492,6 +503,7 @@ public class LMM_GuiInventory extends GuiContainer {
 
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton) {
+		int booster = entitylittlemaid.getExpBooster();
 		switch (par1GuiButton.id) {
 		case 100 :
 			entitylittlemaid.setNextTexturePackege(0);
@@ -552,6 +564,12 @@ public class LMM_GuiInventory extends GuiContainer {
 			frdmbutton.toggle=!frdmbutton.toggle;
 			entitylittlemaid.requestChangeFreedom(frdmbutton.toggle);
 			entitylittlemaid.handleHealthUpdate((byte) (frdmbutton.toggle?12:13));
+			break;
+		case 320:
+			booster-=2;
+		case 321:
+			entitylittlemaid.setExpBooster(++booster);
+			entitylittlemaid.recallExpBoost();
 			break;
 		}
 	}
