@@ -259,8 +259,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	protected String registerMode;
 
 	// NX5 レベル関連
-	private float maidExperience = 0;
-	protected ExperienceHandler experienceHandler;
+	private float maidExperience = 0;				// 経験値
+	protected ExperienceHandler experienceHandler;	// 経験値アクション制御
+	protected char gainExpBoost = 1;					// 取得経験値倍率 そんなに大きい値を使わないからbyteでいいと思う
+
 
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
@@ -704,6 +706,34 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		byte b2b[] = Arrays.copyOf(b2, b2.length+armor.length());
 		MMM_Helper.setStr(b2b, 6, armor);
 		syncNet(b2b);
+	}
+
+	/**
+	 * Client用
+	 * 経験値ブースト値の取得
+	 */
+	public void requestExpBoost() {
+		byte b[] = new byte[] {
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_UB_RequestExpBoost
+		};
+		syncNet(b);
+	}
+
+	/**
+	 * Server用
+	 * 経験値ブーストを返す
+	 */
+	public void recallExpBoost() {
+		byte b[] = new byte[] {
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_Integer_RecallExpBoost,
+				0, 0, 0, 0
+		};
+		MMM_Helper.setInt(b, 6, getExpBooster());
+		syncNet(b);
 	}
 
 	/**
@@ -3859,6 +3889,24 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public ExperienceHandler getExperienceHandler() {
 		return experienceHandler;
+	}
+
+	/**
+	 * 経験値ブーストを取得
+	 */
+	public char getExpBooster() {
+		return gainExpBoost;
+	}
+
+	/**
+	 * 経験値ブーストを設定
+	 * @param v ブースト値(正, char範囲)
+	 */
+	public void setExpBooster(int v) {
+		if (v < 0 || v > Character.MAX_VALUE) {
+			throw new IllegalStateException("Value is out of bound.");
+		}
+		gainExpBoost = (char)v;
 	}
 
 	/**
