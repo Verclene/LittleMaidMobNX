@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 
 public class ExperienceHandler {
@@ -68,8 +69,16 @@ public class ExperienceHandler {
 		}
 	}
 	
+	public boolean onDeath(DamageSource cause) {
+		return false;
+	}
+	
 	public void onUpdate() {
 		
+	}
+	
+	public boolean onDeathUpdate() {
+		return false;
 	}
 
 }

@@ -109,6 +109,7 @@ import net.minecraft.world.pathfinder.WalkNodeProcessor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import scala.annotation.meta.setter;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -2524,6 +2525,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		super.onUpdate();
+
 		// SwingUpdate
 		LMM_SwingStatus lmss1 = getSwingStatusDominant();
 		prevSwingProgress = maidAvatar.prevSwingProgress = lmss1.prevSwingProgress;
@@ -2701,6 +2703,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onDeath(DamageSource par1DamageSource) {
+		if (getExperienceHandler().onDeath(par1DamageSource)) {
+			return;
+		}
+		
 		super.onDeath(par1DamageSource);
 
 		// 死因を表示
@@ -2730,6 +2736,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				mstatMasterEntity.addChatMessage(text);
 			}
 		}
+	}
+	
+	@Override
+	protected void onDeathUpdate() {
+		if (getExperienceHandler().onDeathUpdate()) {
+			return;
+		}
+		super.onDeathUpdate();
 	}
 
 	// ポーションエフェクト
@@ -3902,6 +3916,13 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 */
 	public ExperienceHandler getExperienceHandler() {
 		return experienceHandler;
+	}
+	
+	public void setExperienceHandler(ExperienceHandler handler) {
+		if (handler == null) {
+			throw new NullPointerException("ExperienceHandler cannot be null!");
+		}
+		experienceHandler = handler;
 	}
 
 	/**

@@ -263,6 +263,9 @@ public class LMM_GuiInventory extends GuiContainer {
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
 		int level = entitylittlemaid.getMaidLevel();
+		if (level >= ExperienceUtil.EXP_FUNCTION_MAX) {
+			level--;
+		}
 		float currentxp = entitylittlemaid.getMaidExperience() - ExperienceUtil.getRequiredExpToLevel(level);
 		float nextxp = ExperienceUtil.getRequiredExpToLevel(level+1) - ExperienceUtil.getRequiredExpToLevel(level);
 		drawGradientRect(guiLeft+86, guiTop+4, guiLeft+166, guiTop+5+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
