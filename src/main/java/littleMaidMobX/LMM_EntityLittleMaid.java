@@ -1321,6 +1321,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		for (int li = 0; li < maidEntityModeList.size(); li++) {
 			maidEntityModeList.get(li).writeEntityToNBT(par1nbtTagCompound);
 		}
+		
+		getExperienceHandler().writeEntityToNBT(par1nbtTagCompound);
 	}
 
 	@Override
@@ -1507,6 +1509,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncMaidArmorVisible();
 		syncFreedom();
 
+		getExperienceHandler().readEntityFromNBT(par1nbtTagCompound);
 	}
 
 	public boolean canBePushed()

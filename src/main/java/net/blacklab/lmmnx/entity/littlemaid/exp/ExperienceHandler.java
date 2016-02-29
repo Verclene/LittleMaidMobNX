@@ -9,6 +9,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 
@@ -18,6 +19,9 @@ public class ExperienceHandler {
 
 	private static final String uuidString = "NX_EXP_HP_BOOSTER";
 	public static final UUID NX_EXP_HP_BOOSTER = UUID.nameUUIDFromBytes(uuidString.getBytes());
+	
+	private int deathCounts = 0;
+	private int requiredSugarToRevive = 0;
 
 	public ExperienceHandler(LMM_EntityLittleMaid maid) {
 		theMaid = maid;
@@ -70,6 +74,11 @@ public class ExperienceHandler {
 	}
 	
 	public boolean onDeath(DamageSource cause) {
+		// 気絶機能はLv20以上で利用可能
+		if (theMaid.getMaidLevel() >= 20) {
+			
+			return true;
+		}
 		return false;
 	}
 	
@@ -79,6 +88,14 @@ public class ExperienceHandler {
 	
 	public boolean onDeathUpdate() {
 		return false;
+	}
+	
+	public void readEntityFromNBT(NBTTagCompound tagCompound) {
+		
+	}
+	
+	public void writeEntityToNBT(NBTTagCompound tagCompound) {
+		
 	}
 
 }
