@@ -102,6 +102,7 @@ public class GuiButtonArmorToggle extends GuiButton {
 		if(hovered){
 			GlStateManager.disableLighting();
 			GlStateManager.disableDepth();
+			GlStateManager.colorMask(true, true, true, false);
 			FontRenderer fRenderer = mcMinecraft.getRenderManager().getFontRenderer();
 			int lcolor = 0xc0000000;
 			String viewString = StatCollector.translateToLocal(showText+getTaleString());
@@ -110,6 +111,7 @@ public class GuiButtonArmorToggle extends GuiButton {
 			drawCenteredString(fRenderer, viewString, mx+fx/2+6, my+6, 0xffffffff);
 			GlStateManager.enableLighting();
 			GlStateManager.enableDepth();
+			GlStateManager.colorMask(true, true, true, true);
 		}
 	}
 

@@ -250,6 +250,39 @@ public class LMM_GuiInventory extends GuiContainer {
 			}
 		}
 */
+		int booster = entitylittlemaid.getExpBooster();
+		if (booster >= ExperienceUtil.getBoosterLimit(entitylittlemaid.getMaidLevel()))
+			boostPlus.setEnabled(false);
+		else boostPlus.setEnabled(true);
+		if (booster <= 1)
+			boostMinus.setEnabled(false);
+		else boostMinus.setEnabled(true);
+
+		// EXPゲージ
+		GlStateManager.colorMask(true, true, true, false);
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		int level = entitylittlemaid.getMaidLevel();
+		float currentxp = entitylittlemaid.getMaidExperience() - ExperienceUtil.getRequiredExpToLevel(level);
+		float nextxp = ExperienceUtil.getRequiredExpToLevel(level+1) - ExperienceUtil.getRequiredExpToLevel(level);
+		drawGradientRect(guiLeft+86, guiTop+4, guiLeft+166, guiTop+5+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
+		drawGradientRect(guiLeft+86, guiTop+4, guiLeft+86+(int)(80*currentxp/nextxp), guiTop+5+mc.fontRendererObj.FONT_HEIGHT, 0xf0008000, 0xf000f000);
+
+		//経験値ブースト
+		drawGradientRect(guiLeft+112, guiTop-16, guiLeft+xSize-16, guiTop, 0x80202020, 0x80202020);
+		drawCenteredString(fontRendererObj, String.format("x%d", booster), guiLeft+112+(xSize-128)/2, guiTop-12, 0xffffff);
+		
+		// LV数値
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(guiLeft, guiTop, 0);
+		String lvString = String.format("Lv. %d", entitylittlemaid.getMaidLevel());
+		mc.fontRendererObj.drawString(lvString, 90, 6, 0xff404040);
+		mc.fontRendererObj.drawString(lvString, 89, 5, 0xfff0f0f0);
+		GlStateManager.popMatrix();
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
+		GlStateManager.colorMask(true, true, true, true);
+
 	}
 
 	protected void drawHeathArmor(int par1, int par2) {
@@ -385,41 +418,8 @@ public class LMM_GuiInventory extends GuiContainer {
 		frdmbutton.visible = true;
 		frdmbutton.toggle = entitylittlemaid.isFreedom();
 
-		int booster = entitylittlemaid.getExpBooster();
-		if (booster >= ExperienceUtil.getBoosterLimit(entitylittlemaid.getMaidLevel()))
-			boostPlus.setEnabled(false);
-		else boostPlus.setEnabled(true);
-		if (booster <= 1)
-			boostMinus.setEnabled(false);
-		else boostMinus.setEnabled(true);
-
 		int ii = i - guiLeft;
 		int jj = j - guiTop;
-
-		// EXPゲージ
-		GlStateManager.colorMask(true, true, true, false);
-		GlStateManager.disableLighting();
-		GlStateManager.disableDepth();
-		int level = entitylittlemaid.getMaidLevel();
-		float currentxp = entitylittlemaid.getMaidExperience() - ExperienceUtil.getRequiredExpToLevel(level);
-		float nextxp = ExperienceUtil.getRequiredExpToLevel(level+1) - ExperienceUtil.getRequiredExpToLevel(level);
-		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+165, guiTop+7+mc.fontRendererObj.FONT_HEIGHT, 0x80202020, 0x80202020);
-		drawGradientRect(guiLeft+85, guiTop+6, guiLeft+85+(int)(80*currentxp/nextxp), guiTop+7+mc.fontRendererObj.FONT_HEIGHT, 0xf0008000, 0xf000f000);
-
-		//経験値ブースト
-		drawGradientRect(guiLeft+112, guiTop-16, guiLeft+xSize-16, guiTop, 0x80202020, 0x80202020);
-		drawCenteredString(fontRendererObj, String.format("x%d", booster), guiLeft+112+(xSize-128)/2, guiTop-12, 0xffffff);
-
-		// LV数値
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(guiLeft, guiTop, 0);
-		String lvString = String.format("Lv. %d", entitylittlemaid.getMaidLevel());
-		mc.fontRendererObj.drawString(lvString, 87, 8, 0xff404040);
-		mc.fontRendererObj.drawString(lvString, 86, 7, 0xfff0f0f0);
-		GlStateManager.popMatrix();
-		GlStateManager.enableLighting();
-		GlStateManager.enableDepth();
-		GlStateManager.colorMask(true, true, true, true);
 
 		if (ii > 25 && ii < 78 && jj > 7 && jj < 60) {
 			// ボタンの表示
@@ -466,6 +466,20 @@ public class LMM_GuiInventory extends GuiContainer {
 			txbutton[3].visible = false;
 			selectbutton.visible = false;
 		}
+		if (ii > 96 && ii < xSize && jj > -16 && jj < 0) {
+			GlStateManager.disableLighting();
+			GlStateManager.disableDepth();
+			GlStateManager.colorMask(true, true, true, false);
+			String str = StatCollector.translateToLocal("littleMaidMob.gui.text.expboost");
+			int width = fontRendererObj.getStringWidth(str);
+			int centerx = guiLeft + 48 + xSize/2;
+			drawGradientRect(centerx - width/2 - 4, guiTop, centerx + width/2 + 4, guiTop + fontRendererObj.FONT_HEIGHT, 0xc0202020, 0xc0202020);
+			drawCenteredString(fontRendererObj, str, centerx, guiTop, 0xffffff);
+			GlStateManager.enableLighting();
+			GlStateManager.enableDepth();
+			GlStateManager.colorMask(true, true, true, true);
+		}
+
 	}
 
 
