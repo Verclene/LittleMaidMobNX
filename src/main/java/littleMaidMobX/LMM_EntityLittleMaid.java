@@ -1306,6 +1306,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setInteger("homeWorld", homeWorld);
 
 		par1nbtTagCompound.setFloat("LMMNX_MAID_EXP", maidExperience);
+		par1nbtTagCompound.setInteger("LMMNX_EXP_BOOST", gainExpBoost);
 
 		// Tiles
 		NBTTagCompound lnbt = new NBTTagCompound();
@@ -1491,6 +1492,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		isMadeTextureNameFlag = par1nbtTagCompound.getBoolean("isMadeTextureNameFlag");
 
 		maidExperience = par1nbtTagCompound.getFloat("LMMNX_MAID_EXP");
+		setExpBooster(par1nbtTagCompound.getInteger("LMMNX_EXP_BOOST"));
 		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExpValue, maidExperience);
 
 		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
