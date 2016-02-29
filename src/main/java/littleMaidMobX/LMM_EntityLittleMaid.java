@@ -3882,6 +3882,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (maidExperience < ExperienceUtil.getRequiredExpToLevel(currentLevel)) {
 			maidExperience = ExperienceUtil.getRequiredExpToLevel(currentLevel);
 		}
+		
+		// 最大レベル
+		if (maidExperience > ExperienceUtil.getRequiredExpToLevel(ExperienceUtil.EXP_FUNCTION_MAX)) {
+			maidExperience = ExperienceUtil.getRequiredExpToLevel(ExperienceUtil.EXP_FUNCTION_MAX);
+		}
 
 		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExpValue, maidExperience);
 		if (maidExperience >= ExperienceUtil.getRequiredExpToLevel(currentLevel+1)) {

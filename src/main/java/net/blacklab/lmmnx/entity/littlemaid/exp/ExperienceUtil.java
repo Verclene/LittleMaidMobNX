@@ -18,6 +18,9 @@ public class ExperienceUtil {
 		if (exp<=0) {
 			return 1;
 		}
+		if (exp > getRequiredExpToLevel(EXP_FUNCTION_MAX)) {
+			return EXP_FUNCTION_MAX;
+		}
 		return MathHelper.floor_double(Math.log(K*exp/A + EXP_K)/K);
 	}
 
