@@ -109,7 +109,6 @@ import net.minecraft.world.pathfinder.WalkNodeProcessor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import scala.annotation.meta.setter;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -335,7 +334,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		for (LMM_EntityModeBase lem : maidEntityModeList) {
 			lem.initEntity();
 		}
-		experienceHandler = new ExperienceHandler(this);
+		setExperienceHandler(new ExperienceHandler(this));
 
 		/*
 		if(par1World.isRemote){
@@ -1321,7 +1320,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		for (int li = 0; li < maidEntityModeList.size(); li++) {
 			maidEntityModeList.get(li).writeEntityToNBT(par1nbtTagCompound);
 		}
-		
+
 		getExperienceHandler().writeEntityToNBT(par1nbtTagCompound);
 	}
 
@@ -1772,6 +1771,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+		if (worldObj.isRemote) {
+			return false;
+		}
+
 		Entity entity = par1DamageSource.getEntity();
 		boolean force = true;
 
@@ -2074,7 +2077,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	@Override
 	public void onLivingUpdate() {
 		getExperienceHandler().onLivingUpdate();
-		
+
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {
@@ -2707,15 +2710,14 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onDeath(DamageSource par1DamageSource) {
-		if (getExperienceHandler().onDeath(par1DamageSource)) {
+		if (worldObj.isRemote || getExperienceHandler().onDeath(par1DamageSource)) {
 			return;
 		}
-		
+
 		super.onDeath(par1DamageSource);
 
 		// 死因を表示
-		if (!worldObj.isRemote) {
-			// マスター判定失敗するかも？
+//		if (!worldObj.isRemote) {
 			if (LMM_LittleMaidMobNX.cfg_DeathMessage && mstatMasterEntity != null) {
 				String ls = par1DamageSource.getDamageType();
 				Entity lentity = par1DamageSource.getEntity();
@@ -2739,12 +2741,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				ChatComponentText text = new ChatComponentText(String.format("your %s killed by %s", lt, ls));
 				mstatMasterEntity.addChatMessage(text);
 			}
-		}
+//		}
 	}
-	
+
 	@Override
 	protected void onDeathUpdate() {
-		if (getExperienceHandler().onDeathUpdate()) {
+		if (worldObj.isRemote || getExperienceHandler().onDeathUpdate()) {
 			return;
 		}
 		super.onDeathUpdate();
@@ -3900,14 +3902,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		if (maidExperience < ExperienceUtil.getRequiredExpToLevel(currentLevel)) {
 			maidExperience = ExperienceUtil.getRequiredExpToLevel(currentLevel);
 		}
-		
+
 		// 最大レベル
 		if (maidExperience > ExperienceUtil.getRequiredExpToLevel(ExperienceUtil.EXP_FUNCTION_MAX)) {
 			maidExperience = ExperienceUtil.getRequiredExpToLevel(ExperienceUtil.EXP_FUNCTION_MAX);
 		}
 
 		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExpValue, maidExperience);
-		if (maidExperience >= ExperienceUtil.getRequiredExpToLevel(currentLevel+1)) {
+		for (;maidExperience >= ExperienceUtil.getRequiredExpToLevel(currentLevel+1); currentLevel++) {
+			// 一度に複数レベルアップした場合にその分だけ呼ぶ
 			playSound("random.levelup");
 			getExperienceHandler().onLevelUp(currentLevel+1);
 			MinecraftForge.EVENT_BUS.post(new LMMNX_Event.LMMNX_MaidLevelUpEvent(this, getMaidLevel()));
@@ -3921,7 +3924,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public ExperienceHandler getExperienceHandler() {
 		return experienceHandler;
 	}
-	
+
 	public void setExperienceHandler(ExperienceHandler handler) {
 		if (handler == null) {
 			throw new NullPointerException("ExperienceHandler cannot be null!");

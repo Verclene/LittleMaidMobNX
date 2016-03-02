@@ -1,12 +1,10 @@
 package net.blacklab.lmmnx.entity.littlemaid.exp;
 
-import java.util.Iterator;
 import java.util.UUID;
 
 import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_EntityMode_Basic;
 import littleMaidMobX.LMM_LittleMaidMobNX;
-import net.blacklab.lib.minecraft.item.ItemUtil;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.entity.littlemaid.mode.EntityMode_DeathWait;
 import net.blacklab.lmmnx.util.NXCommonUtil;
@@ -21,12 +19,12 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 
 public class ExperienceHandler {
-	
+
 	protected LMM_EntityLittleMaid theMaid;
 
 	private static final String uuidString = "NX_EXP_HP_BOOSTER";
 	public static final UUID NX_EXP_HP_BOOSTER = UUID.nameUUIDFromBytes(uuidString.getBytes());
-	
+
 	private boolean isWaitRevive = false;
 	// 死亡までの猶予時間
 	private int deathCount = 0;
@@ -37,7 +35,7 @@ public class ExperienceHandler {
 	public ExperienceHandler(LMM_EntityLittleMaid maid) {
 		theMaid = maid;
 	}
-	
+
 	public void onLevelUp(int level) {
 		/*
 		 * 報酬付与・固定アイテム
@@ -48,7 +46,7 @@ public class ExperienceHandler {
 		if (level%50 == 0) {
 			NXCommonUtil.giveItem(new ItemStack(Items.emerald, level/50), theMaid);
 		}
-		
+
 		/*
 		 * 最大HP上昇
 		 */
@@ -83,24 +81,27 @@ public class ExperienceHandler {
 			theMaid.setHealth(prevHP);
 		}
 	}
-	
+
 	public boolean onDeath(DamageSource cause) {
 		LMM_LittleMaidMobNX.Debug("HOOK CATCH");
 		if (theMaid.getMaidLevel() >= 20 && !cause.getDamageType().equals("outOfWorld") && !cause.getDamageType().equals("lmmnx_timeover") && !isWaitRevive) {
 			// 復帰に必要な砂糖はレベルが低いほど大きく，猶予は少なく
-			LMM_LittleMaidMobNX.Debug("DISABLING");
+			LMM_LittleMaidMobNX.Debug("DISABLING Remote=%s", theMaid.worldObj.isRemote);
+			theMaid.playSound("random.glass");
 			deathCount = (int) Math.max(1200, 200 + Math.pow(theMaid.getMaidLevel()-20, 1.8));
 			pauseCount = (int) Math.max(100, 600 - (theMaid.getMaidLevel()-20)*6.5);
 			requiredSugarToRevive = Math.min(16, 64 - (int)((theMaid.getMaidLevel()-20)/100f*48f));
 			isWaitRevive = true;
+			LMM_LittleMaidMobNX.Debug("TURN ON COUNT=%d", deathCount);
 			return true;
 		} else if (cause.getDamageType().equals("lmmnx_timeover")) {
 			theMaid.playSound("random.glass");
 		}
 		return false;
 	}
-	
+
 	public void onLivingUpdate() {
+		LMM_LittleMaidMobNX.Debug("COUNT %d", deathCount);
 		if (isWaitRevive) {
 			LMM_LittleMaidMobNX.Debug("HOOK UPDATE");
 
@@ -110,13 +111,13 @@ public class ExperienceHandler {
 						new DamageSource("lmmnx_timeover").setDamageBypassesArmor().setDamageAllowedInCreativeMode().setDamageIsAbsolute(),
 						Float.MAX_VALUE);
 			}
-			
+
 			// 行動不能
 			if ((--pauseCount > 0 || deathCount > 0) && theMaid.getMaidModeInt() != EntityMode_DeathWait.mmode_DeathWait) {
 				theMaid.setMaidWait(false);
 				theMaid.setMaidMode(EntityMode_DeathWait.mmode_DeathWait);
 			}
-			
+
 			// 砂糖を持っているか？
 			int sugarCount = 0;
 			for (int i=0; i<18 && sugarCount < requiredSugarToRevive; i++) {
@@ -149,7 +150,7 @@ public class ExperienceHandler {
 			}
 		}
 	}
-	
+
 	public boolean onDeathUpdate() {
 		LMM_LittleMaidMobNX.Debug("HOOK ONDEATH");
 		if (isWaitRevive && deathCount > 0) {
@@ -161,14 +162,14 @@ public class ExperienceHandler {
 		}
 		return false;
 	}
-	
+
 	public void readEntityFromNBT(NBTTagCompound tagCompound) {
 		isWaitRevive = tagCompound.getBoolean("LMMNX_EXP_HANDLER_DEATH_WAIT");
 		deathCount = tagCompound.getInteger("LMMNX_EXP_HANDLER_DEATH_DCNT");
 		pauseCount = tagCompound.getInteger("LMMNX_EXP_HANDLER_DEATH_PCNT");
 		requiredSugarToRevive = tagCompound.getInteger("LMMNX_EXP_HANDLER_DEATH_REQ");
 	}
-	
+
 	public void writeEntityToNBT(NBTTagCompound tagCompound) {
 		tagCompound.setBoolean("LMMNX_EXP_HANDLER_DEATH_WAIT", isWaitRevive);
 		tagCompound.setInteger("LMMNX_EXP_HANDLER_DEATH_DCNT", deathCount);
