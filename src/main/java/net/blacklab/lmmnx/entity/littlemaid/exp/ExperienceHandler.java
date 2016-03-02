@@ -7,6 +7,7 @@ import littleMaidMobX.LMM_EntityMode_Basic;
 import littleMaidMobX.LMM_LittleMaidMobNX;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.entity.littlemaid.mode.EntityMode_DeathWait;
+import net.blacklab.lmmnx.sync.LMMNX_NetSync;
 import net.blacklab.lmmnx.util.NXCommonUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -15,7 +16,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 
 public class ExperienceHandler {
@@ -100,8 +100,8 @@ public class ExperienceHandler {
 		return false;
 	}
 
-	public void onLivingUpdate() {
-		LMM_LittleMaidMobNX.Debug("COUNT %d", deathCount);
+	public void onUpdate() {
+		LMM_LittleMaidMobNX.Debug("COUNT %d/%d", deathCount, pauseCount);
 		if (isWaitRevive) {
 			LMM_LittleMaidMobNX.Debug("HOOK UPDATE");
 
@@ -131,8 +131,8 @@ public class ExperienceHandler {
 				deathCount++;
 				// 復帰
 				if (deathCount > 0 && pauseCount <= 0) {
-					isWaitRevive = false;
-					theMaid.heal(10f);
+					theMaid.setHealth(8f);
+					theMaid.eatSugar(false,false,false);
 					for(int i=0; i<18 && requiredSugarToRevive > 0; i++) {
 						ItemStack stack = theMaid.maidInventory.mainInventory[i];
 						if (stack!=null && LMMNX_API_Item.isSugar(stack.getItem())) {
@@ -146,6 +146,7 @@ public class ExperienceHandler {
 					}
 					theMaid.setMaidWait(false);
 					theMaid.setMaidMode(LMM_EntityMode_Basic.mmode_Escorter);
+					isWaitRevive = false;
 				}
 			}
 		}
@@ -155,10 +156,14 @@ public class ExperienceHandler {
 		LMM_LittleMaidMobNX.Debug("HOOK ONDEATH");
 		if (isWaitRevive && deathCount > 0) {
 			LMM_LittleMaidMobNX.Debug("DISABLING");
-			if (theMaid.worldObj.isRemote) {
-				theMaid.showParticleFX(EnumParticleTypes.SUSPENDED_DEPTH, 0.5D, 0.5D, 0.5D, 1.0D, 1.0D, 1.0D);
-			}
 			return true;
+		} else if (!theMaid.worldObj.isRemote && theMaid.getHealth() <= 0f) {
+			byte b[] = new byte[] {
+					LMMNX_NetSync.LMMNX_Sync,
+					0, 0, 0, 0,
+					LMMNX_NetSync.LMMNX_Sync_UB_ManualOnDeath, 0
+			};
+			theMaid.syncNet(b);
 		}
 		return false;
 	}

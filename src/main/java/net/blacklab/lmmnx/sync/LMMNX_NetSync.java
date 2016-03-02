@@ -18,6 +18,9 @@ public class LMMNX_NetSync {
 	public static final byte LMMNX_Sync_UB_RequestExpBoost = (byte)0x04;			// C->S
 	public static final byte LMMNX_Sync_Integer_SetExpBoost = (byte)0x10;
 
+	// 手動onDeathUpdate
+	public static final byte LMMNX_Sync_UB_ManualOnDeath = (byte) 0x05;
+
 	// サーバがテクスチャ設定を受信(C->S)
 	public static final byte LMMNX_Sync_String_MT_RequestChangeRender   = (byte) 0x20;
 	public static final byte LMMNX_Sync_String_AT_RequestChangeRender   = (byte) 0x21;
@@ -62,6 +65,9 @@ public class LMMNX_NetSync {
 			break;
 		case LMMNX_Sync_UB_RequestExpBoost :
 			pMaid.requestExpBoost();
+			break;
+		case LMMNX_Sync_UB_ManualOnDeath :
+			pMaid.manualOnDeath();
 			break;
 		}
 	}

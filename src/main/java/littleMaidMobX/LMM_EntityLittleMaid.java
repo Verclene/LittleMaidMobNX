@@ -109,6 +109,7 @@ import net.minecraft.world.pathfinder.WalkNodeProcessor;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -758,7 +759,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 
-	protected void syncNet(byte[] b) {
+	public void syncNet(byte[] b) {
 		if(worldObj.isRemote){
 			LMM_Net.sendToEServer(this, b);
 		}else{
@@ -2076,8 +2077,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onLivingUpdate() {
-		getExperienceHandler().onLivingUpdate();
-
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {
@@ -2448,6 +2447,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// モデルサイズのリアルタイム変更有り？
 		textureData.onUpdate();
 
+		getExperienceHandler().onUpdate();
+
 		// リアルタイム変動値をアップデート
 		if (worldObj.isRemote) {
 			// クライアント側
@@ -2744,12 +2745,28 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //		}
 	}
 
+	@SideOnly(Side.CLIENT)
+	private boolean manualDeath = false;
+
 	@Override
 	protected void onDeathUpdate() {
-		if (worldObj.isRemote || getExperienceHandler().onDeathUpdate()) {
-			return;
+		if (!worldObj.isRemote) {
+			if (getExperienceHandler().onDeathUpdate()) {
+				return;
+			}
+		} else {
+			if (!manualDeath) {
+				showParticleFX(EnumParticleTypes.SUSPENDED_DEPTH);
+				return;
+			}
 		}
 		super.onDeathUpdate();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void manualOnDeath() {
+		onDeath(new DamageSource("lmmnx_timeover"));
+		manualDeath = true;
 	}
 
 	// ポーションエフェクト
@@ -3122,7 +3139,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 				}
 				// 契約状態
-				if (lhealth > 0F && isMaidContractOwner(par1EntityPlayer)) {
+				if (/*lhealth > 0F && */isMaidContractOwner(par1EntityPlayer)) {
 					if (itemstack1 != null) {
 						// 追加分の処理
 						// プラグインでの処理を先に行う
@@ -3380,7 +3397,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //					worldObj.setEntityState(this, (byte)6);
 				}
 			}
-		} else if (lhealth > 0F && mstatgotcha != null) {
+		} else if (/*lhealth > 0F && */mstatgotcha != null) {
 			if (!worldObj.isRemote) {
 				EntityItem entityitem = new EntityItem(worldObj, mstatgotcha.posX, mstatgotcha.posY, mstatgotcha.posZ, new ItemStack(Items.string));
 				worldObj.spawnEntityInWorld(entityitem);
@@ -3663,7 +3680,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	/** インベントリ内の砂糖を食べる。左上から消費する。
 	 * @param mode EnumConsumeSugar型の定数
 	 */
-	public void consumeSugar(EnumConsumeSugar mode){
+	protected void consumeSugar(EnumConsumeSugar mode){
 		ItemStack[] stacklist = maidInventory.mainInventory;
 		ItemStack stack = null;
 		Item item = null;
@@ -3701,7 +3718,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	 * @param motion 腕を振るか？
 	 * @param recontract 契約延長効果アリ？
 	 */
-	protected void eatSugar(boolean heal, boolean motion, boolean recontract) {
+	public void eatSugar(boolean heal, boolean motion, boolean recontract) {
 		if (motion) {
 			setSwing(2, (getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar, false);
 		}

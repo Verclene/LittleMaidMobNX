@@ -68,7 +68,7 @@ public class LMMNX_EntityMode_Debug extends LMM_EntityMode_Basic {
 	public void updateAITick(int pMode) {
 		super.updateAITick(pMode);
 		if (pMode == mmode_Debug) {
-			owner.addMaidExperience(5f);
+			owner.addMaidExperience(10f);
 			/*
 			try {
 				int limit = (Integer) ObfuscationReflectionHelper.getPrivateValue(LMM_EntityLittleMaid.class, owner, "maidContractLimit");
