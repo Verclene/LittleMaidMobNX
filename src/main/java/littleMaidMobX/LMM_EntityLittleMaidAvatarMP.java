@@ -35,7 +35,6 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 	private double appendY;
 	private double appendZ;
 
-
 	public LMM_EntityLittleMaidAvatarMP(World par1World)
 	{
 		super(MinecraftServer.getServer().worldServerForDimension(par1World == null ? 0 : par1World.provider.getDimensionId()),
@@ -598,14 +597,6 @@ public class LMM_EntityLittleMaidAvatarMP extends FakePlayer implements LMM_IEnt
 		super.damageEntity(par1DamageSource, par2);
 	}
 	
-	/*
-	@Override
-	public boolean isEntityInvulnerable() {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
-	}
-	*/
-
 	@Override
 	public boolean isEntityInvulnerable(DamageSource source){
 		return false;

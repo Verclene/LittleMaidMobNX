@@ -2073,6 +2073,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onLivingUpdate() {
+		getExperienceHandler().onLivingUpdate();
+		
 		// 回復判定
 		float lhealth = getHealth();
 		if (lhealth > 0) {
@@ -2443,7 +2445,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// モデルサイズのリアルタイム変更有り？
 		textureData.onUpdate();
 
-		getExperienceHandler().onUpdate();
 		// リアルタイム変動値をアップデート
 		if (worldObj.isRemote) {
 			// クライアント側

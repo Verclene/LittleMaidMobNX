@@ -15,6 +15,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -106,6 +107,13 @@ public class LMM_EventHook
 		Entity entity = event.source.getSourceOfDamage();
 		if (entity instanceof EntityArrow && ((EntityArrow) entity).shootingEntity instanceof LMM_EntityLittleMaid) {
 			((LMM_EntityLittleMaid)((EntityArrow) entity).shootingEntity).addMaidExperience(0.18f * event.ammount);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingDeath(LivingDeathEvent event) {
+		if (event.entityLiving instanceof LMM_EntityLittleMaid) {
+			event.setCanceled(((LMM_EntityLittleMaid) event.entityLiving).getExperienceHandler().onDeath(event.source));
 		}
 	}
 
