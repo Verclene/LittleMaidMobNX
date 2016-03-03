@@ -2719,30 +2719,34 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		// 死因を表示
 //		if (!worldObj.isRemote) {
-			if (LMM_LittleMaidMobNX.cfg_DeathMessage && mstatMasterEntity != null) {
-				String ls = par1DamageSource.getDamageType();
-				Entity lentity = par1DamageSource.getEntity();
-				if (lentity != null) {
-					if (par1DamageSource.getEntity() instanceof EntityPlayer) {
-						ls += ":" + MMM_Helper.getPlayerName((EntityPlayer)lentity);
-					} else {
-						String lt = EntityList.getEntityString(lentity);
-						if (lt != null) {
-							ls += ":" + lt;
-						}
-					}
-				}
-
-				// 不具合対応
-				// getFormattedText → getUnformattedTextForChat
-				// getFormattedText はクライアント専用（描画用）。
-				// http://forum.minecraftuser.jp/viewtopic.php?f=13&t=23347&p=212078#p211805
-				String lt = getDisplayName().getUnformattedTextForChat();
-
-				ChatComponentText text = new ChatComponentText(String.format("your %s killed by %s", lt, ls));
-				mstatMasterEntity.addChatMessage(text);
+			if (LMM_LittleMaidMobNX.cfg_DeathMessage && getMaidMasterEntity() != null) {
+				ChatComponentText text = new ChatComponentText(sprintfDeadCause("your %s killed, by %s", par1DamageSource));
+				getMaidMasterEntity().addChatMessage(text);
 			}
 //		}
+	}
+	
+	public String sprintfDeadCause(String format, DamageSource source) {
+		String ls = source.getDamageType();
+		Entity lentity = source.getEntity();
+		if (lentity != null) {
+			if (source.getEntity() instanceof EntityPlayer) {
+				ls += ":" + MMM_Helper.getPlayerName((EntityPlayer)lentity);
+			} else {
+				String lt = EntityList.getEntityString(lentity);
+				if (lt != null) {
+					ls += ":" + lt;
+				}
+			}
+		}
+
+		// 不具合対応
+		// getFormattedText → getUnformattedTextForChat
+		// getFormattedText はクライアント専用（描画用）。
+		// http://forum.minecraftuser.jp/viewtopic.php?f=13&t=23347&p=212078#p211805
+		String lt = getDisplayName().getUnformattedTextForChat();
+
+		return String.format(format, lt, ls);
 	}
 
 	@SideOnly(Side.CLIENT)

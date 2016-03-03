@@ -15,8 +15,10 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 
 public class ExperienceHandler {
 
@@ -31,6 +33,7 @@ public class ExperienceHandler {
 	// 復帰までに最低限必要になる時間
 	private int pauseCount = 0;
 	private int requiredSugarToRevive = 0;
+	private DamageSource deadCause;
 
 	public ExperienceHandler(LMM_EntityLittleMaid maid) {
 		theMaid = maid;
@@ -87,33 +90,38 @@ public class ExperienceHandler {
 		if (theMaid.getMaidLevel() >= 20 && !cause.getDamageType().equals("outOfWorld") && !cause.getDamageType().equals("lmmnx_timeover") && !isWaitRevive) {
 			// 復帰に必要な砂糖はレベルが低いほど大きく，猶予は少なく
 			LMM_LittleMaidMobNX.Debug("DISABLING Remote=%s", theMaid.worldObj.isRemote);
-			theMaid.playSound("random.glass");
-			deathCount = (int) Math.max(1200, 200 + Math.pow(theMaid.getMaidLevel()-20, 1.8));
+			theMaid.playSound("dig.glass");
+			deathCount = (int) Math.min(1200, 200 + Math.pow(theMaid.getMaidLevel()-20, 1.8));
 			pauseCount = (int) Math.max(100, 600 - (theMaid.getMaidLevel()-20)*6.5);
-			requiredSugarToRevive = Math.min(16, 64 - (int)((theMaid.getMaidLevel()-20)/100f*48f));
+			requiredSugarToRevive = Math.max(16, 64 - (int)((theMaid.getMaidLevel()-20)/100f*48f));
+			deadCause = cause;
 			isWaitRevive = true;
-			LMM_LittleMaidMobNX.Debug("TURN ON COUNT=%d", deathCount);
+			LMM_LittleMaidMobNX.Debug("TURN ON COUNT=%d/%d", deathCount, pauseCount);
 			return true;
 		} else if (cause.getDamageType().equals("lmmnx_timeover")) {
-			theMaid.playSound("random.glass");
+			theMaid.playSound("mob.ghast.death");
+			theMaid.playSound("dig.glass");
 		}
 		return false;
 	}
 
 	public void onUpdate() {
-		LMM_LittleMaidMobNX.Debug("COUNT %d/%d", deathCount, pauseCount);
-		if (isWaitRevive) {
-			LMM_LittleMaidMobNX.Debug("HOOK UPDATE");
-
+		if (!theMaid.worldObj.isRemote && isWaitRevive) {
+			LMM_LittleMaidMobNX.Debug("COUNT %d/%d", deathCount, pauseCount);
 			// 死亡判定
 			if (--deathCount <= 0 && !theMaid.isDead) {
+				LMM_LittleMaidMobNX.Debug("TIMEOVER.");
 				theMaid.attackEntityFrom(
 						new DamageSource("lmmnx_timeover").setDamageBypassesArmor().setDamageAllowedInCreativeMode().setDamageIsAbsolute(),
 						Float.MAX_VALUE);
+				if (theMaid.getMaidMasterEntity() != null) {
+					theMaid.getMaidMasterEntity().addChatComponentMessage(new ChatComponentText(
+							theMaid.sprintfDeadCause(StatCollector.translateToLocal("littleMaidMob.chat.text.timedeath"), deadCause)));
+				}
 			}
 
 			// 行動不能
-			if ((--pauseCount > 0 || deathCount > 0) && theMaid.getMaidModeInt() != EntityMode_DeathWait.mmode_DeathWait) {
+			if ((--pauseCount > 0 || deathCount > 0) && (theMaid.isMaidWait() || theMaid.getMaidModeInt() != EntityMode_DeathWait.mmode_DeathWait)) {
 				theMaid.setMaidWait(false);
 				theMaid.setMaidMode(EntityMode_DeathWait.mmode_DeathWait);
 			}
@@ -153,9 +161,7 @@ public class ExperienceHandler {
 	}
 
 	public boolean onDeathUpdate() {
-		LMM_LittleMaidMobNX.Debug("HOOK ONDEATH");
 		if (isWaitRevive && deathCount > 0) {
-			LMM_LittleMaidMobNX.Debug("DISABLING");
 			return true;
 		} else if (!theMaid.worldObj.isRemote && theMaid.getHealth() <= 0f) {
 			byte b[] = new byte[] {
