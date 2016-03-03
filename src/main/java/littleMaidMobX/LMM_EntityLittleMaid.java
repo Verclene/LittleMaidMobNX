@@ -2728,9 +2728,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	
 	public String sprintfDeadCause(String format, DamageSource source) {
 		String ls = source.getDamageType();
-		Entity lentity = source.getEntity();
+		Entity lentity = source.getSourceOfDamage();
 		if (lentity != null) {
-			if (source.getEntity() instanceof EntityPlayer) {
+			if (lentity instanceof EntityPlayer) {
 				ls += ":" + MMM_Helper.getPlayerName((EntityPlayer)lentity);
 			} else {
 				String lt = EntityList.getEntityString(lentity);

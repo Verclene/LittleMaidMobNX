@@ -9,6 +9,8 @@ import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.entity.littlemaid.mode.EntityMode_DeathWait;
 import net.blacklab.lmmnx.sync.LMMNX_NetSync;
 import net.blacklab.lmmnx.util.NXCommonUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 
@@ -33,7 +36,7 @@ public class ExperienceHandler {
 	// 復帰までに最低限必要になる時間
 	private int pauseCount = 0;
 	private int requiredSugarToRevive = 0;
-	private DamageSource deadCause;
+	private DamageSource deadCause = DamageSource.generic;
 
 	public ExperienceHandler(LMM_EntityLittleMaid maid) {
 		theMaid = maid;
@@ -93,14 +96,11 @@ public class ExperienceHandler {
 			theMaid.playSound("dig.glass");
 			deathCount = (int) Math.min(1200, 200 + Math.pow(theMaid.getMaidLevel()-20, 1.8));
 			pauseCount = (int) Math.max(100, 600 - (theMaid.getMaidLevel()-20)*6.5);
-			requiredSugarToRevive = Math.max(16, 64 - (int)((theMaid.getMaidLevel()-20)/100f*48f));
+			requiredSugarToRevive = Math.max(32, 64 - (int)((theMaid.getMaidLevel()-20)/100f*32f));
 			deadCause = cause;
 			isWaitRevive = true;
 			LMM_LittleMaidMobNX.Debug("TURN ON COUNT=%d/%d", deathCount, pauseCount);
 			return true;
-		} else if (cause.getDamageType().equals("lmmnx_timeover")) {
-			theMaid.playSound("mob.ghast.death");
-			theMaid.playSound("dig.glass");
 		}
 		return false;
 	}
@@ -110,10 +110,13 @@ public class ExperienceHandler {
 			LMM_LittleMaidMobNX.Debug("COUNT %d/%d", deathCount, pauseCount);
 			// 死亡判定
 			if (--deathCount <= 0 && !theMaid.isDead) {
+				isWaitRevive = false;
 				LMM_LittleMaidMobNX.Debug("TIMEOVER.");
 				theMaid.attackEntityFrom(
 						new DamageSource("lmmnx_timeover").setDamageBypassesArmor().setDamageAllowedInCreativeMode().setDamageIsAbsolute(),
 						Float.MAX_VALUE);
+				theMaid.playSound("mob.ghast.death");
+				theMaid.playSound("dig.glass");
 				if (theMaid.getMaidMasterEntity() != null) {
 					theMaid.getMaidMasterEntity().addChatComponentMessage(new ChatComponentText(
 							theMaid.sprintfDeadCause(StatCollector.translateToLocal("littleMaidMob.chat.text.timedeath"), deadCause)));
@@ -124,6 +127,9 @@ public class ExperienceHandler {
 			if ((--pauseCount > 0 || deathCount > 0) && (theMaid.isMaidWait() || theMaid.getMaidModeInt() != EntityMode_DeathWait.mmode_DeathWait)) {
 				theMaid.setMaidWait(false);
 				theMaid.setMaidMode(EntityMode_DeathWait.mmode_DeathWait);
+			}
+			if (theMaid.onGround && deathCount%20 == 0 && !theMaid.isSneaking()) {
+				theMaid.setSneaking(true);
 			}
 
 			// 砂糖を持っているか？
@@ -139,7 +145,7 @@ public class ExperienceHandler {
 				deathCount++;
 				// 復帰
 				if (deathCount > 0 && pauseCount <= 0) {
-					theMaid.setHealth(8f);
+					theMaid.setHealth(Math.min(8f + Math.min(24f, MathHelper.floor_float((theMaid.getMaidLevel()-20)/100f*24f)), theMaid.getMaxHealth()));
 					theMaid.eatSugar(false,false,false);
 					for(int i=0; i<18 && requiredSugarToRevive > 0; i++) {
 						ItemStack stack = theMaid.maidInventory.mainInventory[i];
@@ -179,6 +185,18 @@ public class ExperienceHandler {
 		deathCount = tagCompound.getInteger("LMMNX_EXP_HANDLER_DEATH_DCNT");
 		pauseCount = tagCompound.getInteger("LMMNX_EXP_HANDLER_DEATH_PCNT");
 		requiredSugarToRevive = tagCompound.getInteger("LMMNX_EXP_HANDLER_DEATH_REQ");
+		String causeType = tagCompound.getString("LMMNX_EXP_HANDLER_DEATH_CAUSE_T");
+		if (causeType != null && !causeType.isEmpty()) {
+			NBTTagCompound causeEntityTag = tagCompound.getCompoundTag("LMMNX_EXP_HADNLER_DEATH_CAUSE_E");
+			if (causeEntityTag != null) {
+				Entity entity = EntityList.createEntityFromNBT(causeEntityTag, theMaid.worldObj);
+				if (entity != null) {
+					deadCause = new EntityDamageSource(causeType, entity);
+				} else {
+					deadCause = new DamageSource(causeType);
+				}
+			}
+		}
 	}
 
 	public void writeEntityToNBT(NBTTagCompound tagCompound) {
@@ -186,6 +204,12 @@ public class ExperienceHandler {
 		tagCompound.setInteger("LMMNX_EXP_HANDLER_DEATH_DCNT", deathCount);
 		tagCompound.setInteger("LMMNX_EXP_HANDLER_DEATH_PCNT", pauseCount);
 		tagCompound.setInteger("LMMNX_EXP_HANDLER_DEATH_REQ", requiredSugarToRevive);
+		tagCompound.setString("LMMNX_EXP_HANDLER_DEATH_CAUSE_T", deadCause.getDamageType());
+		if (deadCause.getSourceOfDamage() != null) {
+			NBTTagCompound causeEntityTag = new NBTTagCompound();
+			deadCause.getSourceOfDamage().writeToNBT(causeEntityTag);
+			tagCompound.setTag("LMMNX_EXP_HANDLER_DEATH_CAUSE_E", causeEntityTag);
+		}
 	}
 
 }
