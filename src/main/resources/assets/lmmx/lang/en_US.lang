@@ -99,6 +99,10 @@ littleMaidMob.mode.FarmPorter=Porter(Disabled)
 littleMaidMob.mode.F-FarmPorter=Porter(Free)
 littleMaidMob.mode.T-FarmPorter=Porter(Trace RS)
 
+littleMaidMob.mode.DeathWait=Fatally Injured
+littleMaidMob.mode.F-DeathWait=Fatally Injured
+littleMaidMob.mode.T-DeathWait=Fatally Injured
+
 littleMaidMob.text.Health=Health
 littleMaidMob.text.AP=AP
 littleMaidMob.text.STATUS=Status
