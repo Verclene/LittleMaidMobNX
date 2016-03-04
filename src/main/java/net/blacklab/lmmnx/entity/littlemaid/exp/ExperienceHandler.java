@@ -52,6 +52,12 @@ public class ExperienceHandler {
 		if (level%50 == 0) {
 			NXCommonUtil.giveItem(new ItemStack(Items.emerald, level/50), theMaid);
 		}
+		if (level%100 == 0) {
+			NXCommonUtil.giveItem(new ItemStack(Items.diamond, level/100), theMaid);
+		}
+		if (level%150 == 0) {
+			NXCommonUtil.giveItem(new ItemStack(Items.nether_star, 1), theMaid);
+		}
 
 		/*
 		 * 最大HP上昇
