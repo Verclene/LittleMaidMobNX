@@ -953,6 +953,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void playLivingSound() {
+		if (!worldObj.isRemote) return;
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		//livingSoundTick--;
@@ -991,9 +992,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		//if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
-			if(!worldObj.isRemote)
-				playLittleMaidSound(so, false);
-			else
+//			if(!worldObj.isRemote)
+//				playLittleMaidSound(so, false);
+//			else
 				playSound(so, false);
 		//	livingSoundTick = 1;
 		//}
