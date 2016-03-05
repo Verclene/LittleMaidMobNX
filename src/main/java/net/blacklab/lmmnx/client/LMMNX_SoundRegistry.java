@@ -23,6 +23,9 @@ public class LMMNX_SoundRegistry {
 	private EnumMap<LMM_EnumSound, HashMap<Pair<String, Integer>, String>> registerMap;
 	// 実際の参照パス
 	private Map<String, List<String>> pathMap;
+	
+	// LivingVoiceの再生レート
+	private static Map<String, Float> ratioMap;
 
 	// ロックされたテクスチャ
 	private List<String> markedTexture = new ArrayList<String>();
@@ -32,6 +35,7 @@ public class LMMNX_SoundRegistry {
 	private LMMNX_SoundRegistry() {
 		registerMap = new EnumMap<LMM_EnumSound, HashMap<Pair<String,Integer>,String>>(LMM_EnumSound.class);
 		pathMap = new HashMap<String, List<String>>();
+		ratioMap = new HashMap<String, Float>();
 	}
 
 	public static void registerSoundName(LMM_EnumSound enumSound, String texture, Integer color, String name) {
@@ -44,6 +48,18 @@ public class LMMNX_SoundRegistry {
 			return;
 		}
 		map.put(new SinglePair<String, Integer>(texture, color), name);
+	}
+	
+	public static void setLivingVoiceRatio(String name, Float ratio) {
+		ratioMap.put(name, ratio);
+	}
+	
+	public static Float getLivingVoiceRatio(String name) {
+		Float f = ratioMap.get(name);
+		if (f == null) {
+			f = LMM_LittleMaidMobNX.cfg_voiceRate;
+		}
+		return f;
 	}
 
 	protected static void markTexVoiceReserved(String texture) {

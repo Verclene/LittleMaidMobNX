@@ -995,7 +995,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //			if(!worldObj.isRemote)
 //				playLittleMaidSound(so, false);
 //			else
-				playSound(so, false);
+		// LivingSoundの再生調整はonEntityUpdateで行う
+		playSound(so, true);
 		//	livingSoundTick = 1;
 		//}
 	}
@@ -1990,6 +1991,17 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				if (sname == null || sname.isEmpty()) {
 					playingSound.remove(enumsound);
 					continue;
+				}
+				
+				if ((enumsound.index & 0xf00) == LMM_EnumSound.living_daytime.index) {
+					// LivingSound LivingVoiceRateを確認
+					Float ratio = LMMNX_SoundRegistry.getLivingVoiceRatio(sname);
+					if (ratio == null) ratio = LMM_LittleMaidMobNX.cfg_voiceRate;
+					// カットオフ
+					if (rand.nextFloat() > ratio) {
+						playingSound.remove(enumsound);
+						continue;
+					}
 				}
 
 				LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), sname));

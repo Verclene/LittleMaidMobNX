@@ -174,52 +174,75 @@ public class LMMNX_SoundLoader {
 			LMMNX_SoundRegistry.markTexVoiceReserved(texture);
 		}
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		List<String> readLines = new ArrayList<String>();
+		// 読み込みだけ先に行う
 		try {
 			String buf;
 			while ((buf = bufferedReader.readLine()) != null) {
-				int a = buf.indexOf("=");
-				if (buf.startsWith("se_") && a != -1) {
-					LMM_EnumSound sound = LMM_EnumSound.valueOf(buf.substring(3, a));
-					String enmString = buf.substring(++a);
-					LMM_LittleMaidMobNX.Debug("LINE READ: detected %s as %s", enmString, sound.toString());
-
-					for (String s : enmString.split(",")) {
-						LMM_LittleMaidMobNX.Debug("DECODING %s", s);
-						String[] vlStrings = s.split(";");
-						// テクスチャ色
-						Integer col = -1;
-						// サウンド名
-						String name = vlStrings[vlStrings.length - 1];
-						// テクスチャネーム
-						String texname = LMMNX_SoundRegistry.DEFAULT_TEXTURE_REGISTRATION_KEY;
-						switch (vlStrings.length) {
-						case 3:
-							texname = vlStrings[0];
-						case 2:
-							try {
-								col = Integer.valueOf(vlStrings[vlStrings.length - 2]);
-								if (col > 15) col = 15;
-								if (col < -1) col = -1;
-							} catch (NumberFormatException e) {
-							}
-						case 1:
-							String tString = texture!=null ? texture : texname;
-							if (texture == null && LMMNX_SoundRegistry.isTexVoiceMarked(texname)) {
-								LMM_LittleMaidMobNX.Debug("TEXTURE %s is marked by cfg", texname);
-								break;
-							}
-							LMM_LittleMaidMobNX.Debug("REGISTER NAME %s, %s, %s", tString, col, name);
-							LMMNX_SoundRegistry.registerSoundName(sound, tString, col, name);
-							break;
-						default:
-							break;
-						}
-					}
-				}
+				readLines.add(buf);
 			}
 			bufferedReader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		// 先にlivingVoiceRateのみを読み込み
+		float livingVoiceRate = LMM_LittleMaidMobNX.cfg_voiceRate;
+		for (String buf: readLines) {
+			if (buf.startsWith("LivingVoiceRate=")) {
+				String vals[] = buf.split("=");
+				try{
+					livingVoiceRate = Float.valueOf(vals[1]);
+				} catch(NumberFormatException exception) {}
+			}
+		}
+
+		// 登録処理
+		for (String buf: readLines) {
+			
+			int a = buf.indexOf("=");
+			if (buf.startsWith("se_") && a != -1) {
+				LMM_EnumSound sound = LMM_EnumSound.valueOf(buf.substring(3, a));
+				String enmString = buf.substring(++a);
+				LMM_LittleMaidMobNX.Debug("LINE READ: detected %s as %s", enmString, sound.toString());
+
+				for (String s : enmString.split(",")) {
+					LMM_LittleMaidMobNX.Debug("DECODING %s", s);
+					String[] vlStrings = s.split(";");
+					// テクスチャ色
+					Integer col = -1;
+					// サウンド名
+					String name = vlStrings[vlStrings.length - 1];
+					// テクスチャネーム
+					String texname = LMMNX_SoundRegistry.DEFAULT_TEXTURE_REGISTRATION_KEY;
+					switch (vlStrings.length) {
+					case 3:
+						texname = vlStrings[0];
+					case 2:
+						try {
+							col = Integer.valueOf(vlStrings[vlStrings.length - 2]);
+							if (col > 15) col = 15;
+							if (col < -1) col = -1;
+						} catch (NumberFormatException e) {
+						}
+					case 1:
+						String tString = texture!=null ? texture : texname;
+						if (texture == null && LMMNX_SoundRegistry.isTexVoiceMarked(texname)) {
+							LMM_LittleMaidMobNX.Debug("TEXTURE %s is marked by cfg", texname);
+							break;
+						}
+						LMM_LittleMaidMobNX.Debug("REGISTER NAME %s, %s, %s", tString, col, name);
+						LMMNX_SoundRegistry.registerSoundName(sound, tString, col, name);
+						break;
+					default:
+						break;
+					}
+					if ((sound.index & 0xf00) == LMM_EnumSound.living_daytime.index) {
+						// LivingSound
+						LMMNX_SoundRegistry.setLivingVoiceRatio(name, livingVoiceRate);
+					}
+				}
+			}
 		}
 		found = true;
 	}
