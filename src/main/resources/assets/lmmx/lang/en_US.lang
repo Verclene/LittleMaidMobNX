@@ -99,6 +99,10 @@ littleMaidMob.mode.FarmPorter=Porter(Disabled)
 littleMaidMob.mode.F-FarmPorter=Porter(Free)
 littleMaidMob.mode.T-FarmPorter=Porter(Trace RS)
 
+littleMaidMob.mode.DeathWait=Fatally Injured
+littleMaidMob.mode.F-DeathWait=Fatally Injured
+littleMaidMob.mode.T-DeathWait=Fatally Injured
+
 littleMaidMob.text.Health=Health
 littleMaidMob.text.AP=AP
 littleMaidMob.text.STATUS=Status
@@ -116,6 +120,8 @@ littleMaidMob.gui.toggle.swim.disable=Disable Swimming Mode
 littleMaidMob.gui.toggle.freedom.enable=Switch to Freedom Mode
 littleMaidMob.gui.toggle.freedom.disable=Switch to Folllow Mode
 
+littleMaidMob.gui.text.expboost=Experience Booster
+
 littleMaidMob.gui.iff.title=Switch mobs to Enemy or Friendly
 
 littleMaidMob.chat.text.changeregistermode=Trigger Registration Mode changed to:
@@ -125,6 +131,7 @@ littleMaidMob.chat.text.addtrigger=Trigger item registered:
 littleMaidMob.chat.text.removetrigger=Trigger item removed: 
 littleMaidMob.chat.text.warningcount=WARNING: The number of registrations are left:
 littleMaidMob.chat.text.endcount=The number of registrations are no longer left. Craft a key again.
+littleMaidMob.chat.text.timedeath=your %s can no longer endure pain from %s
 
 system.lmmnx.chat.text.newversion=New version avaliable
 system.lmmnx.chat.text.checkversion=Go to: http://el-blacklab.net/

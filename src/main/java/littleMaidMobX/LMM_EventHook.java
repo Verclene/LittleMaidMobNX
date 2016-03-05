@@ -1,22 +1,25 @@
 package littleMaidMobX;
 
 import net.blacklab.lib.minecraft.item.ItemUtil;
-import net.blacklab.lib.version.Version;
 import net.blacklab.lmmnx.api.event.LMMNX_Event;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
@@ -92,6 +95,22 @@ public class LMM_EventHook
 	}
 
 	@SubscribeEvent
+	public void onLivingAttack(LivingAttackEvent event) {
+		Entity entity = event.source.getEntity();
+		if (entity instanceof LMM_EntityLittleMaidAvatarMP) {
+			((LMM_EntityLittleMaidAvatarMP) entity).avatar.addMaidExperience(0.16f * event.ammount);
+		}
+	}
+
+	@SubscribeEvent
+	public void onLivingHurt(LivingHurtEvent event) {
+		Entity entity = event.source.getSourceOfDamage();
+		if (entity instanceof EntityArrow && ((EntityArrow) entity).shootingEntity instanceof LMM_EntityLittleMaid) {
+			((LMM_EntityLittleMaid)((EntityArrow) entity).shootingEntity).addMaidExperience(0.18f * event.ammount);
+		}
+	}
+	
+	@SubscribeEvent
 	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
 		LMM_EntityLittleMaid maid = event.maid;
 //		IInventory target = event.target;
@@ -108,6 +127,18 @@ public class LMM_EventHook
 			}
 		}
 		if(event.maidStackIndex==17&&ItemUtil.isHelm(stack)){
+			event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public void onPickUpXP(PlayerPickupXpEvent event) {
+		EntityPlayer player = event.entityPlayer;
+		if (player instanceof LMM_EntityLittleMaidAvatarMP) {
+			LMM_EntityLittleMaid maid = ((LMM_EntityLittleMaidAvatarMP) player).avatar;
+			maid.addMaidExperience(event.orb.getXpValue()/(maid.getExpBooster()*10f));
+			maid.playSound("random.orb");
+			event.orb.setDead();
 			event.setCanceled(true);
 		}
 	}

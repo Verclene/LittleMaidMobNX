@@ -83,7 +83,7 @@ public class LMM_EntityAIFleeRain extends EntityAIBase implements LMM_IEntityAI 
 			int l = MathHelper.floor_double((theMaid.posZ + (i-5)));
 			
 			//離れすぎている
-			if(theMaid.getPosition().distanceSq(j, k, l)>LMM_EntityMode_Torcher.limitDistance_Freedom &&
+			if(theMaid.getPosition().distanceSq(j, k, l)>LMM_EntityModeBase.limitDistance_Freedom &&
 					theMaid.isFreedom()){
 				continue;
 			}

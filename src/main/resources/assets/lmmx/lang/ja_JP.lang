@@ -95,6 +95,10 @@ littleMaidMob.mode.FarmPorter=穀物運び(無効)
 littleMaidMob.mode.F-FarmPorter=穀物運び(自由)
 littleMaidMob.mode.T-FarmPorter=穀物運び(赤石)
 
+littleMaidMob.mode.DeathWait=致命傷
+littleMaidMob.mode.F-DeathWait=致命傷
+littleMaidMob.mode.T-DeathWait=致命傷
+
 littleMaidMob.text.AP=メイド装甲
 littleMaidMob.text.Health=メイド強度
 littleMaidMob.text.STATUS=メイド状態

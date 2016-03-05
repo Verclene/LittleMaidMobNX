@@ -1,6 +1,10 @@
 package net.blacklab.lmmnx.util;
 
+import littleMaidMobX.LMM_EntityLittleMaid;
 import littleMaidMobX.LMM_LittleMaidMobNX;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import scala.language;
 
 public class NXCommonUtil {
 	
@@ -33,6 +37,44 @@ public class NXCommonUtil {
 		if(path.startsWith("/")) path = path.substring(1);
 		if(path.endsWith(".class")) path = path.substring(0,path.lastIndexOf(".class"));
 		return path.replace("/", ".");
+	}
+	
+	/**
+	 * メイドにアイテムを与える
+	 */
+	public static void giveItem(ItemStack stack, LMM_EntityLittleMaid maid) {
+		int stacksize = stack.stackSize;
+		
+		for (int i=0; i<maid.maidInventory.mainInventory.length; i++) {
+			ItemStack stack1 = maid.maidInventory.mainInventory[i];
+
+			if (stack1 != null && stack != null) {
+				// スタックが空でない場合は合成を行う．
+				if (stack.getItem() == stack1.getItem() && stack.getItemDamage() == stack1.getItemDamage()) {
+					int totalsize = stack1.stackSize + stacksize;
+					int diffsize = totalsize - stack1.getItem().getItemStackLimit(stack1);
+					if (diffsize<=0) {
+						stack1.stackSize = totalsize;
+						stack = null;
+					} else {
+						stack1.stackSize = stack1.getItem().getItemStackLimit(stack1);
+						stack.stackSize = diffsize;
+					}
+				}
+			} else if (stack != null) {
+				// スタックが空の場合は投入
+				maid.maidInventory.mainInventory[i] = stack.copy();
+				stack = null;
+			} else {
+				// 処理対象がなくなったらその時点でループを抜ける．
+				break;
+			}
+		}
+		
+		// それでも残ってしまったらドロップ
+		if (stack!=null) {
+			maid.entityDropItem(stack, 0);
+		}
 	}
 
 }

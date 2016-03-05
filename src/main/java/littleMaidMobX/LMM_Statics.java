@@ -5,7 +5,7 @@ public class LMM_Statics
 
 	/** Absoption効果をクライアント側へ転送するのに使う */
 	protected static final int dataWatch_Absoption		= 18;
-	
+
 	/** メイドカラー(byte) */
 	protected static final int dataWatch_Color			= 19;
 	/**
@@ -37,25 +37,24 @@ public class LMM_Statics
 
 	/** 紐の持ち主のEntityID。 */
 	protected static final int dataWatch_Gotcha			= 23;
-	
+
 	/** メイドモード(Short) */
 	protected static final int dataWatch_Mode			= 24;
 	/** 利き腕(Byte) */
 	protected static final int dataWatch_DominamtArm	= 25;
 	/** アイテムの使用判定、腕毎(Integer) */
 	protected static final int dataWatch_ItemUse		= 26;
-	/** 保持経験値、実のところクライアント側では必要ないので要らない(Integer) */
-	protected static final int dataWatch_ExpValue		= 27;
-	
+	/** 保持経験値→メイド経験値で上書きな */
+	protected static final int dataWatch_MaidExpValue		= 27;
+
 	/** EntityPlayer と EntityTameable で17番がかぶっているため、EntityPlayer側を28へ移動。 */
 	protected static final int dataWatch_AbsorptionAmount	= 28;
-	
-	
+
 	/**
 	 * 自由設定値。
 	 */
 	protected static final int dataWatch_Free			= 31;
-	
+
 	protected static final int dataFlags_ForceUpdateInventory	= 0x80000000;
 
 // NetWork
@@ -63,14 +62,14 @@ public class LMM_Statics
 	/*
 	 * 動作用定数、8bit目を立てるとEntity要求
 	 */
-	
+
 	/*
 	 * LMMPacetのフォーマット
 	 * (Byte)
 	 * 0	: 識別(1byte)
-	 * 1 - 4: EntityID(4Byte)場合に寄っては省略 
+	 * 1 - 4: EntityID(4Byte)場合に寄っては省略
 	 * 5 - 	: Data
-	 * 
+	 *
 	 */
 	/**
 	 * サーバー側へ対象のインベントリを送信するように指示する。
@@ -131,5 +130,5 @@ public class LMM_Statics
 	 * [5..8]	: SoundIndex(int);
 	 */
 	public static final byte LMN_Client_PlaySound		= (byte)0x89;
-	
+
 }

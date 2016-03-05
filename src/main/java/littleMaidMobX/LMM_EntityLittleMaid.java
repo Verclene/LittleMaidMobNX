@@ -1,28 +1,6 @@
 package littleMaidMobX;
 
-import static littleMaidMobX.LMM_Statics.dataWatch_Absoption;
-import static littleMaidMobX.LMM_Statics.dataWatch_Color;
-import static littleMaidMobX.LMM_Statics.dataWatch_DominamtArm;
-import static littleMaidMobX.LMM_Statics.dataWatch_ExpValue;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Aimebow;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Bloodsuck;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Freedom;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_LooksSugar;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_OverDrive;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Register;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Tracer;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Wait;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_Working;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterest;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_looksWithInterestAXIS;
-import static littleMaidMobX.LMM_Statics.dataWatch_Flags_remainsContract;
-import static littleMaidMobX.LMM_Statics.dataWatch_Free;
-import static littleMaidMobX.LMM_Statics.dataWatch_Gotcha;
-import static littleMaidMobX.LMM_Statics.dataWatch_ItemUse;
-import static littleMaidMobX.LMM_Statics.dataWatch_Mode;
-import static littleMaidMobX.LMM_Statics.dataWatch_Parts;
-import static littleMaidMobX.LMM_Statics.dataWatch_Texture;
+import static littleMaidMobX.LMM_Statics.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -35,7 +13,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import scala.util.Random;
 import mmmlibx.lib.ITextureEntity;
 import mmmlibx.lib.MMMLib;
 import mmmlibx.lib.MMM_Counter;
@@ -48,6 +25,7 @@ import mmmlibx.lib.multiModel.model.mc162.EquippedStabilizer;
 import mmmlibx.lib.multiModel.model.mc162.IModelCaps;
 import net.blacklab.lib.minecraft.item.ItemUtil;
 import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
+import net.blacklab.lmmnx.api.event.LMMNX_Event;
 import net.blacklab.lmmnx.api.item.LMMNX_API_Item;
 import net.blacklab.lmmnx.api.item.LMMNX_IItemSpecialSugar;
 import net.blacklab.lmmnx.client.LMMNX_SoundLoader;
@@ -55,7 +33,8 @@ import net.blacklab.lmmnx.client.LMMNX_SoundRegistry;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIRestrictOpenDoor;
 import net.blacklab.lmmnx.entity.ai.LMMNX_EntityAIWatchClosest;
-import net.blacklab.lmmnx.entity.lmm.exp.ExperienceUtil;
+import net.blacklab.lmmnx.entity.littlemaid.exp.ExperienceHandler;
+import net.blacklab.lmmnx.entity.littlemaid.exp.ExperienceUtil;
 import net.blacklab.lmmnx.entity.pathnavigate.LMMNX_PathNavigatorLittleMaid;
 import net.blacklab.lmmnx.item.LMMNX_ItemRegisterKey;
 import net.blacklab.lmmnx.sync.LMMNX_NetSync;
@@ -77,7 +56,6 @@ import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.ai.EntityAITempt;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.item.EntityItem;
@@ -107,7 +85,6 @@ import net.minecraft.network.play.server.S1EPacketRemoveEntityEffect;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.profiler.Profiler;
@@ -129,8 +106,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.TempCategory;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import wrapper.W_Common;
 
 public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEntity {
@@ -273,13 +252,18 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	protected int maidArmorVisible = 15;
 
+	private static final int[] ZBOUND_BLOCKOFFS = new int[]{  1,  1,  0, -1, -1, -1,  0,  1};
+	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
+	public int DEBUGCOUNT = 0;
+	private boolean isInsideOpaque = false;
 	protected MMM_Counter registerTick;
 	protected String registerMode;
-	
+
 	// NX5 レベル関連
-	private int maidLevel = 1;
-	private float maidExperience = 0;
-	
+	private float maidExperience = 0;				// 経験値
+	protected ExperienceHandler experienceHandler;	// 経験値アクション制御
+	private int gainExpBoost = 1;					// 取得経験値倍率
+
 	public LMM_EntityLittleMaid(World par1World) {
 		super(par1World);
 		// 初期設定
@@ -351,6 +335,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		for (LMM_EntityModeBase lem : maidEntityModeList) {
 			lem.initEntity();
 		}
+		setExperienceHandler(new ExperienceHandler(this));
 
 		/*
 		if(par1World.isRemote){
@@ -438,7 +423,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 26:アイテムの使用判定
 		dataWatcher.addObject(dataWatch_ItemUse, Integer.valueOf(0));
 		// 27:保持経験値
-		dataWatcher.addObject(dataWatch_ExpValue, Integer.valueOf(0));
+		/**
+		 * TODO 旧コメにあった「互換性保持」の意味がよく分からなかった．
+		 * バニラには27番を使うMobはいないし，旧版継承の問題？
+		 * バニラ由来のexperienceValueはほとんど利用していないので上書き．
+		 */
+		dataWatcher.addObject(LMM_Statics.dataWatch_MaidExpValue , Float.valueOf(0));
 
 		// TODO:test
 		// 31:自由変数、EntityMode等で使用可能な変数。
@@ -468,7 +458,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		aiPanic = new EntityAIPanic(this, 2.0F);
 		aiTracer = new LMM_EntityAITracerMove(this);
 		aiSit = new LMM_EntityAIWait(this);
-		
+
 		aiWatchClosest = new LMMNX_EntityAIWatchClosest(this, EntityLivingBase.class, 10F);
 
 		// TODO:これいらなくね？
@@ -579,7 +569,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void setSwimming(boolean flag){
 		swimmingEnabled = flag;
 	}
-	
+
 	public boolean isInWater() {
 		return inWater ? true : worldObj.getBlockState(getPosition()).getBlock().getMaterial() == Material.water;
 	}
@@ -719,6 +709,34 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 	/**
+	 * Client用
+	 * 経験値ブースト値の取得
+	 */
+	public void requestExpBoost() {
+		byte b[] = new byte[] {
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_UB_RequestExpBoost, 0
+		};
+		syncNet(b);
+	}
+
+	/**
+	 * Server用
+	 * 経験値ブーストを返す
+	 */
+	public void recallExpBoost() {
+		byte b[] = new byte[] {
+				LMMNX_NetSync.LMMNX_Sync,
+				0, 0, 0, 0,
+				LMMNX_NetSync.LMMNX_Sync_Integer_SetExpBoost,
+				0, 0, 0, 0
+		};
+		MMM_Helper.setInt(b, 6, getExpBooster());
+		syncNet(b);
+	}
+
+	/**
 	 * Client専用。
 	 */
 	public static MMM_TextureBox referTextureBox(String string) {
@@ -741,7 +759,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	}
 
 
-	protected void syncNet(byte[] b) {
+	public void syncNet(byte[] b) {
 		if(worldObj.isRemote){
 			LMM_Net.sendToEServer(this, b);
 		}else{
@@ -898,7 +916,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
 		if (worldObj.isRemote && enumsound!=LMM_EnumSound.Null) {
 			if (!force) {
-				if(Math.random() > LMM_LittleMaidMobNX.cfg_soundPlayRate) {
+				if(Math.random() > LMM_LittleMaidMobNX.cfg_voiceRate) {
 					return;
 				}
 			}
@@ -915,6 +933,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void playLittleMaidSound(LMM_EnumSound enumsound, boolean force) {
 		// 音声の再生
 		if (enumsound == LMM_EnumSound.Null) return;
+		if (!force && rand.nextFloat() > LMM_LittleMaidMobNX.cfg_voiceRate) return;
 		maidSoundInterval = 20;
 		if (!worldObj.isRemote) {
 			// Server
@@ -934,10 +953,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void playLivingSound() {
+		if (!worldObj.isRemote) return;
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		//livingSoundTick--;
-		if(getAttackTarget()!=null || Math.random() > 0.3) return;
+		if(getAttackTarget()!=null/* || Math.random() > 0.3*/) return;
 		LMM_EnumSound so = LMM_EnumSound.Null;
 		if (getHealth() < 10)
 			so = LMM_EnumSound.living_whine;
@@ -972,10 +992,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 		//if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
-			if(!worldObj.isRemote)
-				playLittleMaidSound(so, true);
-			else
-				playSound(so, true);
+//			if(!worldObj.isRemote)
+//				playLittleMaidSound(so, false);
+//			else
+		// LivingSoundの再生調整はonEntityUpdateで行う
+		playSound(so, true);
 		//	livingSoundTick = 1;
 		//}
 	}
@@ -1267,7 +1288,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setBoolean("isWildSaved", isWildSaved);
 		par1nbtTagCompound.setInteger("LimitCount", maidContractLimit);
 		par1nbtTagCompound.setLong("Anniversary", maidAnniversary);
-		par1nbtTagCompound.setInteger("EXP", experienceValue);
+//		par1nbtTagCompound.setInteger("EXP", experienceValue);
 		par1nbtTagCompound.setInteger("DominantArm", maidDominantArm);
 		par1nbtTagCompound.setInteger("Color", textureData.getColor());
 		par1nbtTagCompound.setString("texName", textureData.getTextureName(0));
@@ -1287,9 +1308,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		par1nbtTagCompound.setInteger("homeY", getPosition().getY());
 		par1nbtTagCompound.setInteger("homeZ", getPosition().getZ());
 		par1nbtTagCompound.setInteger("homeWorld", homeWorld);
-		
+
 		par1nbtTagCompound.setFloat("LMMNX_MAID_EXP", maidExperience);
-		
+		par1nbtTagCompound.setInteger("LMMNX_EXP_BOOST", gainExpBoost);
+
 		// Tiles
 		NBTTagCompound lnbt = new NBTTagCompound();
 		par1nbtTagCompound.setTag("Tiles", lnbt);
@@ -1302,6 +1324,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		for (int li = 0; li < maidEntityModeList.size(); li++) {
 			maidEntityModeList.get(li).writeEntityToNBT(par1nbtTagCompound);
 		}
+
+		getExperienceHandler().writeEntityToNBT(par1nbtTagCompound);
 	}
 
 	@Override
@@ -1472,9 +1496,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		isMadeTextureNameFlag = par1nbtTagCompound.getBoolean("isMadeTextureNameFlag");
-		
+
 		maidExperience = par1nbtTagCompound.getFloat("LMMNX_MAID_EXP");
-		maidLevel = ExperienceUtil.getLevelFromExp(maidExperience);
+		setExpBooster(par1nbtTagCompound.getInteger("LMMNX_EXP_BOOST"));
+		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExpValue, maidExperience);
 
 		LMM_LittleMaidMobNX.Debug("READ %s %s", textureModelNameForClient, textureArmorNameForClient);
 		if(!worldObj.isRemote) recallRenderParamTextureName(textureModelNameForClient, textureArmorNameForClient);
@@ -1487,6 +1512,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		syncMaidArmorVisible();
 		syncFreedom();
 
+		getExperienceHandler().readEntityFromNBT(par1nbtTagCompound);
 	}
 
 	public boolean canBePushed()
@@ -1749,6 +1775,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
+		if (worldObj.isRemote) {
+			return false;
+		}
+
 		Entity entity = par1DamageSource.getEntity();
 		boolean force = true;
 
@@ -1761,7 +1791,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				return false;
 			}
 		}
-		
+
 		LMM_LittleMaidMobNX.Debug("LMM_EntityLittleMaid.attackEntityFrom "+this+"("+maidAvatar+") <= "+entity);
 
 		// ダメージソースを特定して音声の設定
@@ -1802,6 +1832,15 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				maidDamegeSound = LMM_EnumSound.hurt_nodamege;
 			}
 			playLittleMaidSound(maidDamegeSound, force);
+
+			// 減EXP対象
+			if (par1DamageSource.getEntity() instanceof EntityPlayer || par1DamageSource.getDamageType().equals("inWall") ||
+					par1DamageSource.getDamageType().equals("inFire") || par1DamageSource.getDamageType().equals("inLava") ||
+					par1DamageSource.getDamageType().equals("anvil") || par1DamageSource.getDamageType().equals("fall") ||
+					par1DamageSource.getDamageType().equals("cactus") || par1DamageSource.getDamageType().equals("onFire")) {
+				addMaidExperience(-2.0f*par2);
+			}
+
 			return false;
 		}
 
@@ -1850,6 +1889,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				PotionEffect potioneffect;
 				for (Iterator iterator = list.iterator(); iterator.hasNext(); entityliving.addPotionEffect(new PotionEffect(potioneffect))) {
 					potioneffect = (PotionEffect)iterator.next();
+					addMaidExperience(0.49f*(potioneffect.getDuration()==0?240:potioneffect.getDuration())/20);
 				}
 			}
 			if(itemstack.stackSize <= 0) {
@@ -1884,7 +1924,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	protected int getExperiencePoints(EntityPlayer par1EntityPlayer) {
-		return experienceValue;
+		return 0;
 	}
 
 
@@ -1933,26 +1973,37 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//音声再生
 		if(worldObj.isRemote&&!playingSound.isEmpty()){
 			float lpitch = LMM_LittleMaidMobNX.cfg_VoiceDistortion ? (rand.nextFloat() * 0.2F) + 0.95F : 1.0F;
-			
+
 			Iterator<LMM_EnumSound> iterator = playingSound.iterator();
 			while(iterator.hasNext()){
 				LMM_EnumSound enumsound = iterator.next();
 				LMM_LittleMaidMobNX.Debug("REQ %s", enumsound);
-				
+
 				if (!LMMNX_SoundLoader.isFoundSoundpack()) {
 					worldObj.playSound(posX, posY, posZ, enumsound.DefaultValue, getSoundVolume(), lpitch, false);
 					playingSound.remove(enumsound);
 					continue;
 				}
-				
+
 				String sname = LMMNX_SoundRegistry.getSoundRegisteredName(enumsound, textureModelNameForClient, getColor());
 				LMM_LittleMaidMobNX.Debug("STC %s,%d/FRS %s", textureModelNameForClient, getColor(), sname);
-				
+
 				if (sname == null || sname.isEmpty()) {
 					playingSound.remove(enumsound);
 					continue;
 				}
 				
+				if ((enumsound.index & 0xf00) == LMM_EnumSound.living_daytime.index) {
+					// LivingSound LivingVoiceRateを確認
+					Float ratio = LMMNX_SoundRegistry.getLivingVoiceRatio(sname);
+					if (ratio == null) ratio = LMM_LittleMaidMobNX.cfg_voiceRate;
+					// カットオフ
+					if (rand.nextFloat() > ratio) {
+						playingSound.remove(enumsound);
+						continue;
+					}
+				}
+
 				LMM_LittleMaidMobNX.Debug(String.format("id:%d, se:%04x-%s (%s)", getEntityId(), enumsound.index, enumsound.name(), sname));
 
 				worldObj.playSound(posX, posY, posZ, "lmmnx:"+sname, getSoundVolume(), lpitch, false);
@@ -2038,12 +2089,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return false;
 	}
 
-	private static final int[] ZBOUND_BLOCKOFFS = new int[]{  1,  1,  0, -1, -1, -1,  0,  1};
-	private static final int[] XBOUND_BLOCKOFFS = new int[]{  0, -1, -1, -1,  0,  1,  1,  1};
-
-	public int DEBUGCOUNT = 0;
-	private boolean isInsideOpaque = false;
-
 	@Override
 	public void onLivingUpdate() {
 		// 回復判定
@@ -2079,7 +2124,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}*/
 
 		superLivingUpdate();
-		
+
 		// 水中関連
 		if (swimmingEnabled || !isContract()) {
 			((PathNavigateGround)navigator).func_179690_a(false);
@@ -2237,7 +2282,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						consumeSugar(EnumConsumeSugar.HEAL);
 					}
 					// つまみ食い
-					if (rand.nextInt(50000) == 0) {
+					if (rand.nextInt(MathHelper.floor_float(50000/(getExpBooster()*(1.05f+0.005f*getExpBooster())))) == 0) {
 						consumeSugar(EnumConsumeSugar.OTHER);
 					}
 					// 契約更新
@@ -2255,7 +2300,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	private void superLivingUpdate() {
 		if(onGround) isJumping = false;
-	
+
 		if (newPosRotationIncrements > 0)
 		{
 			double d0 = posX + (newPosX - posX) / newPosRotationIncrements;
@@ -2274,24 +2319,24 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			motionY *= 0.98D;
 			motionZ *= 0.98D;
 		}
-	
+
 		if (Math.abs(motionX) < 0.005D)
 		{
 			motionX = 0.0D;
 		}
-	
+
 		if (Math.abs(motionY) < 0.005D)
 		{
 			motionY = 0.0D;
 		}
-	
+
 		if (Math.abs(motionZ) < 0.005D)
 		{
 			motionZ = 0.0D;
 		}
-	
+
 		worldObj.theProfiler.startSection("ai");
-	
+
 		if (isMovementBlocked())
 		{
 			isJumping = false;
@@ -2309,10 +2354,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 			worldObj.theProfiler.endSection();
 		}
-	
+
 		worldObj.theProfiler.endSection();
 		worldObj.theProfiler.startSection("jump");
-	
+
 		if (isInWater())
 		{
 			updateAITick();
@@ -2321,23 +2366,23 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		{
 			motionY += 0.0333333339D;
 		}
-	
+
 		worldObj.theProfiler.endSection();
-	
+
 		worldObj.theProfiler.startSection("travel");
 		moveStrafing *= 0.98F;
 		moveForward *= 0.98F;
 		randomYawVelocity *= 0.9F;
 		moveEntityWithHeading(moveStrafing, moveForward);
 		worldObj.theProfiler.endSection();
-	
+
 		worldObj.theProfiler.startSection("push");
-	
+
 		if (!worldObj.isRemote)
 		{
 			collideWithNearbyEntities();
 		}
-	
+
 		worldObj.theProfiler.endSection();
 	}
 
@@ -2381,7 +2426,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void onUpdate() {
 		int litemuse = 0;
 //		resetNavigator();
-		
+
 		if (registerTick.isDelay()){
 			registerTick.onUpdate();
 
@@ -2415,6 +2460,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 		// モデルサイズのリアルタイム変更有り？
 		textureData.onUpdate();
+
+		getExperienceHandler().onUpdate();
+
 		// リアルタイム変動値をアップデート
 		if (worldObj.isRemote) {
 			// クライアント側
@@ -2431,7 +2479,12 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			setDominantArm(dataWatcher.getWatchableObjectByte(dataWatch_DominamtArm));
 			updateMaidFlagsClient();
 			updateGotcha();
-			
+
+			// メイド経験値
+			if (ticksExisted%10 == 0) {
+				maidExperience = dataWatcher.getWatchableObjectFloat(LMM_Statics.dataWatch_MaidExpValue);
+			}
+
 			// 腕の挙動関連
 			litemuse = dataWatcher.getWatchableObjectInt(dataWatch_ItemUse);
 			for (int li = 0; li < mstatSwingStatus.length; li++) {
@@ -2485,7 +2538,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				latt.applyModifier(attSneakingSpeed);
 			}
 //			isSprinting()
-			
+
 		}
 
 		// 独自処理用毎時処理
@@ -2494,6 +2547,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		}
 
 		super.onUpdate();
+
 		// SwingUpdate
 		LMM_SwingStatus lmss1 = getSwingStatusDominant();
 		prevSwingProgress = maidAvatar.prevSwingProgress = lmss1.prevSwingProgress;
@@ -2585,11 +2639,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			// 構えの更新
 			updateAimebow();
 
-			// TODO:test
-			if (dataWatcher.getWatchableObjectInt(dataWatch_ExpValue) != experienceValue) {
-				dataWatcher.updateObject(dataWatch_ExpValue, Integer.valueOf(experienceValue));
-			}
-
 			// 自分より大きなものは乗っけない（イカ除く）
 			if (riddenByEntity != null && !(riddenByEntity instanceof EntitySquid)) {
 				if (height * width < riddenByEntity.height * riddenByEntity.width) {
@@ -2610,10 +2659,6 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 				// 属性を設定
 				latt.applyModifier(attAxeAmp);
 			}
-		} else {
-			// Client
-			// TODO:test
-			experienceValue = dataWatcher.getWatchableObjectInt(dataWatch_ExpValue);
 		}
 
 		// 紐で拉致
@@ -2680,35 +2725,68 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 
 	@Override
 	public void onDeath(DamageSource par1DamageSource) {
+		if (worldObj.isRemote || getExperienceHandler().onDeath(par1DamageSource)) {
+			return;
+		}
+
 		super.onDeath(par1DamageSource);
 
 		// 死因を表示
-		if (!worldObj.isRemote) {
-			// マスター判定失敗するかも？
-			if (LMM_LittleMaidMobNX.cfg_DeathMessage && mstatMasterEntity != null) {
-				String ls = par1DamageSource.getDamageType();
-				Entity lentity = par1DamageSource.getEntity();
-				if (lentity != null) {
-					if (par1DamageSource.getEntity() instanceof EntityPlayer) {
-						ls += ":" + MMM_Helper.getPlayerName((EntityPlayer)lentity);
-					} else {
-						String lt = EntityList.getEntityString(lentity);
-						if (lt != null) {
-							ls += ":" + lt;
-						}
-					}
+//		if (!worldObj.isRemote) {
+			if (LMM_LittleMaidMobNX.cfg_DeathMessage && getMaidMasterEntity() != null) {
+				ChatComponentText text = new ChatComponentText(sprintfDeadCause("your %s killed, by %s", par1DamageSource));
+				getMaidMasterEntity().addChatMessage(text);
+			}
+//		}
+	}
+	
+	public String sprintfDeadCause(String format, DamageSource source) {
+		String ls = source.getDamageType();
+		Entity lentity = source.getSourceOfDamage();
+		if (lentity != null) {
+			if (lentity instanceof EntityPlayer) {
+				ls += ":" + MMM_Helper.getPlayerName((EntityPlayer)lentity);
+			} else {
+				String lt = EntityList.getEntityString(lentity);
+				if (lt != null) {
+					ls += ":" + lt;
 				}
-
-				// 不具合対応
-				// getFormattedText → getUnformattedTextForChat
-				// getFormattedText はクライアント専用（描画用）。
-				// http://forum.minecraftuser.jp/viewtopic.php?f=13&t=23347&p=212078#p211805
-				String lt = getDisplayName().getUnformattedTextForChat();
-
-				ChatComponentText text = new ChatComponentText(String.format("your %s killed by %s", lt, ls));
-				mstatMasterEntity.addChatMessage(text);
 			}
 		}
+
+		// 不具合対応
+		// getFormattedText → getUnformattedTextForChat
+		// getFormattedText はクライアント専用（描画用）。
+		// http://forum.minecraftuser.jp/viewtopic.php?f=13&t=23347&p=212078#p211805
+		String lt = getDisplayName().getUnformattedTextForChat();
+
+		return String.format(format, lt, ls);
+	}
+
+	/**
+	 * Client専用．
+	 */
+	private boolean manualDeath = false;
+
+	@Override
+	protected void onDeathUpdate() {
+		if (!worldObj.isRemote) {
+			if (getExperienceHandler().onDeathUpdate()) {
+				return;
+			}
+		} else {
+			if (!manualDeath) {
+				showParticleFX(EnumParticleTypes.SUSPENDED_DEPTH);
+				return;
+			}
+		}
+		super.onDeathUpdate();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void manualOnDeath() {
+		onDeath(new DamageSource("lmmnx_timeover"));
+		manualDeath = true;
 	}
 
 	// ポーションエフェクト
@@ -3048,8 +3126,40 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			}
 
 			if (isContract()) {
+				// Issue #35: 契約失効時の処理を優先化
+				if(!isRemainsContract() && itemstack1 != null){
+					// ストライキ
+					if (itemstack1.getItem() == Items.sugar) {
+						// 受取拒否
+						worldObj.setEntityState(this, (byte)10);
+						return true;
+					} else if (itemstack1.getItem() == Items.cake) {
+						// 再契約
+						MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
+						maidContractLimit = (24000 * 7);
+						setFreedom(false);
+						setTracer(false);
+						setMaidWait(false);
+						setMaidMode("Escorter");
+						if(!isMaidContractOwner(par1EntityPlayer)){
+							// あんなご主人なんか捨てて、僕のもとへおいで(洗脳)
+							W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));
+							playLittleMaidSound(LMM_EnumSound.getCake, true);
+							worldObj.setEntityState(this, (byte)7);
+							maidContractLimit = (24000 * 7);
+							maidAnniversary = worldObj.getTotalWorldTime();
+						}else{
+							// ごめんねメイドちゃん
+							worldObj.setEntityState(this, (byte)11);
+							playLittleMaidSound(LMM_EnumSound.Recontract, true);
+
+						}
+						return true;
+					}
+
+				}
 				// 契約状態
-				if (lhealth > 0F && isMaidContractOwner(par1EntityPlayer)) {
+				if (/*lhealth > 0F && */isMaidContractOwner(par1EntityPlayer)) {
 					if (itemstack1 != null) {
 						// 追加分の処理
 						// プラグインでの処理を先に行う
@@ -3067,10 +3177,11 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 									cmode = ((LMMNX_IItemSpecialSugar)itemstack1.getItem()).onSugarInteract(worldObj, par1EntityPlayer, itemstack1, this);
 								}
 								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-								eatSugar(true, false, true);
+								eatSugar(false, true, false);
 								if(!cmode) return true;
 								worldObj.setEntityState(this, (byte)11);
 
+								// TODO 口開くよ…
 								LMM_LittleMaidMobNX.Debug("give suger." + worldObj.isRemote);
 								if (!worldObj.isRemote) {
 									setFreedom(isFreedom());
@@ -3203,7 +3314,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 											(int)posZ);
 //								}
 								return true;
-							}
+							}/*
 							else if ((itemstack1.getItem() == Items.glass_bottle) && (experienceValue >= 5)) {
 								// Expボトル
 								MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
@@ -3215,7 +3326,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 									}
 								}
 								return true;
-							}
+							}*/
 							else if (itemstack1.getItem() instanceof ItemPotion) {
 								// ポーション
 								if(!worldObj.isRemote) {
@@ -3266,40 +3377,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 						syncSwimming();
 						syncMaidArmorVisible();
 						syncFreedom();
+						recallExpBoost();
 					}
 					displayGUIMaidInventory(par1EntityPlayer);
 					return true;
-				}
-				if(!isRemainsContract() && itemstack1 != null){
-					// ストライキ
-					if (itemstack1.getItem() == Items.sugar) {
-						// 受取拒否
-						worldObj.setEntityState(this, (byte)10);
-						return true;
-					} else if (itemstack1.getItem() == Items.cake) {
-						// 再契約
-						MMM_Helper.decPlayerInventory(par1EntityPlayer, -1, 1);
-						maidContractLimit = (24000 * 7);
-						setFreedom(false);
-						setTracer(false);
-						setMaidWait(false);
-						setMaidMode("Escorter");
-						if(!isMaidContractOwner(par1EntityPlayer)){
-							// あんなご主人なんか捨てて、僕のもとへおいで(洗脳)
-							W_Common.setOwner(this, MMM_Helper.getPlayerName(par1EntityPlayer));
-							playLittleMaidSound(LMM_EnumSound.getCake, true);
-							worldObj.setEntityState(this, (byte)7);
-							maidContractLimit = (24000 * 7);
-							maidAnniversary = worldObj.getTotalWorldTime();
-						}else{
-							// ごめんねメイドちゃん
-							worldObj.setEntityState(this, (byte)11);
-							playLittleMaidSound(LMM_EnumSound.Recontract, true);
-							
-						}
-						return true;
-					}
-
 				}
 			} else {
 				// 未契約
@@ -3336,7 +3417,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 //					worldObj.setEntityState(this, (byte)6);
 				}
 			}
-		} else if (lhealth > 0F && mstatgotcha != null) {
+		} else if (/*lhealth > 0F && */mstatgotcha != null) {
 			if (!worldObj.isRemote) {
 				EntityItem entityitem = new EntityItem(worldObj, mstatgotcha.posX, mstatgotcha.posY, mstatgotcha.posZ, new ItemStack(Items.string));
 				worldObj.spawnEntityInWorld(entityitem);
@@ -3616,10 +3697,10 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		/**その他（つまみ食いとか）**/OTHER
 	};
 
-	/** 砂糖を食べる。インベントリの左上から消費する。
+	/** インベントリ内の砂糖を食べる。左上から消費する。
 	 * @param mode EnumConsumeSugar型の定数
 	 */
-	public void consumeSugar(EnumConsumeSugar mode){
+	protected void consumeSugar(EnumConsumeSugar mode){
 		ItemStack[] stacklist = maidInventory.mainInventory;
 		ItemStack stack = null;
 		Item item = null;
@@ -3642,21 +3723,29 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			//モノグサ実装。良い子の皆さんはちゃんとif使うように…
 			eatSugar(((LMMNX_IItemSpecialSugar)item).onSugarEaten(this, mode, stack), true, mode==EnumConsumeSugar.RECONTRACT);
 		}
-		maidInventory.decrStackSize(index, 1);
+		if (mode == EnumConsumeSugar.RECONTRACT) {
+			addMaidExperience(3.5f);
+		} else if (mode == EnumConsumeSugar.HEAL) {
+			addMaidExperience(0.8f);
+		}
+		maidInventory.decrStackSize(index, Math.min(1, mode == EnumConsumeSugar.OTHER ? 1 : getExpBooster()));
 	}
 
-	/** 主に砂糖を食べる仕草やその後のこと。
+	/** 主に砂糖を食べる仕草やその後のこと。consumeSugar()から呼ばれる．
+	 * interact()等メイドインベントリ外の砂糖を食べさせるときはこっちを直接呼ぶべし．
 	 * ペロッ・・・これは・・・砂糖ッ！！
 	 * @param heal デフォルトの1回復をするか？
 	 * @param motion 腕を振るか？
 	 * @param recontract 契約延長効果アリ？
 	 */
-	protected void eatSugar(boolean heal, boolean motion, boolean recontract) {
+	public void eatSugar(boolean heal, boolean motion, boolean recontract) {
 		if (motion) {
 			setSwing(2, (getMaxHealth() - getHealth() <= 1F) ?  LMM_EnumSound.eatSugar_MaxPower : LMM_EnumSound.eatSugar, false);
 		}
 		int h = hurtResistantTime;
-		if(heal) heal(1);
+		if(heal) {
+			heal(1);
+		}
 		hurtResistantTime = h;
 		playSound("random.pop");
 		LMM_LittleMaidMobNX.Debug(("eat Sugar." + worldObj.isRemote));
@@ -3667,7 +3756,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 			if (maidContractLimit > 168000) {
 				maidContractLimit = 168000;	// 24000 * 7
 			}
-			
+
 			if (worldObj.getTotalWorldTime() - maidAnniversary > 24000 * 365) {
 				EntityPlayer player;
 				if ((player = getMaidMasterEntity()) != null)
@@ -3788,7 +3877,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		};
 		syncNet(b);
 	}
-	
+
 	protected void requestChangeFreedom(boolean flag) {
 		byte[] b = new byte[]{
 			LMMNX_NetSync.LMMNX_Sync,
@@ -3797,7 +3886,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		};
 		syncNet(b);
 	}
-	
+
 	protected void onJump() {
 		getActiveModeClass().onJump();
 	}
@@ -3805,40 +3894,100 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public boolean isHeadMount(){
 		return ItemUtil.isHelm(maidInventory.mainInventory[17]);
 	}
-	
+
 	public ItemStack getHeadMountStackCopy(){
 		ItemStack stack = maidInventory.mainInventory[17];
 		if(ItemUtil.isHelm(stack)) return stack.copy();
 		return null;
 	}
-	
+
 	/**
 	 *  レベルを取得
 	 * @return
 	 */
 	public int getMaidLevel() {
-		return maidLevel;
+		return ExperienceUtil.getLevelFromExp(maidExperience);
 	}
-	
+
 	/**
 	 *  現在経験値を取得
 	 * @return
 	 */
 	public float getMaidExperience() {
+		if (maidExperience<=0) {
+			return 0;
+		}
 		return maidExperience;
 	}
-	
+
 	/**
 	 * 経験値を追加
 	 * @param value
 	 */
 	public void addMaidExperience(float value) {
-		maidExperience += value;
-		if (ExperienceUtil.getLevelFromExp(maidExperience) > getMaidLevel()) {
-			maidLevel++;
-			playSound("random.levelup");
-			
+		if (!isContractEX() || worldObj.isRemote) {
+			return;
 		}
+
+		int currentLevel = getMaidLevel();
+		if (maidExperience > 0) {
+			value *= getExpBooster();
+		}
+		maidExperience += value;
+
+		// レベルが下がってしまう場合はそれ以上引かない
+		if (maidExperience < ExperienceUtil.getRequiredExpToLevel(currentLevel)) {
+			maidExperience = ExperienceUtil.getRequiredExpToLevel(currentLevel);
+		}
+
+		// 最大レベル
+		if (maidExperience > ExperienceUtil.getRequiredExpToLevel(ExperienceUtil.EXP_FUNCTION_MAX)) {
+			maidExperience = ExperienceUtil.getRequiredExpToLevel(ExperienceUtil.EXP_FUNCTION_MAX);
+		}
+
+		dataWatcher.updateObject(LMM_Statics.dataWatch_MaidExpValue, maidExperience);
+		for (;maidExperience >= ExperienceUtil.getRequiredExpToLevel(currentLevel+1); currentLevel++) {
+			// 一度に複数レベルアップした場合にその分だけ呼ぶ
+			playSound("random.levelup");
+			getExperienceHandler().onLevelUp(currentLevel+1);
+			MinecraftForge.EVENT_BUS.post(new LMMNX_Event.LMMNX_MaidLevelUpEvent(this, getMaidLevel()));
+		}
+	}
+
+	/**
+	 * 取得経験値による操作を定義するExperienceHandlerを取得
+	 * @return
+	 */
+	public ExperienceHandler getExperienceHandler() {
+		return experienceHandler;
+	}
+
+	public void setExperienceHandler(ExperienceHandler handler) {
+		if (handler == null) {
+			throw new NullPointerException("ExperienceHandler cannot be null!");
+		}
+		experienceHandler = handler;
+	}
+
+	/**
+	 * 経験値ブーストを取得
+	 */
+	public int getExpBooster() {
+		return gainExpBoost;
+	}
+
+	/**
+	 * 経験値ブーストを設定
+	 * @param v ブースト値(0以上)
+	 */
+	public void setExpBooster(int v) {
+		if (v < 1) {
+			v = 1;
+		}
+		if (v > ExperienceUtil.getBoosterLimit(getMaidLevel())) {
+			v = ExperienceUtil.getBoosterLimit(getMaidLevel());
+		}
+		gainExpBoost = v;
 	}
 
 	/**
@@ -4266,9 +4415,8 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return (dataWatcher.getWatchableObjectInt(dataWatch_ItemUse) & (1 << pIndex)) > 0;
 	}
 
-	public void setExperienceValue(int val)
-	{
-		experienceValue = val;
+	public void setExperienceValue(int val) {
+//		experienceValue = val;
 	}
 
 	public void setFlag(int par1, boolean par2) {

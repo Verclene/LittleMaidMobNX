@@ -20,10 +20,10 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	public static final int mmode_Ripper	= 0x0081;
 	public static final int mmode_TNTD		= 0x00c1;
 	public static final int mmode_Detonator	= 0x00c2;
-	
+
 	public int timeSinceIgnited;
 	public int lastTimeSinceIgnited;
-	
+
 
 	public LMM_EntityMode_Ripper(LMM_EntityLittleMaid pEntity) {
 		super(pEntity);
@@ -63,7 +63,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	@Override
 	public void addEntityMode(EntityAITasks pDefaultMove, EntityAITasks pDefaultTargeting) {
 
-		
+
 		// Ripper:0x0081
 		EntityAITasks[] ltasks = new EntityAITasks[2];
 		ltasks[0] = new EntityAITasks(owner.aiProfiler);
@@ -92,17 +92,17 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 
 		owner.addMaidMode(ltasks, "Ripper", mmode_Ripper);
 
-		
+
 		// TNT-D:0x00c1
 		EntityAITasks[] ltasks2 = new EntityAITasks[2];
 		ltasks2[0] = ltasks[0];
 		ltasks2[1] = new EntityAITasks(owner.aiProfiler);
 		ltasks2[1].addTask(1, new LMM_EntityAINearestAttackableTarget(owner, EntityCreeper.class, 0, true));
 		ltasks2[1].addTask(2, new LMM_EntityAINearestAttackableTarget(owner, EntityTNTPrimed.class, 0, true));
-		
+
 		owner.addMaidMode(ltasks2, "TNT-D", mmode_TNTD);
-		
-		
+
+
 		// Detonator:0x00c2
 		EntityAITasks[] ltasks3 = new EntityAITasks[2];
 		ltasks3[0] = pDefaultMove;
@@ -151,7 +151,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 					owner.getLookHelper().setLookPositionWithEntity(owner.getMaidMasterEntity(), 40F, 40F);
 				}
 				LMM_LittleMaidMobNX.Debug(String.format("ID:%d(%s)-dom:%d(%d)", owner.getEntityId(), owner.worldObj.isRemote ? "C" : "W", owner.maidDominantArm, owner.maidInventory.currentItem));
-				
+
 				if (owner.maidInventory.isItemExplord(owner.maidInventory.currentItem) && timeSinceIgnited++ > 30) {
 					// TODO:自爆威力を対応させたいけど無理ぽ？
 					owner.maidInventory.decrStackSize(owner.maidInventory.currentItem, 1);
@@ -199,10 +199,10 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 			owner.setBloodsuck(true);
 //			owner.aiPanic.
 			timeSinceIgnited = -1;
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -210,7 +210,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	public int getNextEquipItem(int pMode) {
 		int li;
 		ItemStack litemstack;
-		
+
 		// モードに応じた識別判定、速度優先
 		switch (pMode) {
 		case mmode_Ripper :
@@ -218,7 +218,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 			for (li = 0; li < LMM_InventoryLittleMaid.maxInventorySize; li++) {
 				litemstack = owner.maidInventory.getStackInSlot(li);
 				if (litemstack == null) continue;
-				
+
 				// はさみ
 				if (litemstack.getItem() instanceof ItemShears) {
 					return li;
@@ -234,7 +234,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 			}
 			break;
 		}
-		
+
 		return -1;
 	}
 
@@ -246,11 +246,10 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 			// 通常殴り
 			return false;
 		}
-		
+
 		if (owner.getSwingStatusDominant().canAttack()) {
 			ItemStack lis = owner.getCurrentEquippedItem();
 			if (pEntity instanceof EntityCreeper) {
-				// TODO:カットオフ
 				// なんでPrivateにかえたし
 				try {
 					lis.damageItem((Integer)ObfuscationReflectionHelper.getPrivateValue(EntityCreeper.class,
@@ -262,21 +261,24 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 				}
 //				((EntityCreeper)pEntity).timeSinceIgnited = 0;
 				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck, !owner.isPlaying());
+				owner.addMaidExperience(0.6f);
 			} else if (pEntity instanceof EntityTNTPrimed) {
 				pEntity.setDead();
 				lis.damageItem(1, owner);
 //				lis.damageItem(1, owner.maidAvatar);
 				owner.setSwing(20, LMM_EnumSound.attack_bloodsuck, !owner.isPlaying());
+				owner.addMaidExperience(4.5f);
 			} else {
 				owner.maidAvatar.interactWith(pEntity);
 				owner.setSwing(20, LMM_EnumSound.attack, !owner.isPlaying());
+				owner.addMaidExperience(2.1f);
 			}
 			if (lis.stackSize <= 0) {
 				owner.maidInventory.setInventoryCurrentSlotContents(null);
 				owner.getNextEquipItem();
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -284,7 +286,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 	public boolean isSearchEntity() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean checkEntity(int pMode, Entity pEntity) {
 		if (owner.maidInventory.currentItem < 0) {
@@ -309,10 +311,10 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 			}
 			break;
 		}
-		
+
 		return false;
 	}
-	
+
 	protected float setLittleMaidFlashTime(float f) {
 		// 爆発カウントダウン発光時間
 		if (timeSinceIgnited > -1) {
@@ -320,11 +322,11 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 		}
 		return 0F;
 	}
-	
+
 	@Override
 	public int colorMultiplier(float pLight, float pPartialTicks) {
 		float f2 = setLittleMaidFlashTime(pPartialTicks);
-		
+
 		if((int)(f2 * 10F) % 2 == 0) {
 			return 0;
 		}
@@ -343,7 +345,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 		char c2 = '\377';
 		return i << 24 | c << 16 | c1 << 8 | c2;
 	}
-	
+
 	@Override
 	public boolean damageEntity(int pMode, DamageSource par1DamageSource, float par2) {
 		// 起爆
@@ -355,7 +357,7 @@ public class LMM_EntityMode_Ripper extends LMM_EntityModeBase {
 //        	if (owner.entityToAttack == null)
 			owner.setMaidWait(true);
 		}
-		
+
 		return false;
 	}
 

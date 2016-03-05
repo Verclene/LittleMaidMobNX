@@ -30,6 +30,10 @@ public abstract class LMM_EntityModeBase {
 	}
 
 	public int fpriority;
+
+	public static final double limitDistance_Freedom = 361D;
+
+	public static final double limitDistance_Follow  = 100D;
 	/**
 	 * 優先順位。
 	 * 番号が若いほうが先に処理される。

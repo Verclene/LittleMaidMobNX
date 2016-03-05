@@ -8,16 +8,29 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class LMMNX_Event extends Event {
 	
+	public static class LMMNX_MaidLevelUpEvent extends LMMNX_Event {
+		
+		public int level = 0;
+
+		public LMMNX_MaidLevelUpEvent(LMM_EntityLittleMaid maid, int level) {
+			super(maid);
+			this.level = level;
+		}
+	}
+
+	public LMMNX_Event(LMM_EntityLittleMaid maid) {
+		this.maid = maid;
+	}
+	
 	@Cancelable
 	public static class LMMNX_ItemPutChestEvent extends LMMNX_Event{
 		
-		public LMM_EntityLittleMaid maid;
 		public IInventory target;
 		public ItemStack stack;
 		public int maidStackIndex;
 		
 		public LMMNX_ItemPutChestEvent(LMM_EntityLittleMaid maid, IInventory target, ItemStack stack, int maidStackIndex){
-			this.maid = maid;
+			super(maid);
 			this.target = target;
 			this.stack = stack;
 			this.maidStackIndex = maidStackIndex;
@@ -26,4 +39,6 @@ public class LMMNX_Event extends Event {
 		
 	}
 
+	public LMM_EntityLittleMaid maid;
+	
 }
