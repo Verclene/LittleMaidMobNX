@@ -2763,7 +2763,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		return String.format(format, lt, ls);
 	}
 
-	@SideOnly(Side.CLIENT)
+	/**
+	 * Client専用．
+	 */
 	private boolean manualDeath = false;
 
 	@Override
