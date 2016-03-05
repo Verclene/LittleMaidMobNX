@@ -916,7 +916,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void playSound(LMM_EnumSound enumsound, boolean force) {
 		if (worldObj.isRemote && enumsound!=LMM_EnumSound.Null) {
 			if (!force) {
-				if(Math.random() > LMM_LittleMaidMobNX.cfg_soundPlayRate) {
+				if(Math.random() > LMM_LittleMaidMobNX.cfg_voiceRate) {
 					return;
 				}
 			}
@@ -933,6 +933,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 	public void playLittleMaidSound(LMM_EnumSound enumsound, boolean force) {
 		// 音声の再生
 		if (enumsound == LMM_EnumSound.Null) return;
+		if (!force && rand.nextFloat() > LMM_LittleMaidMobNX.cfg_voiceRate) return;
 		maidSoundInterval = 20;
 		if (!worldObj.isRemote) {
 			// Server
@@ -955,7 +956,7 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		// 普段の声
 		//LMM_LittleMaidMobNX.Debug("DEBUG INFO=tick %d", livingSoundTick);
 		//livingSoundTick--;
-		if(getAttackTarget()!=null || Math.random() > 0.3) return;
+		if(getAttackTarget()!=null/* || Math.random() > 0.3*/) return;
 		LMM_EnumSound so = LMM_EnumSound.Null;
 		if (getHealth() < 10)
 			so = LMM_EnumSound.living_whine;
@@ -991,9 +992,9 @@ public class LMM_EntityLittleMaid extends EntityTameable implements ITextureEnti
 		//if(livingSoundTick<=0){
 			LMM_LittleMaidMobNX.Debug("id:%d LivingSound:%s", getEntityId(), worldObj == null ? "null" : worldObj.isRemote ? "Client" : "Server");
 			if(!worldObj.isRemote)
-				playLittleMaidSound(so, true);
+				playLittleMaidSound(so, false);
 			else
-				playSound(so, true);
+				playSound(so, false);
 		//	livingSoundTick = 1;
 		//}
 	}

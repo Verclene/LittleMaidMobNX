@@ -105,7 +105,7 @@ public class LMM_ProxyClient extends LMM_ProxyCommon
 			// 音声再生
 			LMM_EnumSound lsound9 = LMM_EnumSound.getEnumSound(MMM_Helper.getInt(pPayload.data, 5));
 			LMM_LittleMaidMobNX.Debug(String.format("playSound:%s", lsound9.name()));
-			lemaid.playSound(lsound9, pPayload.data[9]==1);
+			lemaid.playSound(lsound9, true);
 			break;
 		case LMMNX_NetSync.LMMNX_Sync:
 			LMMNX_NetSync.onPayLoad(lemaid, pPayload.data);

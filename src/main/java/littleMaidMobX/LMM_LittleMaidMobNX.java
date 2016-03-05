@@ -47,8 +47,8 @@ import network.W_Network;
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "5.1.79";
-	public static final String VERSION_FORSITE = "NX5 Build 79";
+	public static final String VERSION = "5.1.80";
+	public static final String VERSION_FORSITE = "NX5 Build 80";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.9]";
 	public static final int VERSION_CODE = 14;
 
@@ -105,13 +105,14 @@ public class LMM_LittleMaidMobNX {
 	public static boolean cfg_isModelAlphaBlend = false;
 	// 野生テクスチャ
 	public static boolean cfg_isFixedWildMaid = false;
+	
+	// LivingSoundRate
+	public static float cfg_voiceRate = 0.1f;
 
 	// @MLProp(info="true: AlphaBlend(request power), false: AlphaTest(more fast)")
 	// public static boolean AlphaBlend = true;
 	// @MLProp(info="true: Will be hostile, false: Is a pacifist")
 	public static boolean cfg_Aggressive = true;
-	public static float cfg_soundPlayRate = 1;
-
 	public static int cfg_maidOverdriveDelay = 64;
 
 	@SidedProxy(clientSide = "littleMaidMobX.LMM_ProxyClient", serverSide = "littleMaidMobX.LMM_ProxyCommon")
@@ -192,8 +193,8 @@ public class LMM_LittleMaidMobNX {
 		cfg_isModelAlphaBlend = cfg.getBoolean("isModelAlphaBlend", true);
 		cfg.setComment("isFixedWildMaid", "If 'true', additional textures of LittleMaid(no-contract) will never used.");
 		cfg_isFixedWildMaid = cfg.getBoolean("isFixedWildMaid", false);
-		cfg.setComment("soundPlayRate", "Adjust frequency of playing some sounds. Type of value is float, value must be 1 or less.");
-		cfg_soundPlayRate = Math.min(1f, cfg.getFloat("soundPlayRate", 1f));
+		cfg_voiceRate = cfg.getFloat("voiceRate", 0.2f);
+		cfg.setComment("voiceRate", "Ratio of playing non-force sound");
 
 		cfg_maidOverdriveDelay = cfg.getInt("maidOverdriveDelay", 32);
 		if (cfg_maidOverdriveDelay < 1) {
