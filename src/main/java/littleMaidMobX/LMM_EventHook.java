@@ -111,13 +111,6 @@ public class LMM_EventHook
 	}
 	
 	@SubscribeEvent
-	public void onLivingDeath(LivingDeathEvent event) {
-		if (event.entityLiving instanceof LMM_EntityLittleMaid) {
-			event.setCanceled(((LMM_EntityLittleMaid) event.entityLiving).getExperienceHandler().onDeath(event.source));
-		}
-	}
-
-	@SubscribeEvent
 	public void onItemPutChest(LMMNX_Event.LMMNX_ItemPutChestEvent event){
 		LMM_EntityLittleMaid maid = event.maid;
 //		IInventory target = event.target;
