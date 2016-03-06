@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -137,8 +138,9 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 			}
 		}
 		
+		BlockPos targetPos = new BlockPos(px, py, pz);
 		if (!owner.isMaidWait()) {
-			int a = worldObj.getLight(new BlockPos(px,py,pz),true);
+			int a = worldObj.getLight(targetPos,true);
 			return a;
 		}
 		return 15;
@@ -152,6 +154,13 @@ public class LMM_EntityMode_Torcher extends LMM_EntityModeBase {
 		if (!owner.isFreedom() && owner.getMaidMasterEntity()!=null &&
 				owner.getMaidMasterEntity().getDistanceSq(px, py, pz) > LMM_EntityModeBase.limitDistance_Follow) {
 			return false;
+		}
+		// アイテムを置けない場合
+		Item heldItem = owner.getHeldItem().getItem();
+		if (heldItem instanceof ItemBlock) {
+			if (!canPlaceItemBlockOnSide(owner.worldObj, px, py - 1, pz, EnumFacing.UP, owner.maidAvatar, owner.getHeldItem(), (ItemBlock) heldItem)) {
+				return false;
+			}
 		}
 
 		int v = getBlockLighting(px, py, pz);
