@@ -50,7 +50,7 @@ public class LMM_LittleMaidMobNX {
 	public static final String VERSION = "5.2.84";
 	public static final String VERSION_FORSITE = "NX5 Build 84";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.9]";
-	public static final int VERSION_CODE = 14;
+	public static final int VERSION_CODE = 15;
 
 	public static final VersionData currentVersion = new VersionData(VERSION_CODE, VERSION, VERSION_FORSITE);
 	public static VersionData latestVersion = new VersionData(1, "1.0.1", "NX1");
