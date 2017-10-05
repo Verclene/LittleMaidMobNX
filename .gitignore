@@ -1,0 +1,14 @@
+/.gradle/
+/build/
+/bin/
+/.classpath
+/.project
+/.settings/
+/build.gradle
+/config/
+/crash-reports/
+/logs/
+/mods/
+/saves/
+/options.txt
+/usernamecache.json

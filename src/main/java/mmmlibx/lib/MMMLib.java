@@ -2,7 +2,9 @@ package mmmlibx.lib;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +17,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -58,6 +61,8 @@ public class MMMLib {
 			urls.add(FileManager.dirMods.toURI().toURL());
 		} catch (MalformedURLException e1) {
 		}
+		
+		/*
 		if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE){
 			for(File f:FileManager.dirDevIncludeClasses){
 				try {
@@ -66,8 +71,8 @@ public class MMMLib {
 				}
 			}
 		}
-		FileManager.COMMON_CLASS_LOADER = new CommonClassLoaderWrapper(urls.toArray(new URL[]{}), MMMLib.class.getClassLoader());
-
+		*/
+		
 		// MMMLibが立ち上がった時点で旧モデル置き換えを開始
 		MMMTransformer.isEnable = true;
 		
@@ -96,6 +101,27 @@ public class MMMLib {
 		EzRecipes.isDebugMessage = lconf.get(ls, "isDebugMessage", false).getBoolean(false);
 */
 
+	}
+
+	@Mod.EventHandler
+	public void init(FMLInitializationEvent pEvent) {
+		if (pEvent.getSide() == Side.CLIENT) {
+// TODO ★			MoveWindow.setPosition();
+		}
+	}
+	
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		URLClassLoader tClassLoader = (URLClassLoader) getClass().getClassLoader();
+		for (URL tUrl : tClassLoader.getURLs()) {
+			try {
+				FileManager.dirDevIncludeClasses.add(new File(tUrl.toURI()));
+			} catch (Exception e) {
+				// Silence not file
+			}
+		}
+		FileManager.COMMON_CLASS_LOADER = new CommonClassLoaderWrapper(tClassLoader.getURLs(), tClassLoader);
+		
 		MMM_StabilizerManager.init();
 
 		// テクスチャパックの構築
@@ -114,13 +140,6 @@ public class MMMLib {
 	}
 
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent pEvent) {
-		if (pEvent.getSide() == Side.CLIENT) {
-// TODO ★			MoveWindow.setPosition();
-		}
-	}
-
-	@Mod.EventHandler
 	public void loaded(FMLPostInitializationEvent pEvent) {
 		// 独自スクリプトデコーダー
 //		EzRecipes.init();
@@ -132,17 +151,9 @@ public class MMMLib {
 //		MultiModelManager.instance.execute();
 		
 		// TODO test
-		List<File> llist = FileManager.getAllmodsFiles(FileManager.COMMON_CLASS_LOADER, true);
+		List<File> llist = FileManager.getAllmodsFiles(FileManager.COMMON_CLASS_LOADER);
 		for (File lf : llist) {
 			Debug("targetFiles: %s", lf.getAbsolutePath());
-		}
-		
-		
-		try {
-			Class<?> lc = ReflectionHelper.getClass(FileManager.COMMON_CLASS_LOADER, "net.minecraft.entity.EntityLivingBase");
-			Debug("test-getClass: %s", lc.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		
 	}

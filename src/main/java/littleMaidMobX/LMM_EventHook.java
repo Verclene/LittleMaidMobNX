@@ -10,18 +10,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class LMM_EventHook
 {
@@ -54,16 +50,6 @@ public class LMM_EventHook
 //			maid.writeEntityToNBT(t);
 //			maid.readEntityFromNBT(t);
 			if(event.world.isRemote) maid.setTextureNames();
-		}
-	}
-
-	@SubscribeEvent
-	public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
-		if (!event.player.worldObj.isRemote && LMM_LittleMaidMobNX.currentVersion.compareVersion(LMM_LittleMaidMobNX.latestVersion) > 0) {
-			event.player.addChatComponentMessage(new ChatComponentText(String.format("[LittleMaidMobNX]%s : %s",
-					StatCollector.translateToLocal("system.lmmnx.chat.text.newverstion"), LMM_LittleMaidMobNX.latestVersion.shownName)));
-			event.player.addChatComponentMessage(new ChatComponentText(String.format("[LittleMaidMobNX]%s",
-					StatCollector.translateToLocal("system.lmmnx.chat.text.checkversion"))));
 		}
 	}
 

@@ -229,13 +229,9 @@ public class MMM_TextureManager {
 		for (String[] lst : searchPrefix) {
 			// mods
 			searchFiles(FileManager.dirMods, lst);
-			if (LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV) {
-				searchFiles(FileManager.dirDevClasses, lst);
-			}
-			if (LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE) {
-				for (File ln: FileManager.dirDevIncludeClasses)
-					searchFiles(ln, lst);
-			}
+
+			for (File ln: FileManager.dirDevIncludeClasses)
+				searchFiles(ln, lst);
 		}
 		
 		// TODO 実験コード
@@ -298,6 +294,16 @@ public class MMM_TextureManager {
 	
 	private void searchFiles(File ln, String[] lst) {
 		MMMLib.Debug("getTexture[%s:%s].", lst[0], lst[1]);
+		
+		if (ln == null) {
+			return;
+		}
+		
+		if (!ln.isDirectory()) {
+			addTexturesZip(ln, lst);
+			return;
+		}
+
 		// mods
 		for (File lf : ln.listFiles()) {
 			boolean lflag;
@@ -581,27 +587,23 @@ public class MMM_TextureManager {
 					String tn = FileClassUtil.getLinuxAntiDotName(nfile.getAbsolutePath());
 					String rmn = FileClassUtil.getLinuxAntiDotName(FileManager.dirMods.getAbsolutePath());
 					ADDMODEL: if (nfile.getName().endsWith(".class")) {
-						if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
-							String rdn = FileClassUtil.getLinuxAntiDotName(FileManager.dirDevClasses.getAbsolutePath());
-							if(tn.startsWith(rdn)){
-								addModelClass(FileClassUtil.getClassName(tn, rdn),pSearch);
+						for(File f:FileManager.dirDevIncludeClasses){
+							String rin = FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath());
+							if(tn.startsWith(rin)){
+								addModelClass(FileClassUtil.getClassName(tn, rin),pSearch);
 								break ADDMODEL;
 							}
-							for(File f:FileManager.dirDevIncludeClasses){
-								String rin = FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath());
-								if(tn.startsWith(rin)){
-									addModelClass(FileClassUtil.getClassName(tn, rin),pSearch);
-									break ADDMODEL;
-								}
-							}
-						}else if(tn.startsWith(rmn)) addModelClass(FileClassUtil.getClassName(tn, rmn), pSearch);
+						}
+						
+						if(tn.startsWith(rmn)) addModelClass(FileClassUtil.getClassName(tn, rmn), pSearch);
 					} else if(nfile.getName().endsWith(".png")) {
 						String s = nfile.getPath().replace('\\', '/');
 						int i = s.indexOf(pSearch[1]);
 						if (i > -1) {
 							// 対象はテクスチャディレクトリ
 							addTextureName(s.substring(i), pSearch);
-							if(LMMNX_DevMode.DEVMODE==LMMNX_DevMode.DEVMODE_ECLIPSE) for(File f:FileManager.dirDevIncludeClasses){
+
+							for(File f : FileManager.dirDevIncludeClasses){
 								String rin = FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath());
 								if(tn.startsWith(rin)){
 									String cname = tn.substring(rin.length()+1);

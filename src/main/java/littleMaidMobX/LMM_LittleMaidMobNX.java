@@ -7,8 +7,6 @@ import java.util.Random;
 import mmmlibx.lib.MMM_Helper;
 import mmmlibx.lib.MMM_TextureManager;
 import net.blacklab.lib.config.ConfigList;
-import net.blacklab.lib.version.Version;
-import net.blacklab.lib.version.Version.VersionData;
 import net.blacklab.lmmnx.achievements.LMMNX_Achievements;
 import net.blacklab.lmmnx.api.mode.LMMNX_API_Farmer;
 import net.blacklab.lmmnx.client.LMMNX_OldZipTexturesLoader;
@@ -43,17 +41,15 @@ import network.W_Network;
 		modid = LMM_LittleMaidMobNX.DOMAIN,
 		name = "LittleMaidMobNX",
 		version = LMM_LittleMaidMobNX.VERSION,
-		acceptedMinecraftVersions=LMM_LittleMaidMobNX.ACCEPTED_MCVERSION)
+		acceptedMinecraftVersions=LMM_LittleMaidMobNX.ACCEPTED_MCVERSION,
+		dependencies = "required-after:net.blacklab.lib@[3.3.13,); required-after:MMMLibX")
 public class LMM_LittleMaidMobNX {
 
 	public static final String DOMAIN = "lmmx";
-	public static final String VERSION = "5.2.84";
-	public static final String VERSION_FORSITE = "NX5 Build 84";
+	public static final String VERSION = "5.3.3.85";
 	public static final String ACCEPTED_MCVERSION = "[1.8,1.8.9]";
 	public static final int VERSION_CODE = 15;
 
-	public static final VersionData currentVersion = new VersionData(VERSION_CODE, VERSION, VERSION_FORSITE);
-	public static VersionData latestVersion = new VersionData(1, "1.0.1", "NX1");
 
 	/*
 	 * public static String[] cfg_comment = {
@@ -222,8 +218,6 @@ public class LMM_LittleMaidMobNX {
 			e.printStackTrace();
 		}
 
-		latestVersion = Version.getLatestVersion("http://mc.el-blacklab.net/lmmnxversion.txt", 10000);
-
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance,
 				new LMM_GuiCommonHandler());
 
@@ -276,6 +270,12 @@ public class LMM_LittleMaidMobNX {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+	}
+
+	// public static LMM_ProxyClient.CountThread countThread;
+
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent evt) {
 		proxy.loadSounds();
 
 		if (MMM_Helper.isClient) {
@@ -289,12 +289,6 @@ public class LMM_LittleMaidMobNX {
 			proxy.init();
 		}
 
-	}
-
-	// public static LMM_ProxyClient.CountThread countThread;
-
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent evt) {
 		// カンマ区切りのアイテム名のリストを配列にして設定
 		// "aaa, bbb,ccc  " -> "aaa" "bbb" "ccc"
 		MinecraftForge.EVENT_BUS.register(new LMM_EventHook());

@@ -26,7 +26,7 @@ public class FileManager {
 		@Override
 		public void addURL(URL url) {
 			// 可視化
-			if (new ArrayList(Arrays.asList(getURLs())).contains(url)) return;
+			if (Arrays.asList(getURLs()).contains(url)) return;
 			super.addURL(url);
 		}
 		
@@ -34,9 +34,6 @@ public class FileManager {
 
 	public static File dirMinecraft;
 	public static File dirMods;
-	public static File dirModsVersion;
-	public static File dirDevClasses;
-	public static File dirDevClassAssets;
 	public static List<File> dirDevIncludeClasses = new ArrayList<File>();
 //	public static File[] dirDevIncludeAssets = new File[]{};
 	
@@ -54,43 +51,7 @@ public class FileManager {
 		dirMinecraft = (File) FMLInjectionData.data()[6];
 		minecraftDir = dirMinecraft.getPath();
 		dirMods = new File(dirMinecraft, "mods");
-		//開発モード
-		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
-			//Linux準拠の形式に変更
-			String path = FileClassUtil.getLinuxAntiDotName(dirMods.getAbsolutePath());
-			String pathd = path;
-			String patha;
-			String tail = "/eclipse/mods";
-			String tail2 = "/eclipse/server/mods";
-			boolean serverFlag = false;
-			if(path.endsWith(tail2)){
-				path = path.substring(0, path.indexOf(tail2))+tail;
-				serverFlag = true;
-			}
-			if(path.endsWith(tail)){
-				if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
-					pathd = path.substring(0, path.indexOf(tail))+"/bin";
-				}else if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE){
-					pathd = path.substring(0, path.indexOf(tail))+"/build/classes/main";
-					patha = path.substring(0, path.indexOf(tail))+"/build/resources/main";
-					dirDevClassAssets = new File(patha);
-				}
-				dirDevClasses = new File(pathd);
-				if(!dirDevClasses.exists()||!dirDevClasses.isDirectory())
-					throw new IllegalStateException("Could not get dev class path: Maybe your source codes are out of src/main/java?");
-				
-				for(int i=0;i<LMMNX_DevMode.INCLUDEPROJECT.length&&!serverFlag;i++){
-					if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
-						String c = FileClassUtil.getParentDir(path.substring(0, path.indexOf(tail)))+"/"+LMMNX_DevMode.INCLUDEPROJECT[i]+"/bin";
-						dirDevIncludeClasses.add(new File(c));
-					}else if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE){
-					}
-				}
-			}else{
-				throw new IllegalStateException("Run Directory is incorrect: You must run at \"<PROJECT>/eclipse\"!");
-			}
-		}
-		dirModsVersion = new File(dirMods, (String)lo[4]);
+
 		MMMLib.Debug("init FileManager.");
 	}
 	
@@ -153,7 +114,7 @@ public class FileManager {
 		return llist;
 	}
 	*/
-	public static List<File> getAllmodsFiles(ClassLoader pClassLoader, boolean pFlag) {
+	public static List<File> getAllmodsFiles(ClassLoader pClassLoader) {
 		List<File> llist = new ArrayList<File>();
 		if (pClassLoader instanceof URLClassLoader ) {
 			for (URL lurl : ((URLClassLoader)pClassLoader).getURLs()) {
@@ -167,18 +128,13 @@ public class FileManager {
 				}
 			}
 		}
-		if (pFlag) {
-			if (dirMods.exists()) {
-				for (File lf : dirMods.listFiles()) {
-					addList(llist, lf);
-				}
-			}
-			if (dirModsVersion.exists()) {
-				for (File lf : dirModsVersion.listFiles()) {
-					addList(llist, lf);
-				}
+
+		if (dirMods.exists()) {
+			for (File lf : dirMods.listFiles()) {
+				addList(llist, lf);
 			}
 		}
+		
 		files = llist;
 		return llist;
 	}
@@ -217,16 +173,11 @@ public class FileManager {
 		
 		MMMLib.Debug("getModFile:[%s]:%s", pname, dirMods.getAbsolutePath());
 		// ファイル・ディレクトリを検索
-		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
-			//開発モード時はそちらを優先
-			llist.add(dirDevClasses);
-			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_NO_IDE) llist.add(dirDevClassAssets);
-			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
-				for(File f:dirDevIncludeClasses){
-					llist.add(f);
-				}
-			}
+		
+		for(File f:dirDevIncludeClasses){
+			llist.add(f);
 		}
+
 		try {
 			if (dirMods.isDirectory()) {
 				MMMLib.Debug("getModFile-get:%d.", dirMods.list().length);

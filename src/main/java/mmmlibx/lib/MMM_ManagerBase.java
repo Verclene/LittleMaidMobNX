@@ -27,16 +27,11 @@ public abstract class MMM_ManagerBase {
 	protected void load() {
 		// ロード
 		
-		// 開発用
-		if(LMMNX_DevMode.DEVMODE != LMMNX_DevMode.NOT_IN_DEV){
-			startSearch(FileManager.dirDevClasses, true);
-			if(LMMNX_DevMode.DEVMODE == LMMNX_DevMode.DEVMODE_ECLIPSE){
-				for(File f:FileManager.dirDevIncludeClasses){
-					startSearch(f, true);
-				}
-			}
+		for(File f:FileManager.dirDevIncludeClasses){
+			startSearch(f, true);
 		}
-
+		
+		// TODO 要らんと思う
 		startSearch(FileManager.dirMods, false);
 	}
 	
