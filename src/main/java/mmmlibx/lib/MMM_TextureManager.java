@@ -607,9 +607,8 @@ public class MMM_TextureManager {
 								String rin = FileClassUtil.getLinuxAntiDotName(f.getAbsolutePath());
 								if(tn.startsWith(rin)){
 									String cname = tn.substring(rin.length()+1);
-									String pr="assets/minecraft/";
-									if(cname.startsWith(pr)) cname=cname.substring(pr.length());
-									if(FMLCommonHandler.instance().getSide()==Side.CLIENT)
+									String pr="mob/littleMaid";
+									if(cname.startsWith(pr) && FMLCommonHandler.instance().getSide()==Side.CLIENT)
 										LMMNX_OldZipTexturesLoader.keys.add(cname);
 								}
 							}
